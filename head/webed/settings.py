@@ -9,7 +9,7 @@ MANAGERS = ADMINS
 
 import os
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
-SITE_NAME = 'webed'
+SITE_NAME = 'webapp' ## notex
 SITE_HOST = 'blackhan.ch'
 
 DATABASE_ENGINE = 'sqlite3'
