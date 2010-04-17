@@ -43,7 +43,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 CACHE_BACKEND = 'memcached://127.0.0.1:11211'
-EXTJS = 'extjs-3.2'
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
 TEMPLATE_DIRS = (
@@ -58,5 +57,5 @@ INSTALLED_APPS = (
     'django.contrib.sites'        ,
     'django.contrib.admin'        ,
 
-    'svc'
+    'svc', 'editor',
 )

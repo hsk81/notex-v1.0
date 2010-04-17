@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block main %}
+<script type="text/javascript">
+Ext.onReady(function() {
+
+    Ext.QuickTips.init();
+
+    var viewport = new Ext.Viewport({
+
+        layout : 'border'
+      , id     : 'viewportId'
+
+      , items : [{
+            region : 'center'
+          , layout : 'fit'
+          , items  : []
+
+      },{
+            region       : 'west'
+          , split        : true
+          , height       : 256
+          , minHeight    : 256
+          , collapsed    : false
+          , collapseMode : 'mini'
+          , hidden       : false
+          , layout       : 'fit'
+          , items        : []
+      }]
+    });
+
+    viewport.show ();
+
+});</script>
+{% endblock %}

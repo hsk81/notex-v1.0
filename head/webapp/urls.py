@@ -6,7 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    (r'^svc/', include('svc.urls', namespace='svc')),
+    (r'^svc/',    include('svc.urls',    namespace='svc')),
+    (r'^editor/', include('editor.urls', namespace='editor')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
