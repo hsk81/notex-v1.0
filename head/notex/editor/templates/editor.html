@@ -10,6 +10,24 @@ Ext.onReady(function() {
      * pnlLhs -----------------------------------------------------------------
      */
 
+    var pnlDynTree = {
+        xtype       : 'treepanel'
+      , autoScroll  : true
+      , rootVisible : false
+
+      , loader : new Ext.tree.TreeLoader({
+            url : '{% url editor:post.node %}'
+        })
+
+      , root : {
+            text     : 'Node: 0'
+          , id       : '0'
+          , cls      : 'folder'
+          , iconCls  : 'icon-folder'
+          , expanded : true
+        }
+    }
+
     var pnlLhs = {
         title  : 'Project Manager'
       , layout : 'fit'
@@ -34,16 +52,7 @@ Ext.onReady(function() {
             }]
         }
 
-      , items : [{
-            layout       : 'hbox'
-          , layoutConfig : { align : 'middle', pack: 'center' }
-          , items : [{
-                width  : 128
-              , height : 128
-              , html   : '<img \
-                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
-          }]
-      }]
+      , items : [pnlDynTree]
     }
 
     /**

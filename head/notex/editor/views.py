@@ -32,7 +32,38 @@ class DATA:
 
 class POST:
 
-    pass
+    def node (request):
+
+        if request.POST['node'] == '0':
+
+            js_string = json.dumps([
+                { 'text': "Table of Contents", 'id': "0.0", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+                { 'text': "Chapter 1", 'id': "0.1", 'cls' : "folder", 'iconCls': "icon-folder"},
+                { 'text': "Chapter 2", 'id': "0.2", 'cls' : "folder", 'iconCls': "icon-folder"},
+            ])
+
+        elif request.POST['node'] == '0.1':
+
+            js_string = json.dumps([
+                { 'text': "Section 1.1", 'id': "0.1.0", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+                { 'text': "Section 1.1", 'id': "0.1.1", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+                { 'text': "Section 1.2", 'id': "0.1.2", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+            ])
+
+        elif request.POST['node'] == '0.2':
+
+            js_string = json.dumps([
+                { 'text': "Section 2.0", 'id': "0.2.0", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+                { 'text': "Section 2.1", 'id': "0.2.1", 'cls' : "file", 'iconCls': "icon-page", 'leaf': True },
+            ])
+
+        else:
+
+            js_string = json.dumps([])
+
+        return HttpResponse (js_string, mimetype='application/json')
+
+    node = staticmethod(node)
 
 if __name__ == "__main__":
 

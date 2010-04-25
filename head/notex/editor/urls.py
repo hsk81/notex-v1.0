@@ -19,6 +19,12 @@ urlpatterns = patterns('',
         name='json.info'
     ),
 
+    url(
+        r'^post/node/$',
+        POST.node,
+        name='post.node'
+    ),
+    
 )
 
 if __name__ == "__main__":
