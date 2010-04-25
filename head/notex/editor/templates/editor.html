@@ -6,6 +6,164 @@ Ext.onReady(function() {
 
     Ext.QuickTips.init();
 
+    /**
+     * pnlLhs -----------------------------------------------------------------
+     */
+
+    var pnlLhs = {
+        title  : 'Project Manager'
+      , layout : 'fit'
+
+      , tbar : {
+            items : [{
+                iconCls       : 'icon-folder_page'
+            },{
+                iconCls       : 'icon-disk'
+            },'-',{
+                iconCls       : 'icon-folder_add'
+            },{
+                iconCls       : 'icon-folder_edit'
+            },{
+                iconCls       : 'icon-folder_delete'
+            },'-',{
+                iconCls       : 'icon-page_add'
+            },{
+                iconCls       : 'icon-page_edit'
+            },{
+                iconCls       : 'icon-page_delete'
+            }]
+        }
+
+      , items : [{
+            layout       : 'hbox'
+          , layoutConfig : { align : 'middle', pack: 'center' }
+          , items : [{
+                width  : 128
+              , height : 128
+              , html   : '<img \
+                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
+          }]
+      }]
+    }
+
+    /**
+     * pnlRhs -----------------------------------------------------------------
+     */
+
+    var tabText = {
+
+        title      : 'Plain'
+      , layout     : 'fit'
+      , autoScroll : true
+      , iconCls    : 'icon-page_white_text'
+
+      , items : [{
+            xtype  : 'htmleditor',
+            anchor : '100% 100%'
+      }]
+
+    }
+
+    var tabLatex = {
+
+        title      : 'Latex'
+      , layout     : 'fit'
+      , autoScroll : true
+      , iconCls    : 'icon-page_white_code'
+
+      , items : [{
+            layout       : 'hbox'
+          , layoutConfig : { align : 'middle', pack: 'center' }
+          , items : [{
+                width  : 128
+              , height : 128
+              , html   : '<img \
+                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
+          }]
+      }]
+
+    }
+
+    var tabPdf = {
+
+        title      : 'PDF'
+      , layout     : 'fit'
+      , autoScroll : true
+      , iconCls    : 'icon-page_white_acrobat'
+
+      , items : [{
+            layout       : 'hbox'
+          , layoutConfig : { align : 'middle', pack: 'center' }
+          , items : [{
+                width  : 128
+              , height : 128
+              , html   : '<img \
+                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
+          }]
+      }]
+
+    }
+
+    var tabHtml = {
+
+        title      : 'HTML'
+      , layout     : 'fit'
+      , autoScroll : true
+      , iconCls    : 'icon-page_white_code_red'
+
+      , items : [{
+            layout       : 'hbox'
+          , layoutConfig : { align : 'middle', pack: 'center' }
+          , items : [{
+                width  : 128
+              , height : 128
+              , html   : '<img \
+                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
+          }]
+      }]
+
+    }
+
+    var tabView = {
+
+        title      : 'HTML View'
+      , layout     : 'fit'
+      , autoScroll : true
+      , iconCls    : 'icon-page_white_world'
+
+      , items : [{
+            layout       : 'hbox'
+          , layoutConfig : { align : 'middle', pack: 'center' }
+          , items : [{
+                width  : 128
+              , height : 128
+              , html   : '<img \
+                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
+          }]
+      }]
+
+    }
+
+    var pnlRhs = new Ext.TabPanel({
+
+        activeTab       : 0
+      , enableTabScroll : true
+      , tabPosition     : 'bottom'
+
+      , items           : [
+             tabText
+           , tabLatex
+           , tabPdf
+           , tabHtml
+           , tabView
+        ]
+
+    });
+
+    /**
+     * viewport ---------------------------------------------------------------
+     */
+
     var viewport = new Ext.Viewport({
 
         layout : 'border'
@@ -14,18 +172,18 @@ Ext.onReady(function() {
       , items : [{
             region : 'center'
           , layout : 'fit'
-          , items  : []
+          , items  : [pnlRhs]
 
       },{
             region       : 'west'
           , split        : true
-          , height       : 256
-          , minHeight    : 256
+          , minWidth     : 256
+          , width        : 256
           , collapsed    : false
           , collapseMode : 'mini'
           , hidden       : false
           , layout       : 'fit'
-          , items        : []
+          , items        : [pnlLhs]
       }]
     });
 

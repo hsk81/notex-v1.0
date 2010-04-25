@@ -7,7 +7,7 @@ import json
 
 class VIEW:
 
-    def main (request, id):
+    def main (request):
 
         return direct_to_template (
             request,

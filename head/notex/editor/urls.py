@@ -8,7 +8,7 @@ from views import POST
 urlpatterns = patterns('',
 
     url(
-        r'^(?P<id>\d+|\$0)/$',
+        r'^$',
         VIEW.main,
         name='view.main'
     ),
