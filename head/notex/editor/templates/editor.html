@@ -6,11 +6,20 @@ Ext.onReady(function() {
 
     Ext.QuickTips.init();
 
+    var session = {
+        id: '{{ sid }}'
+      , timestamp: '{{ timestamp }}'
+    }
+
+    if (typeof(console)!='undefined') {
+        console.info (session)
+    }
+
     /**
      * pnlLhs -----------------------------------------------------------------
      */
 
-    var pnlDynTree = {
+    var pnlTree = {
         xtype       : 'treepanel'
       , autoScroll  : true
       , rootVisible : false
@@ -20,8 +29,8 @@ Ext.onReady(function() {
         })
 
       , root : {
-            text     : 'Node: 0'
-          , id       : '0'
+            text     : 'Root'
+          , id       : 'root'
           , cls      : 'folder'
           , iconCls  : 'icon-folder'
           , expanded : true
@@ -32,27 +41,32 @@ Ext.onReady(function() {
         title  : 'Project Manager'
       , layout : 'fit'
 
+      , tools:[{
+            id:'refresh',
+            handler: function(event, toolEl, panel) {
+                //@TODO!
+            }
+        }]
+
       , tbar : {
             items : [{
                 iconCls       : 'icon-folder_page'
             },{
                 iconCls       : 'icon-disk'
             },'-',{
-                iconCls       : 'icon-folder_add'
+                iconCls       : 'icon-add'
             },{
-                iconCls       : 'icon-folder_edit'
+                iconCls       : 'icon-pencil'
             },{
-                iconCls       : 'icon-folder_delete'
+                iconCls       : 'icon-delete'
             },'-',{
-                iconCls       : 'icon-page_add'
+                iconCls       : 'icon-arrow_up'
             },{
-                iconCls       : 'icon-page_edit'
-            },{
-                iconCls       : 'icon-page_delete'
+                iconCls       : 'icon-arrow_down'
             }]
         }
 
-      , items : [pnlDynTree]
+      , items : [pnlTree]
     }
 
     /**
@@ -160,11 +174,11 @@ Ext.onReady(function() {
       , tabPosition     : 'bottom'
 
       , items           : [
-             tabText
-           , tabLatex
-           , tabPdf
-           , tabHtml
-           , tabView
+           tabText
+           //tabLatex
+           //tabPdf
+           //tabHtml
+           //tabView
         ]
 
     });

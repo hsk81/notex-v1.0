@@ -45,6 +45,16 @@ MIDDLEWARE_CLASSES = (
 CACHE_BACKEND = 'memcached://127.0.0.1:11211'
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
+SESSION_COOKIE_AGE = 259200 ## secs: three days
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_NAME = 'sid.'
+SESSION_COOKIE_PATH = '/'
+SESSION_COOKIE_SECURE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = False
+
 TEMPLATE_DIRS = (
     os.path.join (SITE_ROOT, 'templates/'),
 )
