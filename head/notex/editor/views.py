@@ -1,9 +1,12 @@
-from datetime                    import datetime
+from datetime                       import datetime
 
-from django.http                 import HttpResponse
-from django.http                 import Http404
-from django.views.generic.simple import direct_to_template
-from django.template             import TemplateDoesNotExist
+from django.http                    import HttpResponse
+from django.http                    import Http404
+from django.views.generic.simple    import direct_to_template
+from django.template                import TemplateDoesNotExist
+
+from editor.models import PROJECT
+from editor.models import FILE
 
 import json
 
@@ -11,20 +14,67 @@ class VIEW:
 
     def init (request):
 
-        request.session['projects'] = {
-            '1': { 'type': 'prj', 'name': 'Project "Alpha"' },
-            '2': { 'type': 'prj', 'name': 'Project "Beta"'  }
-        }
+        prj000 = PROJECT.objects.create (
+            sid  = request.session.session_key,
+            name = 'Random Texts',
+            rank = 000,
+        )
 
-        request.session['files'] = {
-            '1.0': { 'type': 'toc', 'name': 'Table of Contents', 'text': ''},
-            '1.1': { 'type': 'chp', 'name': 'Chapter 1.1', 'text': '' },
-            '1.2': { 'type': 'chp', 'name': 'Chapter 1.2', 'text': '' },
-            '2.0': { 'type': 'toc', 'name': 'Table of Contents', 'text': ''},
-            '2.1': { 'type': 'chp', 'name': 'Chapter 2.1', 'text': '' },
-            '2.2': { 'type': 'chp', 'name': 'Chapter 2.2', 'text': '' },
-            '2.3': { 'type': 'chp', 'name': 'Chapter 2.3', 'text': '' },
-        }
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Table of Contents',
+            type = 'toc',
+            text = '..',
+            rank = 0,
+        )
+
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Abstract',
+            text = '..',
+            rank = 1,
+        )
+
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Introduction',
+            text = '..',
+            rank = 2,
+        )
+
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Related Work',
+            text = '..',
+            rank = 3
+        )
+
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Lorem Ipsum',
+            text = '..',
+            rank = 4
+        )
+
+        _ = FILE.objects.create (
+            project = prj000,
+            name = 'Conclusion',
+            text = '..',
+            rank = 5
+        )
+
+        prj001 = PROJECT.objects.create (
+            sid  = request.session.session_key,
+            name = 'Notex Editor',
+            rank = 001,
+        )
+
+        _ = FILE.objects.create (
+            project = prj001,
+            name = 'Tutorial',
+            text = '..',
+            rank = 1,
+        )
 
     init = staticmethod (init)
 
@@ -32,10 +82,15 @@ class VIEW:
 
         if request.session.has_key ('timestamp') != True:
 
+            request.session['timestamp'] = datetime.now ()
+            request.session.save ()
+
             VIEW.init (request)
 
-        request.session['timestamp'] = datetime.now ()
-        request.session.save ()
+        else:
+
+            request.session['timestamp'] = datetime.now ()
+            request.session.save ()
 
         print "Session ID: %s" % request.session.session_key
         print "Time Stamp: %s" % request.session['timestamp']
@@ -67,47 +122,42 @@ class POST:
 
     def node (request):
 
+        ps = PROJECT.objects.filter (sid = request.session.session_key)
+        ps = sorted (ps, lambda lhs, rhs: cmp (lhs.rank, rhs.rank))
+
         if request.POST['node'] == 'root':
 
-            ds = request.session['projects']
-
-            ls = zip(ds.keys (), ds.values ())
-            ls = sorted (ls, lambda (k1,v1), (k2,v2): cmp (k1,k2))
-
-            js_string = json.dumps (map (lambda (key, value): {
-                'text': value['name'],
-                'id': key,
+            js_string = json.dumps (map (lambda prj: {
+                'text': prj.name,
+                'id': str (prj.pk),
                 'cls': "folder",
                 'iconCls': "icon-report"
-            }, ls))
+            }, ps))
 
-        elif (request.POST['node'] in request.session['projects'].keys ()):
+        elif (request.POST['node'] in map (lambda prj: str (prj.pk), ps)):
 
-            ds = request.session['files']
+            fs = FILE.objects.filter (project = request.POST['node'])
+            fs = sorted (fs, lambda lhs, rhs: cmp (lhs.rank, rhs.rank))
 
-            ls = zip(ds.keys (), ds.values ())
-            ls = filter (lambda (k,v): k.startswith (request.POST['node']), ls)
-            ls = sorted (ls, lambda (k1,v1), (k2,v2): cmp (k1,k2))
-
-            js_string = json.dumps (map (lambda (k,v): (v['type']=='toc') and {
-                'text'     : v['name'],
-                'id'       : k,
+            js_string = json.dumps (map (lambda file: (file.type=='toc') and {
+                'text'     : file.name,
+                'id'       : '%s.%s' % (request.POST['node'], str (file.pk)),
                 'cls'      : "file",
                 'iconCls'  : "icon-table",
                 'leaf'     : True,
                 'expanded' : False
             } or {
-                'text'     : v['name'],
-                'id'       : k,
+                'text'     : file.name,
+                'id'       : '%s.%s' % (request.POST['node'], str (file.pk)),
                 'cls'      : "folder",
                 'iconCls'  : "icon-page",
                 'leaf'     : False,
                 'expanded' : True
-            }, ls))
+            }, fs))
 
         else:
 
-            js_string = json.dumps([])
+            js_string = json.dumps ([])
 
         return HttpResponse (js_string, mimetype='application/json')
 
