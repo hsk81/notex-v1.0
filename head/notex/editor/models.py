@@ -7,7 +7,7 @@ class PROJECT (Model):
         ('prj', 'Default Project'),
     )
 
-    sid  = CharField (max_length=32, null=True, default=None)
+    sid  = CharField ('Session ID', max_length=32, null=True, default=None)
     name = CharField (max_length=256)
     type = CharField (max_length=3, choices=TYPES, default='prj')
     rank = PositiveIntegerField (default=0)

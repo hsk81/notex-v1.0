@@ -20,9 +20,9 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^post/node/$',
-        POST.node,
-        name='post.node'
+        r'^post/tree/$',
+        POST.tree,
+        name='post.tree'
     ),
     
 )
@@ -35,3 +35,10 @@ else:
 
     from svc.urls import data_urlpatterns
     from models   import *
+
+    #
+    # TODO: Security/Session information validation required! ..
+    #
+
+    urlpatterns += data_urlpatterns (PROJECT)
+    urlpatterns += data_urlpatterns (FILE)

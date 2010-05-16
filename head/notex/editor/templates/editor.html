@@ -25,15 +25,23 @@ Ext.onReady(function() {
       , rootVisible : false
 
       , loader : new Ext.tree.TreeLoader({
-            url : '{% url editor:post.node %}'
+            url : '{% url editor:post.tree %}'
         })
 
       , root : {
             text     : 'Root'
-          , id       : 'root'
+          , id       : 'LMRHE33POQRCYIC3LVOQ====' //[u'root', []]
           , cls      : 'folder'
           , iconCls  : 'icon-folder'
           , expanded : true
+        }
+
+      , listeners : {
+            dblclick: function (node, event) {
+                if (node.attributes['cls'] == "file") {
+                    Ext.getCmp ('pnlRhsId').fireEvent ('show_tab', node)
+                }
+            }
         }
     }
 
@@ -79,6 +87,7 @@ Ext.onReady(function() {
       , layout     : 'fit'
       , autoScroll : true
       , iconCls    : 'icon-page_white_text'
+      , closable   : true
 
       , items : [{
             xtype  : 'htmleditor',
@@ -93,6 +102,7 @@ Ext.onReady(function() {
       , layout     : 'fit'
       , autoScroll : true
       , iconCls    : 'icon-page_white_code'
+      , closable   : true
 
       , items : [{
             layout       : 'hbox'
@@ -113,6 +123,7 @@ Ext.onReady(function() {
       , layout     : 'fit'
       , autoScroll : true
       , iconCls    : 'icon-page_white_acrobat'
+      , closable   : true
 
       , items : [{
             layout       : 'hbox'
@@ -133,6 +144,7 @@ Ext.onReady(function() {
       , layout     : 'fit'
       , autoScroll : true
       , iconCls    : 'icon-page_white_code_red'
+      , closable   : true
 
       , items : [{
             layout       : 'hbox'
@@ -153,6 +165,7 @@ Ext.onReady(function() {
       , layout     : 'fit'
       , autoScroll : true
       , iconCls    : 'icon-page_white_world'
+      , closable   : true
 
       , items : [{
             layout       : 'hbox'
@@ -170,17 +183,39 @@ Ext.onReady(function() {
     var pnlRhs = new Ext.TabPanel({
 
         activeTab       : 0
+      , id              : 'pnlRhsId'
       , enableTabScroll : true
       , tabPosition     : 'bottom'
 
       , items           : [
-           tabText
-           //tabLatex
-           //tabPdf
-           //tabHtml
-           //tabView
         ]
 
+      , listeners : {
+            show_tab: function (node) {
+                if (typeof(console) != 'undefined') {
+                    console.info (node)
+                }
+
+                var tab = this.findById (node.id)
+                if (!tab) {
+                    tab = this.add({
+                        title      : node.attributes['text']
+                      , id         : node.id
+                      , layout     : 'fit'
+                      , autoScroll : true
+                      , iconCls    : node.attributes['iconCls']
+                      , closable   : true
+
+                      , items : [{
+                            xtype  : 'htmleditor',
+                            anchor : '100% 100%'
+                      }]
+                    })
+                }
+                
+                this.activate (tab)
+            }
+        }
     });
 
     /**
