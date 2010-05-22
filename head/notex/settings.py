@@ -21,7 +21,7 @@ DATABASE_PORT = ''
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
-SITE_ID = 2
+SITE_ID = 3
 USE_I18N = True
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
@@ -45,7 +45,7 @@ MIDDLEWARE_CLASSES = (
 CACHE_BACKEND = 'memcached://127.0.0.1:11211'
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 259200 ## secs: three days
 SESSION_COOKIE_DOMAIN = None
@@ -61,11 +61,13 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
 
-    'django.contrib.auth'         ,
-    'django.contrib.contenttypes' ,
-    'django.contrib.sessions'     ,
-    'django.contrib.sites'        ,
-    'django.contrib.admin'        ,
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
 
     'svc', 'editor',
 )
+

@@ -8,7 +8,9 @@ from django.template                import TemplateDoesNotExist
 from editor.models import PROJECT
 from editor.models import FILE
 
-import sys, base64, json
+import sys
+import base64
+import json
 
 class VIEW:
 
@@ -17,11 +19,11 @@ class VIEW:
         prj000 = PROJECT.objects.create (
             sid  = request.session.session_key,
             name = 'Random Texts',
-            rank = 002,
+            rank = 002
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Table of Contents',
             type = 'toc',
             text = '..',
@@ -29,35 +31,35 @@ class VIEW:
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Abstract',
             text = '..',
-            rank = 1,
+            rank = 1
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Introduction',
             text = '..',
-            rank = 2,
+            rank = 2
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Related Work',
             text = '..',
             rank = 3
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Lorem Ipsum',
             text = '..',
             rank = 4
         )
 
         _ = FILE.objects.create (
-            prj = prj000,
+            project = prj000,
             name = 'Conclusion',
             text = '..',
             rank = 5
@@ -66,14 +68,14 @@ class VIEW:
         prj001 = PROJECT.objects.create (
             sid  = request.session.session_key,
             name = 'Notex Editor',
-            rank = 001,
+            rank = 001
         )
 
         _ = FILE.objects.create (
-            prj = prj001,
+            project = prj001,
             name = 'Tutorial',
             text = '..',
-            rank = 1,
+            rank = 1
         )
 
     init = staticmethod (init)

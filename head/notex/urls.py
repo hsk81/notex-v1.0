@@ -9,10 +9,7 @@ urlpatterns = patterns('',
     (r'^svc/',    include('svc.urls',    namespace='svc')),
     (r'^editor/', include('editor.urls', namespace='editor')),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
-    # to INSTALLED_APPS to enable admin documentation:
-    
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+  # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 
   # url(
@@ -24,10 +21,11 @@ urlpatterns = patterns('',
   #     name="base"
   # ),
 
-    url(
+    url (
         r'^json/info/$',
         DATA.info,
         name='json.info'
     ),
 
 )
+
