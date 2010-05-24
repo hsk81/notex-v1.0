@@ -40,5 +40,7 @@ else:
     # TODO: Security/Session information validation required! ..
     #
 
-    urlpatterns += data_urlpatterns (PROJECT)
-    urlpatterns += data_urlpatterns (FILE)
+    urlpatterns += data_urlpatterns (ROOT)
+    urlpatterns += data_urlpatterns (NODE)
+    urlpatterns += data_urlpatterns (LEAF)
+    

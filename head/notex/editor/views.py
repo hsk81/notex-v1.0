@@ -5,8 +5,9 @@ from django.http                    import Http404
 from django.views.generic.simple    import direct_to_template
 from django.template                import TemplateDoesNotExist
 
-from editor.models import PROJECT
-from editor.models import FILE
+from editor.models import ROOT, ROOT_TYPE
+from editor.models import NODE, NODE_TYPE
+from editor.models import LEAF, LEAF_TYPE
 
 import sys
 import base64
@@ -16,66 +17,87 @@ class VIEW:
 
     def init (request):
 
-        prj000 = PROJECT.objects.create (
-            sid  = request.session.session_key,
-            name = 'Random Texts',
-            rank = 002
+        root = ROOT.objects.create (
+            type = ROOT_TYPE.objects.get (_code='root'),
+            usid = request.session.session_key,
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        prj = NODE.objects.create (
+            type = NODE_TYPE.objects.get (_code='prj'),
+            root = root,
+            name = 'Notex Editor',
+            rank = 0
+        )
+
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
+            name = 'Tutorial',
+            text = '..',
+            rank = 1
+        )
+
+        prj = NODE.objects.create (
+            type = NODE_TYPE.objects.get (_code='prj'),
+            root = root,
+            name = 'Random Texts',
+            rank = 1,
+        )
+
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='toc'),
+            node = prj,
             name = 'Table of Contents',
-            type = 'toc',
             text = '..',
             rank = 0,
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
             name = 'Abstract',
             text = '..',
             rank = 1
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
             name = 'Introduction',
             text = '..',
             rank = 2
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
             name = 'Related Work',
             text = '..',
             rank = 3
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
             name = 'Lorem Ipsum',
             text = '..',
             rank = 4
         )
 
-        _ = FILE.objects.create (
-            project = prj000,
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='sct'),
+            node = prj,
             name = 'Conclusion',
             text = '..',
             rank = 5
         )
 
-        prj001 = PROJECT.objects.create (
-            sid  = request.session.session_key,
-            name = 'Notex Editor',
-            rank = 001
-        )
-
-        _ = FILE.objects.create (
-            project = prj001,
-            name = 'Tutorial',
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='idx'),
+            node = prj,
+            name = 'Index',
             text = '..',
-            rank = 1
+            rank = 6
         )
 
     init = staticmethod (init)
@@ -127,35 +149,35 @@ class POST:
         return json.dumps (map (lambda project: {
             'text'    : project.name,
             'id'      : base64.b32encode (
-                json.dumps ((PROJECT.__name__, [project.pk]))
+                json.dumps (('project', [project.pk]))
             ),
             'cls'     : "folder",
             'iconCls' : "icon-report"
-        }, projects.order_by ('rank')))
+        }, projects.order_by ('_rank')))
 
     project_nodes = staticmethod (project_nodes)
 
     def file_nodes (files):
 
-        return json.dumps (map (lambda file: (file.type=='toc') and {
+        return json.dumps (map (lambda file: (file.type.code=='toc') and {
             'text'     : file.name,
             'id'       : base64.b32encode (
-                json.dumps ((FILE.__name__, [file.project.pk, file.pk]))
+                json.dumps (('file', [file.node.pk, file.pk]))
             ),
             'cls'      : "file",
             'iconCls'  : "icon-table",
             'leaf'     : True,
             'expanded' : False
-        } or { # file.type == 'sct'|'idx'
+        } or { # file.type.code == 'sct'|'idx'
             'text'     : file.name,
             'id'       : base64.b32encode (
-                json.dumps ((FILE.__name__, [file.project.pk, file.pk]))
+                json.dumps (('file', [file.node.pk, file.pk]))
             ),
             'cls'      : "file",
             'iconCls'  : "icon-page",
             'leaf'     : False,
             'expanded' : True
-        }, files.order_by ('rank')))
+        }, files.order_by ('_rank')))
 
     file_nodes = staticmethod (file_nodes)
 
@@ -171,20 +193,22 @@ class POST:
 
         if type == 'root': # ids == []
 
+            root = ROOT.objects.get (_usid = request.session.session_key)
+
             js_string = POST.project_nodes (
-                PROJECT.objects.filter (sid = request.session.session_key)
+                NODE.objects.filter (_root = root)
             )
 
-        elif type == PROJECT.__name__:
+        elif type == 'project':
 
             js_string = POST.file_nodes (
-                FILE.objects.filter (project = ids[0])
+                LEAF.objects.filter (_node = ids[0])
             )
 
-        elif type == FILE.__name__:
+        elif type == 'file':
 
             js_string = POST.text_nodes (
-                FILE.objects.get (pk = ids[1])
+                LEAF.objects.get (pk = ids[1])
             )
 
         else:

@@ -21,7 +21,7 @@ DATABASE_PORT = ''
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
-SITE_ID = 3
+SITE_ID = 1
 USE_I18N = True
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
@@ -68,6 +68,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'svc', 'editor',
+    'util', 'base', 'svc', 'editor',
 )
-
