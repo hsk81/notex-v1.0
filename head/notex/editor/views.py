@@ -161,6 +161,7 @@ class POST:
 
         return json.dumps (map (lambda file: (file.type.code=='toc') and {
             'text'     : file.name,
+            'data'     : file.text,
             'id'       : base64.b32encode (
                 json.dumps (('file', [file.node.pk, file.pk]))
             ),
@@ -170,6 +171,7 @@ class POST:
             'expanded' : False
         } or { # file.type.code == 'sct'|'idx'
             'text'     : file.name,
+            'data'     : file.text,
             'id'       : base64.b32encode (
                 json.dumps (('file', [file.node.pk, file.pk]))
             ),

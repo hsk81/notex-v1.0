@@ -2,16 +2,16 @@
 
 {% block main %}
 <script type="text/javascript">
-Ext.onReady(function() {
+Ext.onReady (function () {
 
-    Ext.QuickTips.init();
+    Ext.QuickTips.init ();
 
     var session = {
         id: '{{ sid }}'
       , timestamp: '{{ timestamp }}'
     }
 
-    if (typeof(console)!='undefined') {
+    if (typeof (console) != 'undefined') {
         console.info (session)
     }
 
@@ -37,7 +37,7 @@ Ext.onReady(function() {
         }
 
       , listeners : {
-            dblclick: function (node, event) {
+            dblclick : function (node, event) {
                 if (node.attributes['cls'] == "file") {
                     Ext.getCmp ('pnlRhsId').fireEvent ('show_tab', node)
                 }
@@ -49,32 +49,40 @@ Ext.onReady(function() {
         title  : 'Project Manager'
       , layout : 'fit'
 
-      , tools:[{
-            id:'refresh',
-            handler: function(event, toolEl, panel) {
+      , tools  : [{
+            id : 'refresh'
+          , handler : function (event, toolEl, panel) {
                 //@TODO!
             }
         }]
 
       , tbar : {
             items : [{
-                iconCls       : 'icon-folder_page'
+                iconCls : 'icon-folder_page'
             },{
-                iconCls       : 'icon-disk'
+                iconCls : 'icon-disk'
             },'-',{
-                iconCls       : 'icon-add'
+                iconCls : 'icon-add'
             },{
-                iconCls       : 'icon-pencil'
+                iconCls : 'icon-pencil'
             },{
-                iconCls       : 'icon-delete'
+                iconCls : 'icon-delete'
             },'-',{
-                iconCls       : 'icon-arrow_up'
+                iconCls : 'icon-arrow_up'
             },{
-                iconCls       : 'icon-arrow_down'
+                iconCls : 'icon-arrow_down'
             }]
         }
 
       , items : [pnlTree]
+      /*
+      , listeners : [{
+            click : function (a, b, c, d) {
+                if (typeof (console) != 'undefined') {
+                    console.info (a, b, c, d)
+                }
+            }
+        }]*/
     }
 
     /**
@@ -207,8 +215,9 @@ Ext.onReady(function() {
                       , closable   : true
 
                       , items : [{
-                            xtype  : 'htmleditor',
-                            anchor : '100% 100%'
+                            xtype  : 'htmleditor'
+                          , anchor : '100% 100%'
+                          , html   : node.attributes['data']
                       }]
                     })
                 }
