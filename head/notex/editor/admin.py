@@ -19,7 +19,7 @@ class ROOTAdmin (admin.ModelAdmin):
 class ROOT_TYPEAdmin (admin.ModelAdmin):
 
     search_fields = ['code', 'desc']
-    list_display = ('code', 'description')
+    list_display = ('code', 'description', 'icon')
 
     def description (self, obj):
 
@@ -36,7 +36,7 @@ class NODEAdmin (admin.ModelAdmin):
 class NODE_TYPEAdmin (admin.ModelAdmin):
 
     search_fields = ['code', 'desc']
-    list_display = ('code', 'description')
+    list_display = ('code', 'description', 'icon')
 
     def description (self, obj):
 
@@ -53,7 +53,7 @@ class LEAFAdmin (admin.ModelAdmin):
 class LEAF_TYPEAdmin (admin.ModelAdmin):
 
     search_fields = ['code', 'desc']
-    list_display = ('code', 'description')
+    list_display = ('code', 'description', 'icon')
 
     def description (self, obj):
 

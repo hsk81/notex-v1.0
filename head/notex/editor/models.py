@@ -6,10 +6,15 @@ from django.db.models               import *
 class BASE_TYPE (BaseModel):
 
     _code = CharField (max_length=32, unique=True)
+    _icon = CharField (max_length=256, blank=True, default='')
     _desc = CharField (max_length=256)
 
     code = property (
         lambda s: getattr (s, '_code'), lambda s, v: setattr (s, '_code', v)
+    )
+
+    icon = property (
+        lambda s: getattr (s, '_icon'), lambda s, v: setattr (s, '_icon', v)
     )
 
     desc = property (

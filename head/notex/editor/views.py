@@ -30,7 +30,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Tutorial',
             text = '..',
@@ -45,7 +45,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='toc'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Table of Contents',
             text = '..',
@@ -53,7 +53,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Abstract',
             text = '..',
@@ -61,7 +61,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Introduction',
             text = '..',
@@ -69,7 +69,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Related Work',
             text = '..',
@@ -77,7 +77,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Lorem Ipsum',
             text = '..',
@@ -85,7 +85,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='sct'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Conclusion',
             text = '..',
@@ -93,7 +93,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='idx'),
+            type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
             name = 'Index',
             text = '..',
@@ -144,50 +144,42 @@ class DATA:
 
 class POST:
 
-    def project_nodes (projects):
+    def nodes (ns):
 
-        return json.dumps (map (lambda project: {
-            'text'    : project.name,
-            'id'      : base64.b32encode (
-                json.dumps (('project', [project.pk]))
-            ),
-            'cls'     : "folder",
-            'iconCls' : "icon-report"
-        }, projects.order_by ('_rank')))
-
-    project_nodes = staticmethod (project_nodes)
-
-    def file_nodes (files):
-
-        return json.dumps (map (lambda file: (file.type.code=='toc') and {
-            'text'     : file.name,
-            'data'     : file.text,
+        return json.dumps (map (lambda node: {
+            'text'     : node.name,
             'id'       : base64.b32encode (
-                json.dumps (('file', [file.node.pk, file.pk]))
+                json.dumps (('node', [node.pk]))
+            ),
+            'cls'      : "folder",
+            'iconCls'  : node.type.icon,
+            'leaf'     : False,
+            'expanded' : False
+        }, ns.order_by ('_rank')))
+
+    nodes = staticmethod (nodes)
+
+    def leafs (ls):
+
+        return json.dumps (map (lambda leaf: {
+            'text'     : leaf.name,
+            'data'     : leaf.text,
+            'id'       : base64.b32encode (
+                json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
             ),
             'cls'      : "file",
-            'iconCls'  : "icon-table",
+            'iconCls'  : leaf.type.icon,
             'leaf'     : True,
             'expanded' : False
-        } or { # file.type.code == 'sct'|'idx'
-            'text'     : file.name,
-            'data'     : file.text,
-            'id'       : base64.b32encode (
-                json.dumps (('file', [file.node.pk, file.pk]))
-            ),
-            'cls'      : "file",
-            'iconCls'  : "icon-page",
-            'leaf'     : False,
-            'expanded' : True
-        }, files.order_by ('_rank')))
+        }, ls.order_by ('_rank')))
 
-    file_nodes = staticmethod (file_nodes)
+    leafs = staticmethod (leafs)
 
-    def text_nodes (file):
+    def texts (ts):
 
         return json.dumps ([])
 
-    text_nodes = staticmethod (text_nodes)
+    texts = staticmethod (texts)
 
     def tree (request):
 
@@ -197,19 +189,19 @@ class POST:
 
             root = ROOT.objects.get (_usid = request.session.session_key)
 
-            js_string = POST.project_nodes (
+            js_string = POST.nodes (
                 NODE.objects.filter (_root = root)
             )
 
-        elif type == 'project':
+        elif type == 'node':
 
-            js_string = POST.file_nodes (
+            js_string = POST.leafs (
                 LEAF.objects.filter (_node = ids[0])
             )
 
-        elif type == 'file':
+        elif type == 'leaf':
 
-            js_string = POST.text_nodes (
+            js_string = POST.texts (
                 LEAF.objects.get (pk = ids[1])
             )
 

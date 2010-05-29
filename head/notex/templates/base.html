@@ -12,9 +12,12 @@
   <!-- This must come BEFORE javascript includes! -->
   <link rel="stylesheet" type="text/css"
         href="{{ MEDIA_URL }}lib/extjs-3.2/include/resources/css/ext-all.css">
- 
+
+  <link rel="stylesheet" type="text/css"
+        href="{{ MEDIA_URL }}lib/extjs-3.2/include/resources/css/xtheme-gray.css">
+
   <!-- Include here your own css files if you have them. -->
-  {% block css %}
+  {% block icon-css %}
   <link rel="stylesheet" 
         type="text/css"
         href="{{ MEDIA_URL }}ico/silk/icons.css" />
