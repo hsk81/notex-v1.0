@@ -24,7 +24,13 @@ urlpatterns = patterns('',
         POST.tree,
         name='post.tree'
     ),
-    
+
+    url(
+        r'^post/save$',
+        POST.save,
+        name='post.save'
+    ),
+
 )
 
 if __name__ == "__main__":

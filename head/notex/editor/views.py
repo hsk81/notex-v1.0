@@ -213,6 +213,29 @@ class POST:
 
     tree = staticmethod (tree)
 
+    def save (request):
+
+        (type, ids) = json.loads (base64.b32decode (request.POST['id']))
+
+        if type == 'leaf':
+
+            try:
+                leaf = LEAF.objects.get (pk = ids[1])
+                leaf.text = request.POST['data']
+                leaf.save ()
+
+                js_string = json.dumps ([{'success':'true' }])
+            except:
+                js_string = json.dumps ([{'success':'false'}])
+
+        else:
+
+            js_string = json.dumps ([{'success':'false'}])
+
+        return HttpResponse (js_string, mimetype='application/json')
+    
+    save = staticmethod (save)
+
 if __name__ == "__main__":
 
     pass

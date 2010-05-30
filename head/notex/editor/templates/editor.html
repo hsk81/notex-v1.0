@@ -11,6 +11,10 @@ Ext.onReady (function () {
       , timestamp: '{{ timestamp }}'
     }
 
+    var urls = {
+        save: '{% url editor:post.save %}'
+    }
+
     if (typeof (console) != 'undefined') {
         console.info (session)
     }
@@ -21,6 +25,7 @@ Ext.onReady (function () {
 
     var pnlTree = {
         xtype       : 'treepanel'
+      , id          : 'pnlTreeId'
       , autoScroll  : true
       , rootVisible : false
 
@@ -46,12 +51,12 @@ Ext.onReady (function () {
     }
 
     var pnlLhs = {
-        title  : 'Project Manager'
+        title  : 'Report Manager'
       , layout : 'fit'
 
       , tools  : [{
             id      : 'refresh'
-          , qtip    : '<b>Refresh</b><br/>Refresh project manager\'s view'
+          , qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view'
           , handler : function (event, toolEl, panel) {
                 //@TODO!
             }
@@ -60,22 +65,61 @@ Ext.onReady (function () {
       , tbar : {
             items : [{
                 iconCls : 'icon-disk_download'
-              , tooltip : '<b>Import</b><br/>Open a project (from <i>local</i> storage)'
+              , tooltip : '<b>Import</b><br/>Open a report (from <i>local</i> storage)'
             },{
                 iconCls : 'icon-disk_upload'
-              , tooltip : '<b>Export</b><br/>Save selected project (to <i>local</i> storage)'
+              , tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)'
             },'-',{
                 iconCls : 'icon-folder_page'
-              , tooltip : '<b>Open</b><br/>Open a text/image file (from <i>local</i> storage)'
+              , tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)'
             },{
                 iconCls : 'icon-disk'
               , tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)'
+              , handler : function (button, event) {
+
+                    var tabPanel = Ext.getCmp ('pnlRhsId')
+                    var tab = tabPanel.getActiveTab ()
+                    if (tab != undefined)
+                    {
+                        tab.el.mask ('Please wait', 'x-mask-loading')
+
+                        var tree = Ext.getCmp ('pnlTreeId')
+                        var node = tree.getNodeById (tab.id)
+
+                        Ext.Ajax.request ({
+
+                            url    : urls.save
+                          , params : {
+                                'id'   : node.id
+                              , 'data' : tab.findById ('htmlEdId').getValue ()
+                            }
+
+                          , success: function (xhr, opts) {
+                                var htmlEd = tab.findById ('htmlEdId')
+                                node.attributes['data'] = htmlEd.getValue ()
+                                tab.el.unmask ()
+                            }
+
+                          , failure: function (xhr, opts) {
+                                tab.el.unmask ()
+
+                                Ext.MessageBox.show ({
+                                    title    : 'Error'
+                                  , msg      : xhr.responseText
+                                  , closable : false
+                                  , width    : 256
+                                  , buttons  : Ext.MessageBox.OK
+                                })
+                            }
+                        })
+                    }
+                }
             },{
                 iconCls : 'icon-disk_multiple'
               , tooltip : '<b>Save All</b><br/>Save all files (to <i>remote</i> storage)'
             },'-',{
                 iconCls : 'icon-add'
-              , tooltip : '<b>Add</b><br/>Add a new project, folder or file'
+              , tooltip : '<b>Add</b><br/>Add a new report, folder or file'
               , split   : true
               , menu    : {
                   xtype : 'menu'
@@ -83,144 +127,40 @@ Ext.onReady (function () {
 
                 , items : [{
                       iconCls : 'icon-report'
-                    , text    : 'Project'
+                    , text    : 'Report'
                   },{
                       iconCls : 'icon-folder'
                     , text    : 'Folder'
-                  },'-',{
+                  },{
                       iconCls : 'icon-page'
                     , text    : 'Plain Text'
+                  },'-',{
+                      iconCls : 'icon-image'
+                    , text    : 'Image'
                   }]
 
                 }
             },{
                 iconCls : 'icon-pencil'
-              , tooltip : '<b>Rename</b><br/>Rename selected project, folder or file'
+              , tooltip : '<b>Rename</b><br/>Rename selected report, folder or file'
             },{
                 iconCls : 'icon-delete'
-              , tooltip : '<b>Delete</b><br/>Delete selected project, folder or file'
+              , tooltip : '<b>Delete</b><br/>Delete selected report, folder or file'
             },'-',{
                 iconCls : 'icon-arrow_up'
-              , tooltip : '<b>Move Up</b><br/>Move selected project, folder or file up in tree'
+              , tooltip : '<b>Move Up</b><br/>Move selected report, folder or file up in tree'
             },{
                 iconCls : 'icon-arrow_down'
-              , tooltip : '<b>Move Down</b><br/>Move selected project, folder or file down in tree'
+              , tooltip : '<b>Move Down</b><br/>Move selected report, folder or file down in tree'
             }]
         }
 
       , items : [pnlTree]
-      /*
-      , listeners : [{
-            click : function (a, b, c, d) {
-                if (typeof (console) != 'undefined') {
-                    console.info (a, b, c, d)
-                }
-            }
-        }]*/
     }
 
     /**
      * pnlRhs -----------------------------------------------------------------
      */
-
-    var tabText = {
-
-        title      : 'Plain'
-      , layout     : 'fit'
-      , autoScroll : true
-      , iconCls    : 'icon-page_white_text'
-      , closable   : true
-
-      , items : [{
-            xtype  : 'htmleditor',
-            anchor : '100% 100%'
-      }]
-
-    }
-
-    var tabLatex = {
-
-        title      : 'Latex'
-      , layout     : 'fit'
-      , autoScroll : true
-      , iconCls    : 'icon-page_white_code'
-      , closable   : true
-
-      , items : [{
-            layout       : 'hbox'
-          , layoutConfig : { align : 'middle', pack: 'center' }
-          , items : [{
-                width  : 128
-              , height : 128
-              , html   : '<img \
-                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
-          }]
-      }]
-
-    }
-
-    var tabPdf = {
-
-        title      : 'PDF'
-      , layout     : 'fit'
-      , autoScroll : true
-      , iconCls    : 'icon-page_white_acrobat'
-      , closable   : true
-
-      , items : [{
-            layout       : 'hbox'
-          , layoutConfig : { align : 'middle', pack: 'center' }
-          , items : [{
-                width  : 128
-              , height : 128
-              , html   : '<img \
-                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
-          }]
-      }]
-
-    }
-
-    var tabHtml = {
-
-        title      : 'HTML'
-      , layout     : 'fit'
-      , autoScroll : true
-      , iconCls    : 'icon-page_white_code_red'
-      , closable   : true
-
-      , items : [{
-            layout       : 'hbox'
-          , layoutConfig : { align : 'middle', pack: 'center' }
-          , items : [{
-                width  : 128
-              , height : 128
-              , html   : '<img \
-                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
-          }]
-      }]
-
-    }
-
-    var tabView = {
-
-        title      : 'HTML View'
-      , layout     : 'fit'
-      , autoScroll : true
-      , iconCls    : 'icon-page_white_world'
-      , closable   : true
-
-      , items : [{
-            layout       : 'hbox'
-          , layoutConfig : { align : 'middle', pack: 'center' }
-          , items : [{
-                width  : 128
-              , height : 128
-              , html   : '<img \
-                    src="{{ MEDIA_URL }}img/mid/under_construction.jpg">'
-          }]
-      }]
-
-    }
 
     var pnlRhs = new Ext.TabPanel({
 
@@ -233,25 +173,26 @@ Ext.onReady (function () {
         ]
 
       , listeners : {
-            show_tab: function (node) {
+            show_tab: function (leaf) {
                 if (typeof(console) != 'undefined') {
-                    console.info (node)
+                    console.info (leaf)
                 }
 
-                var tab = this.findById (node.id)
+                var tab = this.findById (leaf.id)
                 if (!tab) {
                     tab = this.add({
-                        title      : node.attributes['text']
-                      , id         : node.id
+                        title      : leaf.attributes['text']
+                      , id         : leaf.id
                       , layout     : 'fit'
                       , autoScroll : true
-                      , iconCls    : node.attributes['iconCls']
+                      , iconCls    : leaf.attributes['iconCls']
                       , closable   : true
 
                       , items : [{
                             xtype  : 'htmleditor'
+                          , id     : 'htmlEdId'
                           , anchor : '100% 100%'
-                          , html   : node.attributes['data']
+                          , html   : leaf.attributes['data']
                       }]
                     })
                 }
