@@ -220,17 +220,29 @@ class POST:
         if type == 'leaf':
 
             try:
+
                 leaf = LEAF.objects.get (pk = ids[1])
                 leaf.text = request.POST['data']
                 leaf.save ()
 
-                js_string = json.dumps ([{'success':'true' }])
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'id'      : request.POST['id']
+                }])
+
             except:
-                js_string = json.dumps ([{'success':'false'}])
+
+                js_string = json.dumps ([{
+                    'success' : 'false',
+                    'id'      : request.POST['id']
+                }])
 
         else:
 
-            js_string = json.dumps ([{'success':'false'}])
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'id'      : request.POST['id']
+            }])
 
         return HttpResponse (js_string, mimetype='application/json')
     

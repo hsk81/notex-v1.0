@@ -31,6 +31,12 @@ urlpatterns = patterns('',
         name='post.save'
     ),
 
+    url(
+        r'^post/save/all$',
+        POST.save,
+        name='post.save_all'
+    ),
+
 )
 
 if __name__ == "__main__":
