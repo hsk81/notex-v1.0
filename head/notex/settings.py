@@ -12,6 +12,11 @@ SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
 SITE_HOST = 'blackhan.ch'
 
+import socket
+if socket.gethostname() != SITE_HOST:
+
+    SITE_HOST = 'localhost'
+
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = os.path.join (SITE_ROOT, 'sqlite.db')
 DATABASE_USER = ''
