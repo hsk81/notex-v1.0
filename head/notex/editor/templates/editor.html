@@ -14,6 +14,13 @@ Ext.onReady (function () {
     var urls = {
         save: '{% url editor:post.save %}'
       , saveAll: '{% url editor:post.save_all %}'
+
+      , create: '{% url editor:post.create %}'
+      , read: '{% url editor:post.read %}'
+      , update: '{% url editor:post.update %}'
+      , del: '{% url editor:post.delete %}'
+
+      , crud: '{% url editor:post.crud %}'
     }
 
     if (typeof (console) != 'undefined') {
@@ -49,6 +56,14 @@ Ext.onReady (function () {
                 }
             }
         }
+
+      , insert_node : function (node) {
+
+            //
+            // @TODO: Implement!
+            //
+
+        }
     }
 
     var pnlLhs = {
@@ -63,6 +78,14 @@ Ext.onReady (function () {
             }
         }]
 
+      , bbar : {
+            items : [{
+               xtype      : 'textfield'
+             , inputType  : 'file'
+             , id         : 'btnOpenFile'
+            }]
+      }
+
       , tbar : {
             items : [{
                 iconCls : 'icon-disk_download'
@@ -73,6 +96,20 @@ Ext.onReady (function () {
             },'-',{
                 iconCls : 'icon-folder_page'
               , tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)'
+              , handler : function (button, event) {
+
+                    var tabPanel = Ext.getCmp ('pnlRhsId')
+                    var pnlTree = Ext.getCmp ('pnlTreeId')
+
+                    // 1. Open a file dialog-box -> filename
+                    var btnOpenFile = Ext.getCmp('bntOpenFile')
+                    btnOpenFile.click()
+                    
+                    // 2. Open file and read name & content
+                    // 3. Create remote file on server
+                    // 4. Open a new tab and show file content
+
+                }
             },{
                 iconCls : 'icon-disk'
               , tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)'
@@ -258,7 +295,7 @@ Ext.onReady (function () {
                       }]
                     })
                 }
-                
+
                 this.activate (tab)
             }
         }

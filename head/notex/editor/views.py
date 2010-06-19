@@ -163,7 +163,7 @@ class POST:
 
         return json.dumps (map (lambda leaf: {
             'text'     : leaf.name,
-            'data'     : leaf.text,
+            'data'     : leaf.text, ## TODO: Remove and implement separately!
             'id'       : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
             ),
@@ -247,6 +247,47 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
     
     save = staticmethod (save)
+
+    def save_all (request):
+
+        ##
+        ## TODO: Implement a *save* for *all* document which are currently open
+        ##       and have been edited!
+        ##
+
+        pass
+
+    save_all = staticmethod (save_all)
+
+    def create (request):
+
+        pass
+
+    create = staticmethod (create)
+
+    def read (request):
+
+        pass
+
+    read = staticmethod (read)
+
+    def update (request):
+
+        pass
+
+    update = staticmethod (update)
+
+    def delete (request):
+
+        pass
+
+    delete = staticmethod (delete)
+
+    def crud (request):
+
+        pass
+
+    crud = staticmethod (crud)
 
 if __name__ == "__main__":
 

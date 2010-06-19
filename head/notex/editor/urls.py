@@ -26,15 +26,45 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^post/save$',
+        r'^post/save/$',
         POST.save,
         name='post.save'
     ),
 
     url(
-        r'^post/save/all$',
+        r'^post/save/all/$',
         POST.save,
         name='post.save_all'
+    ),
+
+    url(
+        r'^post/create/$',
+        POST.create,
+        name='post.create'
+    ),
+
+    url(
+        r'^post/read/$',
+        POST.read,
+        name='post.read'
+    ),
+
+    url(
+        r'^post/update/$',
+        POST.update,
+        name='post.update'
+    ),
+
+    url(
+        r'^post/delete/$',
+        POST.delete,
+        name='post.delete'
+    ),
+
+    url(
+        r'^post/crud/$',
+        POST.crud,
+        name='post.crud'
     ),
 
 )
