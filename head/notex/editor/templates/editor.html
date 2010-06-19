@@ -101,10 +101,22 @@ Ext.onReady (function () {
                     var tabPanel = Ext.getCmp ('pnlRhsId')
                     var pnlTree = Ext.getCmp ('pnlTreeId')
 
+                    /*function buildWindow() {
+                        var win = new Ext.Window({ // 1
+                            id : 'myWindow',
+                            title : 'My first Ext JS Window',
+                            width : 300,
+                            height : 150,
+                            layout : 'fit',
+                            autoLoad : { // 2
+                                url : 'sayHi.html',
+                                scripts : true
+                            }
+                        });
+                        win.show(); // 3
+                    }*/
+
                     // 1. Open a file dialog-box -> filename
-                    var btnOpenFile = Ext.getCmp('bntOpenFile')
-                    btnOpenFile.click()
-                    
                     // 2. Open file and read name & content
                     // 3. Create remote file on server
                     // 4. Open a new tab and show file content
