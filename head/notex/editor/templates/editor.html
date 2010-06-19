@@ -78,14 +78,6 @@ Ext.onReady (function () {
             }
         }]
 
-      , bbar : {
-            items : [{
-               xtype      : 'textfield'
-             , inputType  : 'file'
-             , id         : 'btnOpenFile'
-            }]
-      }
-
       , tbar : {
             items : [{
                 iconCls : 'icon-disk_download'
@@ -101,25 +93,75 @@ Ext.onReady (function () {
                     var tabPanel = Ext.getCmp ('pnlRhsId')
                     var pnlTree = Ext.getCmp ('pnlTreeId')
 
-                    /*function buildWindow() {
-                        var win = new Ext.Window({ // 1
-                            id : 'myWindow',
-                            title : 'My first Ext JS Window',
-                            width : 300,
-                            height : 150,
-                            layout : 'fit',
-                            autoLoad : { // 2
-                                url : 'sayHi.html',
-                                scripts : true
-                            }
-                        });
-                        win.show(); // 3
-                    }*/
+                    var win = new Ext.Window({
 
-                    // 1. Open a file dialog-box -> filename
-                    // 2. Open file and read name & content
-                    // 3. Create remote file on server
-                    // 4. Open a new tab and show file content
+                        layout    : 'fit'
+                      , id        : 'inputFileWindowId'
+                      , title     : 'Open File'
+                      , frame     : true
+                      , modal     : true
+                      , draggable : true
+                      , plain     : false
+                      , border    : false
+                      , closable  : false
+                      , resizable : false
+                        
+                      , items : [{
+                            layout : 'hbox'
+                          , frame  : true
+                          , width  : 267
+                          , height : 36
+                          , layoutConfig : {
+                                pack  : 'center'
+                              , align : 'middle'
+                          }
+                          , items : [{
+                                xtype     : 'textfield'
+                              , inputType : 'file'
+                              , id        : 'inputFileId'
+                          }]
+                        }]
+
+                      , bbar : ['->', {
+                            text    : 'Cancel'
+                          , style   : 'padding: 5 0 5 0;'
+                          , iconCls : 'icon-cross'
+                          , handler : function (btn) {
+                                win.close ();
+                          }
+                      },{
+                            text    : 'Open'
+                          , style   : 'padding: 5 0 5 0;'
+                          , iconCls : 'icon-folder_page'
+                          , handler : function (btn) {
+                            
+                                var cmp = Ext.getCmp("inputFileId");
+                                if (cmp.el.dom.files.length > 0) {
+
+                                    win.el.mask ('Please wait', 'x-mask-loading')
+                                    var file = cmp.el.dom.files[0]
+                                    var fileText = file.getAsBinary();
+
+                                    if (typeof (console) != 'undefined') {
+                                        console.info (fileText)
+                                    }
+
+                                    if (fileText != undefined) {
+
+                                        //
+                                        // @TODO!
+                                        //
+
+                                    }
+
+                                    win.el.unmask ()
+                                    win.close ()
+                                }
+                          }
+                      }]
+                    })
+                    
+                    win.show();
 
                 }
             },{
