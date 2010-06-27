@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block main %}
+<script type="text/javascript">
+
+    var session = {
+        id: '{{ sid }}'
+      , timestamp: '{{ timestamp }}'
+    }
+
+    var urls = {
+        save: '{% url editor:post.save %}'
+      , saveAll: '{% url editor:post.save_all %}'
+
+      , create: '{% url editor:post.create %}'
+      , read: '{% url editor:post.read %}'
+      , update: '{% url editor:post.update %}'
+      , del: '{% url editor:post.delete %}'
+
+      , crud: '{% url editor:post.crud %}'
+    }
+
+    if (typeof (console) != 'undefined') {
+        console.info (session)
+    }
+    
+</script>
+
+<script type="text/javascript" src="{% url editor:reportManager.js %}"></script>
+<script type="text/javascript" src="{% url editor:editorTabs.js %}"></script>
+
+<script type="text/javascript">
+Ext.onReady (function () {
+
+    Ext.QuickTips.init ();
+
+    /**
+     * viewport ---------------------------------------------------------------
+     */
+
+    var viewport = new Ext.Viewport({
+
+        layout : 'border'
+      , id     : 'viewportId'
+
+      , items : [{
+            region : 'center'
+          , layout : 'fit'
+          , items  : [pnlEditorTabs]
+
+      },{
+            region       : 'west'
+          , split        : true
+          , minWidth     : 268
+          , width        : 268
+          , collapsed    : false
+          , collapseMode : 'mini'
+          , hidden       : false
+          , layout       : 'fit'
+          , items        : [pnlReportManager]
+      }]
+    });
+
+    viewport.show ();
+
+});</script>
+{% endblock %}

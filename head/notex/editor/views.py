@@ -121,7 +121,7 @@ class VIEW:
 
         return direct_to_template (
             request,
-            template ='editor.html',
+            template ='viewport.html',
             extra_context = {
                 'sid': request.session.session_key,
                 'timestamp': request.session['timestamp']

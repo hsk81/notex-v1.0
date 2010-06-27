@@ -8,63 +8,61 @@ from views import POST
 urlpatterns = patterns('',
 
     url(
-        r'^$',
-        VIEW.main,
-        name='view.main'
+        r'^$', VIEW.main, name='view.main'
     ),
 
     url(
-        r'^json/info/$',
-        DATA.info,
-        name='json.info'
+        r'^reportManager.js$',
+        direct_to_template, {
+            'template'      : 'reportManager.js',
+            'extra_context' : {}
+        },
+        name='reportManager.js'
     ),
 
     url(
-        r'^post/tree/$',
-        POST.tree,
-        name='post.tree'
+        r'^editorTabs.js$',
+        direct_to_template, {
+            'template'      : 'editorTabs.js',
+            'extra_context' : {}
+        },
+        name='editorTabs.js'
     ),
 
     url(
-        r'^post/save/$',
-        POST.save,
-        name='post.save'
+        r'^json/info/$', DATA.info, name='json.info'
     ),
 
     url(
-        r'^post/save/all/$',
-        POST.save,
-        name='post.save_all'
+        r'^post/tree/$', POST.tree, name='post.tree'
     ),
 
     url(
-        r'^post/create/$',
-        POST.create,
-        name='post.create'
+        r'^post/save/$', POST.save, name='post.save'
     ),
 
     url(
-        r'^post/read/$',
-        POST.read,
-        name='post.read'
+        r'^post/save/all/$', POST.save, name='post.save_all'
     ),
 
     url(
-        r'^post/update/$',
-        POST.update,
-        name='post.update'
+        r'^post/create/$', POST.create, name='post.create'
     ),
 
     url(
-        r'^post/delete/$',
-        POST.delete,
-        name='post.delete'
+        r'^post/read/$', POST.read, name='post.read'
     ),
 
     url(
-        r'^post/crud/$',
-        POST.crud,
-        name='post.crud'
+        r'^post/update/$', POST.update, name='post.update'
+    ),
+
+    url(
+        r'^post/delete/$', POST.delete, name='post.delete'
+    ),
+
+    url(
+        r'^post/crud/$', POST.crud, name='post.crud'
     ),
 
 )
