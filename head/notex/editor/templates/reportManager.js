@@ -8,7 +8,7 @@ var pnlTree = new Ext.tree.TreePanel ({
   , rootVisible : false
 
   , loader : new Ext.tree.TreeLoader({
-        url : '{% url editor:post.tree %}'
+        url : '{% url editor:post.read %}'
     })
 
   , root : {
@@ -24,10 +24,10 @@ var pnlTree = new Ext.tree.TreePanel ({
             if (node.attributes['cls'] == "file") {
 
                 var tabInfo = {
-                    id      : node.id,
-                    title   : node.attributes['text'],
-                    text    : node.attributes['data'],
-                    iconCls : node.attributes['iconCls']
+                    id      : node.id
+                  , title   : node.attributes['text']
+                  , text    : node.attributes['data']
+                  , iconCls : node.attributes['iconCls']
                 }
 
                 Ext.getCmp ('pnlEditorTabsId').fireEvent (
@@ -36,43 +36,57 @@ var pnlTree = new Ext.tree.TreePanel ({
             }
         }
 
-      , insertNode : function (nodeInfo) {
+      , insertNode : function (nodeInfo, fnCallback) {
 
             var selectionModel = this.getSelectionModel ()
             var selectedNode = selectionModel.getSelectedNode ()
 
-            if (selectedNode != undefined) {
-                if (selectedNode.isLeaf ()) {
-                    var parentNode = selectedNode.parentNode
-                    if (parentNode != undefined) {
+            if (selectedNode != null) {
 
-                        var node = new Ext.tree.TreeNode ({
-                            'text'     : nodeInfo.title,
-                            'data'     : nodeInfo.text,
-                            'id'       : nodeInfo.id,
-                            'cls'      : "file",
-                            'iconCls'  : nodeInfo.iconCls,
-                            'leaf'     : true,
-                            'expanded' : false
-                        })
+                var fn = function (nodeInfo, node) {
 
-                        parentNode.insertBefore(node, null)
-                    } else {
-                        //
-                        // @TODO!
-                        //
+                    node.insertBefore(
+                        new Ext.tree.TreeNode ({
+                            'text'     : nodeInfo.title
+                          , 'data'     : nodeInfo.text
+                          , 'id'       : nodeInfo.id
+                          , 'cls'      : "file"
+                          , 'iconCls'  : nodeInfo.iconCls
+                          , 'leaf'     : true
+                          , 'expanded' : false
+                        }), null
+                    )
+
+                    Ext.getCmp ('pnlEditorTabsId').fireEvent (
+                        'insertTab', nodeInfo
+                    )
+
+                    if (fnCallback != undefined) {
+                        fnCallback (true, null)
                     }
-                } else {
-                    //
-                    // @TODO!
-                    //
                 }
+
+                if (selectedNode.isLeaf ()) {
+                    fn (nodeInfo, selectedNode.parentNode)
+                } else {
+                    if (!selectedNode.expanded) {
+                        selectedNode.addListener ('expand', function () {
+                            fn (nodeInfo, selectedNode)
+                            selectedNode.purgeListeners ()
+                        })
+                        selectedNode.expand ()
+                    } else {
+                        fn (nodeInfo, selectedNode)
+                    }
+                }
+
             } else {
-                //
-                // @TODO!
-                //
+                if (fnCallback != undefined) {
+                    fnCallback (false, 'no node selected')
+                }
             }
         }
+        
     }
 });
 
@@ -101,12 +115,12 @@ var wndOpenFile = new Ext.Window ({
       , layoutConfig : {
             pack  : 'center'
           , align : 'middle'
-      }
+        }
       , items : [{
             xtype     : 'textfield'
           , inputType : 'file'
           , id        : 'inputOpenFileId'
-      }]
+        }]
     }]
 
   , bbar : ['->', {
@@ -122,9 +136,6 @@ var wndOpenFile = new Ext.Window ({
       , iconCls : 'icon-folder_page'
       , handler : function (btn) {
 
-            var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
-            var pnlTree = Ext.getCmp ('pnlTreeId')
-
             var cmp = Ext.getCmp("inputOpenFileId");
             if (cmp.el.dom.files.length > 0) {
 
@@ -135,26 +146,33 @@ var wndOpenFile = new Ext.Window ({
                 var file = cmp.el.dom.files[0]
                 var fileText = file.getAsBinary ()
 
-                if (fileText != undefined) {
+                if (fileText != null) {
 
                     var fileInfo = {
-                        id      : 0,
-                        title   : String.format (
-                            "<i>{0}</i>", file.name
-                        ),
-                        text    : fileText.replace (
+                        id      : Math.uuid ()
+                      , title   : file.name
+                      , text    : fileText.replace (
                             "\n", "<br>", 'g'
-                        ),
-                        iconCls : 'icon-page'
+                        )
+                      , iconCls : 'icon-page'
                     }
 
-                    pnlTree.fireEvent (
-                        'insertNode', fileInfo
+                    Ext.getCmp ('pnlTreeId').fireEvent (
+                        'insertNode', fileInfo, function (result, msg) {
+                            if (!result) {
+                                Ext.Msg.alert (
+                                    "Error",
+                                    "No report selected; select a report!"
+                                )
+                            }
+                        }
                     )
+                } else {
 
-                    pnlEditorTabs.fireEvent (
-                        'insertTab', fileInfo
-                    )
+                    //
+                    // @TODO!
+                    //
+
                 }
 
                 wndOpenFile.el.unmask ()
@@ -184,7 +202,11 @@ var pnlReportManager = {
         id      : 'refresh'
       , qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view'
       , handler : function (event, toolEl, panel) {
-            //@TODO!
+
+            //
+            // @TODO!
+            //
+
         }
     }]
 
@@ -218,10 +240,13 @@ var pnlReportManager = {
                     var node = tree.getNodeById (tab.id)
 
                     Ext.Ajax.request ({
-                        url: urls.save
+                        url: urls.update
                       , params: {
-                            'id'   : node.id
-                          , 'data' : tab.findById ('htmlEditorId').getValue ()
+                            'leafId' : node.id
+                          , 'nodeId' : node.parentNode.id
+                          , 'name'   : node.text
+                          , 'data'   : tab.getData ()
+                          , 'rank'   : node.parentNode.indexOf (node)
                         }
 
                       , success: function (xhr, opts) {
@@ -229,12 +254,25 @@ var pnlReportManager = {
                             var pnlEditorTabs = Ext.getCmp (
                                 'pnlEditorTabsId'
                             )
-                            var tab = pnlEditorTabs.findById (res.id)
+
+                            var tab = pnlEditorTabs.findById (
+                                (res.uuid != undefined) ? res.uuid : res.id
+                            )
+
                             tab.el.unmask ()
+                            if (res.id != undefined) {
+                                tab.id = res.id
+                            }
 
                             var tree = Ext.getCmp ('pnlTreeId')
-                            var node = tree.getNodeById (tab.id)
+                            var node = tree.getNodeById (
+                                (res.uuid != undefined) ? res.uuid : res.id
+                            )
+
                             node.attributes['data'] = tab.getData ()
+                            if (res.id != undefined) { 
+                                node.id = res.id
+                            }
                         }
 
                       , failure: function (xhr, opts) {
@@ -242,14 +280,16 @@ var pnlReportManager = {
                             var pnlEditorTabs = Ext.getCmp (
                                 'pnlEditorTabsId'
                             )
+                            
                             var tab = pnlEditorTabs.findById (res.id)
                             tab.el.unmask ()
 
                             Ext.MessageBox.show ({
                                 title    : 'Saving failed'
-                              , msg      : String.Format(
+                              , msg      : String.Format (
                                     "Saving failed for tab '{0}'!"
-                                  , tab.title)
+                                  , tab.title
+                                )
                               , closable : false
                               , width    : 256
                               , buttons  : Ext.MessageBox.OK
@@ -272,12 +312,19 @@ var pnlReportManager = {
                 }
 
                 for (var idx=0; idx<pnlEditorTabs.items.length; idx++) {
+
                     var tab = pnlEditorTabs.items.items[idx]
+                    var tree = Ext.getCmp ('pnlTreeId')
+                    var node = tree.getNodeById (tab.id)
+
                     Ext.Ajax.request ({
-                        url: urls.save
+                        url: urls.update
                       , params: {
-                            'id'   : tab.id
-                          , 'data' : tab.getData ()
+                            'leafId' : node.id
+                          , 'nodeId' : node.parentNode.id
+                          , 'name'   : node.text
+                          , 'data'   : tab.getData ()
+                          , 'rank'   : node.parentNode.indexOf (node)
                         }
 
                       , success: function (xhr, opts) {
@@ -285,12 +332,25 @@ var pnlReportManager = {
                             var pnlEditorTabs = Ext.getCmp (
                                 'pnlEditorTabsId'
                             )
-                            var tab = pnlEditorTabs.findById (res.id)
+
+                            var tab = pnlEditorTabs.findById (
+                                (res.uuid != undefined) ? res.uuid : res.id
+                            )
+
                             tab.el.unmask ()
+                            if (res.id != undefined) {
+                                tab.id = res.id
+                            }
 
                             var tree = Ext.getCmp ('pnlTreeId')
-                            var node = tree.getNodeById (tab.id)
+                            var node = tree.getNodeById (
+                                (res.uuid != undefined) ? res.uuid : res.id
+                            )
+
                             node.attributes['data'] = tab.getData ()
+                            if (res.id != undefined) {
+                                node.id = res.id
+                            }
                         }
 
                       , failure: function (xhr, opts) {
@@ -298,15 +358,16 @@ var pnlReportManager = {
                             var pnlEditorTabs = Ext.getCmp (
                                 'pnlEditorTabsId'
                             )
+
                             var tab = pnlEditorTabs.findById (res.id)
                             tab.el.unmask ()
 
                             Ext.MessageBox.show ({
                                 title    : 'Saving failed'
-                              , msg      : String.Format(
+                              , msg      : String.Format (
                                     "Saving failed for tab '{0}'!"
                                   , tab.title
-                              )
+                                )
                               , closable : false
                               , width    : 256
                               , buttons  : Ext.MessageBox.OK

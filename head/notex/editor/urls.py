@@ -11,6 +11,19 @@ urlpatterns = patterns('',
         r'^$', VIEW.main, name='view.main'
     ),
 
+    ##
+    ## javascript 'includes'
+    ##
+
+    url(
+        r'^Math.uuid.js$',
+        direct_to_template, {
+            'template'      : 'Math.uuid.js',
+            'extra_context' : {}
+        },
+        name='Math.uuid.js'
+    ),
+
     url(
         r'^reportManager.js$',
         direct_to_template, {
@@ -29,21 +42,17 @@ urlpatterns = patterns('',
         name='editorTabs.js'
     ),
 
+    ##
+    ## info : general app information
+    ##
+
     url(
         r'^json/info/$', DATA.info, name='json.info'
     ),
 
-    url(
-        r'^post/tree/$', POST.tree, name='post.tree'
-    ),
-
-    url(
-        r'^post/save/$', POST.save, name='post.save'
-    ),
-
-    url(
-        r'^post/save/all/$', POST.save, name='post.save_all'
-    ),
+    ##
+    ## crud : create, read, update & delete
+    ##
 
     url(
         r'^post/create/$', POST.create, name='post.create'
@@ -59,10 +68,6 @@ urlpatterns = patterns('',
 
     url(
         r'^post/delete/$', POST.delete, name='post.delete'
-    ),
-
-    url(
-        r'^post/crud/$', POST.crud, name='post.crud'
     ),
 
 )

@@ -12,6 +12,7 @@ from editor.models import LEAF, LEAF_TYPE
 import sys
 import base64
 import json
+import uuid
 
 class VIEW:
 
@@ -181,7 +182,53 @@ class POST:
 
     texts = staticmethod (texts)
 
-    def tree (request):
+    ##
+    ## crud: create, read, update & save
+    ##
+
+    def create (request):
+
+        (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
+
+        if type == 'node':
+
+            try:
+
+                leaf = LEAF.objects.create (
+                    type = LEAF_TYPE.objects.get (_code='txt'),
+                    node = NODE.objects.get (pk = ids[0]),
+                    name = request.POST['name'],
+                    text = request.POST['data'],
+                    rank = int (request.POST['rank'])
+                )
+
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'uuid'    : request.POST['leafId'],
+                    'id'      :  base64.b32encode (
+                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                    )
+                }])
+
+            except:
+
+                js_string = json.dumps ([{
+                    'success' : 'false',
+                    'uuid'    : request.POST['leafId']
+                }])
+
+        else:
+
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'uuid'    : request.POST['leafId']
+            }])
+
+        return HttpResponse (js_string, mimetype='application/json')
+
+    create = staticmethod (create)
+
+    def read (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['node']))
 
@@ -211,11 +258,18 @@ class POST:
 
         return HttpResponse (js_string, mimetype='application/json')
 
-    tree = staticmethod (tree)
+    read = staticmethod (read)
 
-    def save (request):
+    def update (request):
 
-        (type, ids) = json.loads (base64.b32decode (request.POST['id']))
+        try:    id = uuid.UUID (request.POST['leafId'])
+        except: id = None
+
+        if id != None: ## create upon update
+
+            return POST.create (request)
+
+        (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
 
         if type == 'leaf':
 
@@ -227,53 +281,24 @@ class POST:
 
                 js_string = json.dumps ([{
                     'success' : 'true',
-                    'id'      : request.POST['id']
+                    'id'      : request.POST['leafId']
                 }])
 
             except:
 
                 js_string = json.dumps ([{
                     'success' : 'false',
-                    'id'      : request.POST['id']
+                    'id'      : request.POST['leafId']
                 }])
 
         else:
 
             js_string = json.dumps ([{
                 'success' : 'false',
-                'id'      : request.POST['id']
+                'id'      : request.POST['leafId']
             }])
 
         return HttpResponse (js_string, mimetype='application/json')
-    
-    save = staticmethod (save)
-
-    def save_all (request):
-
-        ##
-        ## TODO: Implement a *save* for *all* document which are currently open
-        ##       and have been edited!
-        ##
-
-        pass
-
-    save_all = staticmethod (save_all)
-
-    def create (request):
-
-        pass
-
-    create = staticmethod (create)
-
-    def read (request):
-
-        pass
-
-    read = staticmethod (read)
-
-    def update (request):
-
-        pass
 
     update = staticmethod (update)
 
@@ -282,12 +307,6 @@ class POST:
         pass
 
     delete = staticmethod (delete)
-
-    def crud (request):
-
-        pass
-
-    crud = staticmethod (crud)
 
 if __name__ == "__main__":
 

@@ -9,15 +9,10 @@
     }
 
     var urls = {
-        save: '{% url editor:post.save %}'
-      , saveAll: '{% url editor:post.save_all %}'
-
-      , create: '{% url editor:post.create %}'
+        create: '{% url editor:post.create %}'
       , read: '{% url editor:post.read %}'
       , update: '{% url editor:post.update %}'
       , del: '{% url editor:post.delete %}'
-
-      , crud: '{% url editor:post.crud %}'
     }
 
     if (typeof (console) != 'undefined') {
@@ -26,6 +21,7 @@
     
 </script>
 
+<script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
 <script type="text/javascript" src="{% url editor:reportManager.js %}"></script>
 <script type="text/javascript" src="{% url editor:editorTabs.js %}"></script>
 
