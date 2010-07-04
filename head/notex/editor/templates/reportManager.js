@@ -36,6 +36,26 @@ var pnlTree = new Ext.tree.TreePanel ({
             }
         }
 
+      , removeNode : function (fnCallback) {
+
+            var selectionModel = this.getSelectionModel ()
+            var selectedNode = selectionModel.getSelectedNode ()
+
+            if (selectedNode != null) {
+
+                selectedNode.remove (false)
+                if (fnCallback != undefined) {
+                    fnCallback (true, {'nodeId': selectedNode.id})
+                }                
+                selectedNode.remove (true)
+
+            } else {
+                if (fnCallback != undefined) {
+                    fnCallback (false, {'msg': 'no node selected'})
+                }
+            }
+        }
+
       , insertNode : function (nodeInfo, fnCallback) {
 
             var selectionModel = this.getSelectionModel ()
@@ -170,7 +190,7 @@ var wndOpenFile = new Ext.Window ({
                 } else {
 
                     //
-                    // @TODO!
+                    // @TODO!?
                     //
 
                 }
@@ -405,6 +425,51 @@ var pnlReportManager = {
         },{
             iconCls : 'icon-delete'
           , tooltip : '<b>Delete</b><br/>Delete selected report, folder or file'
+          , handler : function (button, event) {
+              
+                Ext.getCmp ('pnlTreeId').fireEvent (
+                    'removeNode', function (result, args) {
+
+                        if (!result) {
+                            Ext.Msg.alert (
+                                "Error", "No node selected; select a node!"
+                            )
+                        } else {
+                            
+                            Ext.getCmp ('pnlEditorTabsId').fireEvent (
+                                'removeTab', {'id': args.nodeId }
+                            )
+                            
+                            Ext.Ajax.request ({
+                                url: urls.del
+
+                              , params: {
+                                    'id' : args.nodeId
+                                }
+
+                              , success: function (xhr, opts) {
+                                    // @DONE!
+                                }
+
+                              , failure: function (xhr, opts) {
+                                    var res = Ext.decode (xhr.responseText)[0]
+
+                                    Ext.MessageBox.show ({
+                                        title    : 'Deleting failed'
+                                      , msg      : String.Format (
+                                            "Deleting for '{0}' failed!", res.id
+                                        )
+                                      , closable : false
+                                      , width    : 256
+                                      , buttons  : Ext.MessageBox.OK
+                                    })
+                                }
+                            })
+                        }
+                    }
+                )
+
+            }
         },'-',{
             iconCls : 'icon-arrow_up'
           , tooltip : '<b>Move Up</b><br/>Move selected report, folder or file up in tree'

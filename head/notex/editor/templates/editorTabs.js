@@ -10,7 +10,17 @@ var pnlEditorTabs = new Ext.TabPanel({
   , tabPosition     : 'bottom'
 
   , listeners : {
-        insertTab: function (tabInfo) {
+
+        removeTab : function (tabInfo) {
+
+            var tab = this.findById (tabInfo.id)
+            if (tab) {
+                this.remove (tab, true)
+            }
+
+        }
+
+      , insertTab : function (tabInfo) {
             var tab = this.findById (tabInfo.id)
             if (!tab) {
                 tab = this.add({
