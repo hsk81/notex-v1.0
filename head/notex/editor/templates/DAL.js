@@ -1,0 +1,154 @@
+var DAL = {
+
+    //
+    // CRUD: Create -----------------------------------------------------------
+    //
+
+    fnSuccessCreate : function (xhr, opts) {
+        //@TODO!
+    }
+
+  , fnFailureCreate : function (xhr, opts) {
+        //@TODO!
+    }
+
+  , crudCreate : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url : urls.create
+
+          , success : function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure : function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        });
+    }
+
+    //
+    // CRUD: Read -------------------------------------------------------------
+    //
+
+  , fnSuccessRead : function (xhr, opts) {
+        //@TODO!
+    }
+
+  , fnFailureRead : function (xhr, opts) {
+        //@TODO!
+    }
+
+  , crudRead : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url: urls.read
+
+          , success : function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure : function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        });
+    }
+
+    //
+    // CRUD: Delete -----------------------------------------------------------
+    //
+
+  , fnSuccessDelete : function (xhr, opts) {
+        //@DONE!
+    }
+
+  , fnFailureDelete : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+
+        Ext.MessageBox.show ({
+            title    : 'Deleting failed'
+          , msg      : String.Format (
+                "Deleting for '{0}' failed!", res.id
+            )
+          , closable : false
+          , width    : 256
+          , buttons  : Ext.MessageBox.OK
+        });
+    }
+
+  , crudDelete : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url : urls.del
+
+          , success: function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure: function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        });
+    }
+
+    //
+    // CRUD: Update -----------------------------------------------------------
+    //
+
+  , fnSuccessUpdate : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]        
+        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+            'updateTab', res.uuid, res.id, function (tab) {
+                tab.el.unmask ()
+                Ext.getCmp ('pnlReportManagerTreeId').fireEvent (
+                    'updateNode', res.uuid, res.id, function (node) {
+                        node.attributes['data'] = tab.getData ()
+                    }
+                )
+            }
+        )
+    }
+
+  , fnFailureUpdate : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+            'updateTab', undefined, res.id, function (tab) {
+                tab.el.unmask ()
+                Ext.MessageBox.show ({
+                    title    : 'Saving failed'
+                  , msg      : String.Format (
+                        "Saving failed for tab '{0}'!"
+                      , tab.title
+                    )
+                  , closable : false
+                  , width    : 256
+                  , buttons  : Ext.MessageBox.OK
+                })
+            }
+        )
+    }
+
+  , crudUpdate : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url : urls.update
+            
+          , success : function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure : function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        });
+    }
+
+}

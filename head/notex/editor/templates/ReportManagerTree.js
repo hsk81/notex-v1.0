@@ -53,6 +53,18 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
             }
         }
 
+      , updateNode : function (uuid, id, fn) {
+            var node = this.getNodeById (
+                (uuid != undefined) ? uuid : id
+            )
+
+            if (id != undefined) {
+                node.id = id
+            }
+
+            return fn (node)
+        }
+
       , insertNode : function (nodeInfo, fnCallback) {
 
             var selectionModel = this.getSelectionModel ()

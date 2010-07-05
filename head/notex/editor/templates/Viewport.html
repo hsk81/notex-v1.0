@@ -9,10 +9,10 @@
     }
 
     var urls = {
-        create: '{% url editor:post.create %}'
-      , read: '{% url editor:post.read %}'
-      , update: '{% url editor:post.update %}'
-      , del: '{% url editor:post.delete %}'
+        create : '{% url editor:post.create %}'
+      , read   : '{% url editor:post.read %}'
+      , update : '{% url editor:post.update %}'
+      , del    : '{% url editor:post.delete %}'
     }
 
     if (typeof (console) != 'undefined') {
@@ -21,11 +21,12 @@
     
 </script>
 
+<script type="text/javascript" src="{% url editor:DAL.js %}"></script>
 <script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
-<script type="text/javascript" src="{% url editor:openFileDialog.js %}"></script>
-<script type="text/javascript" src="{% url editor:reportManagerTree.js %}"></script>
-<script type="text/javascript" src="{% url editor:reportManager.js %}"></script>
-<script type="text/javascript" src="{% url editor:editorTabs.js %}"></script>
+<script type="text/javascript" src="{% url editor:OpenFileDialog.js %}"></script>
+<script type="text/javascript" src="{% url editor:ReportManagerTree.js %}"></script>
+<script type="text/javascript" src="{% url editor:ReportManager.js %}"></script>
+<script type="text/javascript" src="{% url editor:EditorTabs.js %}"></script>
 
 <script type="text/javascript">
 Ext.onReady (function () {

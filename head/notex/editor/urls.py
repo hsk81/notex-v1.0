@@ -25,39 +25,48 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^openFileDialog.js$',
+        r'^DAL.js$',
         direct_to_template, {
-            'template'      : 'openFileDialog.js',
+            'template'      : 'DAL.js',
             'extra_context' : {}
         },
-        name='openFileDialog.js'
+        name='DAL.js'
     ),
 
     url(
-        r'^reportManager.js$',
+        r'^OpenFileDialog.js$',
         direct_to_template, {
-            'template'      : 'reportManager.js',
+            'template'      : 'OpenFileDialog.js',
             'extra_context' : {}
         },
-        name='reportManager.js'
+        name='OpenFileDialog.js'
     ),
 
     url(
-        r'^reportManagerTree.js$',
+        r'^ReportManager.js$',
         direct_to_template, {
-            'template'      : 'reportManagerTree.js',
+            'template'      : 'ReportManager.js',
             'extra_context' : {}
         },
-        name='reportManagerTree.js'
+        name='ReportManager.js'
     ),
 
     url(
-        r'^editorTabs.js$',
+        r'^ReportManagerTree.js$',
         direct_to_template, {
-            'template'      : 'editorTabs.js',
+            'template'      : 'ReportManagerTree.js',
             'extra_context' : {}
         },
-        name='editorTabs.js'
+        name='ReportManagerTree.js'
+    ),
+
+    url(
+        r'^EditorTabs.js$',
+        direct_to_template, {
+            'template'      : 'EditorTabs.js',
+            'extra_context' : {}
+        },
+        name='EditorTabs.js'
     ),
 
     ##
