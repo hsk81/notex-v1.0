@@ -1,7 +1,3 @@
-/**
- * pnlEditorTabs -----------------------------------------------------------
- */
-
 var pnlEditorTabs = new Ext.TabPanel({
 
     activeTab       : 0

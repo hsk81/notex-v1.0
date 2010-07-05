@@ -25,12 +25,30 @@ urlpatterns = patterns('',
     ),
 
     url(
+        r'^openFileDialog.js$',
+        direct_to_template, {
+            'template'      : 'openFileDialog.js',
+            'extra_context' : {}
+        },
+        name='openFileDialog.js'
+    ),
+
+    url(
         r'^reportManager.js$',
         direct_to_template, {
             'template'      : 'reportManager.js',
             'extra_context' : {}
         },
         name='reportManager.js'
+    ),
+
+    url(
+        r'^reportManagerTree.js$',
+        direct_to_template, {
+            'template'      : 'reportManagerTree.js',
+            'extra_context' : {}
+        },
+        name='reportManagerTree.js'
     ),
 
     url(

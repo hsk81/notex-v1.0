@@ -1,220 +1,5 @@
-/**
- * pnlTree --------------------------------------------------------------------
- */
-
-var pnlTree = new Ext.tree.TreePanel ({
-    id          : 'pnlTreeId'
-  , autoScroll  : true
-  , rootVisible : false
-
-  , loader : new Ext.tree.TreeLoader({
-        url : '{% url editor:post.read %}'
-    })
-
-  , root : {
-        text     : 'Root'
-      , id       : 'LMRHE33POQRCYIC3LVOQ====' //[u'root', []]
-      , cls      : 'folder'
-      , iconCls  : 'icon-folder'
-      , expanded : true
-    }
-
-  , listeners : {
-        dblclick : function (node, event) {
-            if (node.attributes['cls'] == "file") {
-
-                var tabInfo = {
-                    id      : node.id
-                  , title   : node.attributes['text']
-                  , text    : node.attributes['data']
-                  , iconCls : node.attributes['iconCls']
-                }
-
-                Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                    'insertTab', tabInfo
-                )
-            }
-        }
-
-      , removeNode : function (fnCallback) {
-
-            var selectionModel = this.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
-
-            if (selectedNode != null) {
-
-                selectedNode.remove (false)
-                if (fnCallback != undefined) {
-                    fnCallback (true, {'nodeId': selectedNode.id})
-                }                
-                selectedNode.remove (true)
-
-            } else {
-                if (fnCallback != undefined) {
-                    fnCallback (false, {'msg': 'no node selected'})
-                }
-            }
-        }
-
-      , insertNode : function (nodeInfo, fnCallback) {
-
-            var selectionModel = this.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
-
-            if (selectedNode != null) {
-
-                var fn = function (nodeInfo, node) {
-
-                    node.insertBefore(
-                        new Ext.tree.TreeNode ({
-                            'text'     : nodeInfo.title
-                          , 'data'     : nodeInfo.text
-                          , 'id'       : nodeInfo.id
-                          , 'cls'      : "file"
-                          , 'iconCls'  : nodeInfo.iconCls
-                          , 'leaf'     : true
-                          , 'expanded' : false
-                        }), null
-                    )
-
-                    Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                        'insertTab', nodeInfo
-                    )
-
-                    if (fnCallback != undefined) {
-                        fnCallback (true, null)
-                    }
-                }
-
-                if (selectedNode.isLeaf ()) {
-                    fn (nodeInfo, selectedNode.parentNode)
-                } else {
-                    if (!selectedNode.expanded) {
-                        selectedNode.addListener ('expand', function () {
-                            fn (nodeInfo, selectedNode)
-                            selectedNode.purgeListeners ()
-                        })
-                        selectedNode.expand ()
-                    } else {
-                        fn (nodeInfo, selectedNode)
-                    }
-                }
-
-            } else {
-                if (fnCallback != undefined) {
-                    fnCallback (false, 'no node selected')
-                }
-            }
-        }
-        
-    }
-});
-
-/**
- * wndOpenFile ----------------------------------------------------------------
- */
-
-var wndOpenFile = new Ext.Window ({
-
-    layout    : 'fit'
-  , id        : 'wndOpenFileId'
-  , title     : 'Open File'
-  , frame     : true
-  , modal     : true
-  , draggable : true
-  , plain     : false
-  , border    : false
-  , closable  : false
-  , resizable : false
-
-  , items : [{
-        layout : 'hbox'
-      , frame  : true
-      , width  : 267
-      , height : 36
-      , layoutConfig : {
-            pack  : 'center'
-          , align : 'middle'
-        }
-      , items : [{
-            xtype     : 'textfield'
-          , inputType : 'file'
-          , id        : 'inputOpenFileId'
-        }]
-    }]
-
-  , bbar : ['->', {
-        text    : 'Cancel'
-      , style   : 'padding: 5 0 5 0;'
-      , iconCls : 'icon-cross'
-      , handler : function (btn) {
-            wndOpenFile.hide ();
-        }
-    },{
-        text    : 'Open'
-      , style   : 'padding: 5 0 5 0;'
-      , iconCls : 'icon-folder_page'
-      , handler : function (btn) {
-
-            var cmp = Ext.getCmp("inputOpenFileId");
-            if (cmp.el.dom.files.length > 0) {
-
-                wndOpenFile.el.mask (
-                    'Please wait', 'x-mask-loading'
-                )
-
-                var file = cmp.el.dom.files[0]
-                var fileText = file.getAsBinary ()
-
-                if (fileText != null) {
-
-                    var fileInfo = {
-                        id      : Math.uuid ()
-                      , title   : file.name
-                      , text    : fileText.replace (
-                            "\n", "<br>", 'g'
-                        )
-                      , iconCls : 'icon-page'
-                    }
-
-                    Ext.getCmp ('pnlTreeId').fireEvent (
-                        'insertNode', fileInfo, function (result, msg) {
-                            if (!result) {
-                                Ext.Msg.alert (
-                                    "Error",
-                                    "No report selected; select a report!"
-                                )
-                            }
-                        }
-                    )
-                } else {
-
-                    //
-                    // @TODO!?
-                    //
-
-                }
-
-                wndOpenFile.el.unmask ()
-                wndOpenFile.hide ()
-            }
-        }
-    }]
-
-  , execute : function () {
-
-        var inputOpenFile = Ext.getCmp ('inputOpenFileId')
-        inputOpenFile.setValue ('')
-        this.show ()
-
-    }
-});
-
-/**
- * pnlReportManager -----------------------------------------------------------
- */
-
 var pnlReportManager = {
+    
     title  : 'Report Manager'
   , layout : 'fit'
 
@@ -242,7 +27,7 @@ var pnlReportManager = {
           , tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)'
           , handler : function (button, event) {
 
-                wndOpenFile.execute ()
+                wndOpenFileDialog.execute ()
 
             }
         },{
@@ -256,7 +41,7 @@ var pnlReportManager = {
                 {
                     tab.el.mask ('Please wait', 'x-mask-loading')
 
-                    var tree = Ext.getCmp ('pnlTreeId')
+                    var tree = Ext.getCmp ('pnlReportManagerTreeId')
                     var node = tree.getNodeById (tab.id)
 
                     Ext.Ajax.request ({
@@ -284,7 +69,7 @@ var pnlReportManager = {
                                 tab.id = res.id
                             }
 
-                            var tree = Ext.getCmp ('pnlTreeId')
+                            var tree = Ext.getCmp ('pnlReportManagerTreeId')
                             var node = tree.getNodeById (
                                 (res.uuid != undefined) ? res.uuid : res.id
                             )
@@ -334,7 +119,7 @@ var pnlReportManager = {
                 for (var idx=0; idx<pnlEditorTabs.items.length; idx++) {
 
                     var tab = pnlEditorTabs.items.items[idx]
-                    var tree = Ext.getCmp ('pnlTreeId')
+                    var tree = Ext.getCmp ('pnlReportManagerTreeId')
                     var node = tree.getNodeById (tab.id)
 
                     Ext.Ajax.request ({
@@ -362,7 +147,7 @@ var pnlReportManager = {
                                 tab.id = res.id
                             }
 
-                            var tree = Ext.getCmp ('pnlTreeId')
+                            var tree = Ext.getCmp ('pnlReportManagerTreeId')
                             var node = tree.getNodeById (
                                 (res.uuid != undefined) ? res.uuid : res.id
                             )
@@ -427,7 +212,7 @@ var pnlReportManager = {
           , tooltip : '<b>Delete</b><br/>Delete selected report, folder or file'
           , handler : function (button, event) {
               
-                Ext.getCmp ('pnlTreeId').fireEvent (
+                Ext.getCmp ('pnlReportManagerTreeId').fireEvent (
                     'removeNode', function (result, args) {
 
                         if (!result) {
@@ -479,5 +264,5 @@ var pnlReportManager = {
         }]
     }
 
-  , items : [pnlTree]
+  , items : [pnlReportManagerTree]
 }
