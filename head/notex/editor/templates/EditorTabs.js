@@ -7,29 +7,7 @@ var pnlEditorTabs = new Ext.TabPanel({
 
   , listeners : {
 
-        removeTab : function (tabInfo) {
-
-            var tab = this.findById (tabInfo.id)
-            if (tab) {
-                this.remove (tab, true)
-            }
-
-        }
-
-      , updateTab : function (uuid, id, fn) {
-
-            var tab = this.findById (
-                (uuid != undefined) ? uuid : id
-            )
-
-            if (id != undefined) {
-                tab.id = id
-            }
-
-            return fn (tab)
-        }
-
-      , insertTab : function (tabInfo) {
+        insertTab : function (tabInfo) {
             var tab = this.findById (tabInfo.id)
             if (!tab) {
                 tab = this.add({
@@ -59,5 +37,32 @@ var pnlEditorTabs = new Ext.TabPanel({
 
             this.activate (tab)
         }
+
+      , getTab : function (id, fn) {
+            //@TODO!?
+        }
+
+      , updateTab : function (uuid, id, fn) {
+
+            var tab = this.findById (
+                (uuid != undefined) ? uuid : id
+            )
+
+            if (id != undefined) {
+                tab.id = id
+            }
+
+            return fn (tab)
+        }
+        
+      , removeTab : function (tabInfo) {
+
+            var tab = this.findById (tabInfo.id)
+            if (tab) {
+                this.remove (tab, true)
+            }
+
+        }
+
     }
 });

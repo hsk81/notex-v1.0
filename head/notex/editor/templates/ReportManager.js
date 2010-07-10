@@ -7,11 +7,7 @@ var pnlReportManager = {
         id      : 'refresh'
       , qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view'
       , handler : function (event, toolEl, panel) {
-
-            //
-            // @TODO!
-            //
-
+            //@TODO!?
         }
     }]
 
@@ -27,7 +23,68 @@ var pnlReportManager = {
           , tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)'
           , handler : function (button, event) {
 
-                wndOpenFileDialog.execute ()
+                var tree = Ext.getCmp ('pnlReportManagerTreeId')
+                var selectionModel = tree.getSelectionModel ()
+                var selectedNode = selectionModel.getSelectedNode ()
+
+                if (selectedNode != null) {
+
+                    wndOpenFileDialog.execute ({
+                        success: function (file) {
+
+                            var fileInfo = {
+                                id      : Math.uuid ()
+                              , title   : file.name
+                              , text    : file.getAsBinary ().replace (
+                                    "\n", "<br>", 'g'
+                                )
+                              , iconCls : 'icon-page'
+                            }
+
+                            var node = new Ext.tree.TreeNode ({
+                                'text'     : fileInfo.title
+                              , 'data'     : fileInfo.text
+                              , 'id'       : fileInfo.id
+                              , 'cls'      : "file"
+                              , 'iconCls'  : fileInfo.iconCls
+                              , 'leaf'     : true
+                              , 'expanded' : false
+                            })
+
+                            tree.fireEvent (
+                                'createNode', node, {
+                                    refNode  : selectedNode
+                                },{
+                                    success: function (args) {
+                                        var pnlTabs = Ext.getCmp (
+                                            'pnlEditorTabsId'
+                                        )
+                                        pnlTabs.fireEvent (
+                                            'insertTab', fileInfo
+                                        )
+                                    }
+
+                                  , failure: function (args) {
+                                        Ext.Msg.alert (
+                                            "Error", "No node inserted!"
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                        
+                      , failure: function () {
+                            Ext.Msg.alert (
+                                "Error", "No file selected!"
+                            )
+                      }
+                    })
+
+                } else {
+                    Ext.Msg.alert (
+                        "Error", "No report selected; select a report!"
+                    )
+                }
 
             }
         },{
@@ -117,28 +174,35 @@ var pnlReportManager = {
             iconCls : 'icon-delete'
           , tooltip : '<b>Delete</b><br/>Delete selected report, folder or file'
           , handler : function (button, event) {
-              
-                Ext.getCmp ('pnlReportManagerTreeId').fireEvent (
-                    'removeNode', function (result, args) {
 
-                        if (!result) {
-                            Ext.Msg.alert (
-                                "Error", "No node selected; select a node!"
-                            )
-                        } else {
-                            
+                var tree = Ext.getCmp ('pnlReportManagerTreeId')
+                var selectionModel = tree.getSelectionModel ()
+                var selectedNode = selectionModel.getSelectedNode ()
+
+                tree.fireEvent (
+                    'deleteNode', selectedNode, {destroy: true}, {
+
+                        success : function (args) {
+
                             Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                                'removeTab', {'id': args.nodeId }
+                                'removeTab', { 'id': args.node.id }
                             )
 
                             DAL.crudDelete({
-                                id : args.nodeId
+                                id: args.node.id
                             },{
-                                success : DAL.fnSuccessDelete
-                              , failure : DAL.fnFailureDelete
+                                success: DAL.fnSuccessDelete
+                              , failure: DAL.fnFailureDelete
                             })
-                            
+
                         }
+
+                      , failure : function (args) {
+                            Ext.Msg.alert (
+                                "Error", "No node selected; select a node!"
+                            )
+                        }
+
                     }
                 )
 
@@ -154,3 +218,19 @@ var pnlReportManager = {
 
   , items : [pnlReportManagerTree]
 }
+
+Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
+    if (node.attributes['cls'] == "file") {
+
+        var tabInfo = {
+            id      : node.id
+          , title   : node.attributes['text']
+          , text    : node.attributes['data']
+          , iconCls : node.attributes['iconCls']
+        }
+
+        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+            'insertTab', tabInfo
+        )
+    }
+});

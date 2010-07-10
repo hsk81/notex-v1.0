@@ -3,6 +3,7 @@ var wndOpenFileDialog = new Ext.Window ({
     layout    : 'fit'
   , id        : 'wndOpenFileDialogId'
   , title     : 'Open File'
+  
   , frame     : true
   , modal     : true
   , draggable : true
@@ -33,7 +34,8 @@ var wndOpenFileDialog = new Ext.Window ({
       , style   : 'padding: 5 0 5 0;'
       , iconCls : 'icon-cross'
       , handler : function (btn) {
-            wndOpenFileDialog.hide ();
+            wndOpenFileDialog.hide ()
+            wndOpenFileDialog.fireEvent ('cancelSuccess')
         }
     },{
         text    : 'Open'
@@ -49,35 +51,10 @@ var wndOpenFileDialog = new Ext.Window ({
                 )
 
                 var file = cmp.el.dom.files[0]
-                var fileText = file.getAsBinary ()
-
-                if (fileText != null) {
-
-                    var fileInfo = {
-                        id      : Math.uuid ()
-                      , title   : file.name
-                      , text    : fileText.replace (
-                            "\n", "<br>", 'g'
-                        )
-                      , iconCls : 'icon-page'
-                    }
-
-                    Ext.getCmp ('pnlReportManagerTreeId').fireEvent (
-                        'insertNode', fileInfo, function (result, msg) {
-                            if (!result) {
-                                Ext.Msg.alert (
-                                    "Error",
-                                    "No report selected; select a report!"
-                                )
-                            }
-                        }
-                    )
+                if (file != null) {
+                    wndOpenFileDialog.fireEvent ('openSuccess', file)
                 } else {
-
-                    //
-                    // @TODO!?
-                    //
-
+                    wndOpenFileDialog.fireEvent ('openFailure')
                 }
 
                 wndOpenFileDialog.el.unmask ()
@@ -86,11 +63,29 @@ var wndOpenFileDialog = new Ext.Window ({
         }
     }]
 
-  , execute : function () {
+  , execute : function (fnOpen, fnCancel) {
+
+        if (fnOpen != undefined) {
+            if (fnOpen.success != undefined) {
+                this.on ('openSuccess', fnOpen.success, this, {single:true})
+            }
+            if (fnOpen.failure != undefined) {
+                this.on ('openFailure', fnOpen.failure, this, {single:true})
+            }
+        }
+
+        if (fnCancel != undefined) {
+            if (fnCancel.success != undefined) {
+                this.on ('cancelSuccess', fnCancel.success, this, {single:true})
+            }
+            if (fnOpen.failure != undefined) {
+                this.on ('cancelFailure', fnCancel.failure, this, {single:true})
+            }
+        }
 
         var inputOpenFile = Ext.getCmp ('inputOpenFileId')
         inputOpenFile.setValue ('')
         this.show ()
-
     }
+    
 });

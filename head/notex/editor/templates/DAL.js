@@ -34,11 +34,11 @@ var DAL = {
     //
 
   , fnSuccessRead : function (xhr, opts) {
-        //@TODO!
+        //@TODO!?
     }
 
   , fnFailureRead : function (xhr, opts) {
-        //@TODO!
+        //@TODO!?
     }
 
   , crudRead : function (crudInfo, fn) {
@@ -46,6 +46,77 @@ var DAL = {
 
             params : crudInfo
           , url: urls.read
+
+          , success : function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure : function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        });
+    }
+
+    //
+    // CRUD: Update -----------------------------------------------------------
+    //
+
+  , fnSuccessUpdate : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+            'updateTab', res.uuid, res.id, function (tab) {
+
+                var pnlReportManagerTree = Ext.getCmp (
+                    'pnlReportManagerTreeId'
+                )
+                
+                var node = pnlReportManagerTree.getNodeById (
+                    (res.uuid != undefined) ? res.uuid : res.id
+                )
+
+                pnlReportManagerTree.fireEvent (
+                    'updateNode', node, {nodeInfo:{id:res.id}}, {
+
+                        success : function (args) {
+                            args.node.attributes['data'] = tab.getData ()
+                        }
+
+                      , failure : function (args) {
+                            //@TODO!?
+                        }
+                    }
+                )
+                
+                tab.el.unmask ()
+            }
+        )
+    }
+
+  , fnFailureUpdate : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+            'updateTab', undefined, res.id, function (tab) {
+                tab.el.unmask ()
+                Ext.MessageBox.show ({
+                    title    : 'Saving failed'
+                  , msg      : String.Format (
+                        "Saving failed for tab '{0}'!"
+                      , tab.title
+                    )
+                  , closable : false
+                  , width    : 256
+                  , buttons  : Ext.MessageBox.OK
+                })
+            }
+        )
+    }
+
+  , crudUpdate : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url : urls.update
 
           , success : function (xhr, opts) {
                 fn.success (xhr, opts)
@@ -91,60 +162,6 @@ var DAL = {
             }
 
           , failure: function (xhr, opts) {
-                fn.failure (xhr, opts)
-            }
-
-        });
-    }
-
-    //
-    // CRUD: Update -----------------------------------------------------------
-    //
-
-  , fnSuccessUpdate : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]        
-        Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'updateTab', res.uuid, res.id, function (tab) {
-                tab.el.unmask ()
-                Ext.getCmp ('pnlReportManagerTreeId').fireEvent (
-                    'updateNode', res.uuid, res.id, function (node) {
-                        node.attributes['data'] = tab.getData ()
-                    }
-                )
-            }
-        )
-    }
-
-  , fnFailureUpdate : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
-        Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'updateTab', undefined, res.id, function (tab) {
-                tab.el.unmask ()
-                Ext.MessageBox.show ({
-                    title    : 'Saving failed'
-                  , msg      : String.Format (
-                        "Saving failed for tab '{0}'!"
-                      , tab.title
-                    )
-                  , closable : false
-                  , width    : 256
-                  , buttons  : Ext.MessageBox.OK
-                })
-            }
-        )
-    }
-
-  , crudUpdate : function (crudInfo, fn) {
-        Ext.Ajax.request ({
-
-            params : crudInfo
-          , url : urls.update
-            
-          , success : function (xhr, opts) {
-                fn.success (xhr, opts)
-            }
-
-          , failure : function (xhr, opts) {
                 fn.failure (xhr, opts)
             }
 

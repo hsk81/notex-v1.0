@@ -17,101 +17,105 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
     }
 
   , listeners : {
-        dblclick : function (node, event) {
-            if (node.attributes['cls'] == "file") {
 
-                var tabInfo = {
-                    id      : node.id
-                  , title   : node.attributes['text']
-                  , text    : node.attributes['data']
-                  , iconCls : node.attributes['iconCls']
-                }
+        createNode: function (node, args, fn) {
 
-                Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                    'insertTab', tabInfo
-                )
-            }
-        }
+            if (node != null && args != null && args.refNode != null) {
 
-      , removeNode : function (fnCallback) {
+                var gn = function (refNode) {
 
-            var selectionModel = this.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
+                    refNode.insertBefore (node, null)
 
-            if (selectedNode != null) {
-
-                selectedNode.remove (false)
-                if (fnCallback != undefined) {
-                    fnCallback (true, {'nodeId': selectedNode.id})
-                }
-                selectedNode.remove (true)
-
-            } else {
-                if (fnCallback != undefined) {
-                    fnCallback (false, {'msg': 'no node selected'})
-                }
-            }
-        }
-
-      , updateNode : function (uuid, id, fn) {
-            var node = this.getNodeById (
-                (uuid != undefined) ? uuid : id
-            )
-
-            if (id != undefined) {
-                node.id = id
-            }
-
-            return fn (node)
-        }
-
-      , insertNode : function (nodeInfo, fnCallback) {
-
-            var selectionModel = this.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
-
-            if (selectedNode != null) {
-
-                var fn = function (nodeInfo, node) {
-
-                    node.insertBefore(
-                        new Ext.tree.TreeNode ({
-                            'text'     : nodeInfo.title
-                          , 'data'     : nodeInfo.text
-                          , 'id'       : nodeInfo.id
-                          , 'cls'      : "file"
-                          , 'iconCls'  : nodeInfo.iconCls
-                          , 'leaf'     : true
-                          , 'expanded' : false
-                        }), null
-                    )
-
-                    Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                        'insertTab', nodeInfo
-                    )
-
-                    if (fnCallback != undefined) {
-                        fnCallback (true, null)
-                    }
-                }
-
-                if (selectedNode.isLeaf ()) {
-                    fn (nodeInfo, selectedNode.parentNode)
-                } else {
-                    if (!selectedNode.expanded) {
-                        selectedNode.addListener ('expand', function () {
-                            fn (nodeInfo, selectedNode)
-                            selectedNode.purgeListeners ()
-                        })
-                        selectedNode.expand ()
+                    if (fn != undefined && fn.success != undefined) {
+                        return fn.success ({'node': node,'refNode': refNode})
                     } else {
-                        fn (nodeInfo, selectedNode)
+                        return {'node': node,'refNode': refNode}
+                    }
+                }
+
+                if (args.refNode.isLeaf ()) {
+                    return gn (args.refNode.parentNode)
+                } else {
+                    if (!args.refNode.expanded) {
+                        args.refNode.on ('expand', gn, this, {single: true})
+                        args.refNode.expand ()                        
+                        return {'node': node,'refNode': args.refNode}
+                    } else {
+                        return gn (args.refNode)
                     }
                 }
 
             } else {
-                if (fnCallback != undefined) {
-                    fnCallback (false, 'no node selected')
+                if (fn != undefined && fn.failure != undefined) {
+                    return fn.failure ({})
+                } else {
+                    return {}
+                }
+            }
+        }
+
+      , updateNode: function (node, args, fn) {
+
+            if (node != undefined 
+             && args != undefined && args.nodeInfo != undefined) {
+
+                for (var property in args.nodeInfo) {
+                    node[property] = args.nodeInfo[property]
+                }
+
+                if (fn != undefined && fn.success != undefined) {
+                    return fn.success ({'node': node})
+                } else {
+                    return {'node': node}
+                }
+
+            } else {
+                if (fn != undefined && fn.failure != undefined) {
+                    return fn.failure ({})
+                } else {
+                    return {}
+                }
+            }
+        }
+
+      , readNode: function (node, args, fn) {
+
+            if (node != undefined && args != undefined) {
+                
+                if (fn != undefined && fn.success != undefined) {
+                    return fn.success ({'node': node})
+                } else {
+                    return {'node': node}
+                }
+
+            } else {
+                if (fn != undefined && fn.failure != undefined) {
+                    return fn.failure ({})
+                } else {
+                    return {}
+                }
+            }
+        }
+
+      , deleteNode: function (node, args, fn) {
+
+            if (node != undefined
+             && args != undefined && args.destroy != undefined) {
+
+                var nodeId = node.id
+                node.remove (args.destroy)
+
+                if (fn != undefined && fn.success != undefined) {
+                    return fn.success ({'node': {'id': nodeId}})
+                } else {
+                    return {'node': {'id': nodeId}}
+                }
+
+            } else {
+                if (fn != undefined && fn.failure != undefined) {
+                    return fn.failure ({})
+                } else {
+                    return {}
                 }
             }
         }
