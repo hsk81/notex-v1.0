@@ -13,15 +13,11 @@ import sys
 import base64
 import json
 import uuid
+import os
 
 class VIEW:
 
-    def init (request):
-
-        root = ROOT.objects.create (
-            type = ROOT_TYPE.objects.get (_code='root'),
-            usid = request.session.session_key,
-        )
+    def init_prj01 (root, path):
 
         prj = NODE.objects.create (
             type = NODE_TYPE.objects.get (_code='prj'),
@@ -38,6 +34,12 @@ class VIEW:
             rank = 1
         )
 
+    init_prj01 = staticmethod (init_prj01)
+
+    def init_prj02 (root, path):
+
+        print "PATH: %s" % path
+
         prj = NODE.objects.create (
             type = NODE_TYPE.objects.get (_code='prj'),
             root = root,
@@ -48,57 +50,58 @@ class VIEW:
         _ = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
-            name = 'Table of Contents',
-            text = '..',
+            name = 'Lorem Ipsum',
+            text = open (os.path.join (path,'lorem-ipsum.txt')).readline (),
             rank = 0,
         )
 
         _ = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
-            name = 'Abstract',
-            text = '..',
+            name = 'Cras Gravida',
+            text = open (os.path.join (path,'cras-gravida.txt')).readline (),
             rank = 1
         )
 
         _ = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
-            name = 'Introduction',
-            text = '..',
+            name = 'Donec Molestie',
+            text = open (os.path.join (path,'donec-molestie.txt')).readline (),
             rank = 2
         )
 
         _ = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
-            name = 'Related Work',
-            text = '..',
+            name = 'In Hac',
+            text = open (os.path.join (path,'in-hac.txt')).readline (),
             rank = 3
         )
 
         _ = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='txt'),
             node = prj,
-            name = 'Lorem Ipsum',
-            text = '..',
+            name = 'Aenean Id',
+            text = open (os.path.join (path,'aenean-id.txt')).readline (),
             rank = 4
         )
 
-        _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
-            node = prj,
-            name = 'Conclusion',
-            text = '..',
-            rank = 5
+    init_prj02 = staticmethod (init_prj02)
+
+    def init (request):
+
+        root = ROOT.objects.create (
+            type = ROOT_TYPE.objects.get (_code='root'),
+            usid = request.session.session_key,
         )
 
-        _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
-            node = prj,
-            name = 'Index',
-            text = '..',
-            rank = 6
+        VIEW.init_prj01 (
+            root, os.path.join (os.path.abspath (''), 'editor/media/')
+        )
+
+        VIEW.init_prj02 (
+            root, os.path.join (os.path.abspath (''), 'editor/media/')
         )
 
     init = staticmethod (init)
@@ -164,7 +167,7 @@ class POST:
 
         return json.dumps (map (lambda leaf: {
             'text'     : leaf.name,
-            'data'     : leaf.text, ## TODO: Remove and implement separately!
+            'data'     : leaf.text,
             'id'       : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
             ),

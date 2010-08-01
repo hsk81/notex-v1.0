@@ -7,10 +7,16 @@ var pnlEditorTabs = new Ext.TabPanel({
 
   , listeners : {
 
-        insertTab : function (tabInfo) {
+        createTab : function (tabInfo) {
             var tab = this.findById (tabInfo.id)
             if (!tab) {
-                tab = this.add({
+
+                var divTag = '<div style="'
+                    + 'font-family: andale mono; '
+                    + 'font-size: 13px; '
+                    + 'text-align: justify;">{0}</div>'
+
+                tab = this.add ({
                     title      : tabInfo.title
                   , id         : tabInfo.id
                   , layout     : 'fit'
@@ -18,19 +24,27 @@ var pnlEditorTabs = new Ext.TabPanel({
                   , iconCls    : tabInfo.iconCls
                   , closable   : true
 
+                  , divTag     : divTag
+
                   , getEditor: function () {
                         return this.findById ('htmlEditorId')
                     }
 
                   , getData: function () {
                         return this.getEditor ().getValue ()
+                            .replace (new RegExp('^<div style="[^>]*">','g'),'')
+                            .replace (new RegExp('</div>$','g'),'')
                     }
 
                   , items : [{
                         xtype  : 'htmleditor'
                       , id     : 'htmlEditorId'
                       , anchor : '100% 100%'
-                      , html   : tabInfo.text
+                      , html   : String.format(divTag, tabInfo.text)
+
+                      , enableFont       : false
+                      , enableAlignments : false
+                      , enableSourceEdit : false
                   }]
                 })
             }
@@ -38,7 +52,7 @@ var pnlEditorTabs = new Ext.TabPanel({
             this.activate (tab)
         }
 
-      , getTab : function (id, fn) {
+      , readTab : function (id, fn) {
             //@TODO!?
         }
 
@@ -55,7 +69,7 @@ var pnlEditorTabs = new Ext.TabPanel({
             return fn (tab)
         }
         
-      , removeTab : function (tabInfo) {
+      , deleteTab : function (tabInfo) {
 
             var tab = this.findById (tabInfo.id)
             if (tab) {

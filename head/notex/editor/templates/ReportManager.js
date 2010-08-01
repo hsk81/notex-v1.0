@@ -53,14 +53,14 @@ var pnlReportManager = {
 
                             tree.fireEvent (
                                 'createNode', node, {
-                                    refNode  : selectedNode
+                                    refNode: selectedNode
                                 },{
                                     success: function (args) {
                                         var pnlTabs = Ext.getCmp (
                                             'pnlEditorTabsId'
                                         )
                                         pnlTabs.fireEvent (
-                                            'insertTab', fileInfo
+                                            'createTab', fileInfo
                                         )
                                     }
 
@@ -185,7 +185,7 @@ var pnlReportManager = {
                         success : function (args) {
 
                             Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                                'removeTab', { 'id': args.node.id }
+                                'deleteTab', { 'id': args.node.id }
                             )
 
                             DAL.crudDelete({
@@ -230,7 +230,7 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
         }
 
         Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'insertTab', tabInfo
+            'createTab', tabInfo
         )
     }
 });

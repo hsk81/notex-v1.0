@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block app-js %}
+<script type="text/javascript" src="{% url editor:DAL.js %}"></script>
+<script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
+<script type="text/javascript" src="{% url editor:OpenFileDialog.js %}"></script>
+<script type="text/javascript" src="{% url editor:ReportManagerTree.js %}"></script>
+<script type="text/javascript" src="{% url editor:ReportManager.js %}"></script>
+<script type="text/javascript" src="{% url editor:EditorTabs.js %}"></script>
+{% endblock %}
+
 {% block main %}
 <script type="text/javascript">
 
@@ -20,13 +29,6 @@
     }
     
 </script>
-
-<script type="text/javascript" src="{% url editor:DAL.js %}"></script>
-<script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
-<script type="text/javascript" src="{% url editor:OpenFileDialog.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManagerTree.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.js %}"></script>
-<script type="text/javascript" src="{% url editor:EditorTabs.js %}"></script>
 
 <script type="text/javascript">
 Ext.onReady (function () {
