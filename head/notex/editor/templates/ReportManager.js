@@ -104,7 +104,7 @@ var pnlReportManager = {
                     DAL.crudUpdate ({
                         leafId : node.id
                       , nodeId : node.parentNode.id
-                      , name   : node.text
+                      , name   : node.text //.replace ('<i>','').replace ('</i>','')
                       , data   : tab.getData ()
                       , rank   : node.parentNode.indexOf (node)
                     },{
@@ -135,7 +135,7 @@ var pnlReportManager = {
                     DAL.crudUpdate ({
                         leafId : node.id
                       , nodeId : node.parentNode.id
-                      , name   : node.text
+                      , name   : node.text //.replace ('<i>','').replace ('</i>','')
                       , data   : tab.getData ()
                       , rank   : node.parentNode.indexOf (node)
                     },{
@@ -170,6 +170,42 @@ var pnlReportManager = {
         },{
             iconCls : 'icon-pencil'
           , tooltip : '<b>Rename</b><br/>Rename selected report, folder or file'
+          , handler : function (button, event) {
+
+                var tree = Ext.getCmp ('pnlReportManagerTreeId')
+                var model = tree.getSelectionModel ()
+                var node = model.getSelectedNode ()
+
+                if (node != undefined) {
+                    Ext.Msg.prompt('Rename Node', 'Enter a name:',
+                        function (btn, text) {
+                            if (btn == 'ok') {                                
+                                tree.el.mask ('Please wait', 'x-mask-loading')
+
+                                var tabs = Ext.getCmp ('pnlEditorTabsId')
+                                var tab = tabs.findById (node.id)
+                                if (tab != undefined) {
+                                    tab.el.mask (
+                                        'Please wait', 'x-mask-loading'
+                                    )
+                                }
+
+                                DAL.crudRename ({
+                                    nodeId : node.id
+                                  , name   : text
+                                },{
+                                    success : DAL.fnSuccessRename
+                                  , failure : DAL.fnFailureRename
+                                })
+                            }
+                        }, this, false, node.text
+                    )
+                } else {
+                    Ext.Msg.alert (
+                        "Error", "No node selected; select a node!"
+                    )
+                }
+            }
         },{
             iconCls : 'icon-delete'
           , tooltip : '<b>Delete</b><br/>Delete selected report, folder or file'
@@ -233,4 +269,4 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
             'createTab', tabInfo
         )
     }
-});
+})

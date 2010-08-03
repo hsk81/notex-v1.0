@@ -55,9 +55,8 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
         }
 
       , updateNode: function (node, args, fn) {
-
-            if (node != undefined 
-             && args != undefined && args.nodeInfo != undefined) {
+            if (node != undefined && args != undefined &&
+                args.nodeInfo != undefined) {
 
                 for (var property in args.nodeInfo) {
                     node[property] = args.nodeInfo[property]

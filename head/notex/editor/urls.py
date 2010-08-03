@@ -94,6 +94,10 @@ urlpatterns = patterns('',
     ),
 
     url(
+        r'^post/rename/$', POST.rename, name='post.rename'
+    ),
+
+    url(
         r'^post/delete/$', POST.delete, name='post.delete'
     ),
 

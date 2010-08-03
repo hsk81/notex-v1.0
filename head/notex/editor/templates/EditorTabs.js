@@ -40,7 +40,7 @@ var pnlEditorTabs = new Ext.TabPanel({
                         xtype  : 'htmleditor'
                       , id     : 'htmlEditorId'
                       , anchor : '100% 100%'
-                      , html   : String.format(divTag, tabInfo.text)
+                      , html   : String.format (divTag, tabInfo.text)
 
                       , enableFont       : false
                       , enableAlignments : false
@@ -56,7 +56,7 @@ var pnlEditorTabs = new Ext.TabPanel({
             //@TODO!?
         }
 
-      , updateTab : function (uuid, id, fn) {
+      , updateTab : function (tabinfo, uuid, id, fn) {
 
             var tab = this.findById (
                 (uuid != undefined) ? uuid : id

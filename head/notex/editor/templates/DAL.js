@@ -65,12 +65,12 @@ var DAL = {
   , fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
         Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'updateTab', res.uuid, res.id, function (tab) {
+            'updateTab', undefined, res.uuid, res.id, function (tab) {
 
                 var pnlReportManagerTree = Ext.getCmp (
                     'pnlReportManagerTreeId'
                 )
-                
+
                 var node = pnlReportManagerTree.getNodeById (
                     (res.uuid != undefined) ? res.uuid : res.id
                 )
@@ -87,7 +87,7 @@ var DAL = {
                         }
                     }
                 )
-                
+
                 tab.el.unmask ()
             }
         )
@@ -127,6 +127,49 @@ var DAL = {
             }
 
         });
+    }
+
+    //
+    // CRUD: Rename -----------------------------------------------------------
+    //
+
+  , fnSuccessRename : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+
+        var tabs = Ext.getCmp ('pnlEditorTabsId')
+        var tab = tabs.findById (res.id)
+        if (tab != undefined) {
+            tab.setTitle (res.name)
+            tab.el.unmask ()
+        }
+
+        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        var node = tree.getNodeById (res.id)
+        if (node != undefined) {
+            node.setText (res.name)
+            tree.el.unmask ()
+        }
+    }
+
+  , fnFailureRename : function (xhr, opts) {
+        //@TOOD
+    }
+
+  , crudRename : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+
+            params : crudInfo
+          , url : urls.rename
+
+          , success : function (xhr, opts) {
+                fn.success (xhr, opts)
+            }
+
+          , failure : function (xhr, opts) {
+                fn.failure (xhr, opts)
+            }
+
+        })
     }
 
     //
