@@ -100,9 +100,9 @@ class VIEW:
             root, 'editor/media/'
         )
 
-        VIEW.init_prj02 (
-            root, 'editor/media/'
-        )
+     ## VIEW.init_prj02 (
+     ##     root, 'editor/media/'
+     ## )
 
     init = staticmethod (init)
 
