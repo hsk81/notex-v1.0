@@ -63,7 +63,21 @@ var pnlEditorTabs = new Ext.TabPanel({
             )
 
             if (tabInfo.id != undefined) {
-                tab.id = tabInfo.id
+
+                var ti = {
+                    id      : tabInfo.id
+                  , title   : tab.title
+                  , text    : tab.getData ()
+                  , iconCls : tab.iconCls
+                }
+
+                this.remove (tab)
+
+                Ext.getCmp (
+                    'pnlEditorTabsId'
+                ).fireEvent (
+                    'createTab', ti
+                )
             }
 
             return fn (tab)

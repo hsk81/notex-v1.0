@@ -285,6 +285,7 @@ var pnlReportManager = {
                                 node.setText (
                                     String.format ("<i>{0}</i>", text)
                                 )
+
                                 tree.el.unmask ()
 
                                 if (tab != undefined) {
