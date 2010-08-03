@@ -97,11 +97,11 @@ class VIEW:
         )
 
         VIEW.init_prj01 (
-            root, os.path.join (os.path.abspath (''), 'editor/media/')
+            root, 'editor/media/'
         )
 
         VIEW.init_prj02 (
-            root, os.path.join (os.path.abspath (''), 'editor/media/')
+            root, 'editor/media/'
         )
 
     init = staticmethod (init)
