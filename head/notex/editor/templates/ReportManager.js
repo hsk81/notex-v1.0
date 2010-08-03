@@ -82,7 +82,6 @@ var pnlReportManager = {
             iconCls : 'icon-pencil'
           , tooltip : '<b>Rename</b><br/>Rename selected report, folder or file'
           , handler : function (button, event) {
-                Ext.getCmp ('pnlReportManagerId').fireEvent ('touchSelectedNode')
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('renameSelectedNode')
             }
         },{
@@ -145,7 +144,7 @@ var pnlReportManager = {
                         }
 
                         var node = new Ext.tree.TreeNode ({
-                            'text'     : fileInfo.title
+                            'text'     : String.format ("<i>{0}</i>", fileInfo.title)
                           , 'data'     : fileInfo.text
                           , 'id'       : fileInfo.id
                           , 'cls'      : "file"
@@ -182,31 +181,6 @@ var pnlReportManager = {
                     "Error", "No report selected; select a report!"
                 )
             }
-        }
-
-        //
-        // Touch selected node ------------------------------------------------
-        //
-
-      , touchSelectedNode : function () {
-            var tree = Ext.getCmp ('pnlReportManagerTreeId')
-            var model = tree.getSelectionModel ()
-            var node = model.getSelectedNode ()
-
-            DAL.crudUpdate ({
-                leafId : node.id
-              , nodeId : node.parentNode.id
-              , name   : node.text.replace('<i>','').replace('</i>','')
-              , data   : undefined
-              , rank   : node.parentNode.indexOf (node)
-            },{
-                success : function (xhr, opts) {
-                    //@TODO
-                }
-              , failure : function (xhr, opts) {
-                    //@TODO
-                }
-            })
         }
 
         //
@@ -294,7 +268,7 @@ var pnlReportManager = {
             var node = model.getSelectedNode ()
 
             if (node != undefined) {
-                Ext.Msg.prompt('Rename Node', 'Enter a name:',
+                Ext.Msg.prompt ('Rename Node', 'Enter a name:',
                     function (btn, text) {
                         if (btn == 'ok') {
                             tree.el.mask ('Please wait', 'x-mask-loading')
@@ -307,16 +281,27 @@ var pnlReportManager = {
                                 )
                             }
 
-                            DAL.crudRename ({
-                                nodeId : node.id
-                              , name   : text
-                            },{
-                                success : DAL.fnSuccessRename
-                              , failure : DAL.fnFailureRename
-                            })
-                            
+                            if (Math.uuidMatch (node.id)) {
+                                node.setText (
+                                    String.format ("<i>{0}</i>", text)
+                                )
+                                tree.el.unmask ()
+
+                                if (tab != undefined) {
+                                    tab.setTitle (text)
+                                    tab.el.unmask ()
+                                }
+                            } else {
+                                DAL.crudRename ({
+                                    nodeId : node.id
+                                  , name   : text
+                                },{
+                                    success : DAL.fnSuccessRename
+                                  , failure : DAL.fnFailureRename
+                                })
+                            }
                         }
-                    }, this, false, node.text
+                    }, this, false, node.text.replace('<i>','').replace('</i>','')
                 )
             } else {
                 Ext.Msg.alert (
@@ -381,7 +366,7 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
 
         var tabInfo = {
             id      : node.id
-          , title   : node.attributes['text']
+          , title   : node.attributes['text'].replace ('<i>','').replace ('</i>','')
           , text    : node.attributes['data']
           , iconCls : node.attributes['iconCls']
         }

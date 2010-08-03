@@ -65,7 +65,7 @@ var DAL = {
   , fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
         Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'updateTab', undefined, res.uuid, res.id, function (tab) {
+            'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
 
                 var pnlReportManagerTree = Ext.getCmp (
                     'pnlReportManagerTreeId'
@@ -152,7 +152,7 @@ var DAL = {
     }
 
   , fnFailureRename : function (xhr, opts) {
-        //@TOOD
+        //@TODO
     }
 
   , crudRename : function (crudInfo, fn) {

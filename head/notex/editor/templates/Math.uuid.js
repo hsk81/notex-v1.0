@@ -1,4 +1,4 @@
-(function() {
+(function () {
   var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     .split('');
 
@@ -7,7 +7,7 @@
     radix = radix || chars.length;
 
     if (len) {
-      for (var i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+      for (var i = 0; i < len; i++) uuid[i] = chars[0 | Math.random () * radix];
     } else {
       var r;
 
@@ -50,5 +50,11 @@
       return v.toString(16);
     }).toUpperCase();
   };
+
+  Math.uuidMatch = function (uuid) {
+      return uuid.match (
+        /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i
+      )
+  }
 
 })();

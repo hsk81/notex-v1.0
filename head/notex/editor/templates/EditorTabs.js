@@ -56,14 +56,14 @@ var pnlEditorTabs = new Ext.TabPanel({
             //@TODO!?
         }
 
-      , updateTab : function (tabinfo, uuid, id, fn) {
+      , updateTab : function (tabInfo, fn) {
 
             var tab = this.findById (
-                (uuid != undefined) ? uuid : id
+                (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
-            if (id != undefined) {
-                tab.id = id
+            if (tabInfo.id != undefined) {
+                tab.id = tabInfo.id
             }
 
             return fn (tab)
