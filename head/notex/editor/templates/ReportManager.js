@@ -29,7 +29,7 @@ var pnlReportManager = {
             iconCls : 'icon-folder_page'
           , tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)'
           , handler : function (button, event) {
-                Ext.getCmp ('pnlReportManagerId').fireEvent ('deleteSelectedNode')
+                Ext.getCmp ('pnlReportManagerId').fireEvent ('openFile')
             }
         },{
             iconCls : 'icon-disk'
@@ -82,6 +82,7 @@ var pnlReportManager = {
             iconCls : 'icon-pencil'
           , tooltip : '<b>Rename</b><br/>Rename selected report, folder or file'
           , handler : function (button, event) {
+                Ext.getCmp ('pnlReportManagerId').fireEvent ('touchSelectedNode')
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('renameSelectedNode')
             }
         },{
@@ -184,6 +185,31 @@ var pnlReportManager = {
         }
 
         //
+        // Touch selected node ------------------------------------------------
+        //
+
+      , touchSelectedNode : function () {
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+
+            DAL.crudUpdate ({
+                leafId : node.id
+              , nodeId : node.parentNode.id
+              , name   : node.text.replace('<i>','').replace('</i>','')
+              , data   : undefined
+              , rank   : node.parentNode.indexOf (node)
+            },{
+                success : function (xhr, opts) {
+                    //@TODO
+                }
+              , failure : function (xhr, opts) {
+                    //@TODO
+                }
+            })
+        }
+
+        //
         // Save active tab or save-all open tab -------------------------------
         //
 
@@ -192,7 +218,7 @@ var pnlReportManager = {
             var tab = pnlEditorTabs.getActiveTab ()
 
             if (tab != undefined) {
-                
+
                 tab.el.mask ('Please wait', 'x-mask-loading')
                 var tree = Ext.getCmp ('pnlReportManagerTreeId')
                 var node = tree.getNodeById (tab.id)
@@ -288,6 +314,7 @@ var pnlReportManager = {
                                 success : DAL.fnSuccessRename
                               , failure : DAL.fnFailureRename
                             })
+                            
                         }
                     }, this, false, node.text
                 )

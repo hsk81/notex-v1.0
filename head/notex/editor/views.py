@@ -280,7 +280,11 @@ class POST:
 
                 leaf = LEAF.objects.get (pk = ids[1])
                 leaf.name = request.POST['name']
-                leaf.text = request.POST['data']
+
+                if request.POST['data']:
+
+                    leaf.text = request.POST['data']
+
                 leaf.save ()
 
                 js_string = json.dumps ([{
