@@ -45,7 +45,7 @@ var pnlEditorTabs = new Ext.TabPanel({
                       , enableFont       : false
                       , enableAlignments : false
                       , enableSourceEdit : false
-                  }]
+                    }]
                 })
             }
 
@@ -77,6 +77,5 @@ var pnlEditorTabs = new Ext.TabPanel({
             }
 
         }
-
     }
-});
+})
