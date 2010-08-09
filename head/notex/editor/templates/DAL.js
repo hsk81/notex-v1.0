@@ -67,19 +67,26 @@ var DAL = {
         Ext.getCmp ('pnlEditorTabsId').fireEvent (
             'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
 
-                var pnlReportManagerTree = Ext.getCmp (
+                var tree = Ext.getCmp (
                     'pnlReportManagerTreeId'
                 )
 
-                var node = pnlReportManagerTree.getNodeById (
+                var node = tree.getNodeById (
                     (res.uuid != undefined) ? res.uuid : res.id
                 )
 
-                pnlReportManagerTree.fireEvent (
-                    'updateNode', node, {nodeInfo:{id:res.id}}, {
+                tree.fireEvent (
+                    'updateNode', node, {uuid:res.uuid, id:res.id}, {
 
                         success : function (args) {
-                            args.node.attributes['data'] = tab.getData ()
+                            if (Math.uuidMatch (node.id)) {
+                                var refNode = args.node.parentNode
+                                tree.getLoader().load(
+                                    refNode, function () { refNode.expand() }
+                                );
+                            } else {
+                                args.node.attributes['data'] = tab.getData ()
+                            }
                         }
 
                       , failure : function (args) {
@@ -141,12 +148,16 @@ var DAL = {
         if (tab != undefined) {
             tab.setTitle (res.name)
             tab.el.unmask ()
+        } else {
+            tab.el.unmask ()
         }
 
         var tree = Ext.getCmp ('pnlReportManagerTreeId')
         var node = tree.getNodeById (res.id)
         if (node != undefined) {
             node.setText (res.name)
+            tree.el.unmask ()
+        } else {
             tree.el.unmask ()
         }
     }

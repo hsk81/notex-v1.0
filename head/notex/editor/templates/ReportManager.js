@@ -37,12 +37,6 @@ var pnlReportManager = {
           , handler : function (button, event) {
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('saveActiveTab')
             }
-        },{
-            iconCls : 'icon-disk_multiple'
-          , tooltip : '<b>Save All</b><br/>Save all files (to <i>remote</i> storage)'
-          , handler : function (button, event) {
-                Ext.getCmp ('pnlReportManagerId').fireEvent ('saveOpenTabs')
-            }
         },'-',{
             iconCls : 'icon-add'
           , tooltip : '<b>Add</b><br/>Add a new report, folder or file'
@@ -210,34 +204,6 @@ var pnlReportManager = {
             }
         }
 
-      , saveOpenTabs : function () {
-            var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
-
-            for (var jdx=0; jdx<pnlEditorTabs.items.length; jdx++) {
-                pnlEditorTabs.items.items[jdx].el.mask (
-                    'Please wait', 'x-mask-loading'
-                )
-            }
-
-            for (var idx=0; idx<pnlEditorTabs.items.length; idx++) {
-
-                var tab = pnlEditorTabs.items.items[idx]
-                var tree = Ext.getCmp ('pnlReportManagerTreeId')
-                var node = tree.getNodeById (tab.id)
-
-                DAL.crudUpdate ({
-                    leafId : node.id
-                  , nodeId : node.parentNode.id
-                  , name   : node.text.replace('<i>','').replace('</i>','')
-                  , data   : tab.getData ()
-                  , rank   : node.parentNode.indexOf (node)
-                },{
-                    success : DAL.fnSuccessUpdate
-                  , failure : DAL.fnFailureUpdate
-                });
-            }
-        }
-
         //
         // Add report, folder, text or image file -----------------------------
         //
@@ -286,7 +252,9 @@ var pnlReportManager = {
                                     String.format ("<i>{0}</i>", text)
                                 )
 
-                                tree.el.unmask ()
+                                if (tree != undefined) {
+                                    tree.el.unmask ()
+                                }
 
                                 if (tab != undefined) {
                                     tab.setTitle (text)
@@ -317,11 +285,11 @@ var pnlReportManager = {
 
       , deleteSelectedNode : function () {
             var tree = Ext.getCmp ('pnlReportManagerTreeId')
-            var selectionModel = tree.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
 
             tree.fireEvent (
-                'deleteNode', selectedNode, {destroy: true}, {
+                'deleteNode', node, {destroy: true}, {
 
                     success : function (args) {
 

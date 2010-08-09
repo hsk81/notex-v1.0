@@ -72,24 +72,6 @@
       '{{ MEDIA_URL }}lib/extjs/include/resources/images/default/s.gif'
   </script>
 
-  {% block string-format %}
-  <script type="text/javascript">
-  /*String.format = String.prototype.format = function () {
-
-    var string = this;
-    var i=0;
-
-    if (typeof(this) == "function") { string = arguments[0]; i++; }
-
-    for (; i < arguments.length; i++) {
-      string = string.replace(/\{\d+?\}/, arguments[i]);
-    }
-
-    return string;
-  }*/
-  </script>
-  {% endblock %}
-
   {% block map2obj %}<script type="text/javascript">
   var map2obj = function (objects) {
 

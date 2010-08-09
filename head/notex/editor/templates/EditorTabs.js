@@ -7,8 +7,12 @@ var pnlEditorTabs = new Ext.TabPanel({
 
   , listeners : {
 
-        createTab : function (tabInfo) {
-            var tab = this.findById (tabInfo.id)
+        createTab : function (tabInfo, fn) {
+
+            var tab = this.findById (
+                (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
+            )
+
             if (!tab) {
 
                 var divTag = '<div style="'
@@ -46,14 +50,23 @@ var pnlEditorTabs = new Ext.TabPanel({
                       , enableAlignments : false
                       , enableSourceEdit : false
                     }]
-                })
+                });
+                
+                this.activate (tab)
+            } else {
+                this.activate (tab)
             }
 
-            this.activate (tab)
+            return (fn != undefined) ? fn (tab) : undefined
         }
 
-      , readTab : function (id, fn) {
-            //@TODO!?
+      , readTab : function (tabInfo, fn) {
+
+            var tab = this.findById (
+                (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
+            )
+
+            return (fn != undefined) ? fn (tab) : undefined
         }
 
       , updateTab : function (tabInfo, fn) {
@@ -62,7 +75,7 @@ var pnlEditorTabs = new Ext.TabPanel({
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
-            if (tabInfo.id != undefined) {
+            if (tabInfo.uuid != undefined) {
 
                 var ti = {
                     id      : tabInfo.id
@@ -80,16 +93,20 @@ var pnlEditorTabs = new Ext.TabPanel({
                 )
             }
 
-            return fn (tab)
+            return (fn != undefined) ? fn (tab) : undefined
         }
         
-      , deleteTab : function (tabInfo) {
+      , deleteTab : function (tabInfo, fn) {
 
-            var tab = this.findById (tabInfo.id)
+            var tab = this.findById (
+                (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
+            )
+            
             if (tab) {
                 this.remove (tab, true)
             }
 
+            return (fn != undefined) ? fn (tab) : undefined
         }
     }
 })
