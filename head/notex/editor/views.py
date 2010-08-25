@@ -148,9 +148,9 @@ class DATA:
 
 class POST:
 
-    def nodes (ns):
+    def node (node):
 
-        return json.dumps (map (lambda node: {
+        return {
             'text'     : node.name,
             'id'       : base64.b32encode (
                 json.dumps (('node', [node.pk]))
@@ -159,13 +159,21 @@ class POST:
             'iconCls'  : node.type.icon,
             'leaf'     : False,
             'expanded' : False
-        }, ns.order_by ('_rank')))
+        }
+
+    node = staticmethod (node)
+
+    def nodes (ns):
+
+        return json.dumps (
+            map (lambda node: POST.node (node), ns.order_by ('_rank'))
+        )
 
     nodes = staticmethod (nodes)
 
-    def leafs (ls):
+    def leaf (leaf):
 
-        return json.dumps (map (lambda leaf: {
+        return {
             'text'     : leaf.name,
             'data'     : leaf.text,
             'id'       : base64.b32encode (
@@ -175,7 +183,15 @@ class POST:
             'iconCls'  : leaf.type.icon,
             'leaf'     : True,
             'expanded' : False
-        }, ls.order_by ('_rank')))
+        }
+
+    leaf = staticmethod (leaf)
+
+    def leafs (ls):
+
+        return json.dumps (
+            map (lambda leaf: POST.leaf (leaf), ls.order_by ('_rank'))
+        )
 
     leafs = staticmethod (leafs)
 
@@ -193,7 +209,34 @@ class POST:
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
 
-        if type == 'node':
+        if type == 'root':
+
+            try:
+
+                root = ROOT.objects.get (_usid = request.session.session_key),
+
+                node = NODE.objects.create (
+                    type = NODE_TYPE.objects.get (_code='prj'),
+                    root = root,
+                    name = request.POST['name'],
+                    rank = request.POST['rank'],
+                )
+
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'id'      : base64.b32encode (
+                        json.dumps (('node', [node.pk]))
+                    )
+                }])
+
+            except:
+
+                js_string = json.dumps ([{
+                    'success' : 'false',
+                    'uuid'    : request.POST['leafId']
+                }])
+                
+        elif type == 'node':
 
             try:
 
@@ -238,10 +281,7 @@ class POST:
         if type == 'root': # ids == []
 
             root = ROOT.objects.get (_usid = request.session.session_key)
-
-            js_string = POST.nodes (
-                NODE.objects.filter (_root = root)
-            )
+            js_string = POST.nodes (NODE.objects.filter (_root = root))
 
         elif type == 'node':
 

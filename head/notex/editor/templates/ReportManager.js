@@ -138,7 +138,9 @@ var pnlReportManager = {
                         }
 
                         var node = new Ext.tree.TreeNode ({
-                            'text'     : String.format ("<i>{0}</i>", fileInfo.title)
+                            'text'     : String.format (
+                                "<i>{0}</i>", fileInfo.title
+                            )
                           , 'data'     : fileInfo.text
                           , 'id'       : fileInfo.id
                           , 'cls'      : "file"
@@ -208,8 +210,28 @@ var pnlReportManager = {
         // Add report, folder, text or image file -----------------------------
         //
 
-      , addReport : function () {
-            //@TODO
+      , addReport : function (a,b,c,d) {
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var rank = tree.root.childNodes.indexOf (
+                tree.root.lastChild
+            )
+            
+            Ext.Msg.prompt ('Create Report', 'Enter a name:',
+                function (btn, text) {
+                    if (btn == 'ok') {
+                        tree.el.mask ('Please wait', 'x-mask-loading')
+
+                        DAL.crudCreate ({
+                            nodeId : tree.root.id
+                          , name   : text
+                          , rank   : rank
+                        },{
+                            success : DAL.fnSuccessCreate
+                          , failure : DAL.fnFailureCreate
+                        })
+                    }
+                }
+            )
         }
 
       , addFolder : function () {
@@ -217,7 +239,34 @@ var pnlReportManager = {
         }
 
       , addTextFile : function () {
-            //@TODO
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+
+            if (node != undefined) {
+                Ext.Msg.prompt ('Create Text File', 'Enter a name:',
+                    function (btn, text) {
+                        if (btn == 'ok') {
+                            tree.el.mask ('Please wait', 'x-mask-loading')
+
+                            DAL.crudCreate ({
+                                nodeId : node.id
+                              , name   : text
+                              , rank   : node.childNodes.indexOf (
+                                    node.lastChild
+                                )
+                            },{
+                                success : DAL.fnSuccessCreate
+                              , failure : DAL.fnFailureCreate
+                            })
+                        }
+                    }
+                )
+            } else {
+                Ext.Msg.alert (
+                    "Error", "No node selected; select a node!"
+                )
+            }
         }
 
       , addImageFile : function () {
@@ -270,7 +319,9 @@ var pnlReportManager = {
                                 })
                             }
                         }
-                    }, this, false, node.text.replace('<i>','').replace('</i>','')
+                    }, this, false, node.text.replace('<i>','').replace(
+                        '</i>',''
+                    )
                 )
             } else {
                 Ext.Msg.alert (
@@ -335,7 +386,9 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
 
         var tabInfo = {
             id      : node.id
-          , title   : node.attributes['text'].replace ('<i>','').replace ('</i>','')
+          , title   : node.attributes['text'].replace ('<i>','').replace (
+                '</i>',''
+            )
           , text    : node.attributes['data']
           , iconCls : node.attributes['iconCls']
         }

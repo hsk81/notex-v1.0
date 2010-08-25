@@ -55,6 +55,7 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
         }
 
       , updateNode: function (node, args, fn) {
+
             if (node != undefined && args != undefined) {
 
                 node.setText (
@@ -119,4 +120,4 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
         }
 
     }
-});
+})

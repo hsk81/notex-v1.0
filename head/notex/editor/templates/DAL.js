@@ -5,11 +5,21 @@ var DAL = {
     //
 
     fnSuccessCreate : function (xhr, opts) {
-        //@TODO!
+        var res = Ext.decode (xhr.responseText)[0]
+        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+
+        tree.getLoader().load(
+            tree.root, null
+        )
+
+        tree.el.unmask ()
     }
 
   , fnFailureCreate : function (xhr, opts) {
-        //@TODO!
+        var res = Ext.decode (xhr.responseText)[0]
+        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        console.info (res.id)
+        tree.el.unmask ()
     }
 
   , crudCreate : function (crudInfo, fn) {
@@ -148,13 +158,11 @@ var DAL = {
         if (tab != undefined) {
             tab.setTitle (res.name)
             tab.el.unmask ()
-        } else {
-            tab.el.unmask ()
         }
 
         var tree = Ext.getCmp ('pnlReportManagerTreeId')
         var node = tree.getNodeById (res.id)
-        if (node != undefined) {
+        if (node) {
             node.setText (res.name)
             tree.el.unmask ()
         } else {
