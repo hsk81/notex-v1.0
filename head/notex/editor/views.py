@@ -213,7 +213,7 @@ class POST:
 
             try:
 
-                root = ROOT.objects.get (_usid = request.session.session_key),
+                root = ROOT.objects.get (_usid=request.session.session_key)
 
                 node = NODE.objects.create (
                     type = NODE_TYPE.objects.get (_code='prj'),
@@ -233,7 +233,7 @@ class POST:
 
                 js_string = json.dumps ([{
                     'success' : 'false',
-                    'uuid'    : request.POST['leafId']
+                    'id  '    : request.POST['nodeId']
                 }])
                 
         elif type == 'node':
@@ -242,19 +242,30 @@ class POST:
 
                 leaf = LEAF.objects.create (
                     type = LEAF_TYPE.objects.get (_code='txt'),
-                    node = NODE.objects.get (pk = ids[0]),
+                    node = NODE.objects.get (pk=ids[0]),
                     name = request.POST['name'],
                     text = request.POST['data'],
                     rank = int (request.POST['rank'])
                 )
 
-                js_string = json.dumps ([{
-                    'success' : 'true',
-                    'uuid'    : request.POST['leafId'],
-                    'id'      :  base64.b32encode (
-                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
-                    )
-                }])
+                if 'leafId' in request.POST:
+
+                    js_string = json.dumps ([{
+                        'success' : 'true',
+                        'uuid'    : request.POST['leafId'],
+                        'id'      :  base64.b32encode (
+                            json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                        )
+                    }])
+
+                else:
+
+                    js_string = json.dumps ([{
+                        'success' : 'true',
+                        'id'      :  base64.b32encode (
+                            json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                        )
+                    }])
 
             except:
 

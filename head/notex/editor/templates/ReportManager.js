@@ -224,7 +224,7 @@ var pnlReportManager = {
                         DAL.crudCreate ({
                             nodeId : tree.root.id
                           , name   : text
-                          , rank   : rank
+                          , rank   : rank + 1
                         },{
                             success : DAL.fnSuccessCreate
                           , failure : DAL.fnFailureCreate
@@ -244,17 +244,32 @@ var pnlReportManager = {
             var node = model.getSelectedNode ()
 
             if (node != undefined) {
+                if (node.isLeaf())
+                {
+                    node = node.parentNode
+                }
+
                 Ext.Msg.prompt ('Create Text File', 'Enter a name:',
                     function (btn, text) {
                         if (btn == 'ok') {
                             tree.el.mask ('Please wait', 'x-mask-loading')
 
+                            var rank = node.childNodes.indexOf (
+                                node.lastChild
+                            );
+
                             DAL.crudCreate ({
                                 nodeId : node.id
                               , name   : text
-                              , rank   : node.childNodes.indexOf (
-                                    node.lastChild
-                                )
+                              , rank   : rank + 1
+                              , data   :
+
+                                    '<div style="' +
+                                        'font-family: andale mono; ' +
+                                        'font-size: 13px; ' +
+                                        'text-align: justify;">..' +
+                                    '</div>'
+
                             },{
                                 success : DAL.fnSuccessCreate
                               , failure : DAL.fnFailureCreate

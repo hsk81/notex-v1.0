@@ -5,6 +5,14 @@ var pnlEditorTabs = new Ext.TabPanel({
   , enableTabScroll : true
   , tabPosition     : 'bottom'
 
+  , divTag : 
+      
+        '<div style="' +
+            'font-family: andale mono; ' +
+            'font-size: 13px; ' +
+            'text-align: justify;">{0}' +
+        '</div>'
+
   , listeners : {
 
         createTab : function (tabInfo, fn) {
@@ -15,11 +23,6 @@ var pnlEditorTabs = new Ext.TabPanel({
 
             if (!tab) {
 
-                var divTag = '<div style="'
-                    + 'font-family: andale mono; '
-                    + 'font-size: 13px; '
-                    + 'text-align: justify;">{0}</div>'
-
                 tab = this.add ({
                     title      : tabInfo.title
                   , id         : tabInfo.id
@@ -28,7 +31,7 @@ var pnlEditorTabs = new Ext.TabPanel({
                   , iconCls    : tabInfo.iconCls
                   , closable   : true
 
-                  , divTag     : divTag
+                  , divTag     : pnlEditorTabs.divTag
 
                   , getEditor: function () {
                         return this.findById ('htmlEditorId')
@@ -44,11 +47,18 @@ var pnlEditorTabs = new Ext.TabPanel({
                         xtype  : 'htmleditor'
                       , id     : 'htmlEditorId'
                       , anchor : '100% 100%'
-                      , html   : String.format (divTag, tabInfo.text)
+
+                      , html   :
+
+                            String.format(
+                                pnlEditorTabs.divTag, String.format (
+                                    pnlEditorTabs.divTag, tabInfo.text
+                                )
+                            )
 
                       , enableFont       : false
                       , enableAlignments : false
-                      , enableSourceEdit : false
+                      , enableSourceEdit : true
                     }]
                 });
                 

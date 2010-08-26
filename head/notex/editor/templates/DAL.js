@@ -18,7 +18,6 @@ var DAL = {
   , fnFailureCreate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
         var tree = Ext.getCmp ('pnlReportManagerTreeId')
-        console.info (res.id)
         tree.el.unmask ()
     }
 
