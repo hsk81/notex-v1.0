@@ -1,3 +1,4 @@
+from settings                       import MEDIA_ROOT
 from datetime                       import datetime
 
 from django.http                    import HttpResponse
@@ -37,8 +38,6 @@ class VIEW:
     init_prj01 = staticmethod (init_prj01)
 
     def init_prj02 (root, path):
-
-        print "PATH: %s" % path
 
         prj = NODE.objects.create (
             type = NODE_TYPE.objects.get (_code='prj'),
@@ -97,12 +96,12 @@ class VIEW:
         )
 
         VIEW.init_prj01 (
-            root, 'editor/media/'
+            root, MEDIA_ROOT + 'app/editor/'
         )
 
-     ## VIEW.init_prj02 (
-     ##     root, 'editor/media/'
-     ## )
+        VIEW.init_prj02 (
+            root, MEDIA_ROOT + 'app/editor/'
+        )
 
     init = staticmethod (init)
 

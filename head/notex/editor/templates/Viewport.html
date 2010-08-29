@@ -25,14 +25,23 @@
       , del    : '{% url editor:post.delete %}'
     }
 
-    if (typeof (console) != 'undefined') {
-        console.info (session)
-    }
-    
+    dump (session);    
 </script>
 
 <script type="text/javascript">
 Ext.onReady (function () {
+
+    $(document).ready(function() {
+        if ($("#textAreaId")) {
+            if ($("#textAreaId").markItUp) {
+                $("#textAreaId").markItUp();
+            }
+        }
+    });
+    
+    /**
+     * quick-tips -------------------------------------------------------------
+     */
 
     Ext.QuickTips.init ();
 
