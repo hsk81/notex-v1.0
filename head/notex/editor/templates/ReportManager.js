@@ -63,12 +63,6 @@ var pnlReportManager = {
                 , handler : function (button, event) {
                       Ext.getCmp ('pnlReportManagerId').fireEvent ('addTextFile')
                   }
-              },'-',{
-                  iconCls : 'icon-image'
-                , text    : 'Image'
-                , handler : function (button, event) {
-                      Ext.getCmp ('pnlReportManagerId').fireEvent ('addImageFile')
-                  }
               }]
 
             }
@@ -129,18 +123,27 @@ var pnlReportManager = {
                     success: function (file) {
 
                         var fileInfo = {
-                            id      : Math.uuid ()
-                          , title   : file.name
-                          , text    : file.getAsBinary ().replace (
+                            id    : Math.uuid ()
+                          , title : file.name
+                        }
+
+                        if (String.match(file.type, "^text") == "text") {
+                            fileInfo.iconCls = 'icon-page'
+                            fileInfo.text = file.getAsBinary ().replace (
                                 "\n", "<br>", 'g'
                             )
-                          , iconCls : 'icon-page'
+                        } else if (
+                            String.match(file.type, "^image") == "image"
+                        ) {
+                            fileInfo.iconCls = 'icon-image'
+                            fileInfo.text = file.getAsBinary ()
+                        } else {
+                            fileInfo.iconCls = 'icon-page_white'
+                            fileInfo.text = file.getAsBinary ()
                         }
 
                         var node = new Ext.tree.TreeNode ({
-                            'text'     : String.format (
-                                "<i>{0}</i>", fileInfo.title
-                            )
+                            'text'     : String.format ("<i>{0}</i>", fileInfo.title)
                           , 'data'     : fileInfo.text
                           , 'id'       : fileInfo.id
                           , 'cls'      : "file"
@@ -168,7 +171,9 @@ var pnlReportManager = {
                     }
 
                   , failure: function () {
-                        Ext.Msg.alert ("Error", "No file selected!")
+                        Ext.Msg.alert (
+                            "Error", "No file or wrong file type selected!"
+                        )
                     }
                 })
 
@@ -294,14 +299,7 @@ var pnlReportManager = {
                                 nodeId : node.id
                               , name   : text
                               , rank   : rank + 1
-                              , data   :
-
-                                    '<div style="' +
-                                        'font-family: andale mono; ' +
-                                        'font-size: 13px; ' +
-                                        'text-align: justify;">..' +
-                                    '</div>'
-
+                              , data   : '..'
                             },{
                                 success : DAL.fnSuccessCreate
                               , failure : DAL.fnFailureCreate
@@ -314,10 +312,6 @@ var pnlReportManager = {
                     "Error", "No node selected; select a node!"
                 )
             }
-        }
-
-      , addImageFile : function () {
-            //@TODO
         }
 
         //
@@ -433,9 +427,7 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
 
         var tabInfo = {
             id      : node.id
-          , title   : node.attributes['text'].replace ('<i>','').replace (
-                '</i>',''
-            )
+          , title   : node.attributes['text'].replace ('<i>','').replace ('</i>','')
           , text    : node.attributes['data']
           , iconCls : node.attributes['iconCls']
         }

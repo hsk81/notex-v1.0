@@ -516,14 +516,13 @@ class POST:
 
     def delete (request):
 
-        try:    id = uuid.UUID (request.POST['nodeId'])
+        try:    id = uuid.UUID (request.POST['id'])
         except: id = None
 
         if id != None: ## not created yet
 
             js_string = json.dumps ([{
-                'success' : 'false',
-                'id'      : request.POST['leafId']
+                'success' : 'false'
             }])
 
         else:

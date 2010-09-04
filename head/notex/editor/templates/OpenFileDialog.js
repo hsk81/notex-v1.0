@@ -43,7 +43,7 @@ var wndOpenFileDialog = new Ext.Window ({
       , iconCls : 'icon-folder_page'
       , handler : function (btn) {
 
-            var cmp = Ext.getCmp("inputOpenFileId");
+            var cmp = Ext.getCmp("inputOpenFileId")
             if (cmp.el.dom.files.length > 0) {
 
                 wndOpenFileDialog.el.mask (
