@@ -8,10 +8,7 @@ var DAL = {
         var res = Ext.decode (xhr.responseText)[0]
         var tree = Ext.getCmp ('pnlReportManagerTreeId')
 
-        tree.getLoader().load(
-            tree.root, null
-        )
-
+        tree.getLoader().load(tree.root, null)
         tree.el.unmask ()
     }
 
@@ -21,11 +18,11 @@ var DAL = {
         tree.el.unmask ()
     }
 
-  , crudCreate : function (crudInfo, fn) {
+  , crudCreate : function (url, crudInfo, fn) {
         Ext.Ajax.request ({
 
             params : crudInfo
-          , url : urls.create
+          , url    : url
 
           , success : function (xhr, opts) {
                 fn.success (xhr, opts)
@@ -76,10 +73,7 @@ var DAL = {
         Ext.getCmp ('pnlEditorTabsId').fireEvent (
             'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
 
-                var tree = Ext.getCmp (
-                    'pnlReportManagerTreeId'
-                )
-
+                var tree = Ext.getCmp ('pnlReportManagerTreeId')
                 var node = tree.getNodeById (
                     (res.uuid != undefined) ? res.uuid : res.id
                 )

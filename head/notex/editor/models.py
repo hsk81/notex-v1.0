@@ -79,12 +79,12 @@ class NODE (BASE):
     _root = ForeignKey (ROOT)
     _node = ForeignKey ('NODE', null=True, default=None)
 
-    node = property (
-        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
-    )
-
     root = property (
         lambda s: getattr (s, '_root'), lambda s, v: setattr (s, '_root', v)
+    )
+
+    node = property (
+        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
     )
 
 class LEAF_TYPE (BASE_TYPE):

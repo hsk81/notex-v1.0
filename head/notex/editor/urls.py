@@ -82,7 +82,16 @@ urlpatterns = patterns('',
     ##
 
     url(
-        r'^post/create/$', POST.create, name='post.create'
+        r'^post/create/project$', POST.createNodeOfTypeProject, name='post.createNodeOfTypeProject'
+    ),
+    url(
+        r'^post/create/folder$', POST.createNodeOfTypeFolder, name='post.createNodeOfTypeFolder'
+    ),
+    url(
+        r'^post/create/text$', POST.createLeafOfTypeText, name='post.createLeafOfTypeText'
+    ),
+    url(
+        r'^post/create/image$', POST.createLeafOfTypeImage, name='post.createLeafOfTypeImage'
     ),
 
     url(

@@ -21,14 +21,14 @@ class VIEW:
     def init_prj01 (root, path):
 
         prj = NODE.objects.create (
-            type = NODE_TYPE.objects.get (_code='prj'),
+            type = NODE_TYPE.objects.get (_code='project'),
             root = root,
             name = 'Notex Editor',
             rank = 0
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'Tutorial',
             text = '..',
@@ -40,14 +40,14 @@ class VIEW:
     def init_prj02 (root, path):
 
         prj = NODE.objects.create (
-            type = NODE_TYPE.objects.get (_code='prj'),
+            type = NODE_TYPE.objects.get (_code='project'),
             root = root,
             name = 'Random Texts',
             rank = 1,
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'Lorem Ipsum',
             text = open (os.path.join (path,'lorem-ipsum.txt')).readline (),
@@ -55,7 +55,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'Cras Gravida',
             text = open (os.path.join (path,'cras-gravida.txt')).readline (),
@@ -63,7 +63,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'Donec Molestie',
             text = open (os.path.join (path,'donec-molestie.txt')).readline (),
@@ -71,7 +71,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'In Hac',
             text = open (os.path.join (path,'in-hac.txt')).readline (),
@@ -79,7 +79,7 @@ class VIEW:
         )
 
         _ = LEAF.objects.create (
-            type = LEAF_TYPE.objects.get (_code='txt'),
+            type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
             name = 'Aenean Id',
             text = open (os.path.join (path,'aenean-id.txt')).readline (),
@@ -151,9 +151,7 @@ class POST:
 
         return {
             'text'     : node.name,
-            'id'       : base64.b32encode (
-                json.dumps (('node', [node.pk]))
-            ),
+            'id'       : base64.b32encode (json.dumps (('node', [node.pk]))),
             'cls'      : "folder",
             'iconCls'  : node.type.icon,
             'leaf'     : False,
@@ -175,9 +173,7 @@ class POST:
         return {
             'text'     : leaf.name,
             'data'     : leaf.text,
-            'id'       : base64.b32encode (
-                json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
-            ),
+            'id'       : base64.b32encode (json.dumps (('leaf', [leaf.node.pk, leaf.pk]))),
             'cls'      : "file",
             'iconCls'  : leaf.type.icon,
             'leaf'     : True,
@@ -194,6 +190,24 @@ class POST:
 
     leafs = staticmethod (leafs)
 
+    def nodesAndLeafs (ns, ls):
+
+        tns = map (lambda n: (n.rank,n), ns)
+        tls = map (lambda l: (l.rank,l), ls)
+
+        print dict (tns + tls)
+
+        return json.dumps (
+            map (
+                lambda nal: (type (nal) == NODE)
+                    and POST.node (nal) 
+                    or POST.leaf (nal),
+                dict(tns + tls).values ()
+            )
+        )
+
+    nodesAndLeafs = staticmethod (nodesAndLeafs)
+
     def texts (ts):
 
         return json.dumps ([])
@@ -201,79 +215,109 @@ class POST:
     texts = staticmethod (texts)
 
     ##
-    ## crud: create, read, update & save
+    ## crud: create -----------------------------------------------------------
     ##
 
-    def create (request):
+    def createNodeOfTypeProject (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
 
-        if type == 'root':
+        try:
 
-            try:
+            root = ROOT.objects.get (_usid=request.session.session_key)
 
-                root = ROOT.objects.get (_usid=request.session.session_key)
+            node = NODE.objects.create (
+                type = NODE_TYPE.objects.get (_code='project'),
+                root = root,
+                name = request.POST['name'],
+                rank = request.POST['rank'],
+            )
 
-                node = NODE.objects.create (
-                    type = NODE_TYPE.objects.get (_code='prj'),
-                    root = root,
-                    name = request.POST['name'],
-                    rank = request.POST['rank'],
+            js_string = json.dumps ([{
+                'success' : 'true',
+                'id'      : base64.b32encode (
+                    json.dumps (('node', [node.pk]))
                 )
+            }])
+
+        except:
+
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'id  '    : request.POST['nodeId']
+            }])
+
+        return HttpResponse (js_string, mimetype='application/json')
+
+    createNodeOfTypeProject = staticmethod (createNodeOfTypeProject)
+
+    def createNodeOfTypeFolder (request):
+
+        print "createNodeOfTypeFolder:", request.POST['nodeId']
+        (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
+
+        try:
+
+            node = NODE.objects.create (
+                type = NODE_TYPE.objects.get (_code='folder'),
+                root = ROOT.objects.get (_usid=request.session.session_key),
+                node = NODE.objects.get (pk=ids[0]),
+                name = request.POST['name'],
+                rank = request.POST['rank'],
+            )
+
+            js_string = json.dumps ([{
+                'success' : 'true',
+                'id'      : base64.b32encode (
+                    json.dumps (('node', [node.pk]))
+                )
+            }])
+
+        except:
+
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'id  '    : request.POST['nodeId']
+            }])
+
+        return HttpResponse (js_string, mimetype='application/json')
+
+    createNodeOfTypeFolder = staticmethod (createNodeOfTypeFolder)
+
+    def createLeafOfTypeText (request):
+
+        (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
+
+        try:
+
+            leaf = LEAF.objects.create (
+                type = LEAF_TYPE.objects.get (_code='text'),
+                node = NODE.objects.get (pk=ids[0]),
+                name = request.POST['name'],
+                text = request.POST['data'],
+                rank = int (request.POST['rank'])
+            )
+
+            if 'leafId' in request.POST:
 
                 js_string = json.dumps ([{
                     'success' : 'true',
-                    'id'      : base64.b32encode (
-                        json.dumps (('node', [node.pk]))
+                    'uuid'    : request.POST['leafId'],
+                    'id'      :  base64.b32encode (
+                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
                     )
                 }])
 
-            except:
+            else:
 
                 js_string = json.dumps ([{
-                    'success' : 'false',
-                    'id  '    : request.POST['nodeId']
-                }])
-                
-        elif type == 'node':
-
-            try:
-
-                leaf = LEAF.objects.create (
-                    type = LEAF_TYPE.objects.get (_code='txt'),
-                    node = NODE.objects.get (pk=ids[0]),
-                    name = request.POST['name'],
-                    text = request.POST['data'],
-                    rank = int (request.POST['rank'])
-                )
-
-                if 'leafId' in request.POST:
-
-                    js_string = json.dumps ([{
-                        'success' : 'true',
-                        'uuid'    : request.POST['leafId'],
-                        'id'      :  base64.b32encode (
-                            json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
-                        )
-                    }])
-
-                else:
-
-                    js_string = json.dumps ([{
-                        'success' : 'true',
-                        'id'      :  base64.b32encode (
-                            json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
-                        )
-                    }])
-
-            except:
-
-                js_string = json.dumps ([{
-                    'success' : 'false',
-                    'uuid'    : request.POST['leafId']
+                    'success' : 'true',
+                    'id'      :  base64.b32encode (
+                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                    )
                 }])
 
-        else:
+        except:
 
             js_string = json.dumps ([{
                 'success' : 'false',
@@ -282,7 +326,55 @@ class POST:
 
         return HttpResponse (js_string, mimetype='application/json')
 
-    create = staticmethod (create)
+    createLeafOfTypeText = staticmethod (createLeafOfTypeText)
+
+    def createLeafOfTypeImage (request):
+
+        (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
+
+        try:
+
+            leaf = LEAF.objects.create (
+                type = LEAF_TYPE.objects.get (_code='image'),
+                node = NODE.objects.get (pk=ids[0]),
+                name = request.POST['name'],
+                text = request.POST['data'],
+                rank = int (request.POST['rank'])
+            )
+
+            if 'leafId' in request.POST:
+
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'uuid'    : request.POST['leafId'],
+                    'id'      :  base64.b32encode (
+                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                    )
+                }])
+
+            else:
+
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'id'      :  base64.b32encode (
+                        json.dumps (('leaf', [leaf.node.pk, leaf.pk]))
+                    )
+                }])
+
+        except:
+
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'uuid'    : request.POST['leafId']
+            }])
+
+        return HttpResponse (js_string, mimetype='application/json')
+
+    createLeafOfTypeImage = staticmethod (createLeafOfTypeImage)
+
+    ##
+    ## crud: read -------------------------------------------------------------
+    ##
 
     def read (request):
 
@@ -291,13 +383,14 @@ class POST:
         if type == 'root': # ids == []
 
             root = ROOT.objects.get (_usid = request.session.session_key)
-            js_string = POST.nodes (NODE.objects.filter (_root = root))
+            js_string = POST.nodes (NODE.objects.filter (_root = root, _node = None))
 
         elif type == 'node':
 
-            js_string = POST.leafs (
-                LEAF.objects.filter (_node = ids[0])
-            )
+            ns = NODE.objects.filter (_node = ids[0])
+            ls = LEAF.objects.filter (_node = ids[0])
+
+            js_string = POST.nodesAndLeafs (ns,ls)
 
         elif type == 'leaf':
 
@@ -313,6 +406,10 @@ class POST:
 
     read = staticmethod (read)
 
+    ##
+    ## crud: update -----------------------------------------------------------
+    ##
+
     def update (request):
 
         try:    id = uuid.UUID (request.POST['leafId'])
@@ -320,7 +417,7 @@ class POST:
 
         if id != None: ## create upon update
 
-            return POST.create (request)
+            return POST.createLeafOfTypeText (request)
 
         (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
 
@@ -412,6 +509,10 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
 
     rename = staticmethod (rename)
+
+    ##
+    ## crud: delete -----------------------------------------------------------
+    ##
 
     def delete (request):
 

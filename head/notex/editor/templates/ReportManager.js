@@ -221,7 +221,7 @@ var pnlReportManager = {
                     if (btn == 'ok') {
                         tree.el.mask ('Please wait', 'x-mask-loading')
 
-                        DAL.crudCreate ({
+                        DAL.crudCreate (urls.createProject, {
                             nodeId : tree.root.id
                           , name   : text
                           , rank   : rank + 1
@@ -235,7 +235,40 @@ var pnlReportManager = {
         }
 
       , addFolder : function () {
-            //@TODO
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+
+            if (node != undefined) {
+                if (node.isLeaf()) {
+                    node = node.parentNode
+                }
+
+                Ext.Msg.prompt ('Create Folder', 'Enter a name:',
+                    function (btn, text) {
+                        if (btn == 'ok') {
+                            tree.el.mask ('Please wait', 'x-mask-loading')
+
+                            var rank = node.childNodes.indexOf (
+                                node.lastChild
+                            );
+
+                            DAL.crudCreate (urls.createFolder, {
+                                nodeId : node.id
+                              , name   : text
+                              , rank   : rank + 1
+                            },{
+                                success : DAL.fnSuccessCreate
+                              , failure : DAL.fnFailureCreate
+                            })
+                        }
+                    }
+                )
+            } else {
+                Ext.Msg.alert (
+                    "Error", "No node selected; select a node!"
+                )
+            }
         }
 
       , addTextFile : function () {
@@ -244,8 +277,7 @@ var pnlReportManager = {
             var node = model.getSelectedNode ()
 
             if (node != undefined) {
-                if (node.isLeaf())
-                {
+                if (node.isLeaf()) {
                     node = node.parentNode
                 }
 
@@ -258,7 +290,7 @@ var pnlReportManager = {
                                 node.lastChild
                             );
 
-                            DAL.crudCreate ({
+                            DAL.crudCreate (urls.createText, {
                                 nodeId : node.id
                               , name   : text
                               , rank   : rank + 1
