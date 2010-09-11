@@ -32,7 +32,7 @@ class VIEW:
             node = prj,
             name = 'Tutorial',
             text = '..',
-            rank = 1
+            rank = 0
         )
 
     init_prj01 = staticmethod (init_prj01)
@@ -194,8 +194,6 @@ class POST:
 
         tns = map (lambda n: (n.rank,n), ns)
         tls = map (lambda l: (l.rank,l), ls)
-
-        print dict (tns + tls)
 
         return json.dumps (
             map (
@@ -410,14 +408,29 @@ class POST:
     ## crud: update -----------------------------------------------------------
     ##
 
-    def update (request):
+    def updateLeafOfTypeText (request):
+
+        return POST.update (request, POST.createLeafOfTypeText)
+
+    updateLeafOfTypeText = staticmethod (updateLeafOfTypeText)
+
+    def updateLeafOfTypeImage (request):
+
+        return POST.update (request, POST.createLeafOfTypeImage)
+
+    updateLeafOfTypeImage = staticmethod (updateLeafOfTypeImage)
+
+    def update (request, fnCreateLeaf = None):
 
         try:    id = uuid.UUID (request.POST['leafId'])
         except: id = None
 
         if id != None: ## create upon update
 
-            return POST.createLeafOfTypeText (request)
+            if fnCreateLeaf != None:            
+                return fnCreateLeaf (request)            
+            else:
+                return POST.createLeafOfTypeText (request)
 
         (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
 
@@ -452,6 +465,10 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
 
     update = staticmethod (update)
+
+    ##
+    ## crud: rename -----------------------------------------------------------
+    ##
 
     def rename (request):
 

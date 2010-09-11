@@ -49,7 +49,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-CACHE_BACKEND = 'memcached://127.0.0.1:11211'
+CACHE_BACKEND = 'memcached://%s:11211' % SITE_HOST
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'

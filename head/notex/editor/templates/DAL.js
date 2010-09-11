@@ -122,11 +122,11 @@ var DAL = {
         )
     }
 
-  , crudUpdate : function (crudInfo, fn) {
+  , crudUpdate : function (crudInfo, fn, url) {
         Ext.Ajax.request ({
 
             params : crudInfo
-          , url : urls.update
+          , url    : url
 
           , success : function (xhr, opts) {
                 fn.success (xhr, opts)

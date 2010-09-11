@@ -99,7 +99,10 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^post/update/$', POST.update, name='post.update'
+        r'^post/update/text$', POST.updateLeafOfTypeText, name='post.updateLeafOfTypeText'
+    ),
+    url(
+        r'^post/update/image$', POST.updateLeafOfTypeImage, name='post.updateLeafOfTypeImage'
     ),
 
     url(

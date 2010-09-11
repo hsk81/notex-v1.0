@@ -35,7 +35,7 @@ var pnlReportManager = {
             iconCls : 'icon-disk'
           , tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)'
           , handler : function (button, event) {
-                Ext.getCmp ('pnlReportManagerId').fireEvent ('saveActiveTab')
+                Ext.getCmp ('pnlReportManagerId').fireEvent ('saveTab')
             }
         },'-',{
             iconCls : 'icon-add'
@@ -123,56 +123,93 @@ var pnlReportManager = {
                     success: function (file) {
 
                         var fileInfo = {
-                            id    : Math.uuid ()
-                          , title : file.name
+                            id       : Math.uuid ()
+                          , title    : file.name
                         }
+
+                        var node = new Ext.tree.TreeNode ({
+                            'text'     : String.format (
+                                "<i>{0}</i>", fileInfo.title
+                            )
+                          //'data'     : fileInfo.text
+                          , 'id'       : fileInfo.id
+                          , 'cls'      : "file"
+                          //'iconCls'  : fileInfo.iconCls
+                          , 'leaf'     : true
+                          , 'expanded' : false
+                        })
 
                         if (String.match(file.type, "^text") == "text") {
                             fileInfo.iconCls = 'icon-page'
-                            fileInfo.text = file.getAsBinary ().replace (
-                                "\n", "<br>", 'g'
+                            fileInfo.text = file.getAsBinary ().replace ("\n", "<br>", 'g')
+                            node.attributes['iconCls'] = fileInfo.iconCls
+                            node.attributes['data'] = fileInfo.text
+
+                            tree.fireEvent (
+                                'createNode', node, {
+                                    refNode: selectedNode
+                                },{
+                                    success: function (args) {
+                                        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+                                            'createTab', fileInfo, function (tab) {
+                                                Ext.getCmp (
+                                                    'pnlReportManagerId'
+                                                ).fireEvent (
+                                                    'saveTextTab', tab
+                                                )
+                                            }
+                                        )
+                                    }
+
+                                  , failure: function (args) {
+                                        Ext.Msg.alert (
+                                            "Error", "No node inserted!"
+                                        )
+                                    }
+                                }
                             )
                         } else if (
                             String.match(file.type, "^image") == "image"
                         ) {
                             fileInfo.iconCls = 'icon-image'
                             fileInfo.text = file.getAsBinary ()
+                            node.attributes['iconCls'] = fileInfo.iconCls
+                            node.attributes['data'] = fileInfo.text
+                            
+                            tree.fireEvent (
+                                'createNode', node, {
+                                    refNode: selectedNode
+                                },{
+                                    success: function (args) {
+                                        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+                                            'createTab', fileInfo, function (tab) {
+                                                Ext.getCmp (
+                                                    'pnlReportManagerId'
+                                                ).fireEvent (
+                                                    'saveImageTab', tab
+                                                )
+                                            }
+                                        )
+                                    }
+
+                                  , failure: function (args) {
+                                        Ext.Msg.alert (
+                                            "Error", "No node inserted!"
+                                        )
+                                    }
+                                }
+                            )
                         } else {
-                            fileInfo.iconCls = 'icon-page_white'
-                            fileInfo.text = file.getAsBinary ()
+                            Ext.Msg.alert (
+                                "Error", "Select a text or image file!"
+                            )
                         }
 
-                        var node = new Ext.tree.TreeNode ({
-                            'text'     : String.format ("<i>{0}</i>", fileInfo.title)
-                          , 'data'     : fileInfo.text
-                          , 'id'       : fileInfo.id
-                          , 'cls'      : "file"
-                          , 'iconCls'  : fileInfo.iconCls
-                          , 'leaf'     : true
-                          , 'expanded' : false
-                        })
-
-                        tree.fireEvent (
-                            'createNode', node, {
-                                refNode: selectedNode
-                            },{
-                                success: function (args) {
-                                    var pnlTabs = Ext.getCmp ('pnlEditorTabsId')
-                                    pnlTabs.fireEvent ('createTab', fileInfo)
-                                }
-
-                              , failure: function (args) {
-                                    Ext.Msg.alert (
-                                        "Error", "No node inserted!"
-                                    )
-                                }
-                            }
-                        )
                     }
 
                   , failure: function () {
                         Ext.Msg.alert (
-                            "Error", "No file or wrong file type selected!"
+                            "Error", "No file or invalid file type selected!"
                         )
                     }
                 })
@@ -185,12 +222,14 @@ var pnlReportManager = {
         }
 
         //
-        // Save active tab or save-all open tab -------------------------------
+        // Save text/image tab ------------------------------------------------
         //
 
-      , saveActiveTab : function () {
-            var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
-            var tab = pnlEditorTabs.getActiveTab ()
+      , saveTextTab : function (tab) {
+            if (tab == undefined) {
+                var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
+                tab = pnlEditorTabs.getActiveTab ()
+            }
 
             if (tab != undefined) {
 
@@ -199,15 +238,40 @@ var pnlReportManager = {
                 var node = tree.getNodeById (tab.id)
 
                 DAL.crudUpdate ({
-                    leafId : node.id
-                  , nodeId : node.parentNode.id
-                  , name   : node.text.replace('<i>','').replace('</i>','')
-                  , data   : tab.getData ()
-                  , rank   : node.parentNode.indexOf (node)
+                    leafId  : node.id
+                  , nodeId  : node.parentNode.id
+                  , name    : node.text.replace('<i>','').replace('</i>','')
+                  , data    : tab.getData ()
+                  , rank    : node.parentNode.indexOf (node)
                 },{
                     success : DAL.fnSuccessUpdate
                   , failure : DAL.fnFailureUpdate
-                })
+                }, urls.updateText)
+            }
+        }
+
+      , saveImageTab : function (tab) {
+            if (tab == undefined) {
+                var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
+                tab = pnlEditorTabs.getActiveTab ()
+            }
+
+            if (tab != undefined) {
+
+                tab.el.mask ('Please wait', 'x-mask-loading')
+                var tree = Ext.getCmp ('pnlReportManagerTreeId')
+                var node = tree.getNodeById (tab.id)
+
+                DAL.crudUpdate ({
+                    leafId  : node.id
+                  , nodeId  : node.parentNode.id
+                  , name    : node.text.replace('<i>','').replace('</i>','')
+                  , data    : tab.getData ()
+                  , rank    : node.parentNode.indexOf (node)
+                },{
+                    success : DAL.fnSuccessUpdate
+                  , failure : DAL.fnFailureUpdate
+                }, urls.updateImage)
             }
         }
 
