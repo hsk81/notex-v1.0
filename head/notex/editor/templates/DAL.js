@@ -6,10 +6,17 @@ var DAL = {
 
     fnSuccessCreate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
-        var tree = Ext.getCmp ('pnlReportManagerTreeId')
 
-        tree.getLoader().load(tree.root, null)
-        tree.el.unmask ()
+        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        var model = tree.getSelectionModel ()
+        var node = model.getSelectedNode ()
+
+        tree.getLoader().load(node, function (node) {
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var path = node.getPath ()
+            tree.expandPath (path)
+            tree.el.unmask ()
+        })
     }
 
   , fnFailureCreate : function (xhr, opts) {

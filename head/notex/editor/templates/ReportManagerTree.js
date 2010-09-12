@@ -38,7 +38,7 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
                 } else {
                     if (!args.refNode.expanded) {
                         args.refNode.on ('expand', gn, this, {single: true})
-                        args.refNode.expand ()                        
+                        args.refNode.expand ()
                         return {'node': node,'refNode': args.refNode}
                     } else {
                         return gn (args.refNode)

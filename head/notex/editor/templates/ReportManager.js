@@ -128,13 +128,9 @@ var pnlReportManager = {
                         }
 
                         var node = new Ext.tree.TreeNode ({
-                            'text'     : String.format (
-                                "<i>{0}</i>", fileInfo.title
-                            )
-                          //'data'     : fileInfo.text
+                            'text'     : String.format ("<i>{0}</i>", fileInfo.title)
                           , 'id'       : fileInfo.id
                           , 'cls'      : "file"
-                          //'iconCls'  : fileInfo.iconCls
                           , 'leaf'     : true
                           , 'expanded' : false
                         })
