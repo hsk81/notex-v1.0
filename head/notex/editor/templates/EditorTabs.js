@@ -151,29 +151,20 @@ var pnlEditorTabs = new Ext.TabPanel({
 
   , listeners : {
 
-        createTab : function (tabInfo, fn) {
+        //
+        // createTextTab ------------------------------------------------------
+        //
+
+        createTextTab : function (tabInfo, fn) {
 
             var tab = this.findById (
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
             var tpl = function () {
-                if (tabInfo.iconCls == "icon-page") {
-                    tpl = ''; for (var idx=0; idx<tabInfo.text.length; idx++) {
-                        tpl += '{' + idx + '}'
-                    }
-                } else if (tabInfo.iconCls == "icon-image") {
-                    tabInfo.text = Base64.encode (tabInfo.text)
-                    tpl = ''; for (var jdx=0; jdx<tabInfo.text.length; jdx++) {
-                        tpl += '{' + jdx + '}'
-                    }
-                } else {
-                    tpl = ''; for (var kdx=0; kdx<tabInfo.text.length; kdx++) {
-                        tpl += '{' + kdx + '}'
-                    }
-                }
-                
-                return tpl;
+                tpl = ''; for (var idx=0; idx<tabInfo.text.length; idx++) {
+                    tpl += '{' + idx + '}'
+                } return tpl;
             }();
 
             var tplHtmlEditor = new Ext.Template (
@@ -215,7 +206,7 @@ var pnlEditorTabs = new Ext.TabPanel({
                       , enableSourceEdit : true
                     }]
                 });
-                
+
                 this.activate (tab)
             } else {
                 this.activate (tab)
@@ -223,6 +214,51 @@ var pnlEditorTabs = new Ext.TabPanel({
 
             return (fn != undefined) ? fn (tab) : undefined
         }
+
+        //
+        // createImageTab -----------------------------------------------------
+        //
+
+      , createImageTab : function (tabInfo, fn) {
+
+            var tab = this.findById (
+                (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
+            )
+
+            if (!tab) {
+
+                tab = this.add ({
+                    title      : tabInfo.title
+                  , id         : tabInfo.id
+                  , autoScroll : true
+                  , iconCls    : tabInfo.iconCls
+                  , closable   : true
+                  , bodyStyle  : 'background-color: grey;'
+
+                  , layout : 'hbox'
+                  , layoutConfig : {
+                        align : 'middle'
+                      , pack  : 'center'
+                  }
+
+                  , items : [{
+                        html : String.format (
+                            '<img src="{0}" />', tabInfo.src
+                        )
+                    }]
+                });
+
+                this.activate (tab)
+            } else {
+                this.activate (tab)
+            }
+
+            return (fn != undefined) ? fn (tab) : undefined
+        }
+
+        //
+        // readTab ------------------------------------------------------------
+        //
 
       , readTab : function (tabInfo, fn) {
 
@@ -232,6 +268,10 @@ var pnlEditorTabs = new Ext.TabPanel({
 
             return (fn != undefined) ? fn (tab) : undefined
         }
+
+        //
+        // updateTab ----------------------------------------------------------
+        //
 
       , updateTab : function (tabInfo, fn) {
 
@@ -260,6 +300,10 @@ var pnlEditorTabs = new Ext.TabPanel({
             return (fn != undefined) ? fn (tab) : undefined
         }
         
+        //
+        // deleteTab ----------------------------------------------------------
+        //
+
       , deleteTab : function (tabInfo, fn) {
 
             var tab = this.findById (

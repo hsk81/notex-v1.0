@@ -135,7 +135,9 @@ var pnlReportManager = {
                           , 'expanded' : false
                         })
 
-                        if (String.match(file.type, "^text") == "text") {
+                        if (
+                            String.match(file.type, "^text") == "text"
+                        ) {
                             fileInfo.iconCls = 'icon-page'
                             fileInfo.text = file.getAsBinary ().replace ("\n", "<br>", 'g')
                             node.attributes['iconCls'] = fileInfo.iconCls
@@ -147,7 +149,7 @@ var pnlReportManager = {
                                 },{
                                     success: function (args) {
                                         Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                                            'createTab', fileInfo, function (tab) {
+                                            'createTextTab', fileInfo, function (tab) {
                                                 Ext.getCmp (
                                                     'pnlReportManagerId'
                                                 ).fireEvent (
@@ -178,7 +180,7 @@ var pnlReportManager = {
                                 },{
                                     success: function (args) {
                                         Ext.getCmp ('pnlEditorTabsId').fireEvent (
-                                            'createTab', fileInfo, function (tab) {
+                                            'createImageTab', fileInfo, function (tab) {
                                                 Ext.getCmp (
                                                     'pnlReportManagerId'
                                                 ).fireEvent (
@@ -492,8 +494,11 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
           , iconCls : node.attributes['iconCls']
         }
 
-        Ext.getCmp ('pnlEditorTabsId').fireEvent (
-            'createTab', tabInfo
-        )
+        if (String.match(tabInfo.iconCls, "^icon-page$") == "icon-page") {
+            Ext.getCmp ('pnlEditorTabsId').fireEvent ('createTextTab', tabInfo)
+        } else if (String.match(tabInfo.iconCls, "^icon-image$") == "icon-image") {
+            tabInfo.src = 'http://1.bp.blogspot.com/_cqVsOMOJ0NM/SbvyunYBlMI/AAAAAAAAA4U/yx1_Qy4C-ko/s400/Misa+Campo+Very+Sexy+Model2.jpg'
+            Ext.getCmp ('pnlEditorTabsId').fireEvent ('createImageTab', tabInfo)
+        }
     }
 })
