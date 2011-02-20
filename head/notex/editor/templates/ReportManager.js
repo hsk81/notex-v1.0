@@ -35,7 +35,9 @@ var pnlReportManager = {
             iconCls : 'icon-disk'
           , tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)'
           , handler : function (button, event) {
-                Ext.getCmp ('pnlReportManagerId').fireEvent ('saveTab')
+                Ext.getCmp ('pnlReportManagerId').fireEvent ('saveTextTab')
+             //@TODO:
+             // Ext.getCmp ('pnlReportManagerId').fireEvent ('saveImageTab') TODO
             }
         },'-',{
             iconCls : 'icon-add'
