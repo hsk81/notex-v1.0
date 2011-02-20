@@ -66,6 +66,10 @@ TEMPLATE_DIRS = (
     os.path.join (SITE_ROOT, 'templates/'),
 )
 
+FIXTURE_DIRS = (
+    os.path.join (SITE_ROOT, 'fixtures/'),
+)
+
 INSTALLED_APPS = (
 
     'django.contrib.auth',
