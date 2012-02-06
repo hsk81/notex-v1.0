@@ -25,10 +25,6 @@ class BASE_TYPE (Model):
 
         return u'%s' % self.code
         
-    def to_type (self):
-
-        return eval (self.clsname).objects.get (id=self.id)
-        
 class BASE (Model):
 
     def to_type (self):
@@ -62,11 +58,6 @@ class BASE (Model):
 
         return u'%s' % self.name
         
-    def to_type (self):
-
-        return eval (self.clsname).objects.get (id=self.id)
-        
-
 class ROOT_TYPE (BASE_TYPE):
 
     class Meta:
