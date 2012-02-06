@@ -3,12 +3,12 @@ from django.contrib.sessions.models import Session
 from base.models                    import BaseModel
 from django.db.models               import *
 
-class BASE_TYPE (BaseModel):
+class BASE_TYPE (Model):
 
     _code = CharField (max_length=32, unique=True)
     _icon = CharField (max_length=256, blank=True, default='')
     _desc = CharField (max_length=256)
-
+    
     code = property (
         lambda s: getattr (s, '_code'), lambda s, v: setattr (s, '_code', v)
     )
@@ -24,9 +24,17 @@ class BASE_TYPE (BaseModel):
     def __unicode__ (self):
 
         return u'%s' % self.code
+        
+    def to_type (self):
 
-class BASE (BaseModel):
+        return eval (self.clsname).objects.get (id=self.id)
+        
+class BASE (Model):
 
+    def to_type (self):
+
+        return eval (self.clsname).objects.get (id=self.id)
+        
     _name = CharField (max_length=256, blank=True, default='')
     _rank = IntegerField (default=0)
     _type = ForeignKey (BASE_TYPE)
@@ -53,6 +61,11 @@ class BASE (BaseModel):
     def __unicode__ (self):
 
         return u'%s' % self.name
+        
+    def to_type (self):
+
+        return eval (self.clsname).objects.get (id=self.id)
+        
 
 class ROOT_TYPE (BASE_TYPE):
 

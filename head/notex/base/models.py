@@ -21,6 +21,10 @@ class BaseModelManager (Manager):
 
 class BaseModel (Model):
 
+    class Meta:
+    
+        abstract = True
+        
     objects = BaseModelManager ()
     clsname = CharField (max_length=32, editable=False, null=True)
 
@@ -32,3 +36,4 @@ class BaseModel (Model):
     def to_type (self):
 
         return eval (self.clsname).objects.get (id=self.id)
+
