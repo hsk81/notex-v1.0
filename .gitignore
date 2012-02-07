@@ -2,12 +2,12 @@
 # project ----------------------------------------------------------------------
 # ##############################################################################
 
-/notex/build
-/notex/dist
-/notex/*.db
-/notex/sessions/*
-/notex/notex.egg-info
-/notex/nbproject/private
+/notex.app/build
+/notex.app/dist
+/notex.app/*.db
+/notex.app/sessions/*
+/notex.app/notex.egg-info
+/notex.app/nbproject/private
 
 # ##############################################################################
 # global -----------------------------------------------------------------------
