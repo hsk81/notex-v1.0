@@ -1,3 +1,6 @@
 [submodule "notex/media/lib/extjs.git"]
 	path = notex/media/lib/extjs.git
 	url = git@github.com:hsk81/extjs.git
+[submodule "notex/media/ico/silk.git"]
+	path = notex/media/ico/silk.git
+	url = git@github.com:hsk81/famfamfam-silk-icons.git
