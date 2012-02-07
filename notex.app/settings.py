@@ -80,5 +80,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'util', 'base', 'svc', 'editor', ## TODO: Remove 'base'?
+    'util', 'svc', 'editor', 
 )

@@ -1,6 +1,5 @@
 from django.core.exceptions         import FieldError
 from django.contrib.sessions.models import Session
-from base.models                    import BaseModel
 from django.db.models               import *
 
 class BASE_TYPE (Model):
