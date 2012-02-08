@@ -19,8 +19,8 @@
  
   <!-- Ext relies on its default css so include it here. -->
   <!-- This must come BEFORE javascript includes! -->
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}lib/extjs/include/resources/css/ext-all.css">
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}lib/extjs/include/resources/css/xtheme-gray.css">
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}lib/extjs/resources/css/ext-all.css">
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}lib/extjs/resources/css/xtheme-gray.css">
 
   <!-- Include here your own css files if you have them. -->
   {% block icon-css %}
@@ -52,9 +52,9 @@
   {% endblock %}
 
   <!-- First of javascript includes must be an adapter... -->
-  <script type="text/javascript" src="{{ MEDIA_URL }}lib/extjs/include/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}lib/extjs/adapter/ext/ext-base.js"></script>
   <!-- ...then you need the Ext itself, either debug or production version. -->
-  <script type="text/javascript" src="{{ MEDIA_URL }}lib/extjs/include/ext-all.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}lib/extjs/ext-all.js"></script>
  
   <!-- Include here your extended classes if you have some. -->
   {% block ext-classes %}{% endblock %}
@@ -66,7 +66,7 @@
   {% endblock %}
 
   {% block blank-image %}<script type="text/javascript">
-  Ext.BLANK_IMAGE_URL = '{{ MEDIA_URL }}lib/extjs/include/resources/images/default/s.gif'
+  Ext.BLANK_IMAGE_URL = '{{ MEDIA_URL }}lib/extjs/resources/images/default/s.gif'
   </script>{% endblock %}
 
   {% block map2obj %}<script type="text/javascript">
