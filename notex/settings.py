@@ -49,6 +49,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
+if DEBUG:
+    
+    MIDDLEWARE_CLASSES += ('django_pdb.middleware.PdbMiddleware',)
+
 CACHE_BACKEND = 'memcached://%s:11211' % SITE_HOST
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
@@ -72,6 +76,8 @@ FIXTURE_DIRS = (
 
 INSTALLED_APPS = (
 
+    'django_pdb',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -80,5 +86,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'util', 'svc', 'editor', 
+    'util', 'svc', 'editor',
 )
