@@ -407,6 +407,65 @@ class POST:
     ## crud: update -----------------------------------------------------------
     ##
 
+    def swapRank (request):
+        
+        try:
+            
+            (type, ids) = json.loads (base64.b32decode (request.POST['id']))
+            (type, jds) = json.loads (base64.b32decode (request.POST['jd']))
+            
+        except: 
+            
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'id'      : request.POST['id'], 
+                'jd'      : request.POST['jd']
+            }])
+
+            return HttpResponse (js_string, mimetype='application/json')
+        
+        if type == 'node':
+
+            leaf = LEAF.objects.get (pk = ids[0])
+            temp = LEAF.objects.get (pk = jds[0])
+
+            rank = leaf.rank
+            leaf.rank = temp.rank
+            temp.rank = rank
+
+            leaf.save ()
+            temp.save ()
+
+        elif type == 'leaf':
+
+            leaf = LEAF.objects.get (pk = ids[1])
+            temp = LEAF.objects.get (pk = jds[1])
+
+            rank = leaf.rank
+            leaf.rank = temp.rank
+            temp.rank = rank
+
+            leaf.save ()
+            temp.save ()
+
+        else:
+
+            js_string = json.dumps ([{
+                'success' : 'false',
+                'id'      : request.POST['id'], 
+                'id'      : request.POST['jd']
+            }])
+        
+        js_string = json.dumps ([{
+            'success' : 'true',
+            'id'      : request.POST['id'], 
+            'jd'      : request.POST['jd']
+        }])
+        
+        return HttpResponse (js_string, mimetype='application/json')
+
+    swapRank = staticmethod (swapRank)
+    
     def updateLeafOfTypeText (request):
 
         return POST.update (request, POST.createLeafOfTypeText)
