@@ -37,7 +37,7 @@ var pnlReportManager = {
           , handler : function (button, event) {
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('saveTextTab')
              //@TODO:
-             // Ext.getCmp ('pnlReportManagerId').fireEvent ('saveImageTab') TODO
+             // Ext.getCmp ('pnlReportManagerId').fireEvent ('saveImageTab')
             }
         },'-',{
             iconCls : 'icon-add'
@@ -82,12 +82,14 @@ var pnlReportManager = {
             }
         },'-',{
             iconCls : 'icon-arrow_up'
+          , id      : 'btnMoveUp'
           , tooltip : '<b>Move Up</b><br/>Move selected report, folder or file up in tree'
           , handler : function (button, event) {
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('moveSelectedNodeUp')
             }
         },{
             iconCls : 'icon-arrow_down'
+          , id      : 'btnMoveDown'
           , tooltip : '<b>Move Down</b><br/>Move selected report, folder or file down in tree'
           , handler : function (button, event) {
                 Ext.getCmp ('pnlReportManagerId').fireEvent ('moveSelectedNodeDown')
@@ -100,7 +102,7 @@ var pnlReportManager = {
   , listeners : {
 
         //
-        // Import or export a report ------------------------------------------
+        // Import or export a report ----------------------------------------------------------
         //
 
         importReport : function () {
@@ -112,7 +114,7 @@ var pnlReportManager = {
         }
 
         //
-        // Open file (from local storage) -------------------------------------
+        // Open file (from local storage) -----------------------------------------------------
         //
 
       , openFile : function () {
@@ -222,7 +224,7 @@ var pnlReportManager = {
         }
 
         //
-        // Save text/image tab ------------------------------------------------
+        // Save text/image tab ----------------------------------------------------------------
         //
 
       , saveTextTab : function (tab) {
@@ -473,15 +475,81 @@ var pnlReportManager = {
         }
 
         //
-        // Move selected node up or down --------------------------------------
+        // Move selected node up or down ------------------------------------------------------
         //
 
       , moveSelectedNodeUp : function () {
-            //@TODO
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+
+            if (node == undefined) {
+                Ext.Msg.alert ("Error", "No node selected; select a node!")
+                return
+            }
+            
+            if (node.parentNode == undefined) return;            
+            if (node.previousSibling == undefined) {
+                prev = node.parentNode.lastChild
+            } else {
+                prev = node.previousSibling
+            }
+
+            var move = Ext.getCmp ('btnMoveUp').disable ()
+            tree.el.mask ('Please wait', 'x-mask-loading')
+            
+            Ext.Ajax.request ({
+                params : {id: node.id, jd: prev.id }
+              , url    : urls.swapRank
+
+              , success : function (xhr, opts) {
+                    node.parentNode.insertBefore (node, prev)
+                    tree.selectPath (node.getPath ())
+                    tree.el.unmask ()
+                    move.enable ()
+                }
+
+              , failure : function (xhr, opts) {
+                    tree.el.unmask ()
+                    move.enable ()
+                    Ext.Msg.alert ("Error", "Moving up '" + node.text + "' failed!")
+                }
+            });
         }
 
       , moveSelectedNodeDown : function () {
-            //@TODO
+            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+
+            if (node == undefined) {
+                Ext.Msg.alert ("Error", "No node selected; select a node!")
+                return;
+            }
+            
+            if (node.parentNode == undefined) return;            
+            if (node.nextSibling == undefined) return;
+            
+            var move = Ext.getCmp ('btnMoveDown').disable ()
+            tree.el.mask ('Please wait', 'x-mask-loading')
+            
+            Ext.Ajax.request ({
+                params : {id: node.id, jd: node.nextSibling.id }
+              , url    : urls.swapRank
+
+              , success : function (xhr, opts) {
+                    node.parentNode.insertBefore (node.nextSibling, node)
+                    tree.selectPath (node.getPath ())
+                    tree.el.unmask ()
+                    move.enable ()
+                }
+
+              , failure : function (xhr, opts) {
+                    tree.el.unmask ()
+                    move.enable ()
+                    Ext.Msg.alert ("Error", "Moving down '" + node.text + "' failed!")
+                }
+            });
         }
     }
 }

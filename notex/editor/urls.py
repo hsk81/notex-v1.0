@@ -104,6 +104,9 @@ urlpatterns = patterns('',
     url(
         r'^post/update/image$', POST.updateLeafOfTypeImage, name='post.updateLeafOfTypeImage'
     ),
+    url(
+        r'^post/update/swap-rank/$', POST.swapRank, name='post.swapRank'
+    ),
 
     url(
         r'^post/rename/$', POST.rename, name='post.rename'
