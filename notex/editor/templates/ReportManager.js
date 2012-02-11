@@ -489,21 +489,17 @@ var pnlReportManager = {
             }
             
             if (node.parentNode == undefined) return;            
-            if (node.previousSibling == undefined) {
-                prev = node.parentNode.lastChild
-            } else {
-                prev = node.previousSibling
-            }
+            if (node.previousSibling == undefined) return;
 
             var move = Ext.getCmp ('btnMoveUp').disable ()
             tree.el.mask ('Please wait', 'x-mask-loading')
             
             Ext.Ajax.request ({
-                params : {id: node.id, jd: prev.id }
+                params : {id: node.id, jd: node.previousSibling.id }
               , url    : urls.swapRank
 
               , success : function (xhr, opts) {
-                    node.parentNode.insertBefore (node, prev)
+                    node.parentNode.insertBefore (node, node.previousSibling)
                     tree.selectPath (node.getPath ())
                     tree.el.unmask ()
                     move.enable ()
