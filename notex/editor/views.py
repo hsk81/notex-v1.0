@@ -251,7 +251,6 @@ class POST:
 
     def createNodeOfTypeFolder (request):
 
-        print "createNodeOfTypeFolder:", request.POST['nodeId']
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
 
         try:
