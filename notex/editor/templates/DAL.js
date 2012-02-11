@@ -11,7 +11,7 @@ var DAL = {
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
 
-        tree.getLoader().load(node, function (node) {
+        tree.getLoader ().load (node, function (node) {
             var tree = Ext.getCmp ('pnlReportManagerTreeId')
             var path = node.getPath ()
             tree.expandPath (path)

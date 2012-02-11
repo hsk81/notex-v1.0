@@ -26,10 +26,6 @@ class BASE_TYPE (Model):
         
 class BASE (Model):
 
-    def to_type (self):
-
-        return eval (self.clsname).objects.get (id=self.id)
-        
     _name = CharField (max_length=256, blank=True, default='')
     _rank = IntegerField (default=0)
     _type = ForeignKey (BASE_TYPE)
@@ -53,6 +49,10 @@ class BASE (Model):
         lambda s: getattr (s, '_type'), set_type
     )
 
+    def to_type (self):
+
+        return eval (self.clsname).objects.get (id=self.id)
+        
     def __unicode__ (self):
 
         return u'%s' % self.name
