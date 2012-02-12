@@ -567,4 +567,27 @@ Ext.getCmp ('pnlReportManagerTreeId').on ('dblclick', function (node, event) {
             Ext.getCmp ('pnlEditorTabsId').fireEvent ('createImageTab', tabInfo)
         }
     }
-})
+});
+
+Ext.TaskMgr.start({
+    
+    run: function () {
+        var pnlReportManager = Ext.getCmp ('pnlReportManagerId')
+        if (pnlReportManager != undefined) {
+            
+            var pnlEditorTabs = Ext.getCmp ('pnlEditorTabsId')
+            if (pnlEditorTabs != undefined) {
+                
+                var tabs = pnlEditorTabs.items.items
+                for (var i=0; i<tabs.length; i++) {
+                    if (tabs[i] != undefined) {
+                        pnlReportManager.fireEvent ('saveTextTab', tabs[i])
+                    }
+                }
+                
+            }
+        }
+    },
+
+    interval: 15 * 60 * 1000 // [ms]
+});
