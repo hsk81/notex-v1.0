@@ -1,0 +1,3 @@
+var dialog = {
+    openFile: dialogOpenFile
+}
