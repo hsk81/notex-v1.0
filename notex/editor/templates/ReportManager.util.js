@@ -1,5 +1,5 @@
-var DAL = {
-
+var reportManagerUtil = {
+    
     //
     // CRUD: Create -----------------------------------------------------------
     //
@@ -7,12 +7,12 @@ var DAL = {
     fnSuccessCreate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
 
-        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
 
         tree.getLoader ().load (node, function (node) {
-            var tree = Ext.getCmp ('pnlReportManagerTreeId')
+            var tree = Ext.getCmp ('reportManager.tree.id')
             var path = node.getPath ()
             tree.expandPath (path)
             tree.el.unmask ()
@@ -21,7 +21,7 @@ var DAL = {
 
   , fnFailureCreate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
-        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        var tree = Ext.getCmp ('reportManager.tree.id')
         tree.el.unmask ()
     }
 
@@ -77,10 +77,10 @@ var DAL = {
 
   , fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
-        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+        Ext.getCmp ('editor.id').fireEvent (
             'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
 
-                var tree = Ext.getCmp ('pnlReportManagerTreeId')
+                var tree = Ext.getCmp ('reportManager.tree.id')
                 var node = tree.getNodeById (
                     (res.uuid != undefined) ? res.uuid : res.id
                 )
@@ -112,7 +112,7 @@ var DAL = {
 
   , fnFailureUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
-        Ext.getCmp ('pnlEditorTabsId').fireEvent (
+        Ext.getCmp ('editor.id').fireEvent (
             'updateTab', undefined, res.id, function (tab) {
                 tab.el.unmask ()
                 Ext.MessageBox.show ({
@@ -153,14 +153,14 @@ var DAL = {
   , fnSuccessRename : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
 
-        var tabs = Ext.getCmp ('pnlEditorTabsId')
+        var tabs = Ext.getCmp ('editor.id')
         var tab = tabs.findById (res.id)
         if (tab != undefined) {
             tab.setTitle (res.name)
             tab.el.unmask ()
         }
 
-        var tree = Ext.getCmp ('pnlReportManagerTreeId')
+        var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (res.id)
         if (node) {
             node.setText (res.name)

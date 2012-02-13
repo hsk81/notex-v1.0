@@ -1,6 +1,6 @@
-var pnlReportManagerTree = new Ext.tree.TreePanel ({
+var reportManagerTree = new Ext.tree.TreePanel ({
     
-    id          : 'pnlReportManagerTreeId'
+    id          : 'reportManager.tree.id'
   , autoScroll  : true
   , rootVisible : false
 
@@ -120,4 +120,23 @@ var pnlReportManagerTree = new Ext.tree.TreePanel ({
         }
 
     }
-})
+});
+
+Ext.getCmp ('reportManager.tree.id').on ('dblclick', function (node, event) {
+    if (node.attributes['cls'] == "file") {
+
+        var tabInfo = {
+            id      : node.id
+          , title   : node.attributes['text'].replace ('<i>','').replace ('</i>','')
+          , text    : node.attributes['data']
+          , iconCls : node.attributes['iconCls']
+        }
+
+        if (String.match(tabInfo.iconCls, "^icon-page$") == "icon-page") {
+            Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
+        } else if (String.match(tabInfo.iconCls, "^icon-image$") == "icon-image") {
+            tabInfo.src = 'http://icon-image.jpg' //@TODO!
+            Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
+        }
+    }
+});
