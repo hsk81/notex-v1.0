@@ -16,24 +16,24 @@
 <script type="text/javascript">
 
     var session = {
-        id: '{{ sid }}'
-      , timestamp: '{{ timestamp }}'
+        id: '{{ sid }}', 
+        timestamp: '{{ timestamp }}'
     }
 
     var urls = {
-        createProject : '{% url editor:post.createNodeOfTypeProject %}'
-      , createFolder  : '{% url editor:post.createNodeOfTypeFolder %}'
-      , createText    : '{% url editor:post.createLeafOfTypeText %}'
-      , createImage   : '{% url editor:post.createLeafOfTypeImage %}'
-      
-      , read   : '{% url editor:post.read %}'
-
-      , updateText  : '{% url editor:post.updateLeafOfTypeText %}'
-      , updateImage : '{% url editor:post.updateLeafOfTypeImage %}'
-      , swapRank  : '{% url editor:post.swapRank %}'
-
-      , rename : '{% url editor:post.rename %}'
-      , del    : '{% url editor:post.delete %}'
+        createProject : '{% url editor:post.createNodeOfTypeProject %}', 
+        createFolder  : '{% url editor:post.createNodeOfTypeFolder %}', 
+        createText    : '{% url editor:post.createLeafOfTypeText %}', 
+        createImage   : '{% url editor:post.createLeafOfTypeImage %}', 
+        
+        read   : '{% url editor:post.read %}', 
+        
+        updateText  : '{% url editor:post.updateLeafOfTypeText %}', 
+        updateImage : '{% url editor:post.updateLeafOfTypeImage %}', 
+        swapRank  : '{% url editor:post.swapRank %}', 
+        
+        rename : '{% url editor:post.rename %}', 
+        del    : '{% url editor:post.delete %}'
     }
 
     dump (session);    
@@ -43,39 +43,37 @@
 Ext.onReady (function () {
 
     /**
-     * quick-tips -------------------------------------------------------------
+     * quick-tips -----------------------------------------------------------------------------
      */
 
     Ext.QuickTips.init ();
 
     /**
-     * viewport ---------------------------------------------------------------
+     * viewport -------------------------------------------------------------------------------
      */
 
     var viewport = new Ext.Viewport({
 
-        layout : 'border'
-      , id     : 'viewportId'
-
-      , items : [{
-            region : 'center'
-          , layout : 'fit'
-          , items  : [editor]
-
+        layout : 'border', 
+        id     : 'viewportId', 
+        
+        items : [{
+            region : 'center', 
+            layout : 'fit', 
+            items  : [editor]
       },{
-            region       : 'west'
-          , split        : true
-          , minWidth     : 248  
-          , width        : 248
-          , collapsed    : false
-          , collapseMode : 'mini'
-          , hidden       : false
-          , layout       : 'fit'
-          , items        : [reportManager]
+            region       : 'west', 
+            split        : true, 
+            minWidth     : 248, 
+            width        : 248, 
+            collapsed    : false, 
+            collapseMode : 'mini', 
+            hidden       : false, 
+            layout       : 'fit', 
+            items        : [reportManager]
       }]
     });
 
     viewport.show ();
-
 });</script>
 {% endblock %}
