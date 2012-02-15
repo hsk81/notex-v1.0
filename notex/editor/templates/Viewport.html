@@ -26,14 +26,15 @@
         createText    : '{% url editor:post.createLeafOfTypeText %}', 
         createImage   : '{% url editor:post.createLeafOfTypeImage %}', 
         
-        read   : '{% url editor:post.read %}', 
+        read : '{% url editor:post.read %}',
         
         updateText  : '{% url editor:post.updateLeafOfTypeText %}', 
         updateImage : '{% url editor:post.updateLeafOfTypeImage %}', 
         swapRank  : '{% url editor:post.swapRank %}', 
         
         rename : '{% url editor:post.rename %}', 
-        del    : '{% url editor:post.delete %}'
+        del    : '{% url editor:post.delete %}',
+        fetch  : '{% url editor:data.fetch "=" %}'
     }
 
     dump (session);    

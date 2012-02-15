@@ -109,8 +109,33 @@ var reportManager = new Ext.Panel ({
         }, 
         
         exportReport : function () {
-            //@TODO
-        }, 
+
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            var selectionModel = tree.getSelectionModel ()
+            var selectedNode = selectionModel.getSelectedNode ()
+            if (selectedNode != undefined) {
+
+                var node = selectedNode
+                var body = Ext.getBody()
+
+                var frame = body.createChild ({
+                    tag : 'iframe',
+                    cls : 'x-hidden',
+                    id : 'iframe',
+                    name : 'iframe'
+                })
+
+                var form = body.createChild ({
+                    tag : 'form',
+                    cls : 'x-hidden',
+                    id : 'form',
+                    action : urls.fetch.replace ('=', node.id),
+                    target : 'iframe'
+                })
+
+                form.dom.submit();
+            }
+        },
 
         //
         // Open file (from local storage) -----------------------------------------------------
@@ -366,7 +391,7 @@ var reportManager = new Ext.Panel ({
         }, 
 
         //
-        // Rename selected node -----------------------------------------------
+        // Rename selected node ---------------------------------------------------------------
         //
 
         renameSelectedNode : function () {

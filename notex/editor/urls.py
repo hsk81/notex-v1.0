@@ -73,6 +73,8 @@ urlpatterns = patterns ('',
     url (r'^post/update/swap-rank/$', POST.swapRank, name='post.swapRank'),
     url (r'^post/rename/$', POST.rename, name='post.rename'),
     url (r'^post/delete/$', POST.delete, name='post.delete'),
+    url (r'^post/delete/$', POST.delete, name='post.delete'),
+    url (r'^data/fetch/(?P<id>.*=)/$', DATA.fetch, name='data.fetch'),
 
 )
 

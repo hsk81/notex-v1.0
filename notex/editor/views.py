@@ -1,5 +1,8 @@
 from settings import MEDIA_ROOT
 from datetime import datetime
+from cStringIO import StringIO
+from zipfile import ZipFile, ZIP_DEFLATED
+
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
 
@@ -142,6 +145,46 @@ class DATA:
 
     info = staticmethod (info)
 
+    def fill (zip_buffer, root, prefix):
+
+        ls = LEAF.objects.filter (_node = root)
+        ns = NODE.objects.filter (_node = root)
+
+        for leaf in ls:
+            zip_buffer.writestr ('%s/%s' % (prefix,leaf.name), leaf.text) ##TODO: HTML to TXT?
+        for node in ns:
+            DATA.fill (zip_buffer, node, "%s/%s" % (prefix, node))
+
+    fill = staticmethod (fill)
+
+    def fetch (request, id):
+
+        (type, ids) = json.loads (base64.b32decode (id))
+
+        if type == 'leaf':
+            leaf = LEAF.objects.get (id = ids[1])
+            node = leaf.node
+
+        else:
+            node = NODE.objects.get (id = ids[0])
+
+        while node.node:
+            node = node.node
+
+        str_buffer = StringIO ()
+        zip_buffer = ZipFile (str_buffer, 'w', ZIP_DEFLATED)
+        DATA.fill (zip_buffer, node, node.name)
+        zip_buffer.close ()
+        str_value = str_buffer.getvalue ()
+        str_buffer.close ()
+
+        response = HttpResponse (str_value, mimetype='application/x-zip')
+        response['Content-Disposition'] = 'attachment;filename="%s.zip"' % node.name
+
+        return response
+
+    fetch = staticmethod (fetch)
+
 class POST:
 
     def node (node):
@@ -192,14 +235,12 @@ class POST:
         tns = map (lambda n: (n.rank,n), ns)
         tls = map (lambda l: (l.rank,l), ls)
 
-        return json.dumps (
-            map (
-                lambda nal: (type (nal) == NODE)
-                    and POST.node (nal) 
-                    or POST.leaf (nal),
-                dict(tns + tls).values ()
-            )
-        )
+        return json.dumps (map (
+            lambda nal: (type (nal) == NODE)
+                and POST.node (nal)
+                or POST.leaf (nal),
+            dict(tns + tls).values ()
+        ))
 
     nodesAndLeafs = staticmethod (nodesAndLeafs)
 
