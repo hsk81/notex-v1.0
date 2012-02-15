@@ -1,8 +1,4 @@
-from django.http                 import HttpResponse
-from django.http                 import Http404
-from django.views.generic.simple import direct_to_template
-from django.template             import TemplateDoesNotExist
-
+from django.http import HttpResponse
 import json
 
 class DATA:

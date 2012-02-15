@@ -1,14 +1,14 @@
 import os.path
-from settings                    import MEDIA_ROOT
+from settings import MEDIA_ROOT
 
-from django.http                 import HttpResponse
-from django.http                 import Http404
+from django.http import HttpResponse
+from django.http import Http404
 from django.views.generic.simple import direct_to_template
-from django.template             import TemplateDoesNotExist
-from django.core                 import serializers
+from django.template import TemplateDoesNotExist
+from django.core import serializers
 
-from numpy                       import array
-from numpy                       import transpose
+from numpy import array
+from numpy import transpose
 
 import inspect
 import json
@@ -22,15 +22,15 @@ def direct_to_template_with_query (request, template, extra_context):
     present, it's value remains *unchanged*.
     '''
 
-    extra_context = dict(zip(request.GET.keys   () + extra_context.keys   (),\
-                             request.GET.values () + extra_context.values ()))
+    extra_context = dict (zip (request.GET.keys   () + extra_context.keys   (),\
+                               request.GET.values () + extra_context.values ()))
 
-    try: return direct_to_template(
+    try: return direct_to_template (
             request,
             template=template,
             extra_context=extra_context)
 
-    except TemplateDoesNotExist: raise Http404()
+    except TemplateDoesNotExist: raise Http404 ()
 
 class DATA:
 
@@ -41,14 +41,13 @@ class DATA:
             'ver' : '0.1'
         })
 
-        return HttpResponse(u'%s\n' % js_string, mimetype='application/json')
+        return HttpResponse (u'%s\n' % js_string, mimetype='application/json')
 
     info = staticmethod (info)
 
     def lorem_ipsum (request, path = MEDIA_ROOT+'app/svc/txt/lorem-ipsum.txt'):
 
         mimetype = request.GET.get('mimetype', 'text/plain')
-
         if mimetype == 'text/html': eop = '<br>'
         else:                       eop = '\n'
 
@@ -59,9 +58,9 @@ class DATA:
 
         else: content = ''
 
-        return HttpResponse(content, mimetype)
+        return HttpResponse (content, mimetype)
 
-    lorem_ipsum = staticmethod(lorem_ipsum)
+    lorem_ipsum = staticmethod (lorem_ipsum)
 
     ##
     ## TODO: Enable filtering and caching for object[s] and implement proper
@@ -70,12 +69,12 @@ class DATA:
 
     def parse (request):
 
-        in_list = request.GET.get('in', '*')
-        in_list = request.GET.get('include', in_list)
-        ex_list = request.GET.get('ex', [ ])
-        ex_list = request.GET.get('exclude', ex_list)
-        rs_list = request.GET.get('rs', [ ])
-        rs_list = request.GET.get('resolve', rs_list)
+        in_list = request.GET.get ('in', '*')
+        in_list = request.GET.get ('include', in_list)
+        ex_list = request.GET.get ('ex', [ ])
+        ex_list = request.GET.get ('exclude', ex_list)
+        rs_list = request.GET.get ('rs', [ ])
+        rs_list = request.GET.get ('resolve', rs_list)
 
         in_regexs = in_list and in_list.split (',')
         ex_regexs = ex_list and ex_list.split (',')
