@@ -74,7 +74,9 @@ urlpatterns = patterns ('',
     url (r'^post/rename/$', POST.rename, name='post.rename'),
     url (r'^post/delete/$', POST.delete, name='post.delete'),
     url (r'^post/delete/$', POST.delete, name='post.delete'),
-    url (r'^data/fetch/(?P<id>.*=)/$', DATA.fetch, name='data.fetch'),
+
+    url (r'^data/fetch-html/(?P<id>.*=)/$', DATA.fetchHtml, name='data.fetchHtml'),
+    url (r'^data/fetch-text/(?P<id>.*=)/$', DATA.fetchText, name='data.fetchText'),
 
 )
 

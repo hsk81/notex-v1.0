@@ -2,6 +2,7 @@ from settings import MEDIA_ROOT
 from datetime import datetime
 from cStringIO import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED
+from lib import MLStripper
 
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
@@ -145,19 +146,25 @@ class DATA:
 
     info = staticmethod (info)
 
-    def fill (zip_buffer, root, prefix):
+    def fill (zipBuffer, root, prefix, withHtmlTags):
 
         ls = LEAF.objects.filter (_node = root)
         ns = NODE.objects.filter (_node = root)
 
-        for leaf in ls:
-            zip_buffer.writestr ('%s/%s' % (prefix,leaf.name), leaf.text) ##TODO: HTML to TXT?
+        if withHtmlTags:
+            for leaf in ls:
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), leaf.text)
+        else:
+            for leaf in ls:
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                    MLStripper.strip_tags (leaf.text))
+                
         for node in ns:
-            DATA.fill (zip_buffer, node, "%s/%s" % (prefix, node))
+            DATA.fill (zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags)
 
     fill = staticmethod (fill)
 
-    def fetch (request, id):
+    def fetch (request, id, withHtmlTags = False):
 
         (type, ids) = json.loads (base64.b32decode (id))
 
@@ -171,12 +178,12 @@ class DATA:
         while node.node:
             node = node.node
 
-        str_buffer = StringIO ()
-        zip_buffer = ZipFile (str_buffer, 'w', ZIP_DEFLATED)
-        DATA.fill (zip_buffer, node, node.name)
-        zip_buffer.close ()
-        str_value = str_buffer.getvalue ()
-        str_buffer.close ()
+        strBuffer = StringIO ()
+        zipBuffer = ZipFile (strBuffer, 'w', ZIP_DEFLATED)
+        DATA.fill (zipBuffer, node, node.name, withHtmlTags)
+        zipBuffer.close ()
+        str_value = strBuffer.getvalue ()
+        strBuffer.close ()
 
         response = HttpResponse (str_value, mimetype='application/x-zip')
         response['Content-Disposition'] = 'attachment;filename="%s.zip"' % node.name
@@ -184,6 +191,12 @@ class DATA:
         return response
 
     fetch = staticmethod (fetch)
+
+    def fetchHtml (request, id): return DATA.fetch (request, id, withHtmlTags = True)
+    fetchHtml = staticmethod (fetchHtml)
+
+    def fetchText (request, id): return DATA.fetch (request, id, withHtmlTags = False)
+    fetchText = staticmethod (fetchText)
 
 class POST:
 

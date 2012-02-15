@@ -20,10 +20,28 @@ var reportManager = new Ext.Panel ({
                 Ext.getCmp ('reportManager.id').fireEvent ('importReport')
             }
         },{
-            iconCls : 'icon-disk_upload', 
-            tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)', 
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportReport')
+            iconCls : 'icon-disk_upload',
+            tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
+            split   : true,
+            menu    : {
+              xtype : 'menu',
+              plain : true,
+
+              items : [{
+                  iconCls : 'icon-html_go',
+                  text    : 'With HTML Tags',
+                  tooltip : '<b>Export with HTML Tags</b><br/>..',
+                  handler : function (button, event) {
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportReport', true)
+                  }
+              },{
+                  iconCls : 'icon-html_delete',
+                  text    : 'As Simple Text',
+                  tooltip : '<b>Export without HTML Tags</b><br/>..',
+                  handler : function (button, event) {
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportReport', false)
+                  }
+              }]
             }
         },'-',{
             iconCls : 'icon-folder_page', 
@@ -66,7 +84,6 @@ var reportManager = new Ext.Panel ({
                       Ext.getCmp ('reportManager.id').fireEvent ('addTextFile')
                   }
               }]
-
             }
         },{
             iconCls : 'icon-pencil', 
@@ -108,7 +125,7 @@ var reportManager = new Ext.Panel ({
             //@TODO
         }, 
         
-        exportReport : function () {
+        exportReport : function (withHtmlTags) {
 
             var tree = Ext.getCmp ('reportManager.tree.id')
             var selectionModel = tree.getSelectionModel ()
@@ -129,7 +146,9 @@ var reportManager = new Ext.Panel ({
                     tag : 'form',
                     cls : 'x-hidden',
                     id : 'form',
-                    action : urls.fetch.replace ('=', node.id),
+                    action : (withHtmlTags)
+                        ? urls.fetchHtml.replace ('=', node.id)
+                        : urls.fetchText.replace ('=', node.id),
                     target : 'iframe'
                 })
 

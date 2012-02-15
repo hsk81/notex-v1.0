@@ -34,7 +34,9 @@
         
         rename : '{% url editor:post.rename %}', 
         del    : '{% url editor:post.delete %}',
-        fetch  : '{% url editor:data.fetch "=" %}'
+
+        fetchHtml  : '{% url editor:data.fetchHtml "=" %}',
+        fetchText  : '{% url editor:data.fetchText "=" %}'
     }
 
     dump (session);    
@@ -65,8 +67,8 @@ Ext.onReady (function () {
       },{
             region       : 'west', 
             split        : true, 
-            minWidth     : 248, 
-            width        : 248, 
+            minWidth     : 260,
+            width        : 260,
             collapsed    : false, 
             collapseMode : 'mini', 
             hidden       : false, 
