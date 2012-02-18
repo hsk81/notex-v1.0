@@ -125,9 +125,9 @@ var reportManager = new Ext.Panel ({
             dialog.openFile.execute ({
                 success: function (file) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", urls.storeFile.replace ('*', file.name) + "?ipdb", true);
+                    xhr.open("POST", urls.storeFile.replace ('*', file.name), true);
                     xhr.onload = function (event) { 
-                        Ext.Msg.alert ("Info", "Imported '" + file.name + "' file.")
+                        Ext.Msg.alert ("Info", "Imported <i>" + file.name + "</i> file.")
                     }
                     xhr.send (file);
                 },

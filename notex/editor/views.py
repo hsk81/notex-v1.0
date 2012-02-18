@@ -231,7 +231,6 @@ class DATA:
                 infolist = sorted (infolist, key=lambda i: i.filename)
 
                 for info in infolist:
-                    print rankdict[info], info.filename
                     with zipBuffer.open (info) as arch:
 
                         basename = os.path.basename (info.filename)
