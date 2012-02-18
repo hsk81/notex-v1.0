@@ -36,7 +36,8 @@
         del    : '{% url editor:post.delete %}',
 
         fetchHtml  : '{% url editor:data.fetchHtml "=" %}',
-        fetchText  : '{% url editor:data.fetchText "=" %}'
+        fetchText  : '{% url editor:data.fetchText "=" %}', 
+        storeFile  : '{% url editor:data.storeFile "*" %}'
     }
 
     dump (session);    

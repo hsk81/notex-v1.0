@@ -122,7 +122,20 @@ var reportManager = new Ext.Panel ({
         //
 
         importReport : function () {
-            //@TODO
+            dialog.openFile.execute ({
+                success: function (file) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", urls.storeFile.replace ('*', file.name) + "?ipdb", true);
+                    xhr.onload = function (event) { 
+                        Ext.Msg.alert ("Info", "Imported '" + file.name + "' file.")
+                    }
+                    xhr.send (file);
+                },
+
+                failure: function () {
+                    Ext.Msg.alert ("Error", "No file or invalid file type selected!")
+                }
+            })
         }, 
         
         exportReport : function (withHtmlTags) {

@@ -1,7 +1,6 @@
 from settings import MEDIA_ROOT
 from datetime import datetime
 from cStringIO import StringIO
-from zipfile import ZipFile, ZIP_DEFLATED
 from lib import MLStripper
 
 from django.http import HttpResponse
@@ -11,10 +10,11 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
-import sys
+import zipfile
 import base64
 import json
 import uuid
+import sys
 import os
 
 class VIEW:
@@ -160,7 +160,9 @@ class DATA:
                     MLStripper.strip_tags (leaf.text))
                 
         for node in ns:
-            DATA.fill (zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags)
+            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fill (
+                zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags
+            )
 
     fill = staticmethod (fill)
 
@@ -179,7 +181,7 @@ class DATA:
             node = node.node
 
         strBuffer = StringIO ()
-        zipBuffer = ZipFile (strBuffer, 'w', ZIP_DEFLATED)
+        zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
         DATA.fill (zipBuffer, node, node.name, withHtmlTags)
         zipBuffer.close ()
         str_value = strBuffer.getvalue ()
@@ -197,6 +199,66 @@ class DATA:
 
     def fetchText (request, id): return DATA.fetch (request, id, withHtmlTags = False)
     fetchText = staticmethod (fetchText)
+
+    def storeFile (request, fid):
+
+        with os.tmpfile() as file:
+            file.write (''.join (request.readlines ()))
+
+            if not zipfile.is_zipfile (file):
+
+                js_string = json.dumps ([{
+                    'success' : 'false',
+                    'file_id' : fid
+                }])
+
+                return HttpResponse (js_string, mimetype='application/json')
+
+            with zipfile.ZipFile (file, 'r') as zipBuffer:
+
+                root = ROOT.objects.get (
+                    _type = ROOT_TYPE.objects.get (_code='root'),
+                    _usid = request.session.session_key)
+
+                node = NODE.objects.create (
+                    type = NODE_TYPE.objects.get (_code='project'),
+                    root = root,
+                    name = os.path.splitext (fid)[0],
+                    rank = NODE.objects.filter (_root = root).count ())
+
+                infolist = zipBuffer.infolist ()
+                rankdict = dict (zip (infolist, range (len (infolist))))
+                infolist = sorted (infolist, key=lambda i: i.filename)
+
+                for info in infolist:
+                    print rankdict[info], info.filename
+                    with zipBuffer.open (info) as arch:
+
+                        basename = os.path.basename (info.filename)
+                        if basename == '':
+                            node = NODE.objects.create (
+                                type = NODE_TYPE.objects.get (_code='folder'),
+                                root = root,
+                                node = node,
+                                name = os.path.split (info.filename[:-1])[1],
+                                rank = rankdict[info])
+
+                        else:
+                            _ = LEAF.objects.create (
+                                type = LEAF_TYPE.objects.get (_code='text'),
+                                node = node,
+                                name = basename,
+                                text = ''.join (arch.readlines ()),
+                                rank = rankdict[info])
+
+                js_string = json.dumps ([{
+                    'success' : 'true',
+                    'file_id' : fid
+                }])
+
+                return HttpResponse (js_string, mimetype='application/json')
+
+    storeFile = staticmethod (storeFile)
 
 class POST:
 

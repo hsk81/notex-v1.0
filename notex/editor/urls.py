@@ -77,6 +77,7 @@ urlpatterns = patterns ('',
 
     url (r'^data/fetch-html/(?P<id>.*=)/$', DATA.fetchHtml, name='data.fetchHtml'),
     url (r'^data/fetch-text/(?P<id>.*=)/$', DATA.fetchText, name='data.fetchText'),
+    url (r'^data/store-file/(?P<fid>.*)/$', DATA.storeFile, name='data.storeFile'),
 
 )
 
