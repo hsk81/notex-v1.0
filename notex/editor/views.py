@@ -1,3 +1,4 @@
+import os.path
 from settings import MEDIA_ROOT
 from datetime import datetime
 from cStringIO import StringIO
@@ -226,6 +227,8 @@ class DATA:
                     name = os.path.splitext (fid)[0],
                     rank = NODE.objects.filter (_root = root).count ())
 
+                prev = {node.name: node}
+
                 infolist = zipBuffer.infolist ()
                 rankdict = dict (zip (infolist, range (len (infolist))))
                 infolist = sorted (infolist, key=lambda i: i.filename)
@@ -234,15 +237,23 @@ class DATA:
                     with zipBuffer.open (info) as arch:
 
                         basename = os.path.basename (info.filename)
-                        if basename == '':
+                        if basename == '': ## is_folder
+
+                            path = os.path.split (info.filename[:-1])[0]
+                            name = os.path.split (info.filename[:-1])[1]
+
+                            if not prev.has_key (path): ## is_subfolder
+                                prev[path] = node
+
                             node = NODE.objects.create (
                                 type = NODE_TYPE.objects.get (_code='folder'),
                                 root = root,
-                                node = node,
-                                name = os.path.split (info.filename[:-1])[1],
+                                node = prev[path],
+                                name = name,
                                 rank = rankdict[info])
 
-                        else:
+                        else: ## is_not_folder
+
                             _ = LEAF.objects.create (
                                 type = LEAF_TYPE.objects.get (_code='text'),
                                 node = node,
