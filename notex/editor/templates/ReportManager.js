@@ -8,7 +8,8 @@ var reportManager = new Ext.Panel ({
         id      : 'refresh', 
         qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view', 
         handler : function (event, toolEl, panel) {
-            //@TODO!?
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            tree.getLoader ().load (tree.root, null, this)
         }
     }], 
 
@@ -124,15 +125,16 @@ var reportManager = new Ext.Panel ({
         importReport : function () {
             dialog.openFile.execute ({
                 success: function (file) {
-                    var xhr = new XMLHttpRequest ();
+                    var xhr = new XMLHttpRequest ()
                     xhr.open ("POST", urls.storeFile.replace ('*', file.name), true)
                     xhr.onload = function (event) {
-
                         if (this.status == 200) {
                             var response = Ext.util.JSON.decode (this.response)
                             if (response.success == 'true') {
                                 Ext.Msg.alert ("Info", "Importing <i>" + file.name +
                                     "</i> file was sucessful.")
+                                var tree = Ext.getCmp ('reportManager.tree.id')
+                                tree.getLoader ().load (tree.root, null, this)
                             } else {
                                 Ext.Msg.alert ("Error", "Importing <i>" + file.name +
                                     "</i> file failed: " + response.message + "!")
@@ -141,7 +143,6 @@ var reportManager = new Ext.Panel ({
                             Ext.Msg.alert ("Error", "Importing <i>" + file.name +
                                 "</i> file failed: Unknown error!")
                         }
-
                     }
                     xhr.send (file);
                 },
