@@ -125,9 +125,15 @@ var reportManager = new Ext.Panel ({
         importReport : function () {
             dialog.openFile.execute ({
                 success: function (file) {
+                    var tree = Ext.getCmp ('reportManager.tree.id')
+                    tree.el.mask ('Please wait', 'x-mask-loading')
+
                     var xhr = new XMLHttpRequest ()
                     xhr.open ("POST", urls.storeFile.replace ('*', file.name), true)
                     xhr.onload = function (event) {
+                        var tree = Ext.getCmp ('reportManager.tree.id')
+                        tree.el.unmask ()
+
                         if (this.status == 200) {
                             var response = Ext.util.JSON.decode (this.response)
                             if (response.success == 'true') {
@@ -144,6 +150,7 @@ var reportManager = new Ext.Panel ({
                                 "</i> file failed: Unknown error!")
                         }
                     }
+                    
                     xhr.send (file);
                 },
 
