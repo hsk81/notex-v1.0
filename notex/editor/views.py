@@ -208,10 +208,11 @@ class DATA:
 
             if not zipfile.is_zipfile (file):
 
-                js_string = json.dumps ([{
+                js_string = json.dumps ({
                     'success' : 'false',
+                    'message' : 'ZIP format expected',
                     'file_id' : fid
-                }])
+                })
 
                 return HttpResponse (js_string, mimetype='application/json')
 
@@ -261,10 +262,10 @@ class DATA:
                                 text = ''.join (arch.readlines ()),
                                 rank = rankdict[info])
 
-                js_string = json.dumps ([{
+                js_string = json.dumps ({
                     'success' : 'true',
                     'file_id' : fid
-                }])
+                })
 
                 return HttpResponse (js_string, mimetype='application/json')
 
