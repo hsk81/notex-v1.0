@@ -129,9 +129,8 @@ var reportManager = new Ext.Panel ({
                     tree.el.mask ('Please wait', 'x-mask-loading')
 
                     var xhr = new XMLHttpRequest ()
-                    xhr.open ("POST", urls.storeFile.replace ('*', file.name), true)
+                    xhr.open ("POST", urls.storeFile.replace ('*', file.name) + "?ipdb", true)
                     xhr.onload = function (event) {
-                        var tree = Ext.getCmp ('reportManager.tree.id')
                         tree.el.unmask ()
 
                         if (this.status == 200) {
@@ -139,7 +138,6 @@ var reportManager = new Ext.Panel ({
                             if (response.success == 'true') {
                                 Ext.Msg.alert ("Info", "Importing <i>" + file.name +
                                     "</i> file was sucessful.")
-                                var tree = Ext.getCmp ('reportManager.tree.id')
                                 tree.getLoader ().load (tree.root, null, this)
                             } else {
                                 Ext.Msg.alert ("Error", "Importing <i>" + file.name +
@@ -217,45 +215,22 @@ var reportManager = new Ext.Panel ({
                             'expanded' : false
                         })
 
-                        if (
-                            String.match(file.type, "^text") == "text"
-                        ) {
-                            fileInfo.iconCls = 'icon-page'
-                            fileInfo.text = file.getAsBinary ().replace ("\n", "<br>", 'g')
-                            node.attributes['iconCls'] = fileInfo.iconCls
-                            node.attributes['data'] = fileInfo.text
+                        if (String.match(file.type, "^image") == "image") {
+                            var imageReader = new FileReader();
 
-                            tree.fireEvent (
-                                'createNode', node, {
-                                    refNode: selectedNode
-                                },{
-                                    success: function (args) {
-                                        Ext.getCmp ('editor.id').fireEvent (
-                                            'createTextTab', fileInfo, function (tab) {
-                                                Ext.getCmp ('reportManager.id').fireEvent (
-                                                    'saveTextTab', tab
-                                                )
-                                            }
-                                        )
-                                    }, 
-                                    
-                                    failure: function (args) {
-                                        Ext.Msg.alert ("Error", "No node inserted!")
-                                    }
-                                }
-                            )
-                        } else if (
-                            String.match(file.type, "^image") == "image"
-                        ) {
-                            fileInfo.iconCls = 'icon-image'
-                            fileInfo.text = file.getAsBinary ()
-                            node.attributes['iconCls'] = fileInfo.iconCls
-                            node.attributes['data'] = fileInfo.text
-                            
-                            tree.fireEvent (
-                                'createNode', node, {
-                                    refNode: selectedNode
-                                },{
+                            imageReader.onerror = function (e) {
+                                Ext.Msg.alert (
+                                    "Error", "Reading <i>" + file.name + "</i> failed!"
+                                )
+                            }
+
+                            imageReader.onload = function (e) {
+                                fileInfo.iconCls = 'icon-image'
+                                fileInfo.text = e.target.result
+                                node.attributes['iconCls'] = fileInfo.iconCls
+                                node.attributes['data'] = fileInfo.text
+
+                                tree.fireEvent ('createNode', node, {refNode: selectedNode},{
                                     success: function (args) {
                                         Ext.getCmp ('editor.id').fireEvent (
                                             'createImageTab', fileInfo, function (tab) {
@@ -264,17 +239,51 @@ var reportManager = new Ext.Panel ({
                                                 )
                                             }
                                         )
-                                    }
+                                    },
 
-                                  , failure: function (args) {
+                                    failure: function (args) {
                                         Ext.Msg.alert ("Error", "No node inserted!")
                                     }
-                                }
-                            )
-                        } else {
-                            Ext.Msg.alert ("Error", "Select a text or image file!")
-                        }
+                                })
+                            }
 
+                            imageReader.readAsDataURL (file);
+                        } else { // assume text
+                            var textReader = new FileReader();
+
+                            textReader.onerror = function (e) {
+                                Ext.Msg.alert (
+                                    "Error", "Reading <i>" + file.name + "</i> failed!"
+                                )
+                            }
+
+                            textReader.onload = function (e) {
+                                fileInfo.iconCls = 'icon-page'
+                                fileInfo.text = e.target.result.replace ("\n", "<br>", 'g')
+                                node.attributes['iconCls'] = fileInfo.iconCls
+                                node.attributes['data'] = fileInfo.text
+
+                                tree.fireEvent (
+                                    'createNode', node, {refNode: selectedNode},{
+                                        success: function (args) {
+                                            Ext.getCmp ('editor.id').fireEvent (
+                                                'createTextTab', fileInfo, function (tab) {
+                                                    Ext.getCmp ('reportManager.id').fireEvent (
+                                                        'saveTextTab', tab
+                                                    )
+                                                }
+                                            )
+                                        },
+
+                                        failure: function (args) {
+                                            Ext.Msg.alert ("Error", "No node inserted!")
+                                        }
+                                    }
+                                )
+                            }
+
+                            textReader.readAsBinaryString (file);
+                        }
                     }, 
                     
                     failure: function () {

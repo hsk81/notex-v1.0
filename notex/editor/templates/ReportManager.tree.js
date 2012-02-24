@@ -132,11 +132,10 @@ Ext.getCmp ('reportManager.tree.id').on ('dblclick', function (node, event) {
           , iconCls : node.attributes['iconCls']
         }
 
-        if (String.match(tabInfo.iconCls, "^icon-page$") == "icon-page") {
-            Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
-        } else if (String.match(tabInfo.iconCls, "^icon-image$") == "icon-image") {
-            tabInfo.src = 'http://icon-image.jpg' //@TODO!
+        if (String.match(tabInfo.iconCls, "^icon-image$") == "icon-image") {
             Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
+        } else {
+            Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
         }
     }
 });

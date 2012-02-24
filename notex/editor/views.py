@@ -11,6 +11,7 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
+import mimetypes
 import zipfile
 import base64
 import json
@@ -154,16 +155,24 @@ class DATA:
 
         if withHtmlTags:
             for leaf in ls:
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), leaf.text)
+                if leaf.type.code == 'image':
+                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                        base64.decodestring (leaf.text.split (',')[1]))
+                else:
+                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                        leaf.text)
         else:
             for leaf in ls:
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                    MLStripper.strip_tags (leaf.text))
+                if leaf.type.code == 'image':
+                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                        base64.decodestring (leaf.text.split (',')[1]))
+                else:
+                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                        MLStripper.strip_tags (leaf.text))
                 
         for node in ns:
             zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fill (
-                zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags
-            )
+                zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags)
 
     fill = staticmethod (fill)
 
@@ -202,6 +211,9 @@ class DATA:
     fetchText = staticmethod (fetchText)
 
     def storeFile (request, fid):
+
+        if not mimetypes.inited:
+            mimetypes.init
 
         with os.tmpfile() as file:
             file.write (''.join (request.readlines ()))
@@ -255,11 +267,20 @@ class DATA:
 
                         else: ## is_not_folder
 
+                            mimetype, encoding = mimetypes.guess_type (basename)
+                            if mimetype and mimetype.startswith ('image'):
+                                code = 'image'
+                                text = 'data:%s;base64,%s' % (mimetype, \
+                                    base64.encodestring (''.join (arch.readlines ())))
+                            else:
+                                code = 'text'
+                                text = ''.join (arch.readlines ())
+
                             _ = LEAF.objects.create (
-                                type = LEAF_TYPE.objects.get (_code='text'),
+                                type = LEAF_TYPE.objects.get (_code=code),
                                 node = node,
                                 name = basename,
-                                text = ''.join (arch.readlines ()),
+                                text = text,
                                 rank = rankdict[info])
 
                 js_string = json.dumps ({

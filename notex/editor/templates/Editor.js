@@ -45,11 +45,11 @@ var editor = new Ext.TabPanel ({
                   , iconCls    : tabInfo.iconCls
                   , closable   : true
 
-                  , getEditor: function () {
+                  , getEditor  : function () {
                         return this.findById ('htmlEditorId')
                     }
 
-                  , getData: function () {
+                  , getData    : function () {
                         return this.getEditor ().getValue ()
                             .replace('<div style="' +
                                  'font-family: andale mono; ' +
@@ -105,9 +105,13 @@ var editor = new Ext.TabPanel ({
                       , pack  : 'center'
                   }
 
+                  , getData   : function () {
+                        return $('#imageId').attr ('src')
+                    }
+
                   , items : [{
                         html : String.format (
-                            '<img src="{0}" />', tabInfo.src
+                            '<img id="imageId" src="{0}" width="100%" />', tabInfo.text
                         )
                     }]
                 });
@@ -144,7 +148,6 @@ var editor = new Ext.TabPanel ({
             )
 
             if (tabInfo.uuid != undefined) {
-
                 var ti = {
                     id      : tabInfo.id
                   , title   : tab.title
@@ -153,7 +156,12 @@ var editor = new Ext.TabPanel ({
                 }
 
                 this.remove (tab)
-                Ext.getCmp ('editor.id').fireEvent ('createTab', ti)
+
+                if (ti.iconCls == 'icon-image') {
+                    Ext.getCmp ('editor.id').fireEvent ('createImageTab', ti)
+                } else {
+                    Ext.getCmp ('editor.id').fireEvent ('createTextTab', ti)
+                }
             }
 
             return (fn != undefined) ? fn (tab) : undefined
