@@ -129,7 +129,7 @@ var reportManager = new Ext.Panel ({
                     tree.el.mask ('Please wait', 'x-mask-loading')
 
                     var xhr = new XMLHttpRequest ()
-                    xhr.open ("POST", urls.storeFile.replace ('*', file.name) + "?ipdb", true)
+                    xhr.open ("POST", urls.storeFile.replace ('*', file.name), true)
                     xhr.onload = function (event) {
                         tree.el.unmask ()
 
