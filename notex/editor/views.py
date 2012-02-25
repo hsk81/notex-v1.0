@@ -243,31 +243,30 @@ class DATA:
                 prev = {node.name: node}
 
                 infolist = zipBuffer.infolist ()
+                for i in infolist: print i.filename
                 rankdict = dict (zip (infolist, range (len (infolist))))
-                infolist = sorted (infolist, key=lambda i: i.filename)
+                infolist = sorted (infolist, key=lambda info: info.filename)
+                for i in infolist: print i.filename
 
                 for info in infolist:
                     with zipBuffer.open (info) as arch:
 
                         basename = os.path.basename (info.filename)
-                        if basename == '': ## is_folder
+                        if basename == '': ## is folder?
 
-                            path = os.path.split (info.filename[:-1])[0]
-                            name = os.path.split (info.filename[:-1])[1]
-
-                            if not prev.has_key (path): ## is_subfolder
-                                prev[path] = node
-
-                            node = NODE.objects.create (
+                            path, name = os.path.split (info.filename[:-1])
+                            prev[info.filename[:-1]] = NODE.objects.create (
                                 type = NODE_TYPE.objects.get (_code='folder'),
                                 root = root,
                                 node = prev[path],
                                 name = name,
                                 rank = rankdict[info])
 
-                        else: ## is_not_folder
+                        else: ## is not folder!
 
-                            mimetype, encoding = mimetypes.guess_type (basename)
+                            path, name = os.path.split (info.filename)
+                            mimetype, encoding = mimetypes.guess_type (name)
+
                             if mimetype and mimetype.startswith ('image'):
                                 code = 'image'
                                 text = 'data:%s;base64,%s' % (mimetype, \
@@ -278,8 +277,8 @@ class DATA:
 
                             _ = LEAF.objects.create (
                                 type = LEAF_TYPE.objects.get (_code=code),
-                                node = node,
-                                name = basename,
+                                node = prev[path],
+                                name = name,
                                 text = text,
                                 rank = rankdict[info])
 
