@@ -10,6 +10,9 @@ var reportManagerUtil = {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
+        if (node.isLeaf ()) {
+            node = node.parentNode
+        }
 
         tree.getLoader ().load (node, function (node) {
             var tree = Ext.getCmp ('reportManager.tree.id')

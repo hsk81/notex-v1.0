@@ -384,7 +384,7 @@ var reportManager = new Ext.Panel ({
             var node = model.getSelectedNode ()
 
             if (node != undefined) {
-                if (node.isLeaf()) {
+                if (node.isLeaf ()) {
                     node = node.parentNode
                 }
 
