@@ -243,11 +243,9 @@ class DATA:
                 prev = {node.name: node}
 
                 infolist = zipBuffer.infolist ()
-                for i in infolist: print i.filename
                 rankdict = dict (zip (infolist, range (len (infolist))))
                 infolist = sorted (infolist, key=lambda info: info.filename)
-                for i in infolist: print i.filename
-
+  
                 for info in infolist:
                     with zipBuffer.open (info) as arch:
 
@@ -552,60 +550,27 @@ class POST:
     ##
 
     def swapRank (request):
+
+        _, ids = json.loads (base64.b32decode (request.POST['id']))
+        _, jds = json.loads (base64.b32decode (request.POST['jd']))
+
+        if len (ids) > 1: base = LEAF.objects.get (pk = ids[1])
+        else:             base = NODE.objects.get (pk = ids[0])
+        if len (jds) > 1: temp = LEAF.objects.get (pk = jds[1])
+        else:             temp = NODE.objects.get (pk = jds[0])
         
-        try:
-            
-            (type, ids) = json.loads (base64.b32decode (request.POST['id']))
-            (type, jds) = json.loads (base64.b32decode (request.POST['jd']))
-            
-        except: 
-            
-            js_string = json.dumps ([{
-                'success' : 'false',
-                'id'      : request.POST['id'], 
-                'jd'      : request.POST['jd']
-            }])
+        rank = base.rank
+        base.rank = temp.rank
+        temp.rank = rank
 
-            return HttpResponse (js_string, mimetype='application/json')
-        
-        if type == 'node':
+        base.save ()
+        temp.save ()
 
-            leaf = LEAF.objects.get (pk = ids[0])
-            temp = LEAF.objects.get (pk = jds[0])
-
-            rank = leaf.rank
-            leaf.rank = temp.rank
-            temp.rank = rank
-
-            leaf.save ()
-            temp.save ()
-
-        elif type == 'leaf':
-
-            leaf = LEAF.objects.get (pk = ids[1])
-            temp = LEAF.objects.get (pk = jds[1])
-
-            rank = leaf.rank
-            leaf.rank = temp.rank
-            temp.rank = rank
-
-            leaf.save ()
-            temp.save ()
-
-        else:
-
-            js_string = json.dumps ([{
-                'success' : 'false',
-                'id'      : request.POST['id'], 
-                'id'      : request.POST['jd']
-            }])
-        
         js_string = json.dumps ([{
-            'success' : 'true',
-            'id'      : request.POST['id'], 
-            'jd'      : request.POST['jd']
+            'id' : request.POST['id'],
+            'jd' : request.POST['jd']
         }])
-        
+
         return HttpResponse (js_string, mimetype='application/json')
 
     swapRank = staticmethod (swapRank)

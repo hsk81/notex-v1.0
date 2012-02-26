@@ -313,11 +313,11 @@ var reportManager = new Ext.Panel ({
                 var node = tree.getNodeById (tab.id)
 
                 reportManager.util.crudUpdate ({
-                    leafId  : node.id
-                  , nodeId  : node.parentNode.id
-                  , name    : node.text.replace('<i>','').replace('</i>','')
-                  , data    : tab.getData ()
-                  , rank    : node.parentNode.indexOf (node)
+                    leafId  : node.id, 
+                    nodeId  : node.parentNode.id,
+                    name    : node.text.replace('<i>','').replace('</i>',''),
+                    data    : tab.getData (),
+                    rank    : node.parentNode.indexOf (node)
                 },{
                     success : reportManager.util.fnSuccessUpdate
                   , failure : reportManager.util.fnFailureUpdate
@@ -338,14 +338,14 @@ var reportManager = new Ext.Panel ({
                 var node = tree.getNodeById (tab.id)
 
                 reportManager.util.crudUpdate ({
-                    leafId  : node.id
-                  , nodeId  : node.parentNode.id
-                  , name    : node.text.replace('<i>','').replace('</i>','')
-                  , data    : tab.getData ()
-                  , rank    : node.parentNode.indexOf (node)
+                    leafId  : node.id, 
+                    nodeId  : node.parentNode.id,
+                    name    : node.text.replace('<i>','').replace('</i>',''),
+                    data    : tab.getData (),
+                    rank    : node.parentNode.indexOf (node)
                 },{
-                    success : reportManager.util.fnSuccessUpdate
-                  , failure : reportManager.util.fnFailureUpdate
+                    success : reportManager.util.fnSuccessUpdate,
+                    failure : reportManager.util.fnFailureUpdate
                 }, urls.updateImage)
             }
         }, 
@@ -568,17 +568,17 @@ var reportManager = new Ext.Panel ({
             tree.el.mask ('Please wait', 'x-mask-loading')
             
             Ext.Ajax.request ({
-                params : {id: node.id, jd: node.previousSibling.id }
-              , url    : urls.swapRank
+                params : {id: node.id, jd: node.previousSibling.id }, 
+                url    : urls.swapRank,
 
-              , success : function (xhr, opts) {
+                success : function (xhr, opts) {
                     node.parentNode.insertBefore (node, node.previousSibling)
                     tree.selectPath (node.getPath ())
                     tree.el.unmask ()
                     move.enable ()
-                }
+                },
 
-              , failure : function (xhr, opts) {
+                failure : function (xhr, opts) {
                     tree.el.unmask ()
                     move.enable ()
                     Ext.Msg.alert ("Error", "Moving up '" + node.text + "' failed!")
