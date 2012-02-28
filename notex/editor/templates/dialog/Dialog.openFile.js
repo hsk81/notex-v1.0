@@ -12,10 +12,9 @@ var dialogOpenFile = new Ext.Window ({
     resizable : false, 
     
     items : [{
-        
         layout : 'hbox', 
         frame  : true, 
-        width  : 267, 
+        width  : 276,
         height : 36, 
         layoutConfig : {
             pack  : 'center', 
