@@ -76,7 +76,7 @@ FIXTURE_DIRS = (
 
 INSTALLED_APPS = (
 
-    'django_extensions', 
+ ## 'django_extensions', 
     'django_pdb',
 
     'django.contrib.auth',
