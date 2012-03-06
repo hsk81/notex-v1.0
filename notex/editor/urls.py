@@ -15,41 +15,50 @@ urlpatterns = patterns ('',
 
     url (r'^ReportManager.js$', direct_to_template, {
             'template'      : 'ReportManager.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.js'),
     url (r'^ReportManager.tree.js$', direct_to_template, {
             'template'      : 'ReportManager.tree.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.tree.js'),
     url (r'^ReportManager.util.js$', direct_to_template, {
             'template'      : 'ReportManager.util.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.util.js'),
     url (r'^ReportManager.task.js$', direct_to_template, {
             'template'      : 'ReportManager.task.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.task.js'),
 
     url (r'^Editor.js$', direct_to_template, {
             'template'      : 'Editor.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Editor.js'),
 
     url (r'^Dialog.js$', direct_to_template, {
             'template'      : 'dialog/Dialog.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Dialog.js'),
     url (r'^Dialog.openFile.js$', direct_to_template, {
             'template'      : 'dialog/Dialog.openFile.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Dialog.openFile.js'),
 
     url (r'^Math.uuid.js$', direct_to_template, {
             'template'      : 'lib/Math.uuid.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Math.uuid.js'),
     url (r'^Base64.js$', direct_to_template, {
             'template'      : 'lib/Base64.js',
+            'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Base64.js'),
 
