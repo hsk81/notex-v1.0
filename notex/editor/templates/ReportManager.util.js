@@ -1,84 +1,90 @@
-var reportManagerUtil = {
+    var reportManagerUtil = {
     
-    //
-    // CRUD: Create -----------------------------------------------------------
-    //
+    // ########################################################################################
+    // CRUD: Create
+    // ########################################################################################
 
     fnSuccessCreate : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
-
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
-        if (node.isLeaf ()) {
-            node = node.parentNode
-        }
 
-        tree.getLoader ().load (node, function (node) {
-            var tree = Ext.getCmp ('reportManager.tree.id')
-            var path = node.getPath ()
-            tree.expandPath (path)
+        if (node != undefined) {
+            tree.getLoader ().load (node, function (node) {
+                var path = node.getPath ()
+                tree.getLoader ().load (tree.root, function (root) {
+                    tree.expandPath (path, null, function (success, node) {
+                        if (success) { tree.getSelectionModel ().select (node) }
+                        tree.el.unmask ()
+                    })
+                })
+            })
+        } else {
+            tree.getLoader ().load (tree.root)
             tree.el.unmask ()
-        })
-    }
+        }
+    },
 
-  , fnFailureCreate : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
+    fnFailureCreate : function (xhr, opts) {
         var tree = Ext.getCmp ('reportManager.tree.id')
         tree.el.unmask ()
-    }
+    },
 
-  , crudCreate : function (url, crudInfo, fn) {
+    crudCreate : function (url, crudInfo, fn) {
         Ext.Ajax.request ({
-
-            params : crudInfo
-          , url    : url
-
-          , success : function (xhr, opts) {
-                fn.success (xhr, opts)
+            params : crudInfo,
+            url : url,
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0]
+                    if (res.success) {
+                        fn.success (xhr, opts)
+                    } else {
+                        fn.failure (xhr, opts)
+                    }
+                } else {
+                    fn.failure (xhr, opts)
+                }
             }
+        })
+    },
 
-          , failure : function (xhr, opts) {
-                fn.failure (xhr, opts)
-            }
+    // ########################################################################################
+    // CRUD: Read
+    // ########################################################################################
 
-        });
-    }
+    fnSuccessRead : function (xhr, opts) {
+        //@DONE!
+    },
 
-    //
-    // CRUD: Read -------------------------------------------------------------
-    //
+    fnFailureRead : function (xhr, opts) {
+        //@DONE!
+    },
 
-  , fnSuccessRead : function (xhr, opts) {
-        //@TODO!?
-    }
-
-  , fnFailureRead : function (xhr, opts) {
-        //@TODO!?
-    }
-
-  , crudRead : function (crudInfo, fn) {
+    crudRead : function (crudInfo, fn) {
         Ext.Ajax.request ({
-
-            params : crudInfo
-          , url: urls.read
-
-          , success : function (xhr, opts) {
-                fn.success (xhr, opts)
+            params : crudInfo, 
+            url : urls.read,
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0]
+                    if (res.success) {
+                        fn.success (xhr, opts)
+                    } else {
+                        fn.failure (xhr, opts)
+                    }
+                } else {
+                    fn.failure (xhr, opts)
+                }
             }
+        })
+    }, 
 
-          , failure : function (xhr, opts) {
-                fn.failure (xhr, opts)
-            }
+    // ########################################################################################
+    // CRUD: Update
+    // ########################################################################################
 
-        });
-    }
-
-    //
-    // CRUD: Update -----------------------------------------------------------
-    //
-
-  , fnSuccessUpdate : function (xhr, opts) {
+    fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
         Ext.getCmp ('editor.id').fireEvent (
             'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
@@ -100,9 +106,9 @@ var reportManagerUtil = {
                             } else {
                                 args.node.attributes['data'] = tab.getData ()
                             }
-                        }
+                        },
 
-                      , failure : function (args) {
+                        failure : function (args) {
                             //@TODO!?
                         }
                     }
@@ -111,49 +117,48 @@ var reportManagerUtil = {
                 tab.el.unmask ()
             }
         )
-    }
+    },
 
-  , fnFailureUpdate : function (xhr, opts) {
+    fnFailureUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
         Ext.getCmp ('editor.id').fireEvent (
             'updateTab', undefined, res.id, function (tab) {
                 tab.el.unmask ()
                 Ext.MessageBox.show ({
-                    title    : 'Saving failed'
-                  , msg      : String.Format (
-                        "Saving failed for tab '{0}'!"
-                      , tab.title
-                    )
-                  , closable : false
-                  , width    : 256
-                  , buttons  : Ext.MessageBox.OK
+                    title : 'Saving failed',
+                    msg : String.Format ("Saving failed for tab '{0}'!", tab.title),
+                    closable : false,
+                    width : 256,
+                    buttons : Ext.MessageBox.OK
                 })
             }
         )
-    }
+    },
 
-  , crudUpdate : function (crudInfo, fn, url) {
+    crudUpdate : function (crudInfo, fn, url) {
         Ext.Ajax.request ({
-
-            params : crudInfo
-          , url    : url
-
-          , success : function (xhr, opts) {
-                fn.success (xhr, opts)
+            params : crudInfo,
+            url : url,
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0]
+                    if (res.success) {
+                        fn.success (xhr, opts)
+                    } else {
+                        fn.failure (xhr, opts)
+                    }
+                } else {
+                    fn.failure (xhr, opts)
+                }
             }
+        })
+    },
 
-          , failure : function (xhr, opts) {
-                fn.failure (xhr, opts)
-            }
+    // ########################################################################################
+    // CRUD: Rename
+    // ########################################################################################
 
-        });
-    }
-
-    //
-    // CRUD: Rename -----------------------------------------------------------
-    //
-
-  , fnSuccessRename : function (xhr, opts) {
+    fnSuccessRename : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
 
         var tabs = Ext.getCmp ('editor.id')
@@ -171,66 +176,78 @@ var reportManagerUtil = {
         } else {
             tree.el.unmask ()
         }
-    }
+    },
 
-  , fnFailureRename : function (xhr, opts) {
-        //@TODO
-    }
-
-  , crudRename : function (crudInfo, fn) {
-        Ext.Ajax.request ({
-
-            params : crudInfo
-          , url : urls.rename
-
-          , success : function (xhr, opts) {
-                fn.success (xhr, opts)
-            }
-
-          , failure : function (xhr, opts) {
-                fn.failure (xhr, opts)
-            }
-
-        })
-    }
-
-    //
-    // CRUD: Delete -----------------------------------------------------------
-    //
-
-  , fnSuccessDelete : function (xhr, opts) {
-        //@DONE!
-    }
-
-  , fnFailureDelete : function (xhr, opts) {
+    fnFailureRename : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
-
+        var tree = Ext.getCmp ('reportManager.tree.id')
+        var node = tree.getNodeById (res.id)
+        
         Ext.MessageBox.show ({
-            title    : 'Deleting failed'
-          , msg      : String.Format (
-                "Deleting for '{0}' failed!", res.id
-            )
-          , closable : false
-          , width    : 256
-          , buttons  : Ext.MessageBox.OK
-        });
-    }
+            title : 'Renaming failed',
+            msg : String.Format ("Renaming failed for node '{0}'!",
+                (node != undefined) ? node.getText () : 'unknown'),
+            closable : false,
+            width : 256,
+            buttons : Ext.MessageBox.OK
+        })
+    },
 
-  , crudDelete : function (crudInfo, fn) {
+    crudRename : function (crudInfo, fn) {
         Ext.Ajax.request ({
-
-            params : crudInfo
-          , url : urls.del
-
-          , success: function (xhr, opts) {
-                fn.success (xhr, opts)
+            params  : crudInfo,
+            url : urls.rename,
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0]
+                    if (res.success) {
+                        fn.success (xhr, opts)
+                    } else {
+                        fn.failure (xhr, opts)
+                    }
+                } else {
+                    fn.failure (xhr, opts)
+                }
             }
+        })
+    },
 
-          , failure: function (xhr, opts) {
-                fn.failure (xhr, opts)
+    // ########################################################################################
+    // CRUD: Delete
+    // ########################################################################################
+
+    fnSuccessDelete : function (xhr, opts) {
+        //@DONE!
+    },
+
+    fnFailureDelete : function (xhr, opts) {
+        var res = Ext.decode (xhr.responseText)[0]
+        Ext.MessageBox.show ({
+            title : 'Deleting failed',
+            msg : String.Format ("Deleting for '{0}' failed!", res.id),
+            closable : false,
+            width : 256,
+            buttons : Ext.MessageBox.OK
+        })
+    },
+
+    crudDelete : function (crudInfo, fn) {
+        Ext.Ajax.request ({
+            params : crudInfo,
+            url : urls.del,
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0]
+                    if (res.success) {
+                        fn.success (xhr, opts)
+                    } else {
+                        fn.failure (xhr, opts)
+                    }
+                } else {
+                    fn.failure (xhr, opts)
+                }
             }
-
-        });
+        })
     }
 
 }

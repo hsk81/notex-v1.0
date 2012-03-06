@@ -98,27 +98,20 @@ class VIEW:
             usid = request.session.session_key,
         )
 
-        VIEW.init_prj01 (
-            root, MEDIA_ROOT + 'app/editor/'
-        )
-
-        VIEW.init_prj02 (
-            root, MEDIA_ROOT + 'app/editor/'
-        )
+        VIEW.init_prj01 (root, MEDIA_ROOT + 'app/editor/')
+        VIEW.init_prj02 (root, MEDIA_ROOT + 'app/editor/')
 
     init = staticmethod (init)
 
     def main (request):
 
         if request.session.has_key ('timestamp') != True:
-
             request.session['timestamp'] = datetime.now ()
             request.session.save ()
 
             VIEW.init (request)
 
         else:
-
             request.session['timestamp'] = datetime.now ()
             request.session.save ()
 
@@ -131,7 +124,8 @@ class VIEW:
             extra_context = {
                 'sid': request.session.session_key,
                 'timestamp': request.session['timestamp']
-            })
+            }
+        )
 
     main = staticmethod (main)
 
@@ -197,7 +191,7 @@ class DATA:
         str_value = strBuffer.getvalue ()
         strBuffer.close ()
 
-        response = HttpResponse (str_value, mimetype='application/x-zip')
+        response = HttpResponse (str_value)
         response['Content-Disposition'] = 'attachment;filename="%s.zip"' % node.name
 
         return response
@@ -349,21 +343,17 @@ class POST:
     nodesAndLeafs = staticmethod (nodesAndLeafs)
 
     def texts (ts):
-
         return json.dumps ([])
-
     texts = staticmethod (texts)
 
-    ##
-    ## crud: create -----------------------------------------------------------
-    ##
+    ## ########################################################################################
+    ## crud: create 
+    ## ########################################################################################
 
     def createNodeOfTypeProject (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
         try:
-
             root = ROOT.objects.get (_usid=request.session.session_key)
 
             node = NODE.objects.create (
@@ -381,7 +371,6 @@ class POST:
             }])
 
         except:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'id  '    : request.POST['nodeId']
@@ -394,9 +383,7 @@ class POST:
     def createNodeOfTypeFolder (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
         try:
-
             node = NODE.objects.create (
                 type = NODE_TYPE.objects.get (_code='folder'),
                 root = ROOT.objects.get (_usid=request.session.session_key),
@@ -413,7 +400,6 @@ class POST:
             }])
 
         except:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'id  '    : request.POST['nodeId']
@@ -426,9 +412,7 @@ class POST:
     def createLeafOfTypeText (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
         try:
-
             leaf = LEAF.objects.create (
                 type = LEAF_TYPE.objects.get (_code='text'),
                 node = NODE.objects.get (pk=ids[0]),
@@ -438,7 +422,6 @@ class POST:
             )
 
             if 'leafId' in request.POST:
-
                 js_string = json.dumps ([{
                     'success' : 'true',
                     'uuid'    : request.POST['leafId'],
@@ -448,7 +431,6 @@ class POST:
                 }])
 
             else:
-
                 js_string = json.dumps ([{
                     'success' : 'true',
                     'id'      :  base64.b32encode (
@@ -457,7 +439,6 @@ class POST:
                 }])
 
         except:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'uuid'    : request.POST['leafId']
@@ -470,9 +451,7 @@ class POST:
     def createLeafOfTypeImage (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
         try:
-
             leaf = LEAF.objects.create (
                 type = LEAF_TYPE.objects.get (_code='image'),
                 node = NODE.objects.get (pk=ids[0]),
@@ -482,7 +461,6 @@ class POST:
             )
 
             if 'leafId' in request.POST:
-
                 js_string = json.dumps ([{
                     'success' : 'true',
                     'uuid'    : request.POST['leafId'],
@@ -492,7 +470,6 @@ class POST:
                 }])
 
             else:
-
                 js_string = json.dumps ([{
                     'success' : 'true',
                     'id'      :  base64.b32encode (
@@ -501,7 +478,6 @@ class POST:
                 }])
 
         except:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'uuid'    : request.POST['leafId']
@@ -511,43 +487,38 @@ class POST:
 
     createLeafOfTypeImage = staticmethod (createLeafOfTypeImage)
 
-    ##
-    ## crud: read -------------------------------------------------------------
-    ##
+    ## ########################################################################################
+    ## crud: read 
+    ## ########################################################################################
 
     def read (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['node']))
-
         if type == 'root': # ids == []
-
             root = ROOT.objects.get (_usid = request.session.session_key)
             js_string = POST.nodes (NODE.objects.filter (_root = root, _node = None))
 
         elif type == 'node':
-
             ns = NODE.objects.filter (_node = ids[0])
             ls = LEAF.objects.filter (_node = ids[0])
 
             js_string = POST.nodesAndLeafs (ns,ls)
 
         elif type == 'leaf':
-
             js_string = POST.texts (
                 LEAF.objects.get (pk = ids[1])
             )
 
         else:
-
-            js_string = json.dumps ([])
+            js_string = json.dumps ([{'success':'false'}])
 
         return HttpResponse (js_string, mimetype='application/json')
 
     read = staticmethod (read)
 
-    ##
-    ## crud: update -----------------------------------------------------------
-    ##
+    ## ########################################################################################
+    ## crud: update 
+    ## ########################################################################################
 
     def swapRank (request):
 
@@ -576,15 +547,11 @@ class POST:
     swapRank = staticmethod (swapRank)
     
     def updateLeafOfTypeText (request):
-
         return POST.update (request, POST.createLeafOfTypeText)
-
     updateLeafOfTypeText = staticmethod (updateLeafOfTypeText)
 
     def updateLeafOfTypeImage (request):
-
         return POST.update (request, POST.createLeafOfTypeImage)
-
     updateLeafOfTypeImage = staticmethod (updateLeafOfTypeImage)
 
     def update (request, fnCreateLeaf = None):
@@ -600,11 +567,8 @@ class POST:
                 return POST.createLeafOfTypeText (request)
 
         (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
-
         if type == 'leaf':
-
             try:
-
                 leaf = LEAF.objects.get (pk = ids[1])
                 leaf.name = request.POST['name']
                 leaf.text = request.POST['data']
@@ -616,14 +580,12 @@ class POST:
                 }])
 
             except:
-
                 js_string = json.dumps ([{
                     'success' : 'false',
                     'id'      : request.POST['leafId']
                 }])
 
         else:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'id'      : request.POST['leafId']
@@ -633,18 +595,15 @@ class POST:
 
     update = staticmethod (update)
 
-    ##
-    ## crud: rename -----------------------------------------------------------
-    ##
+    ## ########################################################################################
+    ## crud: rename 
+    ## ########################################################################################
 
     def rename (request):
 
         (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
         if type == 'node':
-
             try:
-
                 node = NODE.objects.get (pk = ids[0])
                 node.name = request.POST['name']
                 node.save ()
@@ -656,16 +615,13 @@ class POST:
                 }])
 
             except:
-
                 js_string = json.dumps ([{
                     'success' : 'false',
                     'id'      : request.POST['nodeId']
                 }])
 
         elif type == 'leaf':
-
             try:
-
                 leaf = LEAF.objects.get (pk = ids[1])
                 leaf.name = request.POST['name']
                 leaf.save ()
@@ -677,14 +633,12 @@ class POST:
                 }])
 
             except:
-
                 js_string = json.dumps ([{
                     'success' : 'false',
-                    'id'      : request.POST['nodeId']
+                    'id'      : request.POST['nodeId'],
                 }])
 
         else:
-
             js_string = json.dumps ([{
                 'success' : 'false',
                 'id'      : request.POST['nodeId']
@@ -694,9 +648,9 @@ class POST:
 
     rename = staticmethod (rename)
 
-    ##
-    ## crud: delete -----------------------------------------------------------
-    ##
+    ## ########################################################################################
+    ## crud: delete 
+    ## ########################################################################################
 
     def delete (request):
 
@@ -704,7 +658,6 @@ class POST:
         except: id = None
 
         if id != None: ## not created yet
-
             js_string = json.dumps ([{
                 'success' : 'false'
             }])
@@ -712,11 +665,8 @@ class POST:
         else:
 
             (type, ids) = json.loads (base64.b32decode (request.POST['id']))
-
             if type == 'leaf':
-
                 try:
-
                     leaf = LEAF.objects.get (pk = ids[1])
                     leaf.delete ()
 
@@ -726,14 +676,12 @@ class POST:
                     }])
 
                 except:
-
                     js_string = json.dumps ([{
                         'success' : 'false',
                         'id'      : request.POST['id']
                     }])
 
             elif type == 'node':
-
                     node = NODE.objects.get (pk = ids[0])
                     node.delete ()
 
@@ -743,7 +691,6 @@ class POST:
                     }])
 
             else:
-
                 js_string = json.dumps ([{
                     'success' : 'false',
                     'id'      : request.POST['id']

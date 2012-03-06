@@ -10,7 +10,16 @@ var reportManagerTask = {
                 var tabs = editor.items.items
                 for (var i=0; i<tabs.length; i++) {
                     if (tabs[i] != undefined) {
-                        reportManager.fireEvent ('saveTextTab', tabs[i])
+
+                        var tree = Ext.getCmp ('reportManager.tree.id')
+                        var node = tree.getNodeById (tabs[i].id)
+                        var attr = node.attributes
+
+                        if (String (attr['iconCls']).match ("^icon-image$") == "icon-image") {
+                            reportManager.fireEvent ('saveImageTab', tabs[i])
+                        } else {
+                            reportManager.fireEvent ('saveTextTab', tabs[i])
+                        }
                     }
                 }
                 

@@ -132,7 +132,7 @@ Ext.getCmp ('reportManager.tree.id').on ('dblclick', function (node, event) {
           , iconCls : node.attributes['iconCls']
         }
 
-        if (String.match(tabInfo.iconCls, "^icon-image$") == "icon-image") {
+        if (String (tabInfo.iconCls).match ("^icon-image$") == "icon-image") {
             Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
         } else {
             Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)

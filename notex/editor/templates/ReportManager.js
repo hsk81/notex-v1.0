@@ -54,9 +54,20 @@ var reportManager = new Ext.Panel ({
             iconCls : 'icon-disk', 
             tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)', 
             handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab')
-             //@TODO:
-             // Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab')
+
+                var editor = Ext.getCmp ('editor.id')
+                var tab = editor.getActiveTab ()
+                if (tab != undefined) {
+                    var tree = Ext.getCmp ('reportManager.tree.id')
+                    var node = tree.getNodeById (tab.id)
+                    var attr = node.attributes
+
+                    if (String (attr['iconCls']).match ("^icon-image$") == "icon-image") {
+                        Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
+                    } else {
+                        Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
+                    }
+                }
             }
         },'-',{
             iconCls : 'icon-add', 
@@ -118,9 +129,9 @@ var reportManager = new Ext.Panel ({
     items : [reportManagerTree], 
     listeners : {
 
-        //
-        // Import or export a report ----------------------------------------------------------
-        //
+        // ####################################################################################
+        // Import or export a report
+        // ####################################################################################
 
         importReport : function () {
             dialog.openFile.execute ({
@@ -189,9 +200,9 @@ var reportManager = new Ext.Panel ({
             }
         },
 
-        //
-        // Open file (from local storage) -----------------------------------------------------
-        //
+        // ####################################################################################
+        // Open file (from local storage)
+        // ####################################################################################
 
         openFile : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -215,7 +226,7 @@ var reportManager = new Ext.Panel ({
                             'expanded' : false
                         })
 
-                        if (String.match(file.type, "^image") == "image") {
+                        if (String (file.type).match("^image") == "image") {
                             var imageReader = new FileReader();
 
                             imageReader.onerror = function (e) {
@@ -296,9 +307,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        //
-        // Save text/image tab ----------------------------------------------------------------
-        //
+        // ####################################################################################
+        // Save text/image tab
+        // ####################################################################################
 
         saveTextTab : function (tab) {
             if (tab == undefined) {
@@ -350,9 +361,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        //
-        // Add report, folder, text or image file -----------------------------
-        //
+        // ####################################################################################
+        // Add report, folder, text or image file
+        // ####################################################################################
 
         addReport : function (a,b,c,d) {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -453,9 +464,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        //
-        // Rename selected node ---------------------------------------------------------------
-        //
+        // ####################################################################################
+        // Rename selected node
+        // ####################################################################################
 
         renameSelectedNode : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -471,19 +482,12 @@ var reportManager = new Ext.Panel ({
                             var tabs = Ext.getCmp ('editor.id')
                             var tab = tabs.findById (node.id)
                             if (tab != undefined) {
-                                tab.el.mask (
-                                    'Please wait', 'x-mask-loading'
-                                )
+                                tab.el.mask ('Please wait', 'x-mask-loading')
                             }
 
                             if (Math.uuidMatch (node.id)) {
-                                node.setText (
-                                    String.format ("<i>{0}</i>", text)
-                                )
-
-                                if (tree != undefined) {
-                                    tree.el.unmask ()
-                                }
+                                node.setText (String.format ("<i>{0}</i>", text))
+                                if (tree != undefined) { tree.el.unmask () }
 
                                 if (tab != undefined) {
                                     tab.setTitle (text)
@@ -499,20 +503,16 @@ var reportManager = new Ext.Panel ({
                                 })
                             }
                         }
-                    }, this, false, node.text.replace('<i>','').replace(
-                        '</i>',''
-                    )
+                    }, this, false, node.text.replace('<i>','').replace('</i>','')
                 )
             } else {
-                Ext.Msg.alert (
-                    "Error", "No node selected; select a node!"
-                )
+                Ext.Msg.alert ("Error", "No node selected; select a node!")
             }
         }, 
 
-        //
-        // Delete selected node -----------------------------------------------
-        //
+        // ####################################################################################
+        // Delete selected node
+        // ####################################################################################
 
         deleteSelectedNode : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -547,9 +547,9 @@ var reportManager = new Ext.Panel ({
             )
         }, 
 
-        //
-        // Move selected node up or down ------------------------------------------------------
-        //
+        // ####################################################################################
+        // Move selected node up or down
+        // ####################################################################################
 
         moveSelectedNodeUp : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -623,8 +623,14 @@ var reportManager = new Ext.Panel ({
     }
 });
 
+// ############################################################################################
+// ############################################################################################
+
 (function() {
     reportManager.util = reportManagerUtil;
     reportManager.tree = reportManagerTree;
     reportManager.task = reportManagerTask;
 })();
+
+// ############################################################################################
+// ############################################################################################
