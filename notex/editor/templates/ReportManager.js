@@ -16,7 +16,7 @@ var reportManager = new Ext.Panel ({
     tbar : {
         items : [{
             iconCls : 'icon-disk_download', 
-            tooltip : '<b>Import</b><br/>Open a report (from <i>local</i> storage)', 
+            tooltip : '<b>Import</b><br/>Open a report from a <b>ZIP</b> archive (at <i>local</i> storage)',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('importReport')
             }
@@ -29,18 +29,32 @@ var reportManager = new Ext.Panel ({
               plain : true,
 
               items : [{
-                  iconCls : 'icon-html_go',
-                  text    : 'With HTML Tags',
-                  tooltip : '<b>Export with HTML Tags</b><br/>..',
+                  iconCls : 'icon-page_white_compressed',
+                  text    : 'Text Report',
+                  tooltip : '<b>Export without HTML Tags</b> i.e. formatting<br/>..',
                   handler : function (button, event) {
-                      Ext.getCmp ('reportManager.id').fireEvent ('exportReport', true)
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportText')
                   }
               },{
-                  iconCls : 'icon-html_delete',
-                  text    : 'As Simple Text',
-                  tooltip : '<b>Export without HTML Tags</b><br/>..',
+                  iconCls : 'icon-html',
+                  text    : 'Text Report <i>(formatted)</i>',
+                  tooltip : '<b>Export with HTML Tags</b>i.e. formatting<br/>..',
                   handler : function (button, event) {
-                      Ext.getCmp ('reportManager.id').fireEvent ('exportReport', false)
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
+                  }
+              },'-',{
+                  iconCls : 'icon-page_white_code',
+                  text    : 'Latex Files',
+                  tooltip : '<b>Export Latex Files</b><br/>..',
+                  handler : function (button, event) {
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
+                  }
+              },{
+                  iconCls : 'icon-page_white_acrobat',
+                  text    : 'PDF Document',
+                  tooltip : '<b>Export as PDF Document</b><br/>..',
+                  handler : function (button, event) {
+                      Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
                   }
               }]
             }
@@ -169,14 +183,18 @@ var reportManager = new Ext.Panel ({
             })
         }, 
         
-        exportReport : function (withHtmlTags) {
+        exportHtml : function () { this.fireEvent ('exportReport', urls.fetchHtml) },
+        exportText : function () { this.fireEvent ('exportReport', urls.fetchText) },
+        exportLatex : function () { this.fireEvent ('exportReport', urls.fetchLatex) },
+        exportPdf : function () { this.fireEvent ('exportReport', urls.fetchPdf) },
+
+        exportReport : function (url) {
 
             var tree = Ext.getCmp ('reportManager.tree.id')
-            var selectionModel = tree.getSelectionModel ()
-            var selectedNode = selectionModel.getSelectedNode ()
-            if (selectedNode != undefined) {
+            var model = tree.getSelectionModel ()
+            var node = model.getSelectedNode ()
+            if (node != undefined) {
 
-                var node = selectedNode
                 var body = Ext.getBody()
 
                 var frame = body.createChild ({
@@ -190,13 +208,12 @@ var reportManager = new Ext.Panel ({
                     tag : 'form',
                     cls : 'x-hidden',
                     id : 'form',
-                    action : (withHtmlTags)
-                        ? urls.fetchHtml.replace ('=', node.id)
-                        : urls.fetchText.replace ('=', node.id),
+                    method : 'POST',
+                    action : url.replace ('=', node.id) + "?ipdb",
                     target : 'iframe'
                 })
 
-                form.dom.submit();
+                form.dom.submit ()
             }
         },
 

@@ -84,10 +84,12 @@ urlpatterns = patterns ('',
     url (r'^post/delete/$', POST.delete, name='post.delete'),
     url (r'^post/delete/$', POST.delete, name='post.delete'),
 
-    url (r'^data/fetch-html/(?P<id>.*=)/$', DATA.fetchHtml, name='data.fetchHtml'),
     url (r'^data/fetch-text/(?P<id>.*=)/$', DATA.fetchText, name='data.fetchText'),
-    url (r'^data/store-file/(?P<fid>.*)/$', DATA.storeFile, name='data.storeFile'),
+    url (r'^data/fetch-html/(?P<id>.*=)/$', DATA.fetchHtml, name='data.fetchHtml'),
+    url (r'^data/fetch-latex/(?P<id>.*=)/$', DATA.fetchLatex, name='data.fetchLatex'),
+    url (r'^data/fetch-pdf/(?P<id>.*=)/$', DATA.fetchPdf, name='data.fetchPdf'),
 
+    url (r'^data/store-file/(?P<fid>.*)/$', DATA.storeFile, name='data.storeFile'),
 )
 
 if __name__ == "__main__":

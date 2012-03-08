@@ -142,35 +142,53 @@ class DATA:
 
     info = staticmethod (info)
 
-    def fill (zipBuffer, root, prefix, withHtmlTags):
-
+    def fillText (zipBuffer, root, prefix):
+        
         ls = LEAF.objects.filter (_node = root)
         ns = NODE.objects.filter (_node = root)
 
-        if withHtmlTags:
-            for leaf in ls:
-                if leaf.type.code == 'image':
-                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                        base64.decodestring (leaf.text.split (',')[1]))
-                else:
-                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                        leaf.text)
-        else:
-            for leaf in ls:
-                if leaf.type.code == 'image':
-                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                        base64.decodestring (leaf.text.split (',')[1]))
-                else:
-                    zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                        MLStripper.strip_tags (leaf.text))
-                
+        for leaf in ls:
+            if leaf.type.code == 'image':
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                    base64.decodestring (leaf.text.split (',')[1]))
+            else:
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                    MLStripper.strip_tags (leaf.text))
+
         for node in ns:
-            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fill (
-                zipBuffer, node, "%s/%s" % (prefix, node), withHtmlTags)
+            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fillText (
+                zipBuffer, node, "%s/%s" % (prefix, node))
+                
+    fillText = staticmethod (fillText)
 
-    fill = staticmethod (fill)
+    def fillHtml (zipBuffer, root, prefix):
+        
+        ls = LEAF.objects.filter (_node = root)
+        ns = NODE.objects.filter (_node = root)
 
-    def fetch (request, id, withHtmlTags = False):
+        for leaf in ls:
+            if leaf.type.code == 'image':
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                    base64.decodestring (leaf.text.split (',')[1]))
+            else:
+                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
+                    leaf.text)
+
+        for node in ns:
+            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fillHtml (
+                zipBuffer, node, "%s/%s" % (prefix, node))
+                
+    fillHtml = staticmethod (fillHtml)
+
+    def fillLatex (zipBuffer, root, prefix):
+        pass ## TODO!
+    fillLatex = staticmethod (fillLatex)
+
+    def fillPdf (zipBuffer, root, prefix):
+        pass ## TODO!
+    fillPdf = staticmethod (fillPdf)
+
+    def compress (request, id, fnFill):
 
         (type, ids) = json.loads (base64.b32decode (id))
 
@@ -186,23 +204,30 @@ class DATA:
 
         strBuffer = StringIO ()
         zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
-        DATA.fill (zipBuffer, node, node.name, withHtmlTags)
+        fnFill (zipBuffer, root = node, prefix = node.name)
         zipBuffer.close ()
         str_value = strBuffer.getvalue ()
         strBuffer.close ()
 
         response = HttpResponse (str_value)
         response['Content-Disposition'] = 'attachment;filename="%s.zip"' % node.name
-
+        
         return response
 
-    fetch = staticmethod (fetch)
+    compress = staticmethod (compress)
 
-    def fetchHtml (request, id): return DATA.fetch (request, id, withHtmlTags = True)
-    fetchHtml = staticmethod (fetchHtml)
-
-    def fetchText (request, id): return DATA.fetch (request, id, withHtmlTags = False)
+    def fetchText (request, id):
+        return DATA.compress (request, id, DATA.fillText)
     fetchText = staticmethod (fetchText)
+    def fetchHtml (request, id):
+        return DATA.compress (request, id, DATA.fillHtml)
+    fetchHtml = staticmethod (fetchHtml)
+    def fetchLatex (request, id):
+        return DATA.compress (request, id, DATA.fillLatex)
+    fetchLatex = staticmethod (fetchLatex)
+    def fetchPdf (request, id):
+        return DATA.compress (request, id, DATA.fillPdf)
+    fetchPdf = staticmethod (fetchPdf)
 
     def storeFile (request, fid):
 
