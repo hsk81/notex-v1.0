@@ -62,7 +62,11 @@
   {% block app-js %}{% endblock %}
 
   {% block title %}
-  <title></title>
+  <title>Notex</title>
+  {% endblock %}
+
+  {% block shortcut-icon %}
+  <link rel="shortcut icon" href="{{ MEDIA_URL }}favicon.ico">
   {% endblock %}
 
   {% block blank-image %}<script type="text/javascript">
