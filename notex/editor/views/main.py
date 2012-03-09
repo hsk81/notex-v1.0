@@ -375,32 +375,6 @@ class POST:
     ## crud: update 
     ## ########################################################################################
 
-    def swapRank (request):
-
-        _, ids = json.loads (base64.b32decode (request.POST['id']))
-        _, jds = json.loads (base64.b32decode (request.POST['jd']))
-
-        if len (ids) > 1: base = LEAF.objects.get (pk = ids[1])
-        else:             base = NODE.objects.get (pk = ids[0])
-        if len (jds) > 1: temp = LEAF.objects.get (pk = jds[1])
-        else:             temp = NODE.objects.get (pk = jds[0])
-        
-        rank = base.rank
-        base.rank = temp.rank
-        temp.rank = rank
-
-        base.save ()
-        temp.save ()
-
-        js_string = json.dumps ([{
-            'id' : request.POST['id'],
-            'jd' : request.POST['jd']
-        }])
-
-        return HttpResponse (js_string, mimetype='application/json')
-
-    swapRank = staticmethod (swapRank)
-    
     def updateLeafOfTypeText (request):
         return POST.update (request, POST.createLeafOfTypeText)
     updateLeafOfTypeText = staticmethod (updateLeafOfTypeText)

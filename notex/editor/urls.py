@@ -81,7 +81,7 @@ urlpatterns = patterns ('',
     url (r'^post/read/$', POST.read, name='post.read'),
     url (r'^post/update/text$', POST.updateLeafOfTypeText, name='post.updateLeafOfTypeText'),
     url (r'^post/update/image$', POST.updateLeafOfTypeImage, name='post.updateLeafOfTypeImage'),
-    url (r'^post/update/swap-rank/$', POST.swapRank, name='post.swapRank'),
+    url (r'^post/update/swap-rank/$', views.swapRank, name='post.swapRank'),
     url (r'^post/rename/$', views.rename, name='post.rename'),
     url (r'^post/delete/$', views.delete, name='post.delete'),
 
