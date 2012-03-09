@@ -11,7 +11,6 @@ from editor.models import LEAF, LEAF_TYPE
 import os.path
 import base64
 import json
-import uuid
 import sys
 import os
 
@@ -370,56 +369,3 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
 
     read = staticmethod (read)
-
-    ## ########################################################################################
-    ## crud: update 
-    ## ########################################################################################
-
-    def updateLeafOfTypeText (request):
-        return POST.update (request, POST.createLeafOfTypeText)
-    updateLeafOfTypeText = staticmethod (updateLeafOfTypeText)
-
-    def updateLeafOfTypeImage (request):
-        return POST.update (request, POST.createLeafOfTypeImage)
-    updateLeafOfTypeImage = staticmethod (updateLeafOfTypeImage)
-
-    def update (request, fnCreateLeaf = None):
-
-        try:    id = uuid.UUID (request.POST['leafId'])
-        except: id = None
-
-        if id != None: ## create upon update
-
-            if fnCreateLeaf != None:            
-                return fnCreateLeaf (request)            
-            else:
-                return POST.createLeafOfTypeText (request)
-
-        (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
-        if type == 'leaf':
-            try:
-                leaf = LEAF.objects.get (pk = ids[1])
-                leaf.name = request.POST['name']
-                leaf.text = request.POST['data']
-                leaf.save ()
-
-                js_string = json.dumps ([{
-                    'success' : 'true',
-                    'id'      : request.POST['leafId']
-                }])
-
-            except:
-                js_string = json.dumps ([{
-                    'success' : 'false',
-                    'id'      : request.POST['leafId']
-                }])
-
-        else:
-            js_string = json.dumps ([{
-                'success' : 'false',
-                'id'      : request.POST['leafId']
-            }])
-
-        return HttpResponse (js_string, mimetype='application/json')
-
-    update = staticmethod (update)
