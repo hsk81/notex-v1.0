@@ -1,6 +1,5 @@
 from settings import MEDIA_ROOT
 from datetime import datetime
-from cStringIO import StringIO
 
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
@@ -9,8 +8,6 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
-import translator
-import zipfile
 import os.path
 import base64
 import json
@@ -140,47 +137,6 @@ class DATA:
         return HttpResponse (u'%s\n' % js_string, mimetype='application/json')
 
     info = staticmethod (info)
-
-    def compress (request, id, fnTranslate):
-
-        (type, ids) = json.loads (base64.b32decode (id))
-
-        if type == 'leaf':
-            leaf = LEAF.objects.get (id = ids[1])
-            node = leaf.node
-
-        else:
-            node = NODE.objects.get (id = ids[0])
-
-        while node.node:
-            node = node.node
-
-        strBuffer = StringIO ()
-        zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
-        fnTranslate (node, node.name, zipBuffer)
-        zipBuffer.close ()
-        str_value = strBuffer.getvalue ()
-        strBuffer.close ()
-
-        response = HttpResponse (str_value)
-        response['Content-Disposition'] = 'attachment;filename="%s.zip"' % node.name
-        
-        return response
-
-    compress = staticmethod (compress)
-
-    def fetchText (request, id):
-        return DATA.compress (request, id, translator.processToText)
-    fetchText = staticmethod (fetchText)
-    def fetchHtml (request, id):
-        return DATA.compress (request, id, translator.processToHtml)
-    fetchHtml = staticmethod (fetchHtml)
-    def fetchLatex (request, id):
-        return DATA.compress (request, id, translator.processToLatex)
-    fetchLatex = staticmethod (fetchLatex)
-    def fetchPdf (request, id):
-        return DATA.compress (request, id, translator.processToPdf)
-    fetchPdf = staticmethod (fetchPdf)
 
 class POST:
 
