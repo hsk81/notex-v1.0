@@ -139,67 +139,6 @@ class DATA:
 
 class POST:
 
-    def node (node):
-
-        return {
-            'text'     : node.name,
-            'id'       : base64.b32encode (json.dumps (('node', [node.pk]))),
-            'cls'      : "folder",
-            'iconCls'  : node.type.icon,
-            'leaf'     : False,
-            'expanded' : False
-        }
-
-    node = staticmethod (node)
-
-    def nodes (ns):
-
-        return json.dumps (
-            map (lambda node: POST.node (node), ns.order_by ('_rank'))
-        )
-
-    nodes = staticmethod (nodes)
-
-    def leaf (leaf):
-
-        return {
-            'text'     : leaf.name,
-            'data'     : leaf.text,
-            'id'       : base64.b32encode (json.dumps (('leaf', [leaf.node.pk, leaf.pk]))),
-            'cls'      : "file",
-            'iconCls'  : leaf.type.icon,
-            'leaf'     : True,
-            'expanded' : False
-        }
-
-    leaf = staticmethod (leaf)
-
-    def leafs (ls):
-
-        return json.dumps (
-            map (lambda leaf: POST.leaf (leaf), ls.order_by ('_rank'))
-        )
-
-    leafs = staticmethod (leafs)
-
-    def nodesAndLeafs (ns, ls):
-
-        tns = map (lambda n: (n.rank,n), ns)
-        tls = map (lambda l: (l.rank,l), ls)
-
-        return json.dumps (map (
-            lambda nal: (type (nal) == NODE)
-                and POST.node (nal)
-                or POST.leaf (nal),
-            dict(tns + tls).values ()
-        ))
-
-    nodesAndLeafs = staticmethod (nodesAndLeafs)
-
-    def texts (ts):
-        return json.dumps ([])
-    texts = staticmethod (texts)
-
     ## ########################################################################################
     ## crud: create 
     ## ########################################################################################
@@ -340,32 +279,3 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
 
     createLeafOfTypeImage = staticmethod (createLeafOfTypeImage)
-
-    ## ########################################################################################
-    ## crud: read 
-    ## ########################################################################################
-
-    def read (request):
-
-        (type, ids) = json.loads (base64.b32decode (request.POST['node']))
-        if type == 'root': # ids == []
-            root = ROOT.objects.get (_usid = request.session.session_key)
-            js_string = POST.nodes (NODE.objects.filter (_root = root, _node = None))
-
-        elif type == 'node':
-            ns = NODE.objects.filter (_node = ids[0])
-            ls = LEAF.objects.filter (_node = ids[0])
-
-            js_string = POST.nodesAndLeafs (ns,ls)
-
-        elif type == 'leaf':
-            js_string = POST.texts (
-                LEAF.objects.get (pk = ids[1])
-            )
-
-        else:
-            js_string = json.dumps ([{'success':'false'}])
-
-        return HttpResponse (js_string, mimetype='application/json')
-
-    read = staticmethod (read)

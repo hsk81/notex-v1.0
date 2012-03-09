@@ -3,6 +3,7 @@ from fetch import *
 from delete import *
 from store import *
 from swapRank import *
+from read import *
 from rename import *
 from translator import *
 from update import *
