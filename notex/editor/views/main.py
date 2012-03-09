@@ -503,57 +503,6 @@ class POST:
 
     rename = staticmethod (rename)
 
-    ## ########################################################################################
-    ## crud: delete 
-    ## ########################################################################################
-
-    def delete (request):
-
-        try:    id = uuid.UUID (request.POST['id'])
-        except: id = None
-
-        if id != None: ## not created yet
-            js_string = json.dumps ([{
-                'success' : 'false'
-            }])
-
-        else:
-
-            (type, ids) = json.loads (base64.b32decode (request.POST['id']))
-            if type == 'leaf':
-                try:
-                    leaf = LEAF.objects.get (pk = ids[1])
-                    leaf.delete ()
-
-                    js_string = json.dumps ([{
-                        'success' : 'true',
-                        'id'      : request.POST['id']
-                    }])
-
-                except:
-                    js_string = json.dumps ([{
-                        'success' : 'false',
-                        'id'      : request.POST['id']
-                    }])
-
-            elif type == 'node':
-                    node = NODE.objects.get (pk = ids[0])
-                    node.delete ()
-
-                    js_string = json.dumps ([{
-                        'success' : 'true',
-                        'id'      : request.POST['id']
-                    }])
-
-            else:
-                js_string = json.dumps ([{
-                    'success' : 'false',
-                    'id'      : request.POST['id']
-                }])
-
-        return HttpResponse (js_string, mimetype='application/json')
-
-    delete = staticmethod (delete)
 
 if __name__ == "__main__":
 
