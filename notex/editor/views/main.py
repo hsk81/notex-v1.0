@@ -449,7 +449,3 @@ class POST:
         return HttpResponse (js_string, mimetype='application/json')
 
     update = staticmethod (update)
-
-if __name__ == "__main__":
-
-    pass
