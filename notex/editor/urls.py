@@ -96,11 +96,7 @@ urlpatterns = patterns ('',
     url (r'^data/store-file/(?P<fid>.*)/$', views.storeFile, name='data.storeFile'),
 )
 
-if __name__ == "__main__":
-
-    pass
-
-else:
+if __name__ != "__main__":
 
     from svc.urls import data_urlpatterns
     from models   import *
