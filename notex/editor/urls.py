@@ -1,6 +1,8 @@
 from django.conf.urls.defaults   import *
 from django.views.generic.simple import direct_to_template
 
+import views
+
 from views import VIEW
 from views import DATA
 from views import POST
@@ -89,7 +91,7 @@ urlpatterns = patterns ('',
     url (r'^data/fetch-latex/(?P<id>.*=)/$', DATA.fetchLatex, name='data.fetchLatex'),
     url (r'^data/fetch-pdf/(?P<id>.*=)/$', DATA.fetchPdf, name='data.fetchPdf'),
 
-    url (r'^data/store-file/(?P<fid>.*)/$', DATA.storeFile, name='data.storeFile'),
+    url (r'^data/store-file/(?P<fid>.*)/$', views.storeFile, name='data.storeFile'),
 )
 
 if __name__ == "__main__":
