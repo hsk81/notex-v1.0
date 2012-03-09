@@ -209,7 +209,7 @@ var reportManager = new Ext.Panel ({
                     cls : 'x-hidden',
                     id : 'form',
                     method : 'POST',
-                    action : url.replace ('=', node.id) + "?ipdb",
+                    action : url.replace ('=', node.id),
                     target : 'iframe'
                 })
 
