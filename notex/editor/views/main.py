@@ -1,8 +1,6 @@
-import os.path
 from settings import MEDIA_ROOT
 from datetime import datetime
 from cStringIO import StringIO
-from lib import MLStripper
 
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
@@ -11,8 +9,10 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
+import translator
 import mimetypes
 import zipfile
+import os.path
 import base64
 import json
 import uuid
@@ -142,53 +142,7 @@ class DATA:
 
     info = staticmethod (info)
 
-    def fillText (zipBuffer, root, prefix):
-        
-        ls = LEAF.objects.filter (_node = root)
-        ns = NODE.objects.filter (_node = root)
-
-        for leaf in ls:
-            if leaf.type.code == 'image':
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                    base64.decodestring (leaf.text.split (',')[1]))
-            else:
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                    MLStripper.strip_tags (leaf.text))
-
-        for node in ns:
-            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fillText (
-                zipBuffer, node, "%s/%s" % (prefix, node))
-                
-    fillText = staticmethod (fillText)
-
-    def fillHtml (zipBuffer, root, prefix):
-        
-        ls = LEAF.objects.filter (_node = root)
-        ns = NODE.objects.filter (_node = root)
-
-        for leaf in ls:
-            if leaf.type.code == 'image':
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                    base64.decodestring (leaf.text.split (',')[1]))
-            else:
-                zipBuffer.writestr ('%s/%s' % (prefix,leaf.name), \
-                    leaf.text)
-
-        for node in ns:
-            zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.fillHtml (
-                zipBuffer, node, "%s/%s" % (prefix, node))
-                
-    fillHtml = staticmethod (fillHtml)
-
-    def fillLatex (zipBuffer, root, prefix):
-        pass ## TODO!
-    fillLatex = staticmethod (fillLatex)
-
-    def fillPdf (zipBuffer, root, prefix):
-        pass ## TODO!
-    fillPdf = staticmethod (fillPdf)
-
-    def compress (request, id, fnFill):
+    def compress (request, id, fnTranslate):
 
         (type, ids) = json.loads (base64.b32decode (id))
 
@@ -204,7 +158,7 @@ class DATA:
 
         strBuffer = StringIO ()
         zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
-        fnFill (zipBuffer, root = node, prefix = node.name)
+        fnTranslate (node, node.name, zipBuffer)
         zipBuffer.close ()
         str_value = strBuffer.getvalue ()
         strBuffer.close ()
@@ -217,16 +171,16 @@ class DATA:
     compress = staticmethod (compress)
 
     def fetchText (request, id):
-        return DATA.compress (request, id, DATA.fillText)
+        return DATA.compress (request, id, translator.processToText)
     fetchText = staticmethod (fetchText)
     def fetchHtml (request, id):
-        return DATA.compress (request, id, DATA.fillHtml)
+        return DATA.compress (request, id, translator.processToHtml)
     fetchHtml = staticmethod (fetchHtml)
     def fetchLatex (request, id):
-        return DATA.compress (request, id, DATA.fillLatex)
+        return DATA.compress (request, id, translator.processToLatex)
     fetchLatex = staticmethod (fetchLatex)
     def fetchPdf (request, id):
-        return DATA.compress (request, id, DATA.fillPdf)
+        return DATA.compress (request, id, translator.processToPdf)
     fetchPdf = staticmethod (fetchPdf)
 
     def storeFile (request, fid):
