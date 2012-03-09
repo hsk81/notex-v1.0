@@ -5,7 +5,6 @@ import views
 
 from views import VIEW
 from views import DATA
-from views import POST
 
 urlpatterns = patterns ('',
 
@@ -74,16 +73,20 @@ urlpatterns = patterns ('',
     ## crud : create, read, update & delete
     ##
 
-    url (r'^post/create/project$', POST.createNodeOfTypeProject, name='post.createNodeOfTypeProject'),
-    url (r'^post/create/folder$', POST.createNodeOfTypeFolder, name='post.createNodeOfTypeFolder'),
-    url (r'^post/create/text$', POST.createLeafOfTypeText, name='post.createLeafOfTypeText'),
-    url (r'^post/create/image$', POST.createLeafOfTypeImage, name='post.createLeafOfTypeImage'),
+    url (r'^post/create/project$', views.createProject, name='post.createProject'),
+    url (r'^post/create/folder$', views.createFolder, name='post.createFolder'),
+    url (r'^post/create/text$', views.createText, name='post.createText'),
+    url (r'^post/create/image$', views.createImage, name='post.createImage'),
     url (r'^post/read/$', views.read, name='post.read'),
     url (r'^post/update/text$', views.updateText, name='post.updateText'),
     url (r'^post/update/image$', views.updateImage, name='post.updateImage'),
     url (r'^post/update/swap-rank/$', views.swapRank, name='post.swapRank'),
     url (r'^post/rename/$', views.rename, name='post.rename'),
     url (r'^post/delete/$', views.delete, name='post.delete'),
+
+    ##
+    ## fetch & store: text, html, latex, pdf, file
+    ##
 
     url (r'^data/fetch-text/(?P<id>.*=)/$', views.fetchText, name='data.fetchText'),
     url (r'^data/fetch-html/(?P<id>.*=)/$', views.fetchHtml, name='data.fetchHtml'),

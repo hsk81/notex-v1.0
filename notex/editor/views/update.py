@@ -6,7 +6,7 @@ __date__ = "$Mar 10, 2012 12:40:30 AM$"
 
 from django.http import HttpResponse
 from editor.models import LEAF
-from editor.views.main import POST
+from editor.views import create
 
 import base64
 import json
@@ -31,7 +31,7 @@ def update (request, fnCreateLeaf = None):
         if fnCreateLeaf != None:
             return fnCreateLeaf (request)
         else:
-            return POST.createLeafOfTypeText (request)
+            return create.createText (request)
 
     (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
     if type == 'leaf':
