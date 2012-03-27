@@ -16,9 +16,11 @@ import uuid
 ###############################################################################################
 
 def updateText (request):
+
     return update (request, updateText)
 
 def updateImage (request):
+
     return update (request, updateImage)
 
 def update (request, fnCreateLeaf = None):

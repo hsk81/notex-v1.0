@@ -1,3 +1,4 @@
+from info import *
 from main import *
 from create import *
 from fetch import *

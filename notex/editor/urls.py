@@ -1,14 +1,20 @@
+__author__="hsk81"
+__date__ ="$Mar 27, 2012 1:12:13 PM$"
+
+###############################################################################################
+###############################################################################################
+
 from django.conf.urls.defaults   import *
 from django.views.generic.simple import direct_to_template
 
 import views
 
-from views import VIEW
-from views import DATA
+###############################################################################################
+###############################################################################################
 
 urlpatterns = patterns ('',
 
-    url (r'^$', VIEW.main, name='view.main'),
+    url (r'^$', views.main, name='view.main'),
 
     ##
     ## javascript 'includes'
@@ -67,7 +73,7 @@ urlpatterns = patterns ('',
     ## info : general app information
     ##
 
-    url (r'^json/info/$', DATA.info, name='json.info'),
+    url (r'^json/info/$', views.info, name='json.info'),
 
     ##
     ## crud : create, read, update & delete
@@ -96,6 +102,9 @@ urlpatterns = patterns ('',
     url (r'^data/store-file/(?P<fid>.*)/$', views.storeFile, name='data.storeFile'),
 )
 
+###############################################################################################
+###############################################################################################
+
 if __name__ != "__main__":
 
     from svc.urls import data_urlpatterns
@@ -108,4 +117,6 @@ if __name__ != "__main__":
     urlpatterns += data_urlpatterns (ROOT)
     urlpatterns += data_urlpatterns (NODE)
     urlpatterns += data_urlpatterns (LEAF)
-    
+
+###############################################################################################
+###############################################################################################

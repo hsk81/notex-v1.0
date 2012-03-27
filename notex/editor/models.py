@@ -1,12 +1,21 @@
+__author__="hsk81"
+__date__ ="$Mar 27, 2012 1:13:38 PM$"
+
+###############################################################################################
+###############################################################################################
+
 from django.core.exceptions         import FieldError
 from django.db.models               import *
+
+###############################################################################################
+###############################################################################################
 
 class BASE_TYPE (Model):
 
     _code = CharField (max_length=32, unique=True)
     _icon = CharField (max_length=256, blank=True, default='')
     _desc = CharField (max_length=256)
-    
+
     code = property (
         lambda s: getattr (s, '_code'), lambda s, v: setattr (s, '_code', v)
     )
@@ -22,7 +31,7 @@ class BASE_TYPE (Model):
     def __unicode__ (self):
 
         return u'%s' % self.code
-        
+
 class BASE (Model):
 
     _name = CharField (max_length=256, blank=True, default='')
@@ -51,15 +60,15 @@ class BASE (Model):
     def to_type (self):
 
         return eval (self.clsname).objects.get (id=self.id)
-        
+
     def __unicode__ (self):
 
         return u'%s' % self.name
-        
+
 class ROOT_TYPE (BASE_TYPE):
 
     class Meta:
-        
+
         verbose_name = 'Root Type'
 
 class ROOT (BASE):
@@ -99,7 +108,7 @@ class LEAF (BASE):
 
     _node = ForeignKey (NODE)
     _text = TextField (blank=True, default='')
-    
+
     node = property (
         lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
     )
@@ -107,3 +116,6 @@ class LEAF (BASE):
     text = property (
         lambda s: getattr (s, '_text'), lambda s, v: setattr (s, '_text', v)
     )
+
+###############################################################################################
+###############################################################################################

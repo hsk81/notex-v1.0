@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# PROJECT documentation build configuration file, created by
-# sphinx-quickstart on Fri Mar  9 11:21:18 2012.
+# PROEJCT documentation build configuration file, created by
+# sphinx-quickstart2 on Tue Mar 27 12:45:59 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PROJECT'
-copyright = u'YEAR, AUTHORs'
+project = u'PROEJCT'
+copyright = u'2012, ATHOR(s)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PROJECTdoc'
+htmlhelp_basename = 'PROEJCTdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -183,8 +183,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PROJECT.tex', u'PROJECT Documentation',
-   u'AUTHORs', 'manual'),
+  ('index', 'PROEJCT.tex', u'PROEJCT Documentation',
+   u'ATHOR(s)', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +213,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'project', u'PROJECT Documentation',
-     [u'AUTHORs'], 1)
+    ('index', 'proejct', u'PROEJCT Documentation',
+     [u'ATHOR(s)'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PROJECT', u'PROJECT Documentation',
-   u'AUTHORs', 'PROJECT', 'One line description of project.',
+  ('index', 'PROEJCT', u'PROEJCT Documentation',
+   u'ATHOR(s)', 'PROEJCT', 'One line description of project.',
    'Miscellaneous'),
 ]
 
