@@ -5,10 +5,10 @@ var editor = new Ext.TabPanel ({
   , enableTabScroll : true
   , tabPosition     : 'bottom'
 
-  , divAndaleMono   :
+  , divMono   :
   
         '<div style="' +
-            'font-family: andale mono; ' +
+            'font-family: mono; ' +
             'font-size: 13px; ' +
             'text-align: justify;">{0}' +
         '</div>'
@@ -32,7 +32,7 @@ var editor = new Ext.TabPanel ({
             }();
 
             var tplHtmlEditor = new Ext.Template (
-                String.format (editor.divAndaleMono, tpl)
+                String.format (editor.divMono, tpl)
             )
 
             if (!tab) {
@@ -52,7 +52,7 @@ var editor = new Ext.TabPanel ({
                   , getData    : function () {
                         return this.getEditor ().getValue ()
                             .replace('<div style="' +
-                                 'font-family: andale mono; ' +
+                                 'font-family: mono; ' +
                                  'font-size: 13px; ' +
                                  'text-align: justify;">','')
                             .replace('</div>','')
