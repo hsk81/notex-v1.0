@@ -64,7 +64,7 @@ def processToLatexPdf (root, title, zipBuffer, includePdf = True):
 
     result = subprocess.call (['cp', origin, target, '-r'])
     if result != 0: return
-    result = unpack (root, os.path.join (target, 'source'))
+    result = unpackTree (root, os.path.join (target, 'source'))
     if result != 0: return
 
     os.chdir (target)
@@ -95,7 +95,7 @@ def processToLatexPdf (root, title, zipBuffer, includePdf = True):
     result = subprocess.call (['rm', target, '-r'])
     if result != 0: return
 
-def unpack (root, prefix):
+def unpackTree (root, prefix):
 
     ls = LEAF.objects.filter (_node = root)
     ns = NODE.objects.filter (_node = root)
@@ -111,7 +111,7 @@ def unpack (root, prefix):
     for node in ns:
         result = subprocess.call (['mkdir', os.path.join (prefix, node.name)])
         if result != 0: return result
-        result = unpack (node, os.path.join (prefix, node.name))
+        result = unpackTree (node, os.path.join (prefix, node.name))
         if result != 0: return result
 
     return 0
