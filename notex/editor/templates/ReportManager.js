@@ -287,7 +287,7 @@ var reportManager = new Ext.Panel ({
 
                             textReader.onload = function (e) {
                                 fileInfo.iconCls = 'icon-page'
-                                fileInfo.text = e.target.result.replace ("\n", "<br>", 'g')
+                                fileInfo.text = e.target.result
                                 node.attributes['iconCls'] = fileInfo.iconCls
                                 node.attributes['data'] = fileInfo.text
 

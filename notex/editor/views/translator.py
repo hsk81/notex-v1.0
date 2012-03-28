@@ -105,8 +105,7 @@ def unpackTree (root, prefix):
             if leaf.type.code == 'image':
                 file.write (decodestring (leaf.text.split (',')[1]))
             else:
-                file.write (MLStripper.strip_tags (leaf.text \
-                    .replace ('\n<br>','<br>').replace ('<br>','\n')))
+                file.write (MLStripper.strip_tags (leaf.text))
 
     for node in ns:
         result = subprocess.call (['mkdir', os.path.join (prefix, node.name)])

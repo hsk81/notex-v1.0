@@ -1,23 +1,15 @@
 var editor = new Ext.TabPanel ({
 
-    activeTab       : 0
-  , id              : 'editor.id'
-  , enableTabScroll : true
-  , tabPosition     : 'bottom'
+    activeTab : 0,
+    id : 'editor.id',
+    enableTabScroll : true,
+    tabPosition : 'bottom',
 
-  , divMono   :
-  
-        '<div style="' +
-            'font-family: mono; ' +
-            'font-size: 13px; ' +
-            'text-align: justify;">{0}' +
-        '</div>'
+    listeners : {
 
-  , listeners : {
-
-        //
-        // createTextTab ------------------------------------------------------
-        //
+        // ####################################################################################
+        // createTextTab
+        // ####################################################################################
 
         createTextTab : function (tabInfo, fn) {
 
@@ -25,49 +17,67 @@ var editor = new Ext.TabPanel ({
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
-            var tpl = function () {
-                tpl = ''; for (var idx=0; idx<tabInfo.text.length; idx++) {
-                    tpl += '{' + idx + '}'
-                } return tpl;
-            }();
 
-            var tplHtmlEditor = new Ext.Template (
-                String.format (editor.divMono, tpl)
-            )
+            var text2Html = function (text) {
+
+                if (Ext.isEmpty (text)) {
+                    text = ''
+                } else {
+                    text = String.format ('<div style="white-space:pre-wrap;">{0}</div>', text)
+                }
+
+                return text;
+            }
+
+            var html2Text = function (html) {
+
+                if (Ext.isEmpty (html)) {
+                    html = ''
+                } else {
+                    html = html.replace (/^<div style="white-space:pre-wrap;">/, '')
+                    html = html.replace (/<\/div>$/, '')
+                }
+
+                return html;
+            }
+
 
             if (!tab) {
 
                 tab = this.add ({
-                    title      : tabInfo.title
-                  , id         : tabInfo.id
-                  , layout     : 'fit'
-                  , autoScroll : true
-                  , iconCls    : tabInfo.iconCls
-                  , closable   : true
+                    title : tabInfo.title,
+                    id : tabInfo.id,
+                    layout : 'fit',
+                    autoScroll : true,
+                    iconCls : tabInfo.iconCls,
+                    closable : true,
 
-                  , getEditor  : function () {
+                    getEditor : function () {
                         return this.findById ('htmlEditorId')
-                    }
+                    },
 
-                  , getData    : function () {
-                        return this.getEditor ().getValue ()
-                            .replace('<div style="' +
-                                 'font-family: mono; ' +
-                                 'font-size: 13px; ' +
-                                 'text-align: justify;">','')
-                            .replace('</div>','')
-                    }
+                    getData : function () {
+                        return html2Text (this.getEditor ().getValue ())
+                    },
 
-                  , items : [{
-                        xtype  : 'htmleditor'
-                      , id     : 'htmlEditorId'
-                      , anchor : '100% 100%'
-                      , data   : tabInfo.text
-                      , tpl    : tplHtmlEditor
+                    items : [{
+                        xtype : 'htmleditor',
+                        id : 'htmlEditorId',
+                        anchor : '100% 100%',
+                        value : text2Html (tabInfo.text),
 
-                      , enableFont       : false
-                      , enableAlignments : false
-                      , enableSourceEdit : true
+                        fontFamilies : ["Mono"], 
+                        enableFont : false,
+                        enableLists : false,
+                        enableFontSize : false,
+                        enableAlignments : false,
+                        enableSourceEdit : false,
+
+                        defaultAutoCreate : {
+                            tag : 'textarea',
+                            id : 'htmlEditorTextAreaId',
+                            style :"font-family:mono; font-size:13px;"
+                        }
                     }]
                 });
 
@@ -77,13 +87,13 @@ var editor = new Ext.TabPanel ({
             }
 
             return (fn != undefined) ? fn (tab) : undefined
-        }
+        },
 
-        //
-        // createImageTab -----------------------------------------------------
-        //
+        // ####################################################################################
+        // createImageTab
+        // ####################################################################################
 
-      , createImageTab : function (tabInfo, fn) {
+        createImageTab : function (tabInfo, fn) {
 
             var tab = this.findById (
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
@@ -92,24 +102,24 @@ var editor = new Ext.TabPanel ({
             if (!tab) {
 
                 tab = this.add ({
-                    title      : tabInfo.title
-                  , id         : tabInfo.id
-                  , autoScroll : true
-                  , iconCls    : tabInfo.iconCls
-                  , closable   : true
-                  , bodyStyle  : 'background-color: grey;'
+                    title : tabInfo.title,
+                    id : tabInfo.id,
+                    autoScroll : true,
+                    iconCls : tabInfo.iconCls,
+                    closable : true,
+                    bodyStyle : 'background-color: grey;',
 
-                  , layout : 'hbox'
-                  , layoutConfig : {
-                        align : 'middle'
-                      , pack  : 'center'
-                  }
+                    layout : 'hbox',
+                    layoutConfig : {
+                        align : 'middle',
+                        pack : 'center'
+                    },
 
-                  , getData   : function () {
+                    getData : function () {
                         return $('#imageId').attr ('src')
-                    }
+                    },
 
-                  , items : [{
+                    items : [{
                         html : String.format (
                             '<img id="imageId" src="{0}" width="100%" />', tabInfo.text
                         )
@@ -122,26 +132,26 @@ var editor = new Ext.TabPanel ({
             }
 
             return (fn != undefined) ? fn (tab) : undefined
-        }
+        },
 
-        //
-        // readTab ------------------------------------------------------------
-        //
+        // ####################################################################################
+        // readTab
+        // ####################################################################################
 
-      , readTab : function (tabInfo, fn) {
+        readTab : function (tabInfo, fn) {
 
             var tab = this.findById (
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
             return (fn != undefined) ? fn (tab) : undefined
-        }
+        },
 
-        //
-        // updateTab ----------------------------------------------------------
-        //
+        // ####################################################################################
+        // updateTab
+        // ####################################################################################
 
-      , updateTab : function (tabInfo, fn) {
+        updateTab : function (tabInfo, fn) {
 
             var tab = this.findById (
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
@@ -149,10 +159,10 @@ var editor = new Ext.TabPanel ({
 
             if (tabInfo.uuid != undefined) {
                 var ti = {
-                    id      : tabInfo.id
-                  , title   : tab.title
-                  , text    : tab.getData ()
-                  , iconCls : tab.iconCls
+                    id : tabInfo.id,
+                    title : tab.title,
+                    text : tab.getData (),
+                    iconCls : tab.iconCls
                 }
 
                 this.remove (tab)
@@ -165,13 +175,13 @@ var editor = new Ext.TabPanel ({
             }
 
             return (fn != undefined) ? fn (tab) : undefined
-        }
+        },
         
-        //
-        // deleteTab --------------------------------------------------------------------------
-        //
+        // ####################################################################################
+        // deleteTab
+        // ####################################################################################
 
-      , deleteTab : function (tabInfo, fn) {
+        deleteTab : function (tabInfo, fn) {
 
             var tab = this.findById (
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
