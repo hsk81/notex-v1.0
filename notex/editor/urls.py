@@ -95,10 +95,8 @@ urlpatterns = patterns ('',
     ##
 
     url (r'^data/fetch-text/(?P<id>.*=)/$', views.fetchText, name='data.fetchText'),
-    url (r'^data/fetch-html/(?P<id>.*=)/$', views.fetchHtml, name='data.fetchHtml'),
     url (r'^data/fetch-latex/(?P<id>.*=)/$', views.fetchLatex, name='data.fetchLatex'),
     url (r'^data/fetch-pdf/(?P<id>.*=)/$', views.fetchPdf, name='data.fetchPdf'),
-
     url (r'^data/store-file/(?P<fid>.*)/$', views.storeFile, name='data.storeFile'),
 )
 

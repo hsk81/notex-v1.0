@@ -46,9 +46,6 @@ def compress (request, id, fnTranslate):
 def fetchText (request, id):
     return compress (request, id, translator.processToText)
 
-def fetchHtml (request, id):
-    return compress (request, id, translator.processToHtml)
-
 def fetchLatex (request, id):
     return compress (request, id, translator.processToLatex)
 

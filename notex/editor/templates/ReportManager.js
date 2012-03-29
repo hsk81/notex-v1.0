@@ -23,36 +23,31 @@ var reportManager = new Ext.Panel ({
         },{
             iconCls : 'icon-disk_upload',
             tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
-            split   : true,
-            menu    : {
+            split : true,
+
+            handler : function (button, event) {
+                Ext.getCmp ('reportManager.id').fireEvent ('exportText')
+            },
+
+            menu : {
               xtype : 'menu',
               plain : true,
 
               items : [{
                   iconCls : 'icon-page_white_compressed',
-                  text    : 'Text Report',
-                  tooltip : '<b>Export without HTML Tags</b> i.e. formatting<br/>..',
+                  text : 'Text Report',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('exportText')
                   }
               },{
-                  iconCls : 'icon-html',
-                  text    : 'Text Report <i>(formatted)</i>',
-                  tooltip : '<b>Export with HTML Tags</b>i.e. formatting<br/>..',
-                  handler : function (button, event) {
-                      Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
-                  }
-              },'-',{
                   iconCls : 'icon-page_white_code',
-                  text    : 'Latex Files',
-                  tooltip : '<b>Export Latex Files</b><br/>..',
+                  text : 'Latex Files',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
                   }
               },{
                   iconCls : 'icon-page_white_acrobat',
-                  text    : 'PDF Document',
-                  tooltip : '<b>Export as PDF Document</b><br/>..',
+                  text : 'PDF Document',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
                   }
@@ -183,7 +178,6 @@ var reportManager = new Ext.Panel ({
             })
         }, 
         
-        exportHtml : function () { this.fireEvent ('exportReport', urls.fetchHtml) },
         exportText : function () { this.fireEvent ('exportReport', urls.fetchText) },
         exportLatex : function () { this.fireEvent ('exportReport', urls.fetchLatex) },
         exportPdf : function () { this.fireEvent ('exportReport', urls.fetchPdf) },

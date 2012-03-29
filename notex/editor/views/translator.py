@@ -9,13 +9,18 @@ from editor.models import NODE, LEAF
 from base64 import decodestring
 
 import subprocess
+import tempfile
 import uuid
 import os
 
 ###############################################################################################
 ###############################################################################################
 
-def processToText (root, prefix, zipBuffer):
+def processToText (root, prefix, zipBuffer, target = 'report'):
+
+    if target != None:
+
+        prefix = os.path.join (prefix, target)
 
     ls = LEAF.objects.filter (_node = root)
     ns = NODE.objects.filter (_node = root)
@@ -25,51 +30,47 @@ def processToText (root, prefix, zipBuffer):
             zipBuffer.writestr (os.path.join (prefix, leaf.name), \
                 decodestring (leaf.text.split (',')[1]))
         else:
-            zipBuffer.writestr (os.path.join (prefix, leaf.name), \
-                MLStripper.strip_tags (leaf.text))
+            _, ftext_path = tempfile.mkstemp (); ftext = open (ftext_path, 'w')
+            _, fhtml_path = tempfile.mkstemp (); fhtml = open (fhtml_path, 'w')
+
+            text = MLStripper.strip_tags (leaf.text)
+
+            ftext.write (text); ftext.close ()
+            fhtml.write (leaf.text); fhtml.close ()
+
+            try: result, diff = 0, subprocess.check_output (['diff', ftext_path, fhtml_path])
+            except subprocess.CalledProcessError, ex: result, diff = ex.returncode, ex.output
+
+            subprocess.call (['rm', fhtml_path, '-f'])
+            subprocess.call (['rm', ftext_path, '-f'])
+
+            zipBuffer.writestr (os.path.join (prefix, leaf.name), text)
+            if result == 1:
+                zipBuffer.writestr (os.path.join (prefix, leaf.name + ".diff"), diff)
 
     for node in ns:
-        zipBuffer.writestr ('%s/%s/' % (prefix, node.name), ''); DATA.processToText (
-            node, os.path.join (prefix, node), zipBuffer)
-
-def processToHtml (root, prefix, zipBuffer):
-
-    ls = LEAF.objects.filter (_node = root)
-    ns = NODE.objects.filter (_node = root)
-
-    for leaf in ls:
-        if leaf.type.code == 'image':
-            zipBuffer.writestr (os.path.join (prefix, leaf.name), \
-                decodestring (leaf.text.split (',')[1]))
-        else:
-            zipBuffer.writestr (os.path.join (prefix, leaf.name), \
-                leaf.text)
-
-    for node in ns:
-        zipBuffer.writestr (os.path.join (prefix, node.name), ''); DATA.processToHtml (
-            node, os.path.join (prefix, node), zipBuffer)
+        zipBuffer.writestr (os.path.join (prefix, node.name), ''); DATA.processToText (
+            node, os.path.join (prefix, node), zipBuffer, target = None)
 
 def processToLatex (root, title, zipBuffer):
 
-    processToLatexPdf (root, title, zipBuffer, includePdf = False)
+    processToLatexPdf (root, title, zipBuffer, excludePdf = True)
 
 def processToPdf (root, title, zipBuffer):
 
-    processToLatexPdf (root, title, zipBuffer, includePdf = True)
+    processToLatexPdf (root, title, zipBuffer)
 
-def processToLatexPdf (root, title, zipBuffer, includePdf = True):
+def processToLatexPdf (root, title, zipBuffer, excludePdf = False):
+
+    processToText (root, title, zipBuffer)
 
     origin = os.path.join ('reports', '00000000-0000-0000-0000-000000000000')
     target = os.path.join ('reports', str (uuid.uuid4 ()))
 
-    result = subprocess.call (['cp', origin, target, '-r'])
-    if result != 0: return
-    result = unpackTree (root, os.path.join (target, 'source'))
-    if result != 0: return
-
+    subprocess.call (['cp', origin, target, '-r'])
+    unpackTree (root, os.path.join (target, 'source'))
     os.chdir (target)
-    result = subprocess.call (['make', includePdf and 'latexpdf' or 'latex'])
-    if result != 0: return
+    subprocess.call (['make', excludePdf and 'latex' or 'latexpdf'])
 
     pdfnames = []
     
@@ -79,9 +80,8 @@ def processToLatexPdf (root, title, zipBuffer, includePdf = True):
             if not filename.endswith ('pdf'):
                 zipBuffer.write (os.path.join (dirpath, filename), \
                     os.path.join (title, dirpath, filename))
-            elif includePdf:
-                result = subprocess.call (['mv', os.path.join (dirpath, filename), '.'])
-                if result != 0: return
+            elif not excludePdf:
+                subprocess.call (['mv', os.path.join (dirpath, filename), '.'])
                 pdfnames.append (filename)
 
     for pdfname in pdfnames:
@@ -92,8 +92,7 @@ def processToLatexPdf (root, title, zipBuffer, includePdf = True):
     os.chdir ('..')
     os.chdir ('..')
 
-    result = subprocess.call (['rm', target, '-r'])
-    if result != 0: return
+    subprocess.call (['rm', target, '-r'])
 
 def unpackTree (root, prefix):
 
@@ -108,12 +107,8 @@ def unpackTree (root, prefix):
                 file.write (MLStripper.strip_tags (leaf.text))
 
     for node in ns:
-        result = subprocess.call (['mkdir', os.path.join (prefix, node.name)])
-        if result != 0: return result
-        result = unpackTree (node, os.path.join (prefix, node.name))
-        if result != 0: return result
-
-    return 0
+        subprocess.call (['mkdir', os.path.join (prefix, node.name)])
+        unpackTree (node, os.path.join (prefix, node.name))
 
 ###############################################################################################
 ###############################################################################################
