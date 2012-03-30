@@ -17,7 +17,6 @@ var editor = new Ext.TabPanel ({
                 (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
             )
 
-
             var text2Html = function (text) {
 
                 if (Ext.isEmpty (text)) {
@@ -34,8 +33,8 @@ var editor = new Ext.TabPanel ({
                 if (Ext.isEmpty (html)) {
                     html = ''
                 } else {
-                    html = html.replace (/^<div style="white-space:pre-wrap;">/, '')
-                    html = html.replace (/<\/div>$/, '')
+                    html = html.replace (/^(<div style="white-space:pre-wrap; ?">)+/, '')
+                    html = html.replace (/<(\/div>)+$/, '')
                 }
 
                 return html;
