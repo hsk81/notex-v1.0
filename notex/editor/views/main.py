@@ -15,6 +15,7 @@ from editor.models import LEAF, LEAF_TYPE
 
 import os.path
 import sys
+import cgi
 import os
 
 ###############################################################################################
@@ -33,7 +34,8 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.rst',
-        text = open (os.path.join (path,'tutorial/index.rst')).read (),
+        text = cgi.escape (open (os.path.join (path,'tutorial/index.rst')).read (),
+            quote=True),
         rank = 0,
     )
 
@@ -41,7 +43,8 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'conf.py',
-        text = open (os.path.join (path,'tutorial/conf.py')).read (),
+        text = cgi.escape (open (os.path.join (path,'tutorial/conf.py')).read (),
+            quote=True),
         rank = 1,
     )
 
@@ -58,7 +61,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'lorem-ipsum.rst',
-        text = open (os.path.join (path,'lorem-ipsum/part-000.rst')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-000.rst')).read (),
+            quote=True),
         rank = 0,
     )
 
@@ -66,7 +70,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'suspendisse-potenti.rst',
-        text = open (os.path.join (path,'lorem-ipsum/part-001.rst')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-001.rst')).read (),
+            quote=True),
         rank = 1,
     )
 
@@ -74,7 +79,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'cras-rutrum.rst',
-        text = open (os.path.join (path,'lorem-ipsum/part-002.rst')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-002.rst')).read (),
+            quote=True),
         rank = 2,
     )
 
@@ -82,7 +88,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.rst',
-        text = open (os.path.join (path,'lorem-ipsum/index.rst')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/index.rst')).read (),
+            quote=True),
         rank = 3,
     )
 
@@ -90,7 +97,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'conf.py',
-        text = open (os.path.join (path,'lorem-ipsum/conf.py')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/conf.py')).read (),
+            quote=True),
         rank = 4,
     )
 
