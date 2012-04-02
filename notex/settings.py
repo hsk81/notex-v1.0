@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -28,6 +29,7 @@ TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
+USE_L10N = True
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
 MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
