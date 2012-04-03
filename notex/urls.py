@@ -15,7 +15,7 @@ urlpatterns = patterns ('',
     (r'^admin/', include (admin.site.urls)),
 
     url (
-        r'^json/info/$', info, name='json.info'
+        r'^json/info/$', views.info, name='json.info'
     ),
 
 )
