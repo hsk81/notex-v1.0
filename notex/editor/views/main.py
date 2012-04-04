@@ -43,7 +43,7 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.yml',
-        text = cgi.escape (open (os.path.join (path,'tutorial/conf.py')).read (),
+        text = cgi.escape (open (os.path.join (path,'tutorial/index.yml')).read (),
             quote=True),
         rank = 1,
     )
@@ -97,7 +97,7 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.yml',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/conf.py')).read (),
+        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/index.yml')).read (),
             quote=True),
         rank = 4,
     )
