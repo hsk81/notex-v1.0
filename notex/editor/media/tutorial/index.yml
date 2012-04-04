@@ -2,6 +2,17 @@
 # general
 ###############################################################################################
 
+project: 'PROJECT'
+author: 'AUTHOR(s)'
+year: '$(date +"%Y")'
+copyright: '${year}, ${author}'
+
+version: '0.1'
+release: '0.1'
+
+master_doc: 'index'
+source_suffix: '.rst'
+
 extensions: 
     - 'sphinx.ext.autodoc'
     - 'sphinx.ext.doctest'
@@ -13,14 +24,6 @@ extensions:
     - 'sphinx.ext.viewcode'
 
 templates_path: ['_templates'] 
-source_suffix: '.rst'
-master_doc: 'index'
-project: 'PROJECT'
-author: 'AUTHOR(s)'
-copyright: '2012, $(author)'
-version: '0.1'
-release: '0.1'
-
 exclude_patterns: [] 
 pygments_style: 'sphinx'
 
@@ -67,7 +70,7 @@ texinfo_documents:
 epub_title: '${project}'
 epub_author: '${author}'
 epub_publisher: '${author}'
-epub_copyright: '2012, ${author}'
+epub_copyright: '${copyright}'
 
 ###############################################################################################
 # intersphinx (example)
@@ -77,3 +80,4 @@ intersphinx_mapping: { 'http://docs.python.org' : ~ }
 
 ###############################################################################################
 ###############################################################################################
+
