@@ -1,4 +1,4 @@
-__author__="hkarahan"
+__author__ ="hkarahan"
 __date__ ="$May 23, 2010 10:45:29 PM$"
 
 from setuptools import setup,find_packages
@@ -22,6 +22,5 @@ setup (
   long_description= 'Long description of the package',
 
   # could also include long_description, download_url, classifiers, etc.
-
   
 )
