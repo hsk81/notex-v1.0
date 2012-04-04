@@ -2,8 +2,8 @@
 # general
 ###############################################################################################
 
-project: 'PROJECT'
-author: 'AUTHOR(s)'
+project: 'Tutorial'
+author: 'Anonymous'
 year: '$(date +"%Y")'
 copyright: '${year}, ${author}'
 
