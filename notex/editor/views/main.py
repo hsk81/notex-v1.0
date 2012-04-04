@@ -1,4 +1,4 @@
-__author__="hsk81"
+__author__ ="hsk81"
 __date__ ="$Mar 27, 2012 1:02:55 PM$"
 
 ###############################################################################################
@@ -42,7 +42,7 @@ def init_prj01 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'conf.py',
+        name = 'index.yml',
         text = cgi.escape (open (os.path.join (path,'tutorial/conf.py')).read (),
             quote=True),
         rank = 1,
@@ -96,7 +96,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'conf.py',
+        name = 'index.yml',
         text = cgi.escape (open (os.path.join (path,'lorem-ipsum/conf.py')).read (),
             quote=True),
         rank = 4,

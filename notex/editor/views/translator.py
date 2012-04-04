@@ -1,4 +1,4 @@
-__author__="hsk81"
+__author__ ="hsk81"
 __date__ ="$Mar 27, 2012 1:06:43 PM$"
 
 ###############################################################################################
@@ -100,10 +100,14 @@ def unpackTree (root, prefix):
     ns = NODE.objects.filter (_node = root)
 
     for leaf in ls:
-        with open (os.path.join (prefix, leaf.name), 'w') as file:
-            if leaf.type.code == 'image':
+        if leaf.type.code == 'image':
+            with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (decodestring (leaf.text.split (',')[1]))
-            else:
+        else:
+            _, ext = os.path.splitext (leaf.name)
+            if not ext in ['.yml','.rst','.txt']:
+                continue ## security fix!
+            with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (MLStripper.strip_tags (leaf.text))
 
     for node in ns:
