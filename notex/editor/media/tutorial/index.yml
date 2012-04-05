@@ -4,7 +4,6 @@
 
 project: 'Tutorial'
 author: 'Anonymous'
-year: '$(date +"%Y")'
 copyright: '${year}, ${author}'
 
 version: '0.1'
@@ -13,18 +12,18 @@ release: '0.1'
 master_doc: 'index'
 source_suffix: '.rst'
 
-extensions: 
+extensions:
     - 'sphinx.ext.autodoc'
     - 'sphinx.ext.doctest'
     - 'sphinx.ext.intersphinx'
     - 'sphinx.ext.todo'
     - 'sphinx.ext.coverage'
     - 'sphinx.ext.pngmath'
-    - 'sphinx.ext.ifconfig' 
+    - 'sphinx.ext.ifconfig'
     - 'sphinx.ext.viewcode'
 
-templates_path: ['_templates'] 
-exclude_patterns: [] 
+templates_path: ['_templates']
+exclude_patterns: []
 pygments_style: 'sphinx'
 
 ###############################################################################################
@@ -47,7 +46,7 @@ latex_documents:
 # manual page
 ###############################################################################################
 
-man_pages: 
+man_pages:
     - ['index', 'project', '${project} Documentation', ['${author}'], 1]
 
 ###############################################################################################
@@ -80,4 +79,3 @@ intersphinx_mapping: { 'http://docs.python.org' : ~ }
 
 ###############################################################################################
 ###############################################################################################
-
