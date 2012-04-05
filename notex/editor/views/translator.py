@@ -7,12 +7,14 @@ __date__ ="$Mar 27, 2012 1:06:43 PM$"
 from editor.lib import MLStripper
 from editor.models import NODE, LEAF
 from base64 import decodestring
+from datetime import datetime
 
 import subprocess
 import tempfile
 import types
 import uuid
 import yaml
+import re
 import os
 
 ###############################################################################################
@@ -125,41 +127,71 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
     data = yaml.load (u'!omap\n' + leaf.text)
 
     with open (os.path.join (prefix, filename), 'w') as file:
-
         file.write ('# -*- coding: utf-8 -*-\n')
-        for k,v in data: file.write ('%s\n' % emit (k,v,type (v)))
+        for key,value in data:
+            file.write ('%s\n' % emit (value,type (value),key))
 
-def emit (key, value, type):
+def emit (value, type, key = None):
 
-    if   type == types.ListType: return emit_list (key, value)
-    elif type == types.DictType: return emit_dict (key, value)
-    elif type == types.IntType: return emit_number (key, value)
-    elif type == types.FloatType: return emit_number (key, value)
-    elif type == types.StringType: return emit_string (key, value)
+    if   type == types.ListType: return emit_list (value, key)
+    elif type == types.DictType: return emit_dict (value, key)
+    elif type == types.IntType: return emit_number (value, key)
+    elif type == types.FloatType: return emit_number (value, key)
+    elif type == types.StringType: return emit_string (value, key)
 
     else: return None ## Security: Ignore other types!
 
-def emit_list (key, ls):
+def emit_list (ls, key):
 
-    if key: return '%s = [%s]' % (key,','.join (map (lambda el:emit (None,el,type (el)), ls)))
-    else:   return      '[%s]' %      ','.join (map (lambda el:emit (None,el,type (el)), ls))
+    if key: return '%s = [%s]' % (key,','.join (map (lambda el:emit (el,type (el)), ls)))
+    else:   return      '[%s]' %      ','.join (map (lambda el:emit (el,type (el)), ls))
 
-def emit_dict (key, ds):
+def emit_dict (ds, key):
 
-    if key: return '%s = {%s}' % (key,','.join ('"%s":%s' % (k,emit (None,ds[k],type (ds[k]))) \
+    if key: return '%s = {%s}' % (key,','.join ('"%s":%s' % (k,emit (ds[k],type (ds[k]))) \
         for k in ds))
-    else:   return      '{%s}' %      ','.join ('"%s":%s' % (k,emit (None,ds[k],type (ds[k]))) \
+    else:   return      '{%s}' %      ','.join ('"%s":%s' % (k,emit (ds[k],type (ds[k]))) \
         for k in ds)
 
-def emit_number (key, number):
+def emit_number (value, key):
 
-    if key: return '%s = %s"' % (key,number)
-    else:   return      '%s'  %      number
+    if key: return '%s = %s"' % (key,value)
+    else:   return      '%s'  %      value
 
-def emit_string (key, value):
+def emit_string (value, key):
 
-    if key: return '%s = "%s"' % (key,value)
-    else:   return      '"%s"' %      value
+    if key: return '%s = "%s"' % (key,interpolate (value, key))
+    else:   return      '"%s"' %      interpolate (value)
+
+def interpolate (value, key = None):
+
+    for tag, arg in re.findall ("\${(\w+)\|?(.*?)}", value):
+
+        if arg != '': el = '${%s|%s}' % (tag,arg)
+        else:         el = '${%s}'    %  tag
+
+        if   _lookups.has_key (tag): value = value.replace (el, _lookups[tag])
+        elif _predefs.has_key (tag): value = value.replace (el, _default(tag, arg))
+        else:                        value = value.replace (el, '')
+
+    if key:
+
+        _lookups[key] = value
+
+    return value
+
+def _default (tag, arg):
+
+    return _predefs[tag] (arg != '' and arg or None)
+
+_predefs = {
+    'date' : lambda format: format and datetime.today ().strftime (format) or \
+        str (datetime.today ()),
+    'time' : lambda format: format and datetime.now ().time ().strftime (format) or \
+        str (datetime.now ().time ())
+}
+
+_lookups = {}
 
 ###############################################################################################
 ###############################################################################################
