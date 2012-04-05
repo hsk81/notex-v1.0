@@ -10,7 +10,9 @@ from base64 import decodestring
 
 import subprocess
 import tempfile
+import types
 import uuid
+import yaml
 import os
 
 ###############################################################################################
@@ -103,16 +105,61 @@ def unpackTree (root, prefix):
         if leaf.type.code == 'image':
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (decodestring (leaf.text.split (',')[1]))
+        elif leaf.name.endswith ('.yml'):
+            yaml2py (leaf, prefix)
         else:
             _, ext = os.path.splitext (leaf.name)
-            if not ext in ['.yml','.rst','.txt']:
-                continue ## security fix!
+            if not ext in ['.rst','.txt']:
+                continue ## security!
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (MLStripper.strip_tags (leaf.text))
 
     for node in ns:
         subprocess.call (['mkdir', os.path.join (prefix, node.name)])
         unpackTree (node, os.path.join (prefix, node.name))
+
+def yaml2py (leaf, prefix, filename = 'conf.py'):
+
+    constructor = lambda loader, node: loader.construct_pairs (node)
+    yaml.add_constructor (u'!omap', constructor)
+    data = yaml.load (u'!omap\n' + leaf.text)
+
+    with open (os.path.join (prefix, filename), 'w') as file:
+
+        file.write ('# -*- coding: utf-8 -*-\n')
+        for k,v in data: file.write ('%s\n' % emit (k,v,type (v)))
+
+def emit (key, value, type):
+
+    if   type == types.ListType: return emit_list (key, value)
+    elif type == types.DictType: return emit_dict (key, value)
+    elif type == types.IntType: return emit_number (key, value)
+    elif type == types.FloatType: return emit_number (key, value)
+    elif type == types.StringType: return emit_string (key, value)
+
+    else: return None ## Security: Ignore other types!
+
+def emit_list (key, ls):
+
+    if key: return '%s = [%s]' % (key,','.join (map (lambda el:emit (None,el,type (el)), ls)))
+    else:   return      '[%s]' %      ','.join (map (lambda el:emit (None,el,type (el)), ls))
+
+def emit_dict (key, ds):
+
+    if key: return '%s = {%s}' % (key,','.join ('"%s":%s' % (k,emit (None,ds[k],type (ds[k]))) \
+        for k in ds))
+    else:   return      '{%s}' %      ','.join ('"%s":%s' % (k,emit (None,ds[k],type (ds[k]))) \
+        for k in ds)
+
+def emit_number (key, number):
+
+    if key: return '%s = %s"' % (key,number)
+    else:   return      '%s'  %      number
+
+def emit_string (key, value):
+
+    if key: return '%s = "%s"' % (key,value)
+    else:   return      '"%s"' %      value
 
 ###############################################################################################
 ###############################################################################################
