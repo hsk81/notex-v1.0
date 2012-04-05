@@ -3,11 +3,13 @@
 ###############################################################################################
 
 project: 'Tutorial'
-author: 'Anonymous'
-copyright: '${year}, ${author}'
+author: 'Blackhan Software'
+copyright: '${date|%Y}, ${author}'
 
 version: '0.1'
 release: '0.1'
+
+###############################################################################################
 
 master_doc: 'index'
 source_suffix: '.rst'

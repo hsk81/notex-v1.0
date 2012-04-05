@@ -2,12 +2,14 @@
 # general
 ###############################################################################################
 
-project: 'Tutorial'
+project: 'Lorem-Ipsum'
 author: 'Anonymous'
-copyright: '${year}, ${author}'
+copyright: '${date|%Y}, ${author}'
 
 version: '0.1'
 release: '0.1'
+
+###############################################################################################
 
 master_doc: 'index'
 source_suffix: '.rst'
