@@ -1,5 +1,5 @@
-Welcome to PROJECT's documentation!
-===================================
+Welcome to Lorem Ipsum's documentation!
+=======================================
 
 .. toctree::
    :maxdepth: 2
@@ -15,4 +15,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

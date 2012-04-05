@@ -98,6 +98,8 @@ def processToLatexPdf (root, title, zipBuffer, excludePdf = False):
 
     subprocess.call (['rm', target, '-r'])
 
+###############################################################################################
+
 def unpackTree (root, prefix):
 
     ls = LEAF.objects.filter (_node = root)
@@ -120,6 +122,8 @@ def unpackTree (root, prefix):
         subprocess.call (['mkdir', os.path.join (prefix, node.name)])
         unpackTree (node, os.path.join (prefix, node.name))
 
+###############################################################################################
+
 def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     constructor = lambda loader, node: loader.construct_pairs (node)
@@ -140,6 +144,8 @@ def emit (value, type, key = None):
     elif type == types.StringType: return emit_string (value, key)
 
     else: return None ## Security: Ignore other types!
+
+###############################################################################################
 
 def emit_list (ls, key):
 
@@ -162,6 +168,8 @@ def emit_string (value, key):
 
     if key: return '%s = "%s"' % (key,interpolate (value, key))
     else:   return      '"%s"' %      interpolate (value)
+
+###############################################################################################
 
 def interpolate (value, key = None):
 

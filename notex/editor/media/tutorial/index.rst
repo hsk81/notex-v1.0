@@ -1,5 +1,5 @@
-Welcome to PROJECT's documentation!
-===================================
+Welcome to Tutorial!
+====================
 
 .. toctree::
    :maxdepth: 2
@@ -11,4 +11,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
