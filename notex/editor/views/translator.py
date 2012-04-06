@@ -5,16 +5,15 @@ __date__ ="$Mar 27, 2012 1:06:43 PM$"
 ###############################################################################################
 
 from editor.lib import MLStripper
+from editor.lib import Interpolator
 from editor.models import NODE, LEAF
 from base64 import decodestring
-from datetime import datetime
 
 import subprocess
 import tempfile
 import types
 import uuid
 import yaml
-import re
 import os
 
 ###############################################################################################
@@ -166,40 +165,8 @@ def emit_number (value, key):
 
 def emit_string (value, key):
 
-    if key: return '%s = "%s"' % (key,interpolate (value, key))
-    else:   return      '"%s"' %      interpolate (value)
-
-###############################################################################################
-
-def interpolate (value, key = None):
-
-    for tag, arg in re.findall ("\${(\w+)\|?(.*?)}", value):
-
-        if arg != '': el = '${%s|%s}' % (tag,arg)
-        else:         el = '${%s}'    %  tag
-
-        if   _lookups.has_key (tag): value = value.replace (el, _lookups[tag])
-        elif _predefs.has_key (tag): value = value.replace (el, _default(tag, arg))
-        else:                        value = value.replace (el, '')
-
-    if key:
-
-        _lookups[key] = value
-
-    return value
-
-def _default (tag, arg):
-
-    return _predefs[tag] (arg != '' and arg or None)
-
-_predefs = {
-    'date' : lambda format: format and datetime.today ().strftime (format) or \
-        str (datetime.today ()),
-    'time' : lambda format: format and datetime.now ().time ().strftime (format) or \
-        str (datetime.now ().time ())
-}
-
-_lookups = {}
+    if key: return '%s = "%s"' % (key, Interpolator.apply (value, key))
+    else:   return      '"%s"' %       Interpolator.apply (value)
 
 ###############################################################################################
 ###############################################################################################
