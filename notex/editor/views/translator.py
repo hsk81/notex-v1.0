@@ -132,7 +132,9 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
     with open (os.path.join (prefix, filename), 'w') as file:
         file.write ('# -*- coding: utf-8 -*-\n')
         for key,value in data:
-            file.write ('%s\n' % emit (value,type (value),key))
+            file.write ('%s\n' % emit (value, type (value), key))
+
+###############################################################################################
 
 def emit (value, type, key = None):
 
@@ -143,8 +145,6 @@ def emit (value, type, key = None):
     elif type == types.StringType: return emit_string (value, key)
 
     else: return None ## Security: Ignore other types!
-
-###############################################################################################
 
 def emit_list (ls, key):
 
