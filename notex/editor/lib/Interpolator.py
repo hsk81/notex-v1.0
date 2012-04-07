@@ -101,6 +101,7 @@ class Interpolator:
 
 class UnknownTagException (exceptions.Exception): pass
 class UnknownFilterException (exceptions.Exception): pass
+class NoFunctionException (exceptions.Exception): pass
 
 ###############################################################################################
 ###############################################################################################
