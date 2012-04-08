@@ -15,13 +15,10 @@ from datetime import datetime
 
 class Interpolator:
     """
-    An interpolator stores associations between a tag like ${tag}, ${tag|arg0|arg1|..|argn},
+    An interpolator stores associations between a tag like ${tag}, ${tag arg0 arg1 .. argn},
     ${tag|filter} or ${tag|filter arg1 arg2 .. 'argn'} with a static or dynamic content. If
     after the tag a filter is given, then it will be applied to the content. Using these asso -
     ciations it interpolates string containing interpolation tags.
-
-    The tag parameters (if any) follow the tag (like filters) after a pipe '|' symbol, whereas
-    filter parameters (if any) are separated by whitespace.
 
     The pre-defined tags are:
 
@@ -65,6 +62,7 @@ class Interpolator:
 
         self._filter_tbl = {
             'quote' : lambda value,*args: urllib.quote_plus (value),
+            'swap' : lambda value,lhs,rhs,*args: value.replace (lhs,rhs)
         }
 
         self._lookup_tbl = {}
@@ -95,21 +93,24 @@ class Interpolator:
                 if string contains an unknown filter, but only if strict mode is set, otherwise
                 no exception is raised.
         """
-        for head, rest in re.findall ("\${(\w+)\|?(.*?)}", value):
+        for head, rest in re.findall ("\${([^|]+)\|?(.*?)}", value): ## TODO: Generalize!?
 
             if rest != '':
                 el = '${%s|%s}' % (head,rest)
             else:
                 el = '${%s}'    %  head
 
-            args = filter (lambda arg: len (arg) > 0, rest.split ('|'))
+            args = filter (lambda arg: len (arg) > 0, head.split (' ')) ## TODO: Generalize!
+            head = args.pop (0)
+            rest = filter (lambda arg: len (arg) > 0, rest.split ('|')) ## TODO: Generalize!
 
             if self._lookup_tbl.has_key (head):
-                value = value.replace (el, self._filter (*self._lookup (head, args), \
+                value = value.replace (el, self._filter (self._lookup (head, args), rest, \
                     **{'strict':strict}))
             elif self._predef_tbl.has_key (head):
-                value = value.replace (el, self._filter (*self._predef (head, args), \
+                value = value.replace (el, self._filter (self._predef (head, args), rest, \
                     **{'strict':strict}))
+
             elif (strict != None) and strict:
                 raise UnknowTagException (el)
             elif (strict == None) and self._strict:
@@ -121,10 +122,10 @@ class Interpolator:
         return value
 
     def _lookup (self, tag, args):
-        return self._lookup_tbl[tag], args
+        return self._lookup_tbl[tag]
 
     def _predef (self, tag, args):
-        return self._predef_tbl[tag] (*args or [None]), args
+        return self._predef_tbl[tag] (*args or [None])
 
     def _filter (self, value, args, strict = None):
         """
@@ -132,11 +133,11 @@ class Interpolator:
         """
         for arg in args:
 
-            ps = re.findall ("\w+", arg)
+            ps = re.findall ("\w+", arg) ## TODO: Generalize!
             op = ps.pop (0)
 
             if self._filter_tbl.has_key (op):
-                value = self._filter_tbl[op] (value, ps)
+                value = self._filter_tbl[op] (value, *ps)
             elif (strict != None) and strict:
                 raise UnknowTagException (el)
             elif (strict == None) and self._strict:
@@ -208,7 +209,7 @@ class NoFunctionException (exceptions.Exception): pass
 ###############################################################################################
 
 def apply (value, key = None, strict = None):
-    return _interpolator.apply (value, kye, strict)
+    return _interpolator.apply (value, key, strict)
 def clear (key = None):
     return _interpolator.clear (key)
 def add_predef (key, fn):
