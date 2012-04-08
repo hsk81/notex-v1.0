@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 __author__ ="hsk81"
 __date__ ="$Apr 6, 2012 12:34:39 PM$"
 
@@ -5,6 +7,7 @@ __date__ ="$Apr 6, 2012 12:34:39 PM$"
 ###############################################################################################
 
 import re
+import types
 import urllib
 import exceptions
 
@@ -15,12 +18,14 @@ from datetime import datetime
 
 class Interpolator:
 
-    def __init__ (self, strict = False):
+    def __init__ (self, strict = True):
 
         self._predef_tbl = {
-            'date' : lambda x,*xs: x and datetime.today ().strftime (x) or \
-                str (datetime.today ()),
-            'time' : lambda x,*xs: x and datetime.now ().time ().strftime (x) or \
+            'datetime' : lambda *xs: xs and datetime.now ().strftime (' '.join (xs)) or \
+                str (datetime.now ()),
+            'date' : lambda *xs: xs and datetime.now ().date ().strftime (' '.join (xs)) or \
+                str (datetime.now ().date ()),
+            'time' : lambda *xs: xs and datetime.now ().time ().strftime (' '.join (xs)) or \
                 str (datetime.now ().time ()),
         }
 
@@ -33,92 +38,170 @@ class Interpolator:
         self._strict = strict
 
     def apply (self, value, key = None, strict = None):
-
+        """
+        >>> self.apply ("lorem ipsum", "lorem-ipsum")
+        'lorem ipsum'
+        >>> self.apply ("${lorem-ipsum}")
+        'lorem ipsum'
+        >>> self.apply ("${not-defined}")
+        Traceback (most recent call last):
+        UnknownTemplateError: ${not-defined}
+        >>> self.apply ("${lorem-ipsum|quote}")
+        'lorem+ipsum'
+        >>> self.apply ("${lorem-ipsum|quote|swap + -}")
+        'lorem-ipsum'
+        >>> self.apply ("${lorem-ipsum|swap ' ' +}", "project")
+        'lorem+ipsum'
+        >>> self.apply ("${lorem-ipsum|swap + ' '}")
+        'lorem ipsum'
+        """
         for head, rest in re.findall ("\${([^|]+)\|?(.*?)}", value): ## TODO: Generalize!?
 
             if rest != '':
-                el = '${%s|%s}' % (head,rest)
+                tpl = '${%s|%s}' % (head,rest)
             else:
-                el = '${%s}'    %  head
+                tpl = '${%s}'    %  head
 
-            args = filter (lambda arg: len (arg) > 0, head.split (' ')) ## TODO: Generalize!
-            head = args.pop (0)
-            rest = filter (lambda arg: len (arg) > 0, rest.split ('|')) ## TODO: Generalize!
+            tag, ps = self._parse (head)
+            filters = filter (lambda el: len (el) > 0, rest.split ('|')) ## TODO: Generalize!
 
-            if self._lookup_tbl.has_key (head):
-                value = value.replace (el, self._filter (self._lookup (head, args), rest, \
+            if self._lookup_tbl.has_key (tag):
+                value = value.replace (tpl, self._filter (self._lookup (tag, ps), filters, \
                     **{'strict':strict}))
-            elif self._predef_tbl.has_key (head):
-                value = value.replace (el, self._filter (self._predef (head, args), rest, \
+            elif self._predef_tbl.has_key (tag):
+                value = value.replace (tpl, self._filter (self._predef (tag, ps), filters, \
                     **{'strict':strict}))
 
             elif (strict != None) and strict:
-                raise UnknowTagException (el)
+                raise UnknownTemplateError (tpl)
             elif (strict == None) and self._strict:
-                raise UnknowTagException (el)
+                raise UnknownTemplateError (tpl)
 
         if key:
             self._lookup_tbl[key] = value
 
         return value
 
-    def _lookup (self, tag, args):
-        return self._lookup_tbl[tag]
+    def _lookup (self, key, ps):
+        return self._lookup_tbl[key]
 
-    def _predef (self, tag, args):
-        return self._predef_tbl[tag] (*args or [None])
+    def _predef (self, key, ps):
+        return self._predef_tbl[key] (*ps)
 
-    def _filter (self, value, args, strict = None):
-        """
-        TODO: *Whitespace* arguments not possible, e.g. $("lorem ipsum"|swap ' ' '_'), fix!
-        """
-        for arg in args:
+    def _filter (self, value, filters, strict = None):
 
-            ps = re.findall ("\w+", arg) ## TODO: Generalize!
-            op = ps.pop (0)
+        for el in filters:
+
+            op,ps = self._parse (el)
 
             if self._filter_tbl.has_key (op):
                 value = self._filter_tbl[op] (value, *ps)
             elif (strict != None) and strict:
-                raise UnknowTagException (el)
+                raise UnknownFilterError (op)
             elif (strict == None) and self._strict:
-                raise UnknowTagException (el)
+                raise UnknownFilterError (op)
 
         return value
 
-    def clear (self, key = None):
+    def _parse (self, cmd):
+        """
+        * TODO:
+        Multiple consecutive quote pairs if the same type cause the parser to report the white -
+        space *between* the quote pairs, instead of ignoring it; fix!
 
+        * Expectation:
+        >>> self._parse (\"""swap '+' '-'\""") # doctest: +SKIP
+        ('swap', ['+', '-'])
+        >>> self._parse (\'''swap "+" "-"\''') # doctest: +SKIP
+        ('swap', ['+', '-'])
+
+        * But actual implementation:
+        >>> self._parse (\"""swap '+' '-'\""")
+        ('swap', ['+', ' ', '-'])
+        >>> self._parse (\'''swap "+" "-"\''')
+        ('swap', ['+', ' ', '-'])
+
+        * But these are fine:
+        >>> self._parse (\"""swap  +   - \""")
+        ('swap', ['+', '-'])
+        >>> self._parse (\"""swap  +  '-'\""")
+        ('swap', ['+', '-'])
+        >>> self._parse (\'''swap  +  "-"\''')
+        ('swap', ['+', '-'])
+        >>> self._parse (\"""swap '+'  - \""")
+        ('swap', ['+', '-'])
+        >>> self._parse (\"""swap "+"  - \""")
+        ('swap', ['+', '-'])
+        >>> self._parse (\"""swap "+" '-'\""")
+        ('swap', ['+', '-'])
+        >>> self._parse (\'''swap '+' "-"\''')
+        ('swap', ['+', '-'])
+        """
+        ls = re.findall (r"""([^\s'"]+)|"(\s+)"|'(\s+)'""", cmd)
+        ts = reduce (lambda rhs,lhs: rhs+lhs, ls, ())
+        ps = list (filter (lambda el: len (el) > 0, ts))
+
+        return ps.pop (0), ps
+
+    def clear (self, key = None):
+        """
+        >>> self.apply ("lorem ipsum", "lorem-ipsum")
+        'lorem ipsum'
+        >>> self.clear ("lorem-ipsum")
+        >>> self.clear ("lorem-ipsum")
+        >>> self.clear ()
+        """
         if key:
             self._lookup_tbl.pop (key, None)
         else:
             self._lookup_tbl.clear ()
 
     def add_predef (self, key, fn):
-
+        """
+        >>> self.add_predef ("none", None)
+        Traceback (most recent call last):
+        NoFunctionError: None
+        >>> self.add_predef ("none", lambda x,*xs: None)
+        """
         if type (fn) == types.FunctionType:
             self._predef_tbl[key] = fn
         else:
-            raise NoFunctionException (fn)
+            raise NoFunctionError (fn)
 
     def del_predef (self, key):
+        """
+        >>> self.add_predef ("none", lambda x,*xs: None)
+        >>> self.del_predef ("none")
+        >>> self.del_predef ("none")
+        """
         self._predef_tbl.pop (key, None)
 
     def add_filter (self, key, fn):
-
+        """
+        >>> self.add_filter ("none", None)
+        Traceback (most recent call last):
+        NoFunctionError: None
+        >>> self.add_filter ("none", lambda x,*xs: None)
+        """
         if type (fn) == types.FunctionType:
             self._filter_tbl[key] = fn
         else:
-            raise NoFunctionException (fn)
+            raise NoFunctionError (fn)
 
     def del_filter (self, key):
+        """
+        >>> self.add_filter ("none", lambda x,*xs: None)
+        >>> self.del_filter ("none")
+        >>> self.del_filter ("none")
+        """
         self._filter_tbl.pop (key, None)
 
 ###############################################################################################
 ###############################################################################################
 
-class UnknownTagException (exceptions.Exception): pass
-class UnknownFilterException (exceptions.Exception): pass
-class NoFunctionException (exceptions.Exception): pass
+class UnknownTemplateError (exceptions.Exception): pass
+class UnknownFilterError (exceptions.Exception): pass
+class NoFunctionError (exceptions.Exception): pass
 
 ###############################################################################################
 ###############################################################################################
@@ -137,6 +220,14 @@ def del_filter (key):
     return _interpolator.del_filter (key)
 
 _interpolator = Interpolator ()
+
+###############################################################################################
+###############################################################################################
+
+if __name__ == "__main__":
+
+    import doctest
+    doctest.testmod(extraglobs={'self': Interpolator ()})
 
 ###############################################################################################
 ###############################################################################################
