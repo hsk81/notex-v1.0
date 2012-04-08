@@ -43,9 +43,16 @@ class Interpolator:
         'lorem ipsum'
         >>> self.apply ("${lorem-ipsum}")
         'lorem ipsum'
+        >>> self.apply ("${lorem-ipsum}|${lorem-ipsum}")
+        'lorem ipsum|lorem ipsum'
+
         >>> self.apply ("${not-defined}")
         Traceback (most recent call last):
         UnknownTemplateError: ${not-defined}
+        >>> self.apply ("${lorem-ipsum|not-defined}")
+        Traceback (most recent call last):
+        UnknownFilterError: not-defined
+
         >>> self.apply ("${lorem-ipsum|quote}")
         'lorem+ipsum'
         >>> self.apply ("${lorem-ipsum|quote|swap + -}")
@@ -54,8 +61,15 @@ class Interpolator:
         'lorem+ipsum'
         >>> self.apply ("${lorem-ipsum|swap + ' '}")
         'lorem ipsum'
+
+        >>> self.apply ("lorem|ipsum", "lorem-ipsum")
+        'lorem|ipsum'
+        >>> self.apply ("${lorem-ipsum|quote}")
+        'lorem%7Cipsum'
+        >>> self.apply ("${lorem-ipsum|quote|swap '%7C' +}")
+        'lorem+ipsum'
         """
-        for head, rest in re.findall ("\${([^|]+)\|?(.*?)}", value): ## TODO: Generalize!?
+        for head, rest in re.findall ("\${([^|}]+)\|?(.*?)}", value):
 
             if rest != '':
                 tpl = '${%s|%s}' % (head,rest)
@@ -63,7 +77,7 @@ class Interpolator:
                 tpl = '${%s}'    %  head
 
             tag, ps = self._parse (head)
-            filters = filter (lambda el: len (el) > 0, rest.split ('|')) ## TODO: Generalize!
+            filters = filter (lambda el: len (el) > 0, rest.split ('|'))
 
             if self._lookup_tbl.has_key (tag):
                 value = value.replace (tpl, self._filter (self._lookup (tag, ps), filters, \
