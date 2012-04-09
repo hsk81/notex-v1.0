@@ -39,35 +39,33 @@ class Interpolator:
 
     def apply (self, value, key = None, strict = None):
         """
-        >>> self.apply ("lorem ipsum", "lorem-ipsum")
+        >>> self.apply ("lorem ipsum", "tag")
         'lorem ipsum'
-        >>> self.apply ("${lorem-ipsum}")
+        >>> self.apply ("${tag}")
         'lorem ipsum'
-        >>> self.apply ("${lorem-ipsum}|${lorem-ipsum}")
-        'lorem ipsum|lorem ipsum'
 
         >>> self.apply ("${not-defined}")
         Traceback (most recent call last):
         UnknownTemplateError: ${not-defined}
-        >>> self.apply ("${lorem-ipsum|not-defined}")
+        >>> self.apply ("${tag|not-defined}")
         Traceback (most recent call last):
         UnknownFilterError: not-defined
 
-        >>> self.apply ("${lorem-ipsum|quote}")
+        >>> self.apply ("${tag|quote}")
         'lorem+ipsum'
-        >>> self.apply ("${lorem-ipsum|quote|swap + -}")
+        >>> self.apply ("${tag|quote|swap + -}")
         'lorem-ipsum'
-        >>> self.apply ("${lorem-ipsum|swap ' ' +}", "project")
+        >>> self.apply ("${tag|swap ' ' +}", "tag")
         'lorem+ipsum'
-        >>> self.apply ("${lorem-ipsum|swap + ' '}")
+        >>> self.apply ("${tag|swap + ' '}")
         'lorem ipsum'
 
-        >>> self.apply ("lorem|ipsum", "lorem-ipsum")
+        >>> self.apply ("lorem|ipsum", "tag")
         'lorem|ipsum'
-        >>> self.apply ("${lorem-ipsum|quote}")
-        'lorem%7Cipsum'
-        >>> self.apply ("${lorem-ipsum|quote|swap '%7C' +}")
-        'lorem+ipsum'
+        >>> self.apply ("${tag|swap \| &}", "tag")
+        'lorem&ipsum'
+        >>> self.apply ("${tag}|${tag}")
+        'lorem&ipsum|lorem&ipsum'
         """
         for head, rest in re.findall ("\${([^|}]+)\|?(.*?)}", value):
 
@@ -77,7 +75,10 @@ class Interpolator:
                 tpl = '${%s}'    %  head
 
             tag, ps = self._parse (head)
-            filters = filter (lambda el: len (el) > 0, rest.split ('|'))
+
+            filters = re.split (r"(?<!\\)\|", rest)
+            filters = filter (lambda el: len (el) > 0, filters)
+            filters = map (lambda el: el.replace ('\\|','|'), filters)
 
             if self._lookup_tbl.has_key (tag):
                 value = value.replace (tpl, self._filter \
@@ -160,10 +161,10 @@ class Interpolator:
 
     def clear (self, key = None):
         """
-        >>> self.apply ("lorem ipsum", "lorem-ipsum")
+        >>> self.apply ("lorem ipsum", "tag")
         'lorem ipsum'
-        >>> self.clear ("lorem-ipsum")
-        >>> self.clear ("lorem-ipsum")
+        >>> self.clear ("tag")
+        >>> self.clear ("tag")
         >>> self.clear ()
         """
         if key:
