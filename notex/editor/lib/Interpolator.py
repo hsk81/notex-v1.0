@@ -3,8 +3,8 @@
 __author__ ="hsk81"
 __date__ ="$Apr 6, 2012 12:34:39 PM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 import re
 import types
@@ -13,20 +13,20 @@ import exceptions
 
 from datetime import datetime
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 class Interpolator:
 
     def __init__ (self, strict = True):
 
         self._predef_tbl = {
-            'datetime' : lambda *xs: xs and datetime.now ().strftime (' '.join (xs)) or \
-                str (datetime.now ()),
-            'date' : lambda *xs: xs and datetime.now ().date ().strftime (' '.join (xs)) or \
-                str (datetime.now ().date ()),
-            'time' : lambda *xs: xs and datetime.now ().time ().strftime (' '.join (xs)) or \
-                str (datetime.now ().time ()),
+            'datetime' : lambda *xs: xs and datetime.now () \
+                .strftime (' '.join (xs)) or str (datetime.now ()),
+            'date' : lambda *xs: xs and datetime.now ().date () \
+                .strftime (' '.join (xs)) or str (datetime.now ().date ()),
+            'time' : lambda *xs: xs and datetime.now ().time () \
+                .strftime (' '.join (xs)) or str (datetime.now ().time ()),
         }
 
         self._filter_tbl = {
@@ -80,11 +80,11 @@ class Interpolator:
             filters = filter (lambda el: len (el) > 0, rest.split ('|'))
 
             if self._lookup_tbl.has_key (tag):
-                value = value.replace (tpl, self._filter (self._lookup (tag, ps), filters, \
-                    **{'strict':strict}))
+                value = value.replace (tpl, self._filter \
+                    (self._lookup (tag, ps), filters, **{'strict':strict}))
             elif self._predef_tbl.has_key (tag):
-                value = value.replace (tpl, self._filter (self._predef (tag, ps), filters, \
-                    **{'strict':strict}))
+                value = value.replace (tpl, self._filter \
+                    (self._predef (tag, ps), filters, **{'strict':strict}))
 
             elif (strict != None) and strict:
                 raise UnknownTemplateError (tpl)
@@ -120,8 +120,9 @@ class Interpolator:
     def _parse (self, cmd):
         """
         * TODO:
-        Multiple consecutive quote pairs if the same type cause the parser to report the white -
-        space *between* the quote pairs, instead of ignoring it; fix!
+        Multiple consecutive quote pairs of the same type cause the parser to
+        report the whitespace *between* the quote pairs, instead of ignoring
+        them; fix!
 
         * Expectation:
         >>> self._parse (\"""swap '+' '-'\""") # doctest: +SKIP
@@ -210,15 +211,15 @@ class Interpolator:
         """
         self._filter_tbl.pop (key, None)
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 class UnknownTemplateError (exceptions.Exception): pass
 class UnknownFilterError (exceptions.Exception): pass
 class NoFunctionError (exceptions.Exception): pass
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 def apply (value, key = None, strict = None):
     return _interpolator.apply (value, key, strict)
@@ -235,14 +236,13 @@ def del_filter (key):
 
 _interpolator = Interpolator ()
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 if __name__ == "__main__":
 
     import doctest
     doctest.testmod(extraglobs={'self': Interpolator ()})
 
-###############################################################################################
-###############################################################################################
-
+################################################################################
+################################################################################
