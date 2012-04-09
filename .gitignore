@@ -5,6 +5,7 @@
 /notex/build
 /notex/dist
 /notex/*.db
+/notex/*.pid
 /notex/sessions/*
 /notex/notex.egg-info
 /notex/nbproject/private

@@ -4,6 +4,8 @@ __date__ ="$Mar 27, 2012 1:06:43 PM$"
 ################################################################################
 ################################################################################
 
+from settings import MEDIA_ROOT
+
 from editor.lib import MLStripper
 from editor.lib import Interpolator
 from editor.models import NODE, LEAF
@@ -11,6 +13,7 @@ from base64 import decodestring
 
 import subprocess
 import tempfile
+import urllib
 import types
 import uuid
 import yaml
@@ -62,43 +65,47 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
 
 def processToLatex (root, title, zipBuffer):
 
-    processToLatexPdf (root, title, zipBuffer, excludePdf = True)
+    processToLatexPdf (root, title, zipBuffer, skipPdf = True)
 
 def processToPdf (root, title, zipBuffer):
 
     processToLatexPdf (root, title, zipBuffer)
 
-def processToLatexPdf (root, title, zipBuffer, excludePdf = False):
+def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
 
     processToText (root, title, zipBuffer)
 
-    origin = os.path.join ('reports', '00000000-0000-0000-0000-000000000000')
-    target = os.path.join ('reports', str (uuid.uuid4 ()))
+    origin = os.path.join (MEDIA_ROOT, 'dat', 'reports', \
+        '00000000-0000-0000-0000-000000000000')
+    target = os.path.join (MEDIA_ROOT, 'dat', 'reports', \
+        str (uuid.uuid4 ()))
 
     subprocess.call (['cp', origin, target, '-r'])
     unpackTree (root, os.path.join (target, 'source'))
-    os.chdir (target)
-    subprocess.call (['make', excludePdf and 'latex' or 'latexpdf'])
+    subprocess.call (['make','-C', target, skipPdf and 'latex' or 'latexpdf'])
 
     pdfnames = []
-    os.chdir ("build")
+    build_dir = os.path.join (target, 'build')
+    latex_dir = os.path.join (build_dir, 'latex')
 
-    for dirpath, dirnames, filenames in os.walk ('latex'):
+    for dirpath, dirnames, filenames in os.walk (latex_dir):
         for filename in filenames:
+
             if not filename.endswith ('pdf'):
                 zipBuffer.write (os.path.join (dirpath, filename), \
-                    os.path.join (title, dirpath, filename))
-            elif not excludePdf:
-                subprocess.call (['mv', os.path.join (dirpath, filename), '.'])
+                    os.path.join (title, dirpath.replace (latex_dir, 'latex'), \
+                        filename))
+
+            elif not skipPdf:
+                pdf_file = os.path.join (dirpath, filename)
+                subprocess.call (['mv', pdf_file, build_dir])
                 pdfnames.append (filename)
 
     for pdfname in pdfnames:
-        zipBuffer.write (os.path.join ('.', pdfname), \
-            os.path.join (title, pdfname))
 
-    os.chdir ('..')
-    os.chdir ('..')
-    os.chdir ('..')
+        pdf_file = os.path.join (build_dir, pdfname)
+        pdf_path = os.path.join (title, urllib.unquote_plus (pdfname))
+        zipBuffer.write (pdf_file, pdf_path)
 
     subprocess.call (['rm', target, '-r'])
 
