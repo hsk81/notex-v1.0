@@ -25,7 +25,6 @@ import os
 def processToText (root, prefix, zipBuffer, target = 'report'):
 
     if target != None:
-
         prefix = os.path.join (prefix, target)
 
     ls = LEAF.objects.filter (_node = root)
@@ -75,39 +74,50 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
 
     processToText (root, title, zipBuffer)
 
-    origin = os.path.join (MEDIA_ROOT, 'dat', 'reports', \
+    origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         '00000000-0000-0000-0000-000000000000')
-    target = os.path.join (MEDIA_ROOT, 'dat', 'reports', \
+    target_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         str (uuid.uuid4 ()))
-
-    subprocess.call (['cp', origin, target, '-r'])
-    unpackTree (root, os.path.join (target, 'source'))
-    subprocess.call (['make','-C', target, skipPdf and 'latex' or 'latexpdf'])
-
-    pdfnames = []
-    build_dir = os.path.join (target, 'build')
+    build_dir = os.path.join (target_dir, 'build')
     latex_dir = os.path.join (build_dir, 'latex')
 
+    subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
+    unpackTree (root, os.path.join (target_dir, 'source'))
+
+    with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+        with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+
+            subprocess.check_call (['make','-C', target_dir, 'latex'],
+                stdout = stdout, stderr = stderr)
+
+            if not skipPdf:
+                subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
+                    os.path.join (latex_dir, 'pdflatex')])
+                subprocess.check_call (['make','-C', latex_dir, 'all-pdf'],
+                    stdout = stdout, stderr = stderr)
+                subprocess.check_call (['rm', \
+                    os.path.join (latex_dir, 'pdflatex')])
+
+    pdfnames = []
     for dirpath, dirnames, filenames in os.walk (latex_dir):
         for filename in filenames:
 
             if not filename.endswith ('pdf'):
-                zipBuffer.write (os.path.join (dirpath, filename), \
-                    os.path.join (title, dirpath.replace (latex_dir, 'latex'), \
+                zipBuffer.write (os.path.join (dirpath, filename),
+                    os.path.join (title, dirpath.replace (latex_dir, 'latex'),
                         filename))
 
             elif not skipPdf:
                 pdf_file = os.path.join (dirpath, filename)
-                subprocess.call (['mv', pdf_file, build_dir])
+                subprocess.check_call (['mv', pdf_file, build_dir])
                 pdfnames.append (filename)
 
     for pdfname in pdfnames:
-
         pdf_file = os.path.join (build_dir, pdfname)
         pdf_path = os.path.join (title, urllib.unquote_plus (pdfname))
         zipBuffer.write (pdf_file, pdf_path)
 
-    subprocess.call (['rm', target, '-r'])
+    subprocess.check_call (['rm', target_dir, '-r'])
 
 ################################################################################
 
@@ -130,7 +140,7 @@ def unpackTree (root, prefix):
                 file.write (MLStripper.strip_tags (leaf.text))
 
     for node in ns:
-        subprocess.call (['mkdir', os.path.join (prefix, node.name)])
+        subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
         unpackTree (node, os.path.join (prefix, node.name))
 
 ################################################################################
