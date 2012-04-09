@@ -59,7 +59,7 @@ man_pages:
 
 texinfo_documents:
     - ['index',
-       '${project}',
+       '${project|quote}',
        '${project} Documentation',
        '${author}',
        '${project}',
