@@ -1,8 +1,8 @@
 __author__ ="hsk81"
 __date__ ="$Mar 27, 2012 1:02:55 PM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 from settings import MEDIA_ROOT
 from datetime import datetime
@@ -18,8 +18,8 @@ import sys
 import cgi
 import os
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 def init_prj01 (root, path):
 
@@ -34,7 +34,8 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.rst',
-        text = cgi.escape (open (os.path.join (path,'tutorial/index.rst')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'tutorial/index.rst')).read ()),
         rank = 0,
     )
 
@@ -42,7 +43,8 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.yml',
-        text = cgi.escape (open (os.path.join (path,'tutorial/index.yml')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'tutorial/index.yml')).read ()),
         rank = 1,
     )
 
@@ -59,7 +61,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'lorem-ipsum.rst',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-000.rst')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'lorem-ipsum/part-000.rst')).read ()),
         rank = 0,
     )
 
@@ -67,7 +70,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'suspendisse-potenti.rst',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-001.rst')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'lorem-ipsum/part-001.rst')).read ()),
         rank = 1,
     )
 
@@ -75,7 +79,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'cras-rutrum.rst',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/part-002.rst')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'lorem-ipsum/part-002.rst')).read ()),
         rank = 2,
     )
 
@@ -83,7 +88,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.rst',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/index.rst')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'lorem-ipsum/index.rst')).read ()),
         rank = 3,
     )
 
@@ -91,7 +97,8 @@ def init_prj02 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.yml',
-        text = cgi.escape (open (os.path.join (path,'lorem-ipsum/index.yml')).read ()),
+        text = cgi.escape (open (os.path.join \
+            (path,'lorem-ipsum/index.yml')).read ()),
         rank = 4,
     )
 
@@ -127,5 +134,5 @@ def main (request):
         }
     )
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
