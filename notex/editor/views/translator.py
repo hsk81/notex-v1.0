@@ -32,7 +32,7 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
 
     for leaf in ls:
         if leaf.type.code == 'image':
-            zipBuffer.writestr (os.path.join (prefix, leaf.name), \
+            zipBuffer.writestr (os.path.join (prefix, leaf.name),
                 decodestring (leaf.text.split (',')[1]))
         else:
             _, ftext_path = tempfile.mkstemp (); ftext = open (ftext_path, 'w')
@@ -59,7 +59,7 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
 
     for node in ns:
         zipBuffer.writestr (os.path.join (prefix, node.name), '')
-        DATA.processToText (node, os.path.join (prefix, node), zipBuffer, \
+        DATA.processToText (node, os.path.join (prefix, node), zipBuffer,
             target = None)
 
 def processToLatex (root, title, zipBuffer):
