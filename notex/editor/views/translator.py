@@ -49,8 +49,8 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
             except subprocess.CalledProcessError, ex: 
                 result, diff = ex.returncode, ex.output
 
-            subprocess.call (['rm', fhtml_path, '-f'])
-            subprocess.call (['rm', ftext_path, '-f'])
+            subprocess.check_call (['rm', fhtml_path, '-f'])
+            subprocess.check_call (['rm', ftext_path, '-f'])
 
             zipBuffer.writestr (os.path.join (prefix, leaf.name), text)
             if result == 1:
