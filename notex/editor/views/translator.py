@@ -1,8 +1,8 @@
 __author__ ="hsk81"
 __date__ ="$Mar 27, 2012 1:06:43 PM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 from editor.lib import MLStripper
 from editor.lib import Interpolator
@@ -16,8 +16,8 @@ import uuid
 import yaml
 import os
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 def processToText (root, prefix, zipBuffer, target = 'report'):
 
@@ -41,19 +41,24 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
             ftext.write (text); ftext.close ()
             fhtml.write (leaf.text); fhtml.close ()
 
-            try: result, diff = 0, subprocess.check_output (['diff', ftext_path, fhtml_path])
-            except subprocess.CalledProcessError, ex: result, diff = ex.returncode, ex.output
+            try:
+                result, diff = 0, subprocess.check_output \
+                    (['diff', ftext_path, fhtml_path])
+            except subprocess.CalledProcessError, ex: 
+                result, diff = ex.returncode, ex.output
 
             subprocess.call (['rm', fhtml_path, '-f'])
             subprocess.call (['rm', ftext_path, '-f'])
 
             zipBuffer.writestr (os.path.join (prefix, leaf.name), text)
             if result == 1:
-                zipBuffer.writestr (os.path.join (prefix, leaf.name + ".diff"), diff)
+                zipBuffer.writestr (os.path.join \
+                    (prefix, leaf.name + ".diff"), diff)
 
     for node in ns:
-        zipBuffer.writestr (os.path.join (prefix, node.name), ''); DATA.processToText (
-            node, os.path.join (prefix, node), zipBuffer, target = None)
+        zipBuffer.writestr (os.path.join (prefix, node.name), '')
+        DATA.processToText (node, os.path.join (prefix, node), zipBuffer, \
+            target = None)
 
 def processToLatex (root, title, zipBuffer):
 
@@ -76,8 +81,8 @@ def processToLatexPdf (root, title, zipBuffer, excludePdf = False):
     subprocess.call (['make', excludePdf and 'latex' or 'latexpdf'])
 
     pdfnames = []
-    
     os.chdir ("build")
+
     for dirpath, dirnames, filenames in os.walk ('latex'):
         for filename in filenames:
             if not filename.endswith ('pdf'):
@@ -97,7 +102,7 @@ def processToLatexPdf (root, title, zipBuffer, excludePdf = False):
 
     subprocess.call (['rm', target, '-r'])
 
-###############################################################################################
+################################################################################
 
 def unpackTree (root, prefix):
 
@@ -121,7 +126,7 @@ def unpackTree (root, prefix):
         subprocess.call (['mkdir', os.path.join (prefix, node.name)])
         unpackTree (node, os.path.join (prefix, node.name))
 
-###############################################################################################
+################################################################################
 
 def yaml2py (leaf, prefix, filename = 'conf.py'):
 
@@ -129,12 +134,18 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
     yaml.add_constructor (u'!omap', constructor)
     data = yaml.load (u'!omap\n' + leaf.text)
 
-    with open (os.path.join (prefix, filename), 'w') as file:
-        file.write ('# -*- coding: utf-8 -*-\n')
-        for key,value in data:
-            file.write ('%s\n' % emit (value, type (value), key))
+    with open (os.path.join (prefix, filename), 'w+') as file:
 
-###############################################################################################
+        line = "# -*- coding: utf-8 -*-\n"
+        file.write (line)
+        line = "extensions = ['sphinx.ext.pngmath', 'sphinx.ext.ifconfig']\n"
+        file.write (line)
+
+        for key,value in data:
+            if key != 'extensions': # security: pre-defined!
+                file.write ('%s\n' % emit (value, type (value), key))
+
+################################################################################
 
 def emit (value, type, key = None):
 
@@ -144,29 +155,37 @@ def emit (value, type, key = None):
     elif type == types.FloatType: return emit_number (value, key)
     elif type == types.StringType: return emit_string (value, key)
 
-    else: return None ## Security: Ignore other types!
+    else: return None ## security: ignore other types!
 
 def emit_list (ls, key):
 
-    if key: return '%s = [%s]' % (key,','.join (map (lambda el:emit (el,type (el)), ls)))
-    else:   return      '[%s]' %      ','.join (map (lambda el:emit (el,type (el)), ls))
+    if key:
+        return '%s = [%s]' % (key,','.join (map (lambda el:emit \
+            (el,type (el)), ls)))
+    else:
+        return      '[%s]' %      ','.join (map (lambda el:emit \
+            (el,type (el)), ls))
 
 def emit_dict (ds, key):
 
-    if key: return '%s = {%s}' % (key,','.join ('"%s":%s' % (k,emit (ds[k],type (ds[k]))) \
-        for k in ds))
-    else:   return      '{%s}' %      ','.join ('"%s":%s' % (k,emit (ds[k],type (ds[k]))) \
-        for k in ds)
+    if key: return '%s = {%s}' % (key,','.join ('"%s":%s' % \
+        (k,emit (ds[k],type (ds[k]))) for k in ds))
+    else:   return      '{%s}' %      ','.join ('"%s":%s' % \
+        (k,emit (ds[k],type (ds[k]))) for k in ds)
 
 def emit_number (value, key):
 
-    if key: return '%s = %s"' % (key,value)
-    else:   return      '%s'  %      value
+    if key:
+        return '%s = %s"' % (key,value)
+    else:
+        return      '%s'  %      value
 
 def emit_string (value, key):
 
-    if key: return '%s = "%s"' % (key, Interpolator.apply (value, key))
-    else:   return      '"%s"' %       Interpolator.apply (value)
+    if key:
+        return '%s = "%s"' % (key, Interpolator.apply (value, key))
+    else:
+        return      '"%s"' %       Interpolator.apply (value)
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################

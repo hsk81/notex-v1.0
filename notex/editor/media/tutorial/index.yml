@@ -3,26 +3,20 @@
 ###############################################################################
 
 project: 'Tutorial'
-author: 'Blackhan Software'
+author: 'Anonymous'
 copyright: '${date %Y}, ${author}'
 
 version: '0.1'
 release: '0.1'
 
+master_doc: 'index'
+source_suffix: '.rst' ## or '.txt'
+
 ###############################################################################
 
-master_doc: 'index'
-source_suffix: '.rst'
-
-extensions:
-    - 'sphinx.ext.autodoc'
-    - 'sphinx.ext.doctest'
-    - 'sphinx.ext.intersphinx'
-    - 'sphinx.ext.todo'
-    - 'sphinx.ext.coverage'
+extensions: ## fixed!
     - 'sphinx.ext.pngmath'
     - 'sphinx.ext.ifconfig'
-    - 'sphinx.ext.viewcode'
 
 templates_path: ['_templates']
 exclude_patterns: []
@@ -40,7 +34,11 @@ htmlhelp_basename: '${project|quote}doc'
 # latex
 ###############################################################################
 
-latex_elements: {}
+latex_elements:
+    papersize: 'a4paper'
+    pointsize: '10pt'
+    preamble: ''
+
 latex_documents:
     - ['index',
        '${project|quote}.tex',
@@ -52,7 +50,7 @@ latex_documents:
 # manual page
 ###############################################################################
 
-man_pages:
+man_pages: 
     - ['index', 'project', '${project} Documentation', ['${author}'], 1]
 
 ###############################################################################
@@ -67,21 +65,6 @@ texinfo_documents:
        '${project}',
        'description',
        'miscellanea']
-
-###############################################################################
-# epub
-###############################################################################
-
-epub_title: '${project}'
-epub_author: '${author}'
-epub_publisher: '${author}'
-epub_copyright: '${copyright}'
-
-###############################################################################
-# intersphinx (example)
-###############################################################################
-
-intersphinx_mapping: { 'http://docs.python.org' : ~ }
 
 ###############################################################################
 ###############################################################################
