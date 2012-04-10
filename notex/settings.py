@@ -44,15 +44,18 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'raven.contrib.django.middleware.SentryResponseErrorIdMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
  ## 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
+    'raven.contrib.django.middleware.Sentry404CatchMiddleware',
 )
 
 if DEBUG:
-    
     MIDDLEWARE_CLASSES += ('django_pdb.middleware.PdbMiddleware',)
 
 CACHE_BACKEND = 'memcached://%s:11211' % SITE_HOST
@@ -76,9 +79,12 @@ FIXTURE_DIRS = (
     os.path.join (SITE_ROOT, 'fixtures/'),
 )
 
-INSTALLED_APPS = (
+SENTRY_DSN = 'http://%s:%s0@localhost:9000/1' % (
+    'a4ed2d41177a466d8816f25f7ad0dd83', 'aa2583e640d04052947995612fec3fc'
+)
 
- ## 'django_extensions', 
+INSTALLED_APPS = (
+    'raven.contrib.django', 
     'django_pdb',
 
     'django.contrib.auth',
@@ -91,3 +97,46 @@ INSTALLED_APPS = (
 
     'util', 'svc', 'editor',
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s -- %(module)s (pid:%(process)d,tid:%(thread)d): %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}
+

@@ -138,9 +138,9 @@ var reportManager = new Ext.Panel ({
     items : [reportManagerTree], 
     listeners : {
 
-        // ####################################################################################
+        // #####################################################################
         // Import or export a report
-        // ####################################################################################
+        // #####################################################################
 
         importReport : function () {
             dialog.openFile.execute ({
@@ -189,31 +189,69 @@ var reportManager = new Ext.Panel ({
             var node = model.getSelectedNode ()
             if (node != undefined) {
 
-                var body = Ext.getBody()
+                tree.el.mask ('Please wait', 'x-mask-loading')
 
-                var frame = body.createChild ({
-                    tag : 'iframe',
-                    cls : 'x-hidden',
-                    id : 'iframe',
-                    name : 'iframe'
-                })
+                var fnSuccess = function (xhr, opts) {
+                    var body = Ext.getBody()
 
-                var form = body.createChild ({
-                    tag : 'form',
-                    cls : 'x-hidden',
-                    id : 'form',
-                    method : 'POST',
-                    action : url.replace ('=', node.id),
-                    target : 'iframe'
-                })
+                    var frame_old = Ext.get ('iframe')
+                    if (frame_old != null) { 
+                        Ext.destroy (frame_old) 
+                    }
 
-                form.dom.submit ()
+                    var frame = body.createChild ({
+                        tag : 'iframe',
+                        cls : 'x-hidden',
+                        id : 'iframe',
+                        name : 'iframe'
+                    })
+
+                    var form = body.createChild ({
+                        tag : 'form',
+                        cls : 'x-hidden',
+                        id : 'form',
+                        method : 'POST',
+                        action : url.replace ('=', node.id),
+                        target : 'iframe'
+                    })
+
+                    tree.el.unmask ()
+                    form.dom.submit ()
+                }
+
+                var fnFailure = function (xhr, opts, res) {
+
+                    if (res) {
+                        msg = "Exporting <i>" + res.name + "</i> report failed!"
+                    } else {
+                        msg = "Exporting report failed!"
+                    }
+
+                    tree.el.unmask ()
+                    Ext.Msg.alert ("Error", msg)
+                }
+
+                Ext.Ajax.request ({
+                    url : url.replace ('=', node.id) + "?refresh=True", 
+                    callback : function (opts, status, xhr) {
+                        if (status) {
+                            var res = Ext.decode (xhr.responseText)[0]
+                            if (res.success) {
+                                fnSuccess (xhr, opts)
+                            } else {
+                                fnFailure (xhr, opts, res)
+                            }
+                        } else {
+                            fnFailure (xhr, opts)
+                        }
+                    }
+                });
             }
         },
 
-        // ####################################################################################
+        // #####################################################################
         // Open file (from local storage)
-        // ####################################################################################
+        // #####################################################################
 
         openFile : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -318,9 +356,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        // ####################################################################################
+        // #####################################################################
         // Save text/image tab
-        // ####################################################################################
+        // #####################################################################
 
         saveTextTab : function (tab) {
             if (tab == undefined) {
@@ -372,9 +410,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        // ####################################################################################
+        // #####################################################################
         // Add report, folder, text or image file
-        // ####################################################################################
+        // #####################################################################
 
         addReport : function (a,b,c,d) {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -475,9 +513,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        // ####################################################################################
+        // #####################################################################
         // Rename selected node
-        // ####################################################################################
+        // #####################################################################
 
         renameSelectedNode : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -521,9 +559,9 @@ var reportManager = new Ext.Panel ({
             }
         }, 
 
-        // ####################################################################################
+        // #####################################################################
         // Delete selected node
-        // ####################################################################################
+        // #####################################################################
 
         deleteSelectedNode : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -558,9 +596,9 @@ var reportManager = new Ext.Panel ({
             )
         }, 
 
-        // ####################################################################################
+        // #####################################################################
         // Move selected node up or down
-        // ####################################################################################
+        // #####################################################################
 
         moveSelectedNodeUp : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -634,8 +672,8 @@ var reportManager = new Ext.Panel ({
     }
 });
 
-// ############################################################################################
-// ############################################################################################
+// #############################################################################
+// #############################################################################
 
 (function() {
     reportManager.util = reportManagerUtil;
@@ -643,5 +681,5 @@ var reportManager = new Ext.Panel ({
     reportManager.task = reportManagerTask;
 })();
 
-// ############################################################################################
-// ############################################################################################
+// #############################################################################
+// #############################################################################
