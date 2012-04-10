@@ -9,7 +9,6 @@ __date__ ="$Apr 6, 2012 12:34:39 PM$"
 import re
 import types
 import urllib
-import exceptions
 
 from datetime import datetime
 
@@ -215,9 +214,9 @@ class Interpolator:
 ################################################################################
 ################################################################################
 
-class UnknownTemplateError (exceptions.Exception): pass
-class UnknownFilterError (exceptions.Exception): pass
-class NoFunctionError (exceptions.Exception): pass
+class UnknownTemplateError (Exception): pass
+class UnknownFilterError (Exception): pass
+class NoFunctionError (Exception): pass
 
 ################################################################################
 ################################################################################
