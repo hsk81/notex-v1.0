@@ -232,7 +232,7 @@ var reportManager = new Ext.Panel ({
                 }
 
                 Ext.Ajax.request ({
-                    url : url.replace ('=', node.id) + "?refresh=True", 
+                    url : url.replace ('=', node.id) + "?refresh", 
                     callback : function (opts, status, xhr) {
                         if (status) {
                             var res = Ext.decode (xhr.responseText)[0]

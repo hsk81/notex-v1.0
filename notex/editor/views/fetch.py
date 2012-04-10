@@ -10,9 +10,15 @@ from editor.models import NODE
 from editor.models import LEAF
 
 import translator
+import logging
 import zipfile
 import base64
 import json
+
+################################################################################
+################################################################################
+
+logger = logging.getLogger(__name__)
 
 ################################################################################
 ################################################################################
@@ -39,13 +45,17 @@ def compress (request, id, fnTranslate):
     zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
 
     try:
-        fnTranslate (node, node.name, zipBuffer); js_string = json.dumps ([{
-            'id' : node.id, 'name' : node.name, 'success' : True
-        }])
-    except: ## TODO: Log exceptions!
+        fnTranslate (node, node.name, zipBuffer);
         js_string = json.dumps ([{
-            'id' : node.id, 'name' : node.name, 'success' : False
-        }])
+            'id' : node.id, 'name' : node.name, 'success' : True}])
+    except Exception as ex:
+        js_string = json.dumps ([{
+            'id' : node.id, 'name' : node.name, 'success' : False}])
+        logger.error (
+            "Translation for project '%s' with ID '%s' failed" % \
+                (node.name, node.id),
+            exc_info=True,
+            extra={'request': request})
 
     zipBuffer.close ()
     str_value = strBuffer.getvalue ()
