@@ -243,7 +243,7 @@ _interpolator = Interpolator ()
 if __name__ == "__main__":
 
     import doctest
-    doctest.testmod(extraglobs={'self': Interpolator ()})
+    doctest.testmod (extraglobs={'self': Interpolator ()})
 
 ################################################################################
 ################################################################################
