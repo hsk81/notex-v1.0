@@ -1,8 +1,8 @@
 __author__ = "hsk81"
 __date__ = "$Mar 10, 2012 12:07:16 AM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 from django.http import HttpResponse
 
@@ -21,8 +21,8 @@ import cgi
 import os
 import re
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 def storeFile (request, fid):
 
@@ -31,11 +31,12 @@ def storeFile (request, fid):
 
     with os.tmpfile() as file:
         file.write (''.join (request.readlines ()))
+        file.flush ()
 
         if not zipfile.is_zipfile (file):
 
             js_string = json.dumps ({
-                'success' : 'false',
+                'success' : False,
                 'message' : 'ZIP format expected',
                 'file_id' : fid
             })
@@ -83,9 +84,9 @@ def storeFile (request, fid):
                         path, name = os.path.split (info.filename)
                         mimetype, encoding = mimetypes.guess_type (name)
 
-                        #######################################################################
+                        ########################################################
                         if name.endswith ('.diff'): ## need to patch?
-                        #######################################################################
+                        ########################################################
 
                             nodes = LEAF.objects.filter (
                                 _node = prev[path],
@@ -105,8 +106,8 @@ def storeFile (request, fid):
                                 fdiff.close ()
 
                                 try:
-                                    subprocess.check_call (['patch', ftext_path, fdiff_path, \
-                                        '-s'])
+                                    subprocess.check_call ([
+                                        'patch', ftext_path, fdiff_path, '-s'])
 
                                     ftext = open (ftext_path, 'r')
                                     node.text = ftext.read ()
@@ -119,13 +120,14 @@ def storeFile (request, fid):
                                 subprocess.call (['rm', fdiff_path, '-f'])
                                 subprocess.call (['rm', ftext_path, '-f'])
 
-                        #######################################################################
-                        elif mimetype and mimetype.startswith ('image'): ## an image?
-                        #######################################################################
+                        ########################################################
+                        elif mimetype and mimetype.startswith ('image'):
+                        ########################################################
 
                             code = 'image'
-                            text = 'data:%s;base64,%s' % (mimetype, base64.encodestring ( \
-                                ''.join (arch.readlines ())))
+                            text = 'data:%s;base64,%s' % ( \
+                                mimetype, base64.encodestring \
+                                    (''.join (arch.readlines ())))
 
                             _ = LEAF.objects.create (
                                 type = LEAF_TYPE.objects.get (_code=code),
@@ -134,12 +136,13 @@ def storeFile (request, fid):
                                 text = text,
                                 rank = rankdict[info])
 
-                        #######################################################################
-                        else: ## neither diff patch nor image, so assume plain text!
-                        #######################################################################
+                        ########################################################
+                        else: ## neither diff patch nor image, so assume text!
+                        ########################################################
 
                             code = 'text'
-                            text = cgi.escape (''.join (arch.readlines ()), quote=True)
+                            text = cgi.escape (''.join (arch.readlines ()), \
+                                quote=True)
 
                             _ = LEAF.objects.create (
                                 type = LEAF_TYPE.objects.get (_code=code),
@@ -148,15 +151,15 @@ def storeFile (request, fid):
                                 text = text,
                                 rank = rankdict[info])
 
-                        #######################################################################
-                        #######################################################################
+                        ########################################################
+                        ########################################################
 
             js_string = json.dumps ({
-                'success' : 'true',
+                'success' : True,
                 'file_id' : fid
             })
 
             return HttpResponse (js_string, mimetype='application/json')
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################

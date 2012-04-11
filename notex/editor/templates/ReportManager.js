@@ -1,21 +1,21 @@
 var reportManager = new Ext.Panel ({
-    
-    title  : 'Report Manager', 
-    id     : 'reportManager.id', 
-    layout : 'fit', 
-    
+
+    title  : 'Report Manager',
+    id     : 'reportManager.id',
+    layout : 'fit',
+
     tools  : [{
-        id      : 'refresh', 
-        qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view', 
+        id      : 'refresh',
+        qtip    : '<b>Refresh</b><br/>Refresh report manager\'s view',
         handler : function (event, toolEl, panel) {
             var tree = Ext.getCmp ('reportManager.tree.id')
             tree.getLoader ().load (tree.root, null, this)
         }
-    }], 
+    }],
 
     tbar : {
         items : [{
-            iconCls : 'icon-disk_download', 
+            iconCls : 'icon-disk_download',
             tooltip : '<b>Import</b><br/>Open a report from a <b>ZIP</b> archive (at <i>local</i> storage)',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('importReport')
@@ -54,14 +54,14 @@ var reportManager = new Ext.Panel ({
               }]
             }
         },'-',{
-            iconCls : 'icon-folder_page', 
-            tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)', 
+            iconCls : 'icon-folder_page',
+            tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('openFile')
             }
         },{
-            iconCls : 'icon-disk', 
-            tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)', 
+            iconCls : 'icon-disk',
+            tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
             handler : function (button, event) {
 
                 var editor = Ext.getCmp ('editor.id')
@@ -79,63 +79,63 @@ var reportManager = new Ext.Panel ({
                 }
             }
         },'-',{
-            iconCls : 'icon-add', 
-            tooltip : '<b>Add</b><br/>Add a new report, folder or file', 
-            split   : true, 
+            iconCls : 'icon-add',
+            tooltip : '<b>Add</b><br/>Add a new report, folder or file',
+            split   : true,
             menu    : {
-              xtype : 'menu', 
-              plain : true, 
-              
+              xtype : 'menu',
+              plain : true,
+
               items : [{
-                  iconCls : 'icon-report', 
-                  text    : 'Report', 
+                  iconCls : 'icon-report',
+                  text    : 'Report',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('addReport')
                   }
               },{
-                  iconCls : 'icon-folder', 
-                  text    : 'Folder', 
+                  iconCls : 'icon-folder',
+                  text    : 'Folder',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('addFolder')
                   }
               },{
-                  iconCls : 'icon-page', 
-                  text    : 'Plain Text', 
+                  iconCls : 'icon-page',
+                  text    : 'Plain Text',
                   handler : function (button, event) {
                       Ext.getCmp ('reportManager.id').fireEvent ('addTextFile')
                   }
               }]
             }
         },{
-            iconCls : 'icon-pencil', 
-            tooltip : '<b>Rename</b><br/>Rename selected report, folder or file', 
+            iconCls : 'icon-pencil',
+            tooltip : '<b>Rename</b><br/>Rename selected report, folder or file',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('renameSelectedNode')
             }
         },{
-            iconCls : 'icon-delete', 
-            tooltip : '<b>Delete</b><br/>Delete selected report, folder or file', 
+            iconCls : 'icon-delete',
+            tooltip : '<b>Delete</b><br/>Delete selected report, folder or file',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('deleteSelectedNode')
             }
         },'-',{
-            iconCls : 'icon-arrow_up', 
-            id      : 'btnMoveUp', 
-            tooltip : '<b>Move Up</b><br/>Move selected report, folder or file up in tree', 
+            iconCls : 'icon-arrow_up',
+            id      : 'btnMoveUp',
+            tooltip : '<b>Move Up</b><br/>Move selected report, folder or file up in tree',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('moveSelectedNodeUp')
             }
         },{
-            iconCls : 'icon-arrow_down', 
-            id      : 'btnMoveDown', 
+            iconCls : 'icon-arrow_down',
+            id      : 'btnMoveDown',
             tooltip : '<b>Move Down</b><br/>Move selected report, folder or file down in tree',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('moveSelectedNodeDown')
             }
         }]
-    }, 
-    
-    items : [reportManagerTree], 
+    },
+
+    items : [reportManagerTree],
     listeners : {
 
         // #####################################################################
@@ -149,38 +149,49 @@ var reportManager = new Ext.Panel ({
                     tree.el.mask ('Please wait', 'x-mask-loading')
 
                     var xhr = new XMLHttpRequest ()
-                    xhr.open ("POST", urls.storeFile.replace ('*', file.name), true)
+                    xhr.open ("POST", urls.storeFile.replace ('*', file.name),
+                        true)
                     xhr.onload = function (event) {
                         tree.el.unmask ()
 
                         if (this.status == 200) {
                             var response = Ext.util.JSON.decode (this.response)
-                            if (response.success == 'true') {
-                                Ext.Msg.alert ("Info", "Importing <i>" + file.name +
-                                    "</i> file was sucessful.")
+                            if (response.success) {
+                                Ext.Msg.alert ("Info", "Importing <i>" +
+                                    file.name + "</i> file was sucessful.")
                                 tree.getLoader ().load (tree.root, null, this)
                             } else {
-                                Ext.Msg.alert ("Error", "Importing <i>" + file.name +
-                                    "</i> file failed: " + response.message + "!")
+                                Ext.Msg.alert ("Error", "Importing <i>" +
+                                    file.name + "</i> file failed: " +
+                                    response.message + "!")
                             }
                         } else {
-                            Ext.Msg.alert ("Error", "Importing <i>" + file.name +
-                                "</i> file failed: Unknown error!")
+                            Ext.Msg.alert ("Error", "Importing <i>" +
+                                file.name + "</i> file failed: Unknown error!")
                         }
                     }
-                    
+
                     xhr.send (file);
                 },
 
                 failure: function () {
-                    Ext.Msg.alert ("Error", "No file or invalid file type selected!")
+                    Ext.Msg.alert ("Error",
+                        "No file or invalid file type selected!")
                 }
             })
-        }, 
-        
-        exportText : function () { this.fireEvent ('exportReport', urls.fetchText) },
-        exportLatex : function () { this.fireEvent ('exportReport', urls.fetchLatex) },
-        exportPdf : function () { this.fireEvent ('exportReport', urls.fetchPdf) },
+        },
+
+        exportText : function () {
+            this.fireEvent ('exportReport', urls.fetchText)
+        },
+
+        exportLatex : function () {
+            this.fireEvent ('exportReport', urls.fetchLatex)
+        },
+
+        exportPdf : function () {
+            this.fireEvent ('exportReport', urls.fetchPdf)
+        },
 
         exportReport : function (url) {
 
@@ -195,8 +206,8 @@ var reportManager = new Ext.Panel ({
                     var body = Ext.getBody()
 
                     var frame_old = Ext.get ('iframe')
-                    if (frame_old != null) { 
-                        Ext.destroy (frame_old) 
+                    if (frame_old != null) {
+                        Ext.destroy (frame_old)
                     }
 
                     var frame = body.createChild ({
@@ -232,7 +243,7 @@ var reportManager = new Ext.Panel ({
                 }
 
                 Ext.Ajax.request ({
-                    url : url.replace ('=', node.id) + "?refresh", 
+                    url : url.replace ('=', node.id) + "?refresh",
                     callback : function (opts, status, xhr) {
                         if (status) {
                             var res = Ext.decode (xhr.responseText)[0]
@@ -263,15 +274,16 @@ var reportManager = new Ext.Panel ({
                     success: function (file) {
 
                         var fileInfo = {
-                            id       : Math.uuid (), 
+                            id       : Math.uuid (),
                             title    : file.name
                         }
 
                         var node = new Ext.tree.TreeNode ({
-                            'text'     : String.format ("<i>{0}</i>", fileInfo.title), 
-                            'id'       : fileInfo.id, 
-                            'cls'      : "file", 
-                            'leaf'     : true, 
+                            'text'     : String.format ("<i>{0}</i>", 
+                                fileInfo.title),
+                            'id'       : fileInfo.id,
+                            'cls'      : "file",
+                            'leaf'     : true,
                             'expanded' : false
                         })
 
@@ -279,9 +291,7 @@ var reportManager = new Ext.Panel ({
                             var imageReader = new FileReader();
 
                             imageReader.onerror = function (e) {
-                                Ext.Msg.alert (
-                                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                                )
+                                Ext.Msg.alert ("Error", "Reading <i>" + file.name + "</i> failed!")
                             }
 
                             imageReader.onload = function (e) {
@@ -294,9 +304,7 @@ var reportManager = new Ext.Panel ({
                                     success: function (args) {
                                         Ext.getCmp ('editor.id').fireEvent (
                                             'createImageTab', fileInfo, function (tab) {
-                                                Ext.getCmp ('reportManager.id').fireEvent (
-                                                    'saveImageTab', tab
-                                                )
+                                                Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
                                             }
                                         )
                                     },
@@ -312,9 +320,7 @@ var reportManager = new Ext.Panel ({
                             var textReader = new FileReader();
 
                             textReader.onerror = function (e) {
-                                Ext.Msg.alert (
-                                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                                )
+                                Ext.Msg.alert ("Error", "Reading <i>" + file.name + "</i> failed!")
                             }
 
                             textReader.onload = function (e) {
@@ -344,8 +350,8 @@ var reportManager = new Ext.Panel ({
 
                             textReader.readAsBinaryString (file);
                         }
-                    }, 
-                    
+                    },
+
                     failure: function () {
                         Ext.Msg.alert ("Error", "No file or invalid file type selected!")
                     }
@@ -354,7 +360,7 @@ var reportManager = new Ext.Panel ({
             } else {
                 Ext.Msg.alert ("Error", "No report selected; select a report!")
             }
-        }, 
+        },
 
         // #####################################################################
         // Save text/image tab
@@ -373,7 +379,7 @@ var reportManager = new Ext.Panel ({
                 var node = tree.getNodeById (tab.id)
 
                 reportManager.util.crudUpdate ({
-                    leafId  : node.id, 
+                    leafId  : node.id,
                     nodeId  : node.parentNode.id,
                     name    : node.text.replace('<i>','').replace('</i>',''),
                     data    : tab.getData (),
@@ -383,7 +389,7 @@ var reportManager = new Ext.Panel ({
                   , failure : reportManager.util.fnFailureUpdate
                 }, urls.updateText)
             }
-        }, 
+        },
 
         saveImageTab : function (tab) {
             if (tab == undefined) {
@@ -398,7 +404,7 @@ var reportManager = new Ext.Panel ({
                 var node = tree.getNodeById (tab.id)
 
                 reportManager.util.crudUpdate ({
-                    leafId  : node.id, 
+                    leafId  : node.id,
                     nodeId  : node.parentNode.id,
                     name    : node.text.replace('<i>','').replace('</i>',''),
                     data    : tab.getData (),
@@ -408,7 +414,7 @@ var reportManager = new Ext.Panel ({
                     failure : reportManager.util.fnFailureUpdate
                 }, urls.updateImage)
             }
-        }, 
+        },
 
         // #####################################################################
         // Add report, folder, text or image file
@@ -419,7 +425,7 @@ var reportManager = new Ext.Panel ({
             var rank = tree.root.childNodes.indexOf (
                 tree.root.lastChild
             )
-            
+
             Ext.Msg.prompt ('Create Report', 'Enter a name:',
                 function (btn, text) {
                     if (btn == 'ok') {
@@ -436,7 +442,7 @@ var reportManager = new Ext.Panel ({
                     }
                 }
             )
-        }, 
+        },
 
         addFolder : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -473,7 +479,7 @@ var reportManager = new Ext.Panel ({
                     "Error", "No node selected; select a node!"
                 )
             }
-        }, 
+        },
 
         addTextFile : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -511,7 +517,7 @@ var reportManager = new Ext.Panel ({
                     "Error", "No node selected; select a node!"
                 )
             }
-        }, 
+        },
 
         // #####################################################################
         // Rename selected node
@@ -557,7 +563,7 @@ var reportManager = new Ext.Panel ({
             } else {
                 Ext.Msg.alert ("Error", "No node selected; select a node!")
             }
-        }, 
+        },
 
         // #####################################################################
         // Delete selected node
@@ -594,7 +600,7 @@ var reportManager = new Ext.Panel ({
 
                 }
             )
-        }, 
+        },
 
         // #####################################################################
         // Move selected node up or down
@@ -609,15 +615,15 @@ var reportManager = new Ext.Panel ({
                 Ext.Msg.alert ("Error", "No node selected; select a node!")
                 return
             }
-            
-            if (node.parentNode == undefined) return;            
+
+            if (node.parentNode == undefined) return;
             if (node.previousSibling == undefined) return;
 
             var move = Ext.getCmp ('btnMoveUp').disable ()
             tree.el.mask ('Please wait', 'x-mask-loading')
-            
+
             Ext.Ajax.request ({
-                params : {id: node.id, jd: node.previousSibling.id }, 
+                params : {id: node.id, jd: node.previousSibling.id },
                 url    : urls.swapRank,
 
                 success : function (xhr, opts) {
@@ -633,7 +639,7 @@ var reportManager = new Ext.Panel ({
                     Ext.Msg.alert ("Error", "Moving up '" + node.text + "' failed!")
                 }
             });
-        }, 
+        },
 
         moveSelectedNodeDown : function () {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -644,23 +650,23 @@ var reportManager = new Ext.Panel ({
                 Ext.Msg.alert ("Error", "No node selected; select a node!")
                 return;
             }
-            
-            if (node.parentNode == undefined) return;            
+
+            if (node.parentNode == undefined) return;
             if (node.nextSibling == undefined) return;
-            
+
             var move = Ext.getCmp ('btnMoveDown').disable ()
             tree.el.mask ('Please wait', 'x-mask-loading')
-            
+
             Ext.Ajax.request ({
-                params : {id: node.id, jd: node.nextSibling.id }, 
-                url    : urls.swapRank, 
-                
+                params : {id: node.id, jd: node.nextSibling.id },
+                url    : urls.swapRank,
+
                 success : function (xhr, opts) {
                     node.parentNode.insertBefore (node.nextSibling, node)
                     tree.selectPath (node.getPath ())
                     tree.el.unmask ()
                     move.enable ()
-                }, 
+                },
 
                 failure : function (xhr, opts) {
                     tree.el.unmask ()
