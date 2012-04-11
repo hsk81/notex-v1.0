@@ -26,159 +26,159 @@ import re
 
 def storeFile (request, fid):
 
-    if not mimetypes.inited:
-        mimetypes.init
+    with os.tmpfile() as zip_file:
+        zip_file.write (''.join (request.readlines ()))
+        zip_file.flush ()
 
-    with os.tmpfile() as file:
-        file.write (''.join (request.readlines ()))
-        file.flush ()
+        if not zipfile.is_zipfile (zip_file):
+            return failure (message = 'ZIP format expected', file_id = fid)
 
-        if not zipfile.is_zipfile (file):
-            js_string = json.dumps ({
-                'success' : False,
-                'message' : 'ZIP format expected',
-                'file_id' : fid
-            })
+        root = ROOT.objects.get (
+            _type = ROOT_TYPE.objects.get (_code='root'),
+            _usid = request.session.session_key)
 
-            return HttpResponse (js_string, mimetype='application/json')
+        with zipfile.ZipFile (zip_file, 'r') as zip_buffer:
+            return create_project (root, fid, zip_buffer)
 
-        with zipfile.ZipFile (file, 'r') as zipBuffer:
+def create_project (root, fid, zip_buffer): ## TODO: Use DB transactions!
 
-            root = ROOT.objects.get (
-                _type = ROOT_TYPE.objects.get (_code='root'),
-                _usid = request.session.session_key)
+    node = NODE.objects.create (
+        type = NODE_TYPE.objects.get (_code='project'),
+        root = root,
+        name = os.path.splitext (fid)[0],
+        rank = NODE.objects.filter (_root = root).count ())
 
-            node = NODE.objects.create (
-                type = NODE_TYPE.objects.get (_code='project'),
-                root = root,
-                name = os.path.splitext (fid)[0],
-                rank = NODE.objects.filter (_root = root).count ())
+    infolist = zip_buffer.infolist ()
+    rankdict = dict (zip (infolist, range (len (infolist))))
+    infolist = sorted (infolist, key=lambda zip_info: zip_info.filename)
+    namelist = map (lambda zi: zi.filename, infolist)
 
-            infolist = zipBuffer.infolist ()
-            rankdict = dict (zip (infolist, range (len (infolist))))
-            infolist = sorted (infolist, key=lambda info: info.filename)
-            namelist = map (lambda zi: zi.filename, infolist)
+    base = os.path.commonprefix (namelist)
+    if base == '':
+        return failure (message = 'Single report root expected', file_id = fid)
 
-            base = os.path.commonprefix (namelist)
-            if base == '':
-                js_string = json.dumps ({
-                    'success' : False,
-                    'message' : 'Single report root expected',
-                    'file_id' : fid
-                })
+    origin = os.path.join (base, 'report')
+    parent = {origin: node}
 
-                return HttpResponse (js_string, mimetype='application/json')
+    if not any (map (lambda i: i.filename.startswith (origin), infolist)):
+        return failure (message = 'Sub-directory "report" expected',
+            file_id = fid)
 
-            orig = os.path.join (base, 'report')
-            prev = {orig: node}
+    for zip_info in infolist:
+        with zip_buffer.open (zip_info) as file:
+            if not zip_info.filename.startswith (origin): continue
+            process_zip_info (zip_info, rankdict[zip_info], parent, file)
 
-            if not any (map (lambda i: i.filename.startswith (orig), infolist)):
-                js_string = json.dumps ({
-                    'success' : False,
-                    'message' : 'Sub-directory "report" expected',
-                    'file_id' : fid
-                })
+    return success (message = None, file_id = fid)
 
-                return HttpResponse (js_string, mimetype='application/json')
+################################################################################
 
-            for info in infolist:
-                with zipBuffer.open (info) as arch:
+def http_response (success, message, file_id):
 
-                    if not info.filename.startswith (orig):
-                        continue ## not in 'report' sub-folder
+    js_string = json.dumps ({
+        'success' : success,
+        'message' : message,
+        'file_id' : file_id
+    })
 
-                    basename = os.path.basename (info.filename)
-                    if basename == '': ## is folder?
+    return HttpResponse (js_string, mimetype='application/json')
 
-                        path, name = os.path.split (info.filename[:-1])
-                        prev[info.filename[:-1]] = NODE.objects.create (
-                            type = NODE_TYPE.objects.get (_code='folder'),
-                            root = root,
-                            node = prev[path],
-                            name = name,
-                            rank = rankdict[info])
+def success (message, file_id):
+    return http_response (True, message, file_id)
+def failure (message, file_id):
+    return http_response (False, message, file_id)
 
-                    else: ## is not folder!
+################################################################################
 
-                        path, name = os.path.split (info.filename)
-                        mimetype, encoding = mimetypes.guess_type (name)
+def process_zip_info (zip_info, rank, parent, file):
 
-                        ########################################################
-                        if name.endswith ('.diff'): ## need to patch?
-                        ########################################################
+    basename = os.path.basename (zip_info.filename)
+    if basename == '': ## is folder?
+        create_folder (zip_info, rank, parent)
 
-                            nodes = LEAF.objects.filter (
-                                _node = prev[path],
-                                _name = re.sub ('\.diff$', '', name))
+    else: ## is not folder!
 
-                            if nodes.count () == 1:
-                                node = nodes[0]
+        if not mimetypes.inited:
+            mimetypes.init
 
-                                _, ftext_path = tempfile.mkstemp ()
-                                ftext = open (ftext_path, 'w')
-                                ftext.write (node.text)
-                                ftext.close ()
+        path, name = os.path.split (zip_info.filename)
+        mimetype, encoding = mimetypes.guess_type (name)
 
-                                _, fdiff_path = tempfile.mkstemp ()
-                                fdiff = open (fdiff_path, 'w')
-                                fdiff.write (''.join (arch.readlines ()))
-                                fdiff.close ()
+        if name.endswith ('.diff'):
+            apply_patch (zip_info, rank, parent, file)
+        elif mimetype and mimetype.startswith ('image'):
+            create_image (zip_info, rank, parent, file)
+        else: ## assume text!
+            create_text (zip_info, rank, parent, file)
 
-                                try:
-                                    subprocess.check_call ([
-                                        'patch', ftext_path, fdiff_path, '-s'])
+################################################################################
 
-                                    ftext = open (ftext_path, 'r')
-                                    node.text = ftext.read ()
-                                    ftext.close ()
-                                    node.save ()
+def create_folder (zip_info, rank, parent):
 
-                                except:
-                                    pass
+    path, name = os.path.split (zip_info.filename[:-1])
+    parent[zip_info.filename[:-1]] = NODE.objects.create (
+        type = NODE_TYPE.objects.get (_code='folder'),
+        root = root,
+        node = parent[path],
+        name = name,
+        rank = rank)
 
-                                subprocess.call (['rm', fdiff_path, '-f'])
-                                subprocess.call (['rm', ftext_path, '-f'])
+def apply_patch (zip_info, rank, parent, file):
 
-                        ########################################################
-                        elif mimetype and mimetype.startswith ('image'):
-                        ########################################################
+    path, name = os.path.split (zip_info.filename)
+    mimetype, encoding = mimetypes.guess_type (name)
 
-                            code = 'image'
-                            text = 'data:%s;base64,%s' % ( \
-                                mimetype, base64.encodestring \
-                                    (''.join (arch.readlines ())))
+    node = LEAF.objects.get (
+        _node = parent[path],
+        _name = re.sub ('\.diff$', '', name))
 
-                            _ = LEAF.objects.create (
-                                type = LEAF_TYPE.objects.get (_code=code),
-                                node = prev[path],
-                                name = name,
-                                text = text,
-                                rank = rankdict[info])
+    _, ftext_path = tempfile.mkstemp ()
+    ftext = open (ftext_path, 'w')
+    ftext.write (node.text)
+    ftext.close ()
 
-                        ########################################################
-                        else: ## neither diff patch nor image, so assume text!
-                        ########################################################
+    _, fdiff_path = tempfile.mkstemp ()
+    fdiff = open (fdiff_path, 'w')
+    fdiff.write (''.join (file.readlines ()))
+    fdiff.close ()
 
-                            code = 'text'
-                            text = cgi.escape (''.join (arch.readlines ()), \
-                                quote=True)
+    try:
+        subprocess.check_call (['patch', ftext_path, fdiff_path, '-s'])
+        ftext = open (ftext_path, 'r')
+        node.text = ftext.read ()
+        ftext.close ()
+        node.save ()
+    except:
+        pass
 
-                            _ = LEAF.objects.create (
-                                type = LEAF_TYPE.objects.get (_code=code),
-                                node = prev[path],
-                                name = name,
-                                text = text,
-                                rank = rankdict[info])
+    subprocess.call (['rm', fdiff_path, '-f'])
+    subprocess.call (['rm', ftext_path, '-f'])
 
-                        ########################################################
-                        ########################################################
+################################################################################
 
-            js_string = json.dumps ({
-                'success' : True,
-                'file_id' : fid
-            })
+def create_image (zip_info, rank, parent, file):
+    create_leaf (zip_info, rank, parent, file, code = 'image')
 
-            return HttpResponse (js_string, mimetype='application/json')
+def create_text (zip_info, rank, parent, file):
+    create_leaf (zip_info, rank, parent, file, code = 'text')
+
+def create_leaf (zip_info, rank, parent, file, code):
+
+    path, name = os.path.split (zip_info.filename)
+    mimetype, encoding = mimetypes.guess_type (name)
+
+    if code == 'image':
+        text = 'data:%s;base64,%s' % (mimetype, base64.encodestring \
+            (''.join (file.readlines ())))
+    else:
+        text = cgi.escape (''.join (file.readlines ()), quote=True)
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code=code),
+        node = parent[path],
+        name = name,
+        text = text,
+        rank = rank)
 
 ################################################################################
 ################################################################################
