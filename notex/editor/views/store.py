@@ -34,7 +34,6 @@ def storeFile (request, fid):
         file.flush ()
 
         if not zipfile.is_zipfile (file):
-
             js_string = json.dumps ({
                 'success' : False,
                 'message' : 'ZIP format expected',
@@ -55,12 +54,32 @@ def storeFile (request, fid):
                 name = os.path.splitext (fid)[0],
                 rank = NODE.objects.filter (_root = root).count ())
 
-            orig = os.path.join (node.name, 'report')
-            prev = {orig: node}
-
             infolist = zipBuffer.infolist ()
             rankdict = dict (zip (infolist, range (len (infolist))))
             infolist = sorted (infolist, key=lambda info: info.filename)
+            namelist = map (lambda zi: zi.filename, infolist)
+
+            base = os.path.commonprefix (namelist)
+            if base == '':
+                js_string = json.dumps ({
+                    'success' : False,
+                    'message' : 'Single report root expected',
+                    'file_id' : fid
+                })
+
+                return HttpResponse (js_string, mimetype='application/json')
+
+            orig = os.path.join (base, 'report')
+            prev = {orig: node}
+
+            if not any (map (lambda i: i.filename.startswith (orig), infolist)):
+                js_string = json.dumps ({
+                    'success' : False,
+                    'message' : 'Sub-directory "report" expected',
+                    'file_id' : fid
+                })
+
+                return HttpResponse (js_string, mimetype='application/json')
 
             for info in infolist:
                 with zipBuffer.open (info) as arch:
