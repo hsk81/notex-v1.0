@@ -5,6 +5,7 @@ __date__ = "$Mar 10, 2012 12:07:16 AM$"
 ################################################################################
 
 from django.http import HttpResponse
+from editor.lib import PathUtil
 
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
@@ -57,7 +58,7 @@ def create_project (root, fid, zip_buffer): ## TODO: Use DB transactions!
     if base == '':
         return failure (message = 'Single report root expected', file_id = fid)
 
-    origin = os.path.join (base, 'report')
+    origin = os.path.join (PathUtil.head (base), 'report')
     parent = {origin: node}
 
     if not any (map (lambda i: i.filename.startswith (origin), infolist)):
@@ -67,7 +68,7 @@ def create_project (root, fid, zip_buffer): ## TODO: Use DB transactions!
     for zip_info in infolist:
         with zip_buffer.open (zip_info) as file:
             if not zip_info.filename.startswith (origin): continue
-            process_zip_info (zip_info, rankdict[zip_info], parent, file)
+            process_zip_info (zip_info, rankdict, parent, file)
 
     return success (message = None, file_id = fid)
 
@@ -90,40 +91,55 @@ def failure (message, file_id):
 
 ################################################################################
 
-def process_zip_info (zip_info, rank, parent, file):
+def process_zip_info (zip_info, rankdict, parent, file):
 
     basename = os.path.basename (zip_info.filename)
-    if basename == '': ## is folder?
-        create_folder (zip_info, rank, parent)
-
-    else: ## is not folder!
-
+    if basename != '': ## is file?
         if not mimetypes.inited:
             mimetypes.init
 
         path, name = os.path.split (zip_info.filename)
         mimetype, encoding = mimetypes.guess_type (name)
 
+        if not parent.has_key (path): ## no parent node/is folder?
+            zi = fake_zip_info (zip_info, rankdict, filename = path)
+            create_folder (zi, rankdict, parent)
+
         if name.endswith ('.diff'):
-            apply_patch (zip_info, rank, parent, file)
+            apply_patch (zip_info, rankdict, parent, file)
         elif mimetype and mimetype.startswith ('image'):
-            create_image (zip_info, rank, parent, file)
+            create_image (zip_info, rankdict, parent, file)
         else: ## assume text!
-            create_text (zip_info, rank, parent, file)
+            create_text (zip_info, rankdict, parent, file)
 
 ################################################################################
 
-def create_folder (zip_info, rank, parent):
+def fake_zip_info (zip_info, rankdict, filename):
+    ##
+    ## TODO: If sub-folders are involved or a PDF file then the ranks get messed
+    ##       up; fix!
+    for zi in rankdict:
+        if rankdict[zi] >= rankdict[zip_info]:
+            rankdict[zi] += 1
 
-    path, name = os.path.split (zip_info.filename[:-1])
-    parent[zip_info.filename[:-1]] = NODE.objects.create (
+    zi = zipfile.ZipInfo (filename = filename)
+    rankdict[zi] = rankdict[zip_info] - 1
+
+    return zi
+
+################################################################################
+
+def create_folder (zip_info, rankdict, parent):
+
+    path, name = os.path.split (zip_info.filename)
+    parent[zip_info.filename] = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='folder'),
-        root = root,
+        root = parent[path].root,
         node = parent[path],
         name = name,
-        rank = rank)
+        rank = rankdict[zip_info])
 
-def apply_patch (zip_info, rank, parent, file):
+def apply_patch (zip_info, rankdict, parent, file):
 
     path, name = os.path.split (zip_info.filename)
     mimetype, encoding = mimetypes.guess_type (name)
@@ -156,13 +172,13 @@ def apply_patch (zip_info, rank, parent, file):
 
 ################################################################################
 
-def create_image (zip_info, rank, parent, file):
-    create_leaf (zip_info, rank, parent, file, code = 'image')
+def create_image (zip_info, rankdict, parent, file):
+    create_leaf (zip_info, rankdict, parent, file, code = 'image')
 
-def create_text (zip_info, rank, parent, file):
-    create_leaf (zip_info, rank, parent, file, code = 'text')
+def create_text (zip_info, rankdict, parent, file):
+    create_leaf (zip_info, rankdict, parent, file, code = 'text')
 
-def create_leaf (zip_info, rank, parent, file, code):
+def create_leaf (zip_info, rankdict, parent, file, code):
 
     path, name = os.path.split (zip_info.filename)
     mimetype, encoding = mimetypes.guess_type (name)
@@ -178,7 +194,7 @@ def create_leaf (zip_info, rank, parent, file, code):
         node = parent[path],
         name = name,
         text = text,
-        rank = rank)
+        rank = rankdict[zip_info])
 
 ################################################################################
 ################################################################################

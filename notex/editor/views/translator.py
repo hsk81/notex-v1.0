@@ -58,9 +58,8 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
                     (prefix, leaf.name + ".diff"), diff)
 
     for node in ns:
-        zipBuffer.writestr (os.path.join (prefix, node.name), '')
-        DATA.processToText (node, os.path.join (prefix, node), zipBuffer,
-            target = None)
+        path = os.path.join (prefix, node.name)
+        processToText (node, path, zipBuffer, target = None)
 
 def processToLatex (root, title, zipBuffer):
 
