@@ -1,8 +1,8 @@
 __author__ = "hsk81"
 __date__ = "$Mar 10, 2012 12:30:40 AM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 from django.http import HttpResponse
 from editor.models import NODE
@@ -11,8 +11,8 @@ from editor.models import LEAF
 import base64
 import json
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 def rename (request):
 
@@ -24,14 +24,14 @@ def rename (request):
             node.save ()
 
             js_string = json.dumps ([{
-                'success' : 'true',
+                'success' : True,
                 'id'      : request.POST['nodeId'],
                 'name'    : request.POST['name']
             }])
 
         except:
             js_string = json.dumps ([{
-                'success' : 'false',
+                'success' : False,
                 'id'      : request.POST['nodeId']
             }])
 
@@ -42,24 +42,24 @@ def rename (request):
             leaf.save ()
 
             js_string = json.dumps ([{
-                'success' : 'true',
+                'success' : True,
                 'id'      : request.POST['nodeId'],
                 'name'    : request.POST['name']
             }])
 
         except:
             js_string = json.dumps ([{
-                'success' : 'false',
+                'success' : False,
                 'id'      : request.POST['nodeId'],
             }])
 
     else:
         js_string = json.dumps ([{
-            'success' : 'false',
+            'success' : False,
             'id'      : request.POST['nodeId']
         }])
 
     return HttpResponse (js_string, mimetype='application/json')
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################

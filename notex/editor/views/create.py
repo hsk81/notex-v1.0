@@ -50,7 +50,7 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         rank = 1)
 
     js_string = json.dumps ([{
-        'success' : 'true',
+        'success' : True,
         'id' : base64.b32encode (json.dumps (('node', [node.pk])))}])
 
     return HttpResponse (js_string, mimetype='application/json')
@@ -68,7 +68,7 @@ def createFolder (request):
     )
 
     js_string = json.dumps ([{
-        'success' : 'true',
+        'success' : True,
         'id' : base64.b32encode (json.dumps (('node', [node.pk])))}])
 
     return HttpResponse (js_string, mimetype='application/json')
@@ -86,14 +86,14 @@ def createText (request):
 
     if 'leafId' in request.POST:
         js_string = json.dumps ([{
-            'success' : 'true',
+            'success' : True,
             'uuid' : request.POST['leafId'],
             'id' :  base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     else:
         js_string = json.dumps ([{
-            'success' : 'true',
+            'success' : True,
             'id' :  base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
@@ -112,14 +112,14 @@ def createImage (request):
 
     if 'leafId' in request.POST:
         js_string = json.dumps ([{
-            'success' : 'true',
+            'success' : True,
             'uuid' : request.POST['leafId'],
             'id' :  base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     else:
         js_string = json.dumps ([{
-            'success' : 'true',
+            'success' : True,
             'id' :  base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
