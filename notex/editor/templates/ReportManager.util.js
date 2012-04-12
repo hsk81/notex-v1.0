@@ -1,8 +1,8 @@
     var reportManagerUtil = {
     
-    // ########################################################################################
+    // #########################################################################
     // CRUD: Create
-    // ########################################################################################
+    // #########################################################################
 
     fnSuccessCreate : function (xhr, opts) {
         var tree = Ext.getCmp ('reportManager.tree.id')
@@ -49,9 +49,9 @@
         })
     },
 
-    // ########################################################################################
+    // #########################################################################
     // CRUD: Read
-    // ########################################################################################
+    // #########################################################################
 
     fnSuccessRead : function (xhr, opts) {
         //@DONE!
@@ -80,9 +80,9 @@
         })
     }, 
 
-    // ########################################################################################
+    // #########################################################################
     // CRUD: Update
-    // ########################################################################################
+    // #########################################################################
 
     fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
@@ -154,12 +154,12 @@
         })
     },
 
-    // ########################################################################################
+    // #########################################################################
     // CRUD: Rename
-    // ########################################################################################
+    // #########################################################################
 
     fnSuccessRename : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
+        var res = Ext.decode (xhr.responseText)
 
         var tabs = Ext.getCmp ('editor.id')
         var tab = tabs.findById (res.id)
@@ -179,7 +179,7 @@
     },
 
     fnFailureRename : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
+        var res = Ext.decode (xhr.responseText)
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (res.id)
         
@@ -199,7 +199,7 @@
             url : urls.rename,
             callback : function (opts, status, xhr) {
                 if (status) {
-                    var res = Ext.decode (xhr.responseText)[0]
+                    var res = Ext.decode (xhr.responseText)
                     if (res.success) {
                         fn.success (xhr, opts)
                     } else {
@@ -212,16 +212,16 @@
         })
     },
 
-    // ########################################################################################
+    // #########################################################################
     // CRUD: Delete
-    // ########################################################################################
+    // #########################################################################
 
     fnSuccessDelete : function (xhr, opts) {
         //@DONE!
     },
 
     fnFailureDelete : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
+        var res = Ext.decode (xhr.responseText)
         Ext.MessageBox.show ({
             title : 'Deleting failed',
             msg : String.Format ("Deleting for '{0}' failed!", res.id),
@@ -237,7 +237,7 @@
             url : urls.del,
             callback : function (opts, status, xhr) {
                 if (status) {
-                    var res = Ext.decode (xhr.responseText)[0]
+                    var res = Ext.decode (xhr.responseText)
                     if (res.success) {
                         fn.success (xhr, opts)
                     } else {

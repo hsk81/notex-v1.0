@@ -5,6 +5,7 @@ __date__ = "$Mar 10, 2012 1:07:38 AM$"
 ################################################################################
 
 from settings import MEDIA_ROOT
+from django.db import transaction
 from django.http import HttpResponse
 
 from editor.models import ROOT
@@ -20,6 +21,7 @@ import os
 ################################################################################
 ################################################################################
 
+@transaction.commit_on_success
 def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
@@ -55,6 +57,7 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
 
     return HttpResponse (js_string, mimetype='application/json')
 
+@transaction.commit_on_success
 def createFolder (request):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
@@ -73,6 +76,7 @@ def createFolder (request):
 
     return HttpResponse (js_string, mimetype='application/json')
 
+@transaction.commit_on_success
 def createText (request):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
@@ -88,17 +92,18 @@ def createText (request):
         js_string = json.dumps ([{
             'success' : True,
             'uuid' : request.POST['leafId'],
-            'id' :  base64.b32encode (
+            'id' : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     else:
         js_string = json.dumps ([{
             'success' : True,
-            'id' :  base64.b32encode (
+            'id' : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     return HttpResponse (js_string, mimetype='application/json')
 
+@transaction.commit_on_success
 def createImage (request):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['nodeId']))

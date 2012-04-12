@@ -4,7 +4,9 @@ __date__ = "$Mar 10, 2012 12:40:30 AM$"
 ################################################################################
 ################################################################################
 
+from django.db import transaction
 from django.http import HttpResponse
+
 from editor.models import LEAF
 
 import editor.views
@@ -21,16 +23,19 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
+@transaction.commit_manually
 def updateText (request):
 
     from editor.views import create
     return update (request, editor.views.create.createText)
 
+@transaction.commit_manually
 def updateImage (request):
 
     from editor.views import create
     return update (request, create.createImage)
 
+@transaction.commit_manually
 def update (request, create_leaf = None):
 
     try:    id = uuid.UUID (request.POST['leafId'])
@@ -55,6 +60,7 @@ def update (request, create_leaf = None):
 
     return response
 
+@transaction.commit_manually
 def create_on_update (request, create_leaf):
 
     if create_leaf != None:
@@ -69,10 +75,14 @@ def create_on_update (request, create_leaf):
 
     return response
 
+################################################################################
+
 def success (request):
+    transaction.commit ()
     return http_response (request, success = True)
 
 def failure (request):
+    transaction.rollback ()
     return http_response (request, success = False)
 
 def http_response (request, success):

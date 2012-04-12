@@ -4,7 +4,9 @@ __date__ = "$Mar 10, 2012 12:36:24 AM$"
 ################################################################################
 ################################################################################
 
+from django.db import transaction
 from django.http import HttpResponse
+
 from editor.models import NODE
 from editor.models import LEAF
 
@@ -14,6 +16,7 @@ import json
 ################################################################################
 ################################################################################
 
+@transaction.commit_on_success
 def swapRank (request):
 
     _, ids = json.loads (base64.b32decode (request.POST['id']))

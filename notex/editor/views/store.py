@@ -4,7 +4,9 @@ __date__ = "$Mar 10, 2012 12:07:16 AM$"
 ################################################################################
 ################################################################################
 
+from django.db import transaction
 from django.http import HttpResponse
+
 from editor.lib import PathUtil
 
 from editor.models import ROOT, ROOT_TYPE
@@ -25,6 +27,7 @@ import re
 ################################################################################
 ################################################################################
 
+@transaction.commit_manually
 def storeFile (request, fid):
 
     with os.tmpfile() as zip_file:
@@ -74,6 +77,14 @@ def create_project (root, fid, zip_buffer): ## TODO: Use DB transactions!
 
 ################################################################################
 
+def success (message, file_id):
+    transaction.commit ()
+    return http_response (True, message, file_id)
+
+def failure (message, file_id):
+    transaction.rollback ()
+    return http_response (False, message, file_id)
+
 def http_response (success, message, file_id):
 
     js_string = json.dumps ({
@@ -83,11 +94,6 @@ def http_response (success, message, file_id):
     })
 
     return HttpResponse (js_string, mimetype='application/json')
-
-def success (message, file_id):
-    return http_response (True, message, file_id)
-def failure (message, file_id):
-    return http_response (False, message, file_id)
 
 ################################################################################
 

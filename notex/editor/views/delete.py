@@ -4,7 +4,9 @@ __date__ = "$Mar 10, 2012 12:26:29 AM$"
 ################################################################################
 ################################################################################
 
+from django.db import transaction
 from django.http import HttpResponse
+
 from editor.models import NODE
 from editor.models import LEAF
 
@@ -15,49 +17,50 @@ import uuid
 ################################################################################
 ################################################################################
 
+@transaction.commit_manually
 def delete (request):
 
-    try:    id = uuid.UUID (request.POST['id'])
-    except: id = None
+    try:
+        id = uuid.UUID (request.POST['id'])
+    except:
+        id = None
 
     if id != None: ## not created yet
-        js_string = json.dumps ([{
-            'success' : False
-        }])
+        response = failure (id = None)
 
     else:
-
         (type, ids) = json.loads (base64.b32decode (request.POST['id']))
         if type == 'leaf':
-            try:
-                leaf = LEAF.objects.get (pk = ids[1])
-                leaf.delete ()
-
-                js_string = json.dumps ([{
-                    'success' : True,
-                    'id'      : request.POST['id']
-                }])
-
-            except:
-                js_string = json.dumps ([{
-                    'success' : False,
-                    'id'      : request.POST['id']
-                }])
+            leaf = LEAF.objects.get (pk = ids[1])
+            leaf.delete ()
+            response = success (id = request.POST['id'])
 
         elif type == 'node':
-                node = NODE.objects.get (pk = ids[0])
-                node.delete ()
-
-                js_string = json.dumps ([{
-                    'success' : True,
-                    'id'      : request.POST['id']
-                }])
+            node = NODE.objects.get (pk = ids[0])
+            node.delete ()
+            response = success (id = request.POST['id'])
 
         else:
-            js_string = json.dumps ([{
-                'success' : False,
-                'id'      : request.POST['id']
-            }])
+            response = failure (id = request.POST['id'])
+
+    return response
+
+################################################################################
+
+def success (id):
+    transaction.commit ()
+    return http_response (True, id)
+
+def failure (id):
+    transaction.rollback ()
+    return http_response (False, id)
+
+def http_response (success, id):
+
+    js_string = json.dumps ({
+        'success' : success,
+        'id' : id
+    })
 
     return HttpResponse (js_string, mimetype='application/json')
 

@@ -47,6 +47,7 @@ MIDDLEWARE_CLASSES = (
     'raven.contrib.django.middleware.SentryResponseErrorIdMiddleware',
 
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
  ## 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
