@@ -1,40 +1,44 @@
 __author__ = "hsk81"
 __date__ = "$Mar 10, 2012 12:40:30 AM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
 from django.http import HttpResponse
 from editor.models import LEAF
-from editor.views import create
 
+import editor.views
+import logging
 import base64
 import json
 import uuid
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
+
+logger = logging.getLogger (__name__)
+
+################################################################################
+################################################################################
 
 def updateText (request):
 
-    return update (request, updateText)
+    from editor.views import create
+    return update (request, editor.views.create.createText)
 
 def updateImage (request):
 
-    return update (request, updateImage)
+    from editor.views import create
+    return update (request, create.createImage)
 
-def update (request, fnCreateLeaf = None):
+def update (request, create_leaf = None):
 
     try:    id = uuid.UUID (request.POST['leafId'])
     except: id = None
 
-    if id != None: ## create upon update
-
-        if fnCreateLeaf != None:
-            return fnCreateLeaf (request)
-        else:
-            return create.createText (request)
-
+    if id != None:
+        return create_on_update (request, create_leaf)
+        
     (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
     if type == 'leaf':
         try:
@@ -43,24 +47,43 @@ def update (request, fnCreateLeaf = None):
             leaf.text = request.POST['data']
             leaf.save ()
 
-            js_string = json.dumps ([{
-                'success' : 'true',
-                'id'      : request.POST['leafId']
-            }])
-
+            response = success (request)
         except:
-            js_string = json.dumps ([{
-                'success' : 'false',
-                'id'      : request.POST['leafId']
-            }])
-
+            response = failure (request)
     else:
-        js_string = json.dumps ([{
-            'success' : 'false',
-            'id'      : request.POST['leafId']
-        }])
+        response = failure (request)
+
+    return response
+
+def create_on_update (request, create_leaf):
+
+    if create_leaf != None:
+        response = create_leaf (request)
+    else:
+        logger.error (
+            "create_leaf not set, function expected",
+            exc_info=True,
+            extra={'request': request})
+
+        response = failure (request)
+
+    return response
+
+def success (request):
+    return http_response (request, success = True)
+
+def failure (request):
+    return http_response (request, success = False)
+
+def http_response (request, success):
+
+    js_string = json.dumps ([{
+        'success' : success,
+        'id' : request.POST['leafId']
+    }])
 
     return HttpResponse (js_string, mimetype='application/json')
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
+
