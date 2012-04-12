@@ -78,10 +78,12 @@ def create_on_update (request, create_leaf):
 ################################################################################
 
 def success (request):
+
     transaction.commit ()
     return http_response (request, success = True)
 
 def failure (request):
+
     transaction.rollback ()
     return http_response (request, success = False)
 
@@ -96,4 +98,3 @@ def http_response (request, success):
 
 ################################################################################
 ################################################################################
-
