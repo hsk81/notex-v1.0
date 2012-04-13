@@ -6,6 +6,7 @@ __date__ = "$Mar 10, 2012 12:14:46 AM$"
 
 from cStringIO import StringIO
 from django.http import HttpResponse
+from django.core.cache import cache
 from editor.models import NODE
 from editor.models import LEAF
 
@@ -35,11 +36,18 @@ def compress (request, id, fnTranslate):
     while node.node:
         node = node.node
 
-    if _cache.has_key (node.id):
+    object_key = str (node.id)
+    object_val = cache.get (object_key)
+
+    if object_val:
         if not 'refresh' in request.GET:
-            return _cache.pop (node.id)
+            http_response = HttpResponse (object_val)
+            http_response['Content-Disposition'] = \
+                'attachment;filename="%s.zip"' % node.name
+
+            cache.delete (object_key); return http_response
         else:
-            del (_cache[node.id])
+            cache.delete (object_key)
 
     strBuffer = StringIO ()
     zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
@@ -58,16 +66,10 @@ def compress (request, id, fnTranslate):
             extra={'request': request})
 
     zipBuffer.close ()
-    str_value = strBuffer.getvalue ()
+    cache.set (object_key, strBuffer.getvalue ())
     strBuffer.close ()
 
-    _cache[node.id] = HttpResponse (str_value)
-    _cache[node.id]['Content-Disposition'] = 'attachment;filename="%s.zip"' % \
-        node.name
-
     return HttpResponse (js_string, mimetype='application/json')
-
-_cache = {} ## TODO: Replace with memcached!
 
 def fetchText (request, id):
     return compress (request, id, translator.processToText)
