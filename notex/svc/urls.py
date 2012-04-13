@@ -4,16 +4,7 @@ from django.views.generic.simple import direct_to_template
 from views import DATA
 from views import POST
 
-urlpatterns = patterns('',
-
-  # url(
-  #     r'^$',
-  #     direct_to_template,
-  #     {'template': 'svc.html',
-  #      'extra_context': {}
-  #     },
-  #     name='svc'
-  # ),
+urlpatterns = patterns ('',
 
     url(
         r'^data/info/$',
