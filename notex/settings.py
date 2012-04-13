@@ -18,12 +18,16 @@ if socket.gethostname() != SITE_HOST:
 
     SITE_HOST = 'localhost'
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = os.path.join (SITE_ROOT, 'sqlite.db')
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT = ''
+DATABASES = {
+    'default' : {
+        'ENGINE' : 'django.db.backends.sqlite3',
+        'NAME' : os.path.join (SITE_ROOT, 'sqlite.db'),
+        'USER' : '',
+        'PASSWORD' : '',
+        'HOST' : '',
+        'PORT' : '',
+    }
+}
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
@@ -87,8 +91,8 @@ FIXTURE_DIRS = (
     os.path.join (SITE_ROOT, 'fixtures/'),
 )
 
-SENTRY_DSN = 'http://%s:%s0@localhost:9000/1' % (
-    'a4ed2d41177a466d8816f25f7ad0dd83', 'aa2583e640d04052947995612fec3fc'
+SENTRY_DSN = 'http://%s:%s@localhost:9000/1' % (
+    'a4ed2d41177a466d8816f25f7ad0dd83', 'aa2583e640d04052947995612fec3fc0'
 )
 
 INSTALLED_APPS = (
