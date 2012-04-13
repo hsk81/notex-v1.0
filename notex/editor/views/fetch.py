@@ -36,7 +36,7 @@ def compress (request, id, fnTranslate):
     while node.node:
         node = node.node
 
-    object_key = str (node.id)
+    object_key = hash ((request.session.session_key, node.id))
     object_val = cache.get (object_key)
 
     if object_val:

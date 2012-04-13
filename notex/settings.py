@@ -60,9 +60,10 @@ if DEBUG:
     MIDDLEWARE_CLASSES += ('django_pdb.middleware.PdbMiddleware',)
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': '127.0.0.1:11211',
+    'default' : {
+        'BACKEND' : 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION' : '127.0.0.1:11211',
+        'TIEMOUT' : 180, #[s]
     }
 }
 
