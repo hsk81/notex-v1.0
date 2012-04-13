@@ -119,7 +119,8 @@ class Interpolator:
 
     def _parse (self, cmd):
         """
-        * TODO:
+        * TODO: Quote pairs' trouble
+
         Multiple consecutive quote pairs of the same type cause the parser to
         report the whitespace *between* the quote pairs, instead of ignoring
         them; fix!

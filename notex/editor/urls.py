@@ -102,19 +102,3 @@ urlpatterns = patterns ('',
 
 ################################################################################
 ################################################################################
-
-if __name__ != "__main__":
-
-    from svc.urls import data_urlpatterns
-    from models   import *
-
-    #
-    # TODO: Security/Session information validation required! ..
-    #
-
-    urlpatterns += data_urlpatterns (ROOT)
-    urlpatterns += data_urlpatterns (NODE)
-    urlpatterns += data_urlpatterns (LEAF)
-
-################################################################################
-################################################################################

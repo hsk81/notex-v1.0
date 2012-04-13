@@ -148,7 +148,10 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     constructor = lambda loader, node: loader.construct_pairs (node)
     yaml.CSafeLoader.add_constructor (u'!omap', constructor)
-    data = yaml.load (u'!omap\n' + leaf.text, Loader = yaml.CSafeLoader)
+
+    data = yaml.load (
+        u'!omap\n' + MLStripper.strip_tags (leaf.text),
+        Loader = yaml.CSafeLoader)
 
     with open (os.path.join (prefix, filename), 'w+') as file:
 

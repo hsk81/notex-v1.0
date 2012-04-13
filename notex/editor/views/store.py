@@ -44,7 +44,7 @@ def storeFile (request, fid):
         with zipfile.ZipFile (zip_file, 'r') as zip_buffer:
             return create_project (root, fid, zip_buffer)
 
-def create_project (root, fid, zip_buffer): ## TODO: Use DB transactions!
+def create_project (root, fid, zip_buffer):
 
     node = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='project'),
@@ -120,10 +120,9 @@ def process_zip_info (zip_info, rankdict, parent, file):
 
 ################################################################################
 
+## TODO: If sub-folders or PDF file then the ranks get messed up; fix!
 def fake_zip_info (zip_info, rankdict, filename):
-    ##
-    ## TODO: If sub-folders are involved or a PDF file then the ranks get messed
-    ##       up; fix!
+
     for zi in rankdict:
         if rankdict[zi] >= rankdict[zip_info]:
             rankdict[zi] += 1
