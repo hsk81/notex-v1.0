@@ -65,9 +65,9 @@ var editor = new Ext.TabPanel ({
                         anchor : '100% 100%',
                         value : text2Html (tabInfo.text),
 
-                        enableFont : false,
+                        enableFont : true,
                         enableLists : false,
-                        enableFontSize : false,
+                        enableFontSize : true,
                         enableAlignments : false,
                         enableSourceEdit : true,
 
