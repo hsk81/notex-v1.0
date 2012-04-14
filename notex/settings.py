@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -92,7 +92,7 @@ FIXTURE_DIRS = (
 )
 
 SENTRY_DSN = 'http://%s:%s@localhost:9000/1' % (
-    'a4ed2d41177a466d8816f25f7ad0dd83', 'aa2583e640d04052947995612fec3fc0'
+    '76296a08393f45acb48ffa6717c1ae2b', 'c9fe5d6842cc4263b555d12be86ad340'
 )
 
 INSTALLED_APPS = (
