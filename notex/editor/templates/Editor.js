@@ -65,17 +65,16 @@ var editor = new Ext.TabPanel ({
                         anchor : '100% 100%',
                         value : text2Html (tabInfo.text),
 
-                        fontFamilies : ["Mono"], 
                         enableFont : false,
                         enableLists : false,
                         enableFontSize : false,
                         enableAlignments : false,
-                        enableSourceEdit : false,
+                        enableSourceEdit : true,
 
                         defaultAutoCreate : {
                             tag : 'textarea',
                             id : 'htmlEditorTextAreaId',
-                            style :"font-family:mono; font-size:13px;"
+                            style :"font-family:mono; font-size:10px;"
                         }
                     }]
                 });
