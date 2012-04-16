@@ -109,12 +109,9 @@ def unpackTree (root, prefix):
         if leaf.type.code == 'image':
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (decodestring (leaf.text.split (',')[1]))
-        elif leaf.name.endswith ('.yml'):
+        elif leaf.name.endswith ('.yml') or leaf.name.endswith ('.cfg'):
             yaml2py (leaf, prefix)
-        else:
-            _, ext = os.path.splitext (leaf.name)
-            if not ext in ['.rst','.txt']:
-                continue ## security!
+        elif leaf.name.endswith ('.rst') or leaf.name.endswith ('.txt'):
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (leaf.text)
 

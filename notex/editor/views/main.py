@@ -33,7 +33,7 @@ def init_prj01 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.rst',
+        name = 'index.txt',
         text = open (os.path.join (path,'tutorial/index.rst')).read (),
         rank = 0,
     )
@@ -41,7 +41,7 @@ def init_prj01 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.yml',
+        name = 'index.cfg',
         text = open (os.path.join (path,'tutorial/index.yml')).read (),
         rank = 1,
     )
@@ -58,7 +58,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'lorem-ipsum.rst',
+        name = 'lorem-ipsum.txt',
         text = open (os.path.join (path,'lorem-ipsum/part-000.rst')).read (),
         rank = 0,
     )
@@ -66,7 +66,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'suspendisse-potenti.rst',
+        name = 'suspendisse-potenti.txt',
         text = open (os.path.join (path,'lorem-ipsum/part-001.rst')).read (),
         rank = 1,
     )
@@ -74,7 +74,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'cras-rutrum.rst',
+        name = 'cras-rutrum.txt',
         text = open (os.path.join (path,'lorem-ipsum/part-002.rst')).read (),
         rank = 2,
     )
@@ -82,7 +82,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.rst',
+        name = 'index.txt',
         text = open (os.path.join (path,'lorem-ipsum/index.rst')).read (),
         rank = 3,
     )
@@ -90,7 +90,7 @@ def init_prj02 (root, path):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.yml',
+        name = 'index.cfg',
         text = open (os.path.join (path,'lorem-ipsum/index.yml')).read (),
         rank = 4,
     )

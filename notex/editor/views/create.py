@@ -35,14 +35,14 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = node,
-        name = 'index.rst',
+        name = 'index.txt',
         text = open (os.path.join (path,'generic/index.rst')).read (),
         rank = 0)
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = node,
-        name = 'index.yml',
+        name = 'index.cfg',
         text = open (os.path.join (path,'generic/index.yml')).read ()
             .replace ('${PROJECT}', request.POST['name'])
             .replace ('${AUTHORs}', 'AUTHORs'),
