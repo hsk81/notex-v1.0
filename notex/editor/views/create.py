@@ -15,7 +15,6 @@ from editor.models import LEAF, LEAF_TYPE
 import os.path
 import base64
 import json
-import cgi
 import os
 
 ################################################################################
@@ -37,18 +36,16 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = node,
         name = 'index.rst',
-        text = cgi.escape (open (os.path.join (path,'generic/index.rst')) \
-            .read ()),
+        text = open (os.path.join (path,'generic/index.rst')).read (),
         rank = 0)
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = node,
         name = 'index.yml',
-        text = cgi.escape (open (os.path.join (path,'generic/index.yml')) \
-            .read () \
-            .replace ('${PROJECT}', request.POST['name']) \
-            .replace ('${AUTHORs}', 'AUTHORs')),
+        text = open (os.path.join (path,'generic/index.yml')).read ()
+            .replace ('${PROJECT}', request.POST['name'])
+            .replace ('${AUTHORs}', 'AUTHORs'),
         rank = 1)
 
     js_string = json.dumps ([{

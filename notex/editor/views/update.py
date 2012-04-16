@@ -66,12 +66,8 @@ def create_on_update (request, create_leaf):
     if create_leaf != None:
         response = create_leaf (request)
     else:
-        logger.error (
-            "create_leaf not set, function expected",
-            exc_info=True,
-            extra={'request': request})
-
         response = failure (request)
+        logger.error (ex, exc_info = True, extra = {'request': request})
 
     return response
 

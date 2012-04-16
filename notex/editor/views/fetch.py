@@ -59,11 +59,7 @@ def compress (request, id, fnTranslate):
     except Exception as ex:
         js_string = json.dumps ([{
             'id' : node.id, 'name' : node.name, 'success' : False}])
-        logger.error (
-            "Translation for project '%s' with ID '%s' failed" % \
-                (node.name, node.id),
-            exc_info=True,
-            extra={'request': request})
+        logger.error (ex, exc_info=True, extra={'request': request})
 
     zipBuffer.close ()
     cache.set (object_key, strBuffer.getvalue ())

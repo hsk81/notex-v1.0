@@ -6,7 +6,6 @@ __date__ ="$Mar 27, 2012 1:06:43 PM$"
 
 from settings import MEDIA_ROOT
 
-from editor.lib import MLStripper
 from editor.lib import Interpolator
 from editor.models import NODE, LEAF
 from base64 import decodestring
@@ -35,31 +34,12 @@ def processToText (root, prefix, zipBuffer, target = 'report'):
             zipBuffer.writestr (os.path.join (prefix, leaf.name),
                 decodestring (leaf.text.split (',')[1]))
         else:
-            _, ftext_path = tempfile.mkstemp (); ftext = open (ftext_path, 'w')
-            _, fhtml_path = tempfile.mkstemp (); fhtml = open (fhtml_path, 'w')
-
-            text = MLStripper.strip_tags (leaf.text)
-
-            ftext.write (text); ftext.close ()
-            fhtml.write (leaf.text); fhtml.close ()
-
-            try:
-                result, diff = 0, subprocess.check_output \
-                    (['diff', ftext_path, fhtml_path])
-            except subprocess.CalledProcessError, ex: 
-                result, diff = ex.returncode, ex.output
-
-            subprocess.check_call (['rm', fhtml_path, '-f'])
-            subprocess.check_call (['rm', ftext_path, '-f'])
-
-            zipBuffer.writestr (os.path.join (prefix, leaf.name), text)
-            if result == 1:
-                zipBuffer.writestr (os.path.join \
-                    (prefix, leaf.name + ".diff"), diff)
+            zipBuffer.writestr (os.path.join (prefix, leaf.name),
+                leaf.text)
 
     for node in ns:
-        path = os.path.join (prefix, node.name)
-        processToText (node, path, zipBuffer, target = None)
+        processToText (node, os.path.join (prefix, node.name), zipBuffer,
+            target = None)
 
 def processToLatex (root, title, zipBuffer):
 
@@ -136,7 +116,7 @@ def unpackTree (root, prefix):
             if not ext in ['.rst','.txt']:
                 continue ## security!
             with open (os.path.join (prefix, leaf.name), 'w') as file:
-                file.write (MLStripper.strip_tags (leaf.text))
+                file.write (leaf.text)
 
     for node in ns:
         subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
@@ -148,10 +128,7 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     constructor = lambda loader, node: loader.construct_pairs (node)
     yaml.CSafeLoader.add_constructor (u'!omap', constructor)
-
-    data = yaml.load (
-        u'!omap\n' + MLStripper.strip_tags (leaf.text),
-        Loader = yaml.CSafeLoader)
+    data = yaml.load (u'!omap\n' + leaf.text, Loader = yaml.CSafeLoader)
 
     with open (os.path.join (prefix, filename), 'w+') as file:
 

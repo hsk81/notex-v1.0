@@ -111,9 +111,7 @@ def process_zip_info (zip_info, rankdict, parent, file):
             zi = fake_zip_info (zip_info, rankdict, filename = path)
             create_folder (zi, rankdict, parent)
 
-        if name.endswith ('.diff'):
-            apply_patch (zip_info, rankdict, parent, file)
-        elif mimetype and mimetype.startswith ('image'):
+        if mimetype and mimetype.startswith ('image'):
             create_image (zip_info, rankdict, parent, file)
         else: ## assume text!
             create_text (zip_info, rankdict, parent, file)
@@ -143,39 +141,6 @@ def create_folder (zip_info, rankdict, parent):
         node = parent[path],
         name = name,
         rank = rankdict[zip_info])
-
-def apply_patch (zip_info, rankdict, parent, file):
-
-    path, name = os.path.split (zip_info.filename)
-    mimetype, encoding = mimetypes.guess_type (name)
-
-    node = LEAF.objects.get (
-        _node = parent[path],
-        _name = re.sub ('\.diff$', '', name))
-
-    _, ftext_path = tempfile.mkstemp ()
-    ftext = open (ftext_path, 'w')
-    ftext.write (node.text)
-    ftext.close ()
-
-    _, fdiff_path = tempfile.mkstemp ()
-    fdiff = open (fdiff_path, 'w')
-    fdiff.write (''.join (file.readlines ()))
-    fdiff.close ()
-
-    try:
-        subprocess.check_call (['patch', ftext_path, fdiff_path, '-s'])
-        ftext = open (ftext_path, 'r')
-        node.text = ftext.read ()
-        ftext.close ()
-        node.save ()
-    except:
-        pass
-
-    subprocess.call (['rm', fdiff_path, '-f'])
-    subprocess.call (['rm', ftext_path, '-f'])
-
-################################################################################
 
 def create_image (zip_info, rankdict, parent, file):
     create_leaf (zip_info, rankdict, parent, file, code = 'image')

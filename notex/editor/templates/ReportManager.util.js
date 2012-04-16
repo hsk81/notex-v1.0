@@ -1,4 +1,4 @@
-    var reportManagerUtil = {
+var reportManagerUtil = {
     
     // #########################################################################
     // CRUD: Create
