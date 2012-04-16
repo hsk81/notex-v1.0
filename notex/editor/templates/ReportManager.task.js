@@ -15,7 +15,8 @@ var reportManagerTask = {
                         var node = tree.getNodeById (tabs[i].id)
                         var attr = node.attributes
 
-                        if (String (attr['iconCls']).match ("^icon-image$") == "icon-image") {
+                        if (String (attr['iconCls']).match ("^icon-image$") == 
+                            "icon-image") {
                             reportManager.fireEvent ('saveImageTab', tabs[i])
                         } else {
                             reportManager.fireEvent ('saveTextTab', tabs[i])

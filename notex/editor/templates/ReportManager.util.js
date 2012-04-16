@@ -249,5 +249,4 @@ var reportManagerUtil = {
             }
         })
     }
-
 }
