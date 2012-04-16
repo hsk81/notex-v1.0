@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
+
+import settings
 import views
 
 admin.autodiscover ()
@@ -19,3 +21,6 @@ urlpatterns = patterns ('',
     ),
 
 )
+
+if not settings.DEBUG:
+    handler404 = 'views.page_not_found'
