@@ -12,11 +12,17 @@ from base64 import decodestring
 
 import subprocess
 import tempfile
+import logging
 import urllib
 import types
 import uuid
 import yaml
 import os
+
+################################################################################
+################################################################################
+
+logger = logging.getLogger (__name__)
 
 ################################################################################
 ################################################################################
@@ -63,19 +69,28 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
     subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
     unpackTree (root, os.path.join (target_dir, 'source'))
 
-    with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-        with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+    try:
+        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-            subprocess.check_call (['make','-C', target_dir, 'latex'],
-                stdout = stdout, stderr = stderr)
-
-            if not skipPdf:
-                subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
-                    os.path.join (latex_dir, 'pdflatex')])
-                subprocess.check_call (['make','-C', latex_dir, 'all-pdf'],
+                subprocess.check_call (['make','-C', target_dir, 'latex'],
                     stdout = stdout, stderr = stderr)
-                subprocess.check_call (['rm', \
-                    os.path.join (latex_dir, 'pdflatex')])
+
+                if not skipPdf:
+                    subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
+                        os.path.join (latex_dir, 'pdflatex')])
+                    subprocess.check_call (['make','-C', latex_dir, 'all-pdf'],
+                        stdout = stdout, stderr = stderr)
+                    subprocess.check_call (['rm', \
+                        os.path.join (latex_dir, 'pdflatex')])
+
+    except Exception as ex:
+        with open (os.path.join (target_dir, 'stdout.log'), 'r') as stdout:
+            with open (os.path.join (target_dir, 'stderr.log'), 'r') as stderr:
+
+                ex.stderr_log = stderr.read ()
+                ex.stdout_log = stdout.read ()
+                raise
 
     pdfnames = []
     for dirpath, dirnames, filenames in os.walk (latex_dir):

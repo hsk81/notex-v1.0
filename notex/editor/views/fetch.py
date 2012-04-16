@@ -59,7 +59,13 @@ def compress (request, id, fnTranslate):
     except Exception as ex:
         js_string = json.dumps ([{
             'id' : node.id, 'name' : node.name, 'success' : False}])
-        logger.error (ex, exc_info=True, extra={'request': request})
+
+        logger.error (ex, exc_info = True, extra =
+        {
+            'request' : request,
+            'stderr_log' : getattr (ex, 'stderr_log', None),
+            'stdout_log' : getattr (ex, 'stdout_log', None)
+        })
 
     zipBuffer.close ()
     cache.set (object_key, strBuffer.getvalue ())
