@@ -10,7 +10,14 @@ PIDFILE="$PROJDIR/$PROJECT.pid"
 
 case "$1" in
 	start)
-		$0 stop
+        if [ -f $PIDFILE ]; then
+            PID=$(cat -- $PIDFILE)
+            STA=$(ps $PID)
+            if [ "$?" -eq "0" ] ; then
+                exit 0
+            fi
+            rm -f -- $PIDFILE
+        fi
         exec /usr/bin/env - PYTHONPATH="../python:.." \
             ./manage.py runfcgi method=$SRVMETH host=$HOSTVAL port=$PORTVAL \
                 pidfile=$PIDFILE
@@ -22,6 +29,7 @@ case "$1" in
         fi
         ;;
     restart)
+		$0 stop
 		$0 start
         ;;
     status)
@@ -38,7 +46,7 @@ case "$1" in
         fi
         ;;
     *)
-		$0 start
+		$0 restart
 esac
 
 exit 0
