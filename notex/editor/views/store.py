@@ -174,8 +174,8 @@ def create_image (zip_info, rankdict, parent, file):
     path = os.path.normpath (path)
 
     mimetype, encoding = mimetypes.guess_type (name)
-    text = 'data:%s;base64,%s' % (mimetype, base64.encodestring \
-        (''.join (file.readlines ())))
+    text = 'data:%s;base64,%s' % \
+        (mimetype, base64.encodestring (file.readlines ()))
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='image'),
@@ -193,7 +193,7 @@ def create_text (zip_info, rankdict, parent, file):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = parent[path],
         name = name,
-        text = ''.join (file.readlines ()),
+        text = file.read ().replace ('\r\n','\n'),
         rank = rankdict[zip_info])
 
 ################################################################################

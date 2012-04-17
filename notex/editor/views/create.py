@@ -82,7 +82,7 @@ def createText (request):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = NODE.objects.get (pk=ids[0]),
         name = request.POST['name'],
-        text = request.POST['data'],
+        text = request.POST['data'].replace ('\r\n','\n'),
         rank = int (request.POST['rank']))
 
     if 'leafId' in request.POST:

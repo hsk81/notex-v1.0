@@ -41,7 +41,7 @@ def processToText (root, prefix, zipBuffer, target = None):
                 decodestring (leaf.text.split (',')[1]))
         else:
             zipBuffer.writestr (os.path.join (prefix, leaf.name),
-                leaf.text)
+                leaf.text.replace ('\n','\r\n'))
 
     for node in ns:
         processToText (node, os.path.join (prefix, node.name), zipBuffer,
