@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
+from django.http import HttpResponse
 
 import settings
 import views
@@ -7,6 +8,9 @@ import views
 admin.autodiscover ()
 
 urlpatterns = patterns ('',
+
+    (r'^robots\.txt$', lambda r:
+        HttpResponse ("User-agent: *\nDisallow: /", mimetype="text/plain")),
 
     (r'^util/', include('util.urls',namespace='util')),
     (r'^svc/', include('svc.urls', namespace='svc')),
