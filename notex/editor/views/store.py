@@ -27,7 +27,7 @@ import re
 ################################################################################
 ################################################################################
 
-@transaction.commit_manually
+#@transaction.commit_manually
 def storeFile (request, fid):
 
     with os.tmpfile() as zip_file:
@@ -57,20 +57,18 @@ def create_project (root, fid, zip_buffer):
     infolist = sorted (infolist, key=lambda zip_info: zip_info.filename)
     namelist = map (lambda zi: zi.filename, infolist)
 
-    base = os.path.commonprefix (namelist)
-    if base == '':
-        return failure (message = 'Single report root expected', file_id = fid)
-
-    origin = os.path.join (PathUtil.head (base), 'report')
+    common = os.path.commonprefix (namelist)
+    origin = os.path.normpath (common)
     parent = {origin: node}
-
-    if not any (map (lambda i: i.filename.startswith (origin), infolist)):
-        return failure (message = 'Sub-directory "report" expected',
-            file_id = fid)
 
     for zip_info in infolist:
         with zip_buffer.open (zip_info) as file:
-            if not zip_info.filename.startswith (origin): continue
+
+            if zip_info.filename.startswith (os.path.join (origin,'latex')) or \
+               zip_info.filename.startswith (os.path.join (origin,'pdf')):
+
+                continue
+
             process_zip_info (zip_info, rankdict, parent, file)
 
     return success (message = None, file_id = fid)
@@ -79,12 +77,12 @@ def create_project (root, fid, zip_buffer):
 
 def success (message, file_id):
 
-    transaction.commit ()
+    #transaction.commit ()
     return http_response (True, message, file_id)
 
 def failure (message, file_id):
 
-    transaction.rollback ()
+    #transaction.rollback ()
     return http_response (False, message, file_id)
 
 def http_response (success, message, file_id):
@@ -101,26 +99,39 @@ def http_response (success, message, file_id):
 
 def process_zip_info (zip_info, rankdict, parent, file):
 
-    basename = os.path.basename (zip_info.filename)
-    if basename != '': ## is file?
-        if not mimetypes.inited:
-            mimetypes.init
+    path, name = os.path.split (zip_info.filename)
+    path = os.path.normpath (path)
 
-        path, name = os.path.split (zip_info.filename)
-        mimetype, encoding = mimetypes.guess_type (name)
+    if not parent.has_key (path): ## no parent node/is folder?
+        zi = fake_zip_info (zip_info, rankdict, filename = path)
+        create_folder (zi, rankdict, parent)
 
-        if not parent.has_key (path): ## no parent node/is folder?
-            zi = fake_zip_info (zip_info, rankdict, filename = path)
-            create_folder (zi, rankdict, parent)
+    if not mimetypes.inited: mimetypes.init
+    mimetype, encoding = mimetypes.guess_type (name)
 
-        if mimetype and mimetype.startswith ('image'):
-            create_image (zip_info, rankdict, parent, file)
-        else: ## assume text!
+    txt_exts = ['.txt','.rst','.cfg','.yml','.text','.rest','.conf','.yaml']
+    img_exts = ['.png','.jpg','.tif','.bmp','.jpeg','.tiff','.exif','.gif']
+
+    if mimetype:
+        if mimetype.startswith ('text'):
             create_text (zip_info, rankdict, parent, file)
+        elif mimetype.startswith ('image'):
+            create_image (zip_info, rankdict, parent, file)
+        else:
+            _, ext = os.path.splitext (name)
+            if ext.lower () in txt_exts:
+                create_text (zip_info, rankdict, parent, file)
+            if ext.lower () in img_exts:
+                create_image (zip_info, rankdict, parent, file)
+    else:
+        _, ext = os.path.splitext (name)
+        if ext.lower () in txt_exts:
+            create_text (zip_info, rankdict, parent, file)
+        if ext.lower () in img_exts:
+            create_image (zip_info, rankdict, parent, file)
 
 ################################################################################
 
-## TODO: If sub-folders or PDF file then the ranks get messed up; fix!
 def fake_zip_info (zip_info, rankdict, filename):
 
     for zi in rankdict:
@@ -137,6 +148,12 @@ def fake_zip_info (zip_info, rankdict, filename):
 def create_folder (zip_info, rankdict, parent):
 
     path, name = os.path.split (zip_info.filename)
+    path = os.path.normpath (path)
+    
+    if not parent.has_key (path): ## no parent node?
+        zi = fake_zip_info (zip_info, rankdict, filename = path)
+        create_folder (zi, rankdict, parent)
+
     parent[zip_info.filename] = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='folder'),
         root = parent[path].root,
@@ -145,27 +162,31 @@ def create_folder (zip_info, rankdict, parent):
         rank = rankdict[zip_info])
 
 def create_image (zip_info, rankdict, parent, file):
-    create_leaf (zip_info, rankdict, parent, file, code = 'image')
-
-def create_text (zip_info, rankdict, parent, file):
-    create_leaf (zip_info, rankdict, parent, file, code = 'text')
-
-def create_leaf (zip_info, rankdict, parent, file, code):
 
     path, name = os.path.split (zip_info.filename)
-    mimetype, encoding = mimetypes.guess_type (name)
+    path = os.path.normpath (path)
 
-    if code == 'image':
-        text = 'data:%s;base64,%s' % (mimetype, base64.encodestring \
-            (''.join (file.readlines ())))
-    else:
-        text = cgi.escape (''.join (file.readlines ()), quote=True)
+    mimetype, encoding = mimetypes.guess_type (name)
+    text = 'data:%s;base64,%s' % (mimetype, base64.encodestring \
+        (''.join (file.readlines ())))
 
     _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code=code),
+        type = LEAF_TYPE.objects.get (_code='image'),
         node = parent[path],
         name = name,
         text = text,
+        rank = rankdict[zip_info])
+
+def create_text (zip_info, rankdict, parent, file):
+
+    path, name = os.path.split (zip_info.filename)
+    path = os.path.normpath (path)
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='text'),
+        node = parent[path],
+        name = name,
+        text = ''.join (file.readlines ()),
         rank = rankdict[zip_info])
 
 ################################################################################

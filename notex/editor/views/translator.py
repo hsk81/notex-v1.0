@@ -27,7 +27,7 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
-def processToText (root, prefix, zipBuffer, target = 'report'):
+def processToText (root, prefix, zipBuffer, target = None):
 
     if target != None:
         prefix = os.path.join (prefix, target)
@@ -97,19 +97,12 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
         for filename in filenames:
 
             if not filename.endswith ('pdf'):
-                zipBuffer.write (os.path.join (dirpath, filename),
-                    os.path.join (title, dirpath.replace (latex_dir, 'latex'),
-                        filename))
-
+                zip_path = os.path.join (title, 'latex', filename)
             elif not skipPdf:
-                pdf_file = os.path.join (dirpath, filename)
-                subprocess.check_call (['mv', pdf_file, build_dir])
-                pdfnames.append (filename)
+                zip_path = os.path.join (title, 'pdf', 
+                    urllib.unquote_plus (filename))
 
-    for pdfname in pdfnames:
-        pdf_file = os.path.join (build_dir, pdfname)
-        pdf_path = os.path.join (title, urllib.unquote_plus (pdfname))
-        zipBuffer.write (pdf_file, pdf_path)
+            zipBuffer.write (os.path.join (dirpath, filename), zip_path)
 
     subprocess.check_call (['rm', target_dir, '-r'])
 
@@ -121,14 +114,18 @@ def unpackTree (root, prefix):
     ns = NODE.objects.filter (_node = root)
 
     for leaf in ls:
-        if leaf.type.code == 'image':
-            with open (os.path.join (prefix, leaf.name), 'w') as file:
-                file.write (decodestring (leaf.text.split (',')[1]))
-        elif leaf.name.endswith ('.yml') or leaf.name.endswith ('.cfg'):
-            yaml2py (leaf, prefix)
-        elif leaf.name.endswith ('.rst') or leaf.name.endswith ('.txt'):
+
+        if leaf.type.code == 'text':
+            _, ext = os.path.splitext (leaf.name)
+            if ext.lower () in ['.cfg','.yml','.conf','.yaml']:
+                yaml2py (leaf, prefix); continue
+
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (leaf.text)
+
+        elif leaf.type.code == 'image':
+            with open (os.path.join (prefix, leaf.name), 'w') as file:
+                file.write (decodestring (leaf.text.split (',')[1]))
 
     for node in ns:
         subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
