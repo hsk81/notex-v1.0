@@ -1,14 +1,19 @@
+__author__ = "hsk81"
+__date__ = "$Apr 17, 2012 12:03:15 PM$"
+
+################################################################################
+################################################################################
+
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 
-from views import DATA
-from views import POST
+import views
+
+################################################################################
+################################################################################
 
 urlpatterns = patterns ('',
-
-    url(r'^data/lorem-ipsum/$', DATA.lorem_ipsum, name='data.lorem-ipsum'),
-
-)
+    url(r'^lorem-ipsum/$', views.lorem_ipsum, name='lorem-ipsum'))
 
 def data_urlpatterns (cls, f_obj={}, f_set={}):
 
@@ -37,63 +42,44 @@ def data_urlpatterns (cls, f_obj={}, f_set={}):
         ## format serialization using 'json'
         ##
 
-        url(
-            r'^json/%s/(?P<id>\d+|\$0)/$' % lit,
-            lambda req, id: DATA.object (req, id, cls, format = 'json'),
-            name='json.%s'% lit
-        ),
+        url(r'^json/%s/(?P<id>\d+|\$0)/$' % lit,
+            lambda req, id: views.object (req, id, cls, format = 'json'),
+            name='json.%s'% lit),
 
-        url(
-            r'^json/%s/$' % (lit + (lit.isupper () and '_SET' or '_set')),
-            lambda req: DATA.objects (req, cls, format = 'json'),
-            name='json.%s'% (lit + (lit.isupper () and '_SET' or '_set'))
-        ),
+        url(r'^json/%s/$' % (lit + (lit.isupper () and '_SET' or '_set')),
+            lambda req: views.objects (req, cls, format = 'json'),
+            name='json.%s'% (lit + (lit.isupper () and '_SET' or '_set'))),
 
         ##
         ## format serialization using 'xml'
         ##
 
-        url(
-            r'^xml/%s/(?P<id>\d+|\$0)/$' % lit,
-            lambda req, id: DATA.object (req, id, cls, format = 'xml'),
-            name='xml.%s'% lit
-        ),
+        url(r'^xml/%s/(?P<id>\d+|\$0)/$' % lit,
+            lambda req, id: views.object (req, id, cls, format = 'xml'),
+            name='xml.%s'% lit),
 
-        url(
-            r'^xml/%s/$' % (lit + (lit.isupper () and '_SET' or '_set')),
-            lambda req: DATA.objects (req, cls, format = 'xml'),
-            name='xml.%s'% (lit + (lit.isupper () and '_SET' or '_set'))
-        ),
+        url(r'^xml/%s/$' % (lit + (lit.isupper () and '_SET' or '_set')),
+            lambda req: views.objects (req, cls, format = 'xml'),
+            name='xml.%s'% (lit + (lit.isupper () and '_SET' or '_set'))))
 
-    )
-    
     for path, action in zip (f_obj.keys (), f_obj.values ()):
 
         res = patterns ('',
-
-            url(
-                r'^%/%s/(?P<id>\d+|\$0)/$' % (path, lit),
-                action,
-                name='%s.%s'% (path, lit)
-            ),
-
-        ) + res ## enables *overwriting* xml/json
+            url(r'^%/%s/(?P<id>\d+|\$0)/$' % (path, lit),
+                action, name='%s.%s'% (path, lit))) + res 
 
     for path, action in zip (f_set.keys (), f_set.values ()):
 
         res = patterns ('',
-
-            url(
-                r'^%s/%s/$' % \
-                    (path, (lit + (lit.isupper () and '_SET' or '_set'))),
-                action,
-                name='%s.%s'% \
-                    (path, (lit + (lit.isupper () and '_SET' or '_set')))
-            ),
-
-        ) + res
+            url(r'^%s/%s/$' % (path, (lit + (lit.isupper () and \
+                    '_SET' or '_set'))),
+                action, name='%s.%s'% (path, (lit + (lit.isupper () and \
+                    '_SET' or '_set'))))) + res
 
     return res ## enables *overwriting* xml/json
+
+################################################################################
+################################################################################
 
 if __name__ == "__main__":
 
