@@ -29,7 +29,7 @@ var editor = function () {
                     id : 'htmlEditorId',
                     anchor : '100% 100%',
                     value : tabInfo.text,
-                    style :"font-family:mono; font-size:11px;"
+                    style :"font-family:courier; font-size:12px;"
                 }]
             });
 
