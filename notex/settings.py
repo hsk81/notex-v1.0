@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+
+################################################################################
+################################################################################
+
+__author__ = "hsk81"
+__date__ = "$Mar 27, 2012 1:12:57 PM$"
+
+################################################################################
+################################################################################
+
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -83,13 +93,8 @@ SESSION_COOKIE_SECURE = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = False
 
-TEMPLATE_DIRS = (
-    os.path.join (SITE_ROOT, 'templates/'),
-)
-
-FIXTURE_DIRS = (
-    os.path.join (SITE_ROOT, 'fixtures/'),
-)
+TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'))
+FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'))
 
 SENTRY_DSN = 'http://%s:%s@localhost:9000/1' % (
     '76296a08393f45acb48ffa6717c1ae2b', 'c9fe5d6842cc4263b555d12be86ad340'
@@ -110,6 +115,9 @@ INSTALLED_APPS = (
     'util', 'svc', 'editor',
 )
 
+################################################################################
+################################################################################
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -119,7 +127,8 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '[%(asctime)s] %(levelname)s -- %(module)s (pid:%(process)d,tid:%(thread)d): %(message)s'
+            'format': '[%(asctime)s] %(levelname)s -- ' \
+                '%(module)s (pid:%(process)d,tid:%(thread)d): %(message)s'
         },
     },
     'handlers': {
@@ -152,3 +161,5 @@ LOGGING = {
     },
 }
 
+################################################################################
+################################################################################

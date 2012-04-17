@@ -1,15 +1,16 @@
-__author__ ="hsk81"
-__date__ ="$Mar 27, 2012 1:12:57 PM$"
+__author__ = "hsk81"
+__date__ = "$Mar 27, 2012 1:12:57 PM$"
 
-###############################################################################################
-###############################################################################################
+################################################################################
+################################################################################
 
-from django.test   import TestCase
+from django.test import TestCase
 from editor.models import *
-from util.views    import UTIL
 
-###############################################################################################
-###############################################################################################
+import random
+
+################################################################################
+################################################################################
 
 class ModelTest (TestCase):
 
@@ -20,20 +21,15 @@ class ModelTest (TestCase):
     def create_root (self, node_type=None):
 
         if node_type == None:
-
             node_type = ROOT_TYPE.objects.create (
-                code = UTIL.create_id (),
-                desc = 'default root type'
-            )
+                code = self.create_id (),
+                desc = 'default root type')
 
-        root = ROOT.objects.create (
-            usid = UTIL.create_id (),
+        return ROOT.objects.create (
+            usid = self.create_id (),
             name = 'root',
             rank = 0,
-            type = node_type
-        )
-
-        return root
+            type = node_type)
 
     def test_root (self):
 
@@ -43,50 +39,41 @@ class ModelTest (TestCase):
     def test_root_exception (self):
 
         node_type = BASE_TYPE.objects.create (
-            code = UTIL.create_id (),
-            desc = 'invalid node type'
-        )
+            code = self.create_id (),
+            desc = 'invalid node type')
 
         self.assertRaises (FieldError, self.create_root, node_type)
 
     def create_node (self, node_type=None, node=None):
 
         if node_type == None:
-
             node_type = NODE_TYPE.objects.create (
-                code = UTIL.create_id (),
-                desc = 'default node type'
-            )
+                code = self.create_id (),
+                desc = 'default node type')
 
-        node = NODE.objects.create (
+        return NODE.objects.create (
             root = self.create_root (),
             node = node,
             name = 'node',
             rank = 0,
-            type = node_type
-        )
-
-        return node
+            type = node_type)
 
     def test_node (self):
 
         node = self.create_node ()
         self.assertTrue(node.id != None)
-
         node = self.create_node (node=node)
         self.assertTrue(node.id != None)
 
     def test_node_exception (self):
 
         base_type = BASE_TYPE.objects.create (
-            code = UTIL.create_id (),
-            desc = 'invalid node type'
-        )
+            code = self.create_id (),
+            desc = 'invalid node type')
 
         node_type = NODE_TYPE.objects.create (
-            code = UTIL.create_id (),
-            desc = 'default node type'
-        )
+            code = self.create_id (),
+            desc = 'default node type')
 
         node = self.create_node (node_type=node_type)
         self.assertTrue(node.id != None)
@@ -97,20 +84,15 @@ class ModelTest (TestCase):
     def create_leaf (self, node_type=None):
 
         if node_type == None:
-
             node_type = LEAF_TYPE.objects.create (
-                code = UTIL.create_id (),
-                desc = 'default leaf type'
-            )
+                code = self.create_id (),
+                desc = 'default leaf type')
 
-        leaf = LEAF.objects.create (
+        return LEAF.objects.create (
             node = self.create_node (),
             name = 'leaf',
             rank = 0,
-            type = node_type
-        )
-
-        return leaf
+            type = node_type)
 
     def test_leaf (self):
 
@@ -120,11 +102,14 @@ class ModelTest (TestCase):
     def test_leaf_exception (self):
 
         node_type = BASE_TYPE.objects.create (
-            code = UTIL.create_id (),
-            desc = 'invalid node type'
-        )
+            code = self.create_id (),
+            desc = 'invalid node type')
 
         self.assertRaises (FieldError, self.create_leaf, node_type)
 
-###############################################################################################
-###############################################################################################
+    def create_id (self, rmin = 0, rmax = 16**32-1):
+
+        return hex (random.randint (rmin, rmax)).lstrip ('0x').rstrip ('L')
+
+################################################################################
+################################################################################
