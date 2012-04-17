@@ -78,10 +78,12 @@ def create_project (root, fid, zip_buffer):
 ################################################################################
 
 def success (message, file_id):
+
     transaction.commit ()
     return http_response (True, message, file_id)
 
 def failure (message, file_id):
+
     transaction.rollback ()
     return http_response (False, message, file_id)
 

@@ -48,38 +48,29 @@
 <script type="text/javascript">
 Ext.onReady (function () {
 
-    /**
-     * quick-tips -----------------------------------------------------------------------------
-     */
-
-    Ext.QuickTips.init ();
-
-    /**
-     * viewport -------------------------------------------------------------------------------
-     */
-
-    var viewport = new Ext.Viewport({
+    Ext.QuickTips.init ()
+    var viewport = new Ext.Viewport ({
 
         layout : 'border', 
-        id     : 'viewportId', 
-        
-        items : [{
-            region : 'center', 
-            layout : 'fit', 
-            items  : [editor]
-      },{
-            region       : 'west', 
-            split        : true, 
-            minWidth     : 260,
-            width        : 260,
-            collapsed    : false, 
-            collapseMode : 'mini', 
-            hidden       : false, 
-            layout       : 'fit', 
-            items        : [reportManager]
-      }]
-    });
+        id : 'viewportId',
 
-    viewport.show ();
+        items : [{
+            region : 'center',
+            layout : 'fit',
+            items : [editor]
+        },{
+            region : 'west',
+            split : true,
+            minWidth : 260,
+            width : 260,
+            collapsed : false,
+            collapseMode : 'mini',
+            hidden : false,
+            layout : 'fit',
+            items : [reportManager]
+        }]
+    })
+
+    viewport.show ()
 });</script>
 {% endblock %}
