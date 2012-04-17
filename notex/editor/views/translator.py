@@ -99,8 +99,7 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
             if not filename.endswith ('pdf'):
                 zip_path = os.path.join (title, 'latex', filename)
             elif not skipPdf:
-                zip_path = os.path.join (title, 'pdf', 
-                    urllib.unquote_plus (filename))
+                zip_path = os.path.join (title, urllib.unquote_plus (filename))
 
             zipBuffer.write (os.path.join (dirpath, filename), zip_path)
 

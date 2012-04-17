@@ -27,7 +27,7 @@ import re
 ################################################################################
 ################################################################################
 
-#@transaction.commit_manually
+@transaction.commit_manually
 def storeFile (request, fid):
 
     with os.tmpfile() as zip_file:
@@ -57,19 +57,26 @@ def create_project (root, fid, zip_buffer):
     infolist = sorted (infolist, key=lambda zip_info: zip_info.filename)
     namelist = map (lambda zi: zi.filename, infolist)
 
-    common = os.path.commonprefix (namelist)
-    origin = os.path.normpath (common)
-    parent = {origin: node}
+    prefix = os.path.commonprefix (namelist)
+    common = ''
+    origin = ''
+    parent = {}
+
+    while prefix != '':
+
+        common += prefix
+        origin = os.path.normpath (common)
+        parent[origin] = node
+
+        prefix = os.path.commonprefix (filter (lambda el: el != '',
+            map (lambda el: re.subn ('^' + common, '', el)[0], namelist)))
+
+    latex_path = os.path.join (origin,'latex')
 
     for zip_info in infolist:
         with zip_buffer.open (zip_info) as file:
-
-            if zip_info.filename.startswith (os.path.join (origin,'latex')) or \
-               zip_info.filename.startswith (os.path.join (origin,'pdf')):
-
-                continue
-
-            process_zip_info (zip_info, rankdict, parent, file)
+            if not zip_info.filename.startswith (latex_path):
+                process_zip_info (zip_info, rankdict, parent, file)
 
     return success (message = None, file_id = fid)
 
@@ -77,12 +84,12 @@ def create_project (root, fid, zip_buffer):
 
 def success (message, file_id):
 
-    #transaction.commit ()
+    transaction.commit ()
     return http_response (True, message, file_id)
 
 def failure (message, file_id):
 
-    #transaction.rollback ()
+    transaction.rollback ()
     return http_response (False, message, file_id)
 
 def http_response (success, message, file_id):
@@ -113,7 +120,7 @@ def process_zip_info (zip_info, rankdict, parent, file):
     img_exts = ['.png','.jpg','.tif','.bmp','.jpeg','.tiff','.exif','.gif']
 
     if mimetype:
-        if mimetype.startswith ('text'):
+        if mimetype == 'text/plain':
             create_text (zip_info, rankdict, parent, file)
         elif mimetype.startswith ('image'):
             create_image (zip_info, rankdict, parent, file)
