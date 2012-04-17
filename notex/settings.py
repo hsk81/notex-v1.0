@@ -14,7 +14,7 @@ SITE_NAME = 'notex'
 SITE_HOST = 'blackhan.ch'
 
 import socket
-if socket.gethostname() != SITE_HOST:
+if socket.gethostname () != SITE_HOST:
 
     SITE_HOST = 'localhost'
 

@@ -1,5 +1,5 @@
-__author__ ="hsk81"
-__date__ ="$Mar 27, 2012 1:12:13 PM$"
+__author__ = "hsk81"
+__date__ = "$Mar 27, 2012 1:12:13 PM$"
 
 ################################################################################
 ################################################################################
@@ -68,12 +68,6 @@ urlpatterns = patterns ('',
             'mimetype'      : 'text/javascript',
             'extra_context' : {}
         }, name='Base64.js'),
-
-    ##
-    ## info : general app information
-    ##
-
-    url (r'^json/info/$', views.info, name='json.info'),
 
     ##
     ## crud : create, read, update & delete
