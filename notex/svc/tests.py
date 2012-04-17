@@ -1,4 +1,4 @@
-from django.test        import TestCase
+from django.test import TestCase
 from django.test.client import Client
 
 from svc.models  import *
@@ -7,10 +7,12 @@ class TestCaseDep:
 
     def __init__ (self, objTest = None, clsTest = None):
 
-        if objTest != None: self._object = objTest
-        else:               self._object = clsTest ()
+        if objTest != None:
+            self._object = objTest
+        else:
+            self._object = clsTest ()
 
-        self._setUp    = (objTest == None)
+        self._setUp = (objTest == None)
         self._tearDown = (objTest == None)
 
     def setUp (self, *args, **kwargs):
@@ -42,10 +44,9 @@ class SvcTest (TestCase):
         ##
 
         for _ in xrange (n):
-
             self.test_lorem_ipsum ()
 
     def test_lorem_ipsum (self):
 
         rsp = self.client.get ('/svc/data/lorem-ipsum/')
-        self.failUnlessEqual(rsp.status_code, 200)
+        self.failUnlessEqual (rsp.status_code, 200)

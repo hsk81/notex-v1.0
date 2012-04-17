@@ -1,4 +1,4 @@
-from django.conf.urls.defaults   import *
+from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 
 from views import DATA
@@ -6,17 +6,7 @@ from views import POST
 
 urlpatterns = patterns ('',
 
-    url(
-        r'^data/info/$',
-        DATA.info,
-        name='data.info'
-    ),
-
-    url(
-        r'^data/lorem-ipsum/$',
-        DATA.lorem_ipsum,
-        name='data.lorem-ipsum'
-    ),
+    url(r'^data/lorem-ipsum/$', DATA.lorem_ipsum, name='data.lorem-ipsum'),
 
 )
 

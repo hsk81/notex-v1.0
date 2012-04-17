@@ -34,17 +34,6 @@ def direct_to_template_with_query (request, template, extra_context):
 
 class DATA:
 
-    def info (request):
-
-        js_string = json.dumps ({
-            'app' : 'svc',
-            'ver' : '0.1'
-        })
-
-        return HttpResponse (u'%s\n' % js_string, mimetype='application/json')
-
-    info = staticmethod (info)
-
     def lorem_ipsum (request, path = MEDIA_ROOT+'app/svc/txt/lorem-ipsum.txt'):
 
         mimetype = request.GET.get('mimetype', 'text/plain')
