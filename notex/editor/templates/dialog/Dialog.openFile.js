@@ -1,45 +1,48 @@
 var dialogOpenFile = new Ext.Window ({
 
-    layout    : 'fit', 
-    id        : 'dialog.openFile.id', 
-    title     : 'Open File', 
-    frame     : true, 
-    modal     : true, 
-    draggable : true, 
-    plain     : false, 
-    border    : false, 
-    closable  : false, 
-    resizable : false, 
-    width     : 320,
-    
+    layout : 'fit',
+    id : 'dialog.openFile.id',
+    title : 'Open File',
+    frame : true,
+    modal : true,
+    draggable : true,
+    plain : false,
+    border : false,
+    closable : false,
+    resizable : false,
+    width : 320,
+
     items : [{
         width  : 320,
         height : 36,
-        layout : 'hbox', 
-        frame  : true, 
+        layout : 'hbox',
+        frame  : true,
         layoutConfig : {
             pack  : 'left',
             align : 'middle'
-        }, 
+        },
         items : [{
-            xtype     : 'textfield', 
-            inputType : 'file', 
-            id        : 'inputOpenFileId'
+            xtype : 'textfield',
+            id : 'inputOpenFileId',
+            width : 296,
+            autoCreate : {
+                tag: 'input', type: 'file', size: '24', autocomplete: 'off'
+            }
         }]
-    }], 
+    }],
 
     bbar : ['->', {
-        text    : 'Cancel', 
-        style   : 'padding: 5 0 5 0;', 
-        iconCls : 'icon-cross', 
+        text : 'Cancel',
+        style : 'padding: 5 0 5 0;',
+        iconCls : 'icon-cross',
         handler : function (btn) {
-            dialogOpenFile.hide ();
-            dialogOpenFile.fireEvent ('cancelSuccess');
+            dialogOpenFile.hide ()
+            dialogOpenFile.fireEvent ('cancelSuccess')
         }
     },{
-        text    : 'Open', 
-        style   : 'padding: 5 0 5 0;', 
-        iconCls : 'icon-folder_page', 
+        text : 'Open',
+        style : 'padding: 5 0 5 0;',
+        iconCls : 'icon-folder_page',
         handler : function (btn) {
 
             var cmp = Ext.getCmp("inputOpenFileId")
@@ -58,7 +61,7 @@ var dialogOpenFile = new Ext.Window ({
                 dialogOpenFile.hide ()
             }
         }
-    }], 
+    }],
 
     execute : function (fnOpen, fnCancel) {
 
@@ -84,5 +87,4 @@ var dialogOpenFile = new Ext.Window ({
         inputOpenFile.setValue ('')
         this.show ()
     }
-    
 });
