@@ -26,14 +26,12 @@ logger = logging.getLogger (__name__)
 @transaction.commit_manually
 def updateText (request):
 
-    from editor.views import create
     return update (request, editor.views.create.createText)
 
 @transaction.commit_manually
 def updateImage (request):
 
-    from editor.views import create
-    return update (request, create.createImage)
+    return update (request, editor.views.create.createImage)
 
 @transaction.commit_manually
 def update (request, create_leaf = None):
