@@ -158,8 +158,9 @@ var reportManager = function () {
             },
 
             failure: function () {
-                Ext.Msg.alert ("Error",
-                    "No file or invalid file type selected!")
+                Ext.Msg.alert (
+                    "Error", "No file or invalid file type selected!"
+                )
             }
         })
     }
@@ -229,6 +230,8 @@ var reportManager = function () {
                     }
                 }
             });
+        } else {
+            Ext.Msg.alert ("Error", "No report selected; select a report!")
         }
     }
     
@@ -563,13 +566,10 @@ var reportManager = function () {
                         success: reportManager.util.fnSuccessDelete,
                         failure: reportManager.util.fnFailureDelete
                     })
-
                 },
 
                 failure : function (args) {
-                    Ext.Msg.alert (
-                        "Error", "No node selected; select a node!"
-                    )
+                    Ext.Msg.alert ("Error", "No node selected; select a node!")
                 }
             }
         )
