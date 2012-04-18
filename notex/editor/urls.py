@@ -21,51 +21,51 @@ urlpatterns = patterns ('',
     ##
 
     url (r'^ReportManager.js$', direct_to_template, {
-            'template'      : 'ReportManager.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'ReportManager.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.js'),
     url (r'^ReportManager.tree.js$', direct_to_template, {
-            'template'      : 'ReportManager.tree.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'ReportManager.tree.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.tree.js'),
     url (r'^ReportManager.util.js$', direct_to_template, {
-            'template'      : 'ReportManager.util.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'ReportManager.util.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.util.js'),
     url (r'^ReportManager.task.js$', direct_to_template, {
-            'template'      : 'ReportManager.task.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'ReportManager.task.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.task.js'),
 
     url (r'^Editor.js$', direct_to_template, {
-            'template'      : 'Editor.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'Editor.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='Editor.js'),
 
     url (r'^Dialog.js$', direct_to_template, {
-            'template'      : 'dialog/Dialog.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'dialog/Dialog.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='Dialog.js'),
     url (r'^Dialog.openFile.js$', direct_to_template, {
-            'template'      : 'dialog/Dialog.openFile.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'dialog/Dialog.openFile.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='Dialog.openFile.js'),
 
     url (r'^Math.uuid.js$', direct_to_template, {
-            'template'      : 'lib/Math.uuid.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'lib/Math.uuid.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='Math.uuid.js'),
     url (r'^Base64.js$', direct_to_template, {
-            'template'      : 'lib/Base64.js',
-            'mimetype'      : 'text/javascript',
+            'template' : 'lib/Base64.js',
+            'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='Base64.js'),
 
@@ -85,12 +85,12 @@ urlpatterns = patterns ('',
     url (r'^delete/$', views.delete, name='delete'),
 
     ##
-    ## fetch & store: text, html, latex, pdf, file
+    ## export & import: text, html, latex, pdf, file
     ##
 
-    url (r'^fetch-text/(?P<id>.*=)/$', views.fetchText, name='fetch-text'),
-    url (r'^fetch-latex/(?P<id>.*=)/$', views.fetchLatex, name='fetch-latex'),
-    url (r'^fetch-pdf/(?P<id>.*=)/$', views.fetchPdf, name='fetch-pdf'),
+    url (r'^export-text/(?P<id>.*=)/$', views.export_text, name='export-text'),
+    url (r'^export-latex/(?P<id>.*=)/$', views.export_latex, name='export-latex'),
+    url (r'^export-pdf/(?P<id>.*=)/$', views.export_pdf, name='export-pdf'),
     url (r'^store-file/(?P<fid>.*)/$', views.storeFile, name='store-file'),
 )
 

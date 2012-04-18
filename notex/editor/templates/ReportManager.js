@@ -233,15 +233,15 @@ var reportManager = function () {
     }
     
     function exportText () {
-        this.fireEvent ('exportReport', urls.fetchText)
+        this.fireEvent ('exportReport', urls.exportText)
     }
 
     function exportLatex () {
-        this.fireEvent ('exportReport', urls.fetchLatex)
+        this.fireEvent ('exportReport', urls.exportLatex)
     }
 
     function exportPdf () {
-        this.fireEvent ('exportReport', urls.fetchPdf)
+        this.fireEvent ('exportReport', urls.exportPdf)
     }
     
     // #########################################################################
