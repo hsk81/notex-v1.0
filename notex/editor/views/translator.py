@@ -92,16 +92,21 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
                 ex.stdout_log = stdout.read ()
                 raise
 
-    pdfnames = []
     for dirpath, dirnames, filenames in os.walk (latex_dir):
         for filename in filenames:
+
+            src_path = os.path.join (dirpath, filename)
+            with open (src_path, 'r') as src_file:
+                src_text = src_file.read ()
+            with open (src_path, 'w') as src_file:
+                src_file.write (src_text.replace ('\n','\r\n'))
 
             if not filename.endswith ('pdf'):
                 zip_path = os.path.join (title, 'latex', filename)
             elif not skipPdf:
                 zip_path = os.path.join (title, urllib.unquote_plus (filename))
 
-            zipBuffer.write (os.path.join (dirpath, filename), zip_path)
+            zipBuffer.write (src_path, zip_path)
 
     subprocess.check_call (['rm', target_dir, '-r'])
 
