@@ -28,7 +28,7 @@ import re
 ################################################################################
 
 @transaction.commit_manually
-def storeFile (request, fid):
+def import_file (request, fid):
 
     with os.tmpfile() as zip_file:
         zip_file.write (''.join (request.readlines ()))

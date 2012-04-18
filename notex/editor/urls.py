@@ -91,7 +91,7 @@ urlpatterns = patterns ('',
     url (r'^export-text/(?P<id>.*=)/$', views.export_text, name='export-text'),
     url (r'^export-latex/(?P<id>.*=)/$', views.export_latex, name='export-latex'),
     url (r'^export-pdf/(?P<id>.*=)/$', views.export_pdf, name='export-pdf'),
-    url (r'^store-file/(?P<fid>.*)/$', views.storeFile, name='store-file'),
+    url (r'^import-file/(?P<fid>.*)/$', views.import_file, name='import-file'),
 )
 
 ################################################################################
