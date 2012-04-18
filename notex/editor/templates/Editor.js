@@ -79,15 +79,6 @@ var editor = function () {
         }
     }
 
-    function _readTab (tabInfo, fn) {
-
-        var tab = this.findById (
-            (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
-        )
-
-        return (fn != undefined) ? fn (tab) : undefined
-    }
-
     function _updateTab (tabInfo, fn) {
 
         var tab = this.findById (
@@ -132,7 +123,6 @@ var editor = function () {
         listeners : {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
-            readTab : _readTab,
             updateTab : _updateTab,
             deleteTab : _deleteTab
         }, 

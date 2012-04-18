@@ -354,8 +354,7 @@ var reportManager = function () {
     function _saveTextTab (tab) {
     // #########################################################################
         if (tab == undefined) {
-            var editor = Ext.getCmp ('editor.id')
-            tab = editor.getActiveTab ()
+            tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
         if (tab != undefined) {
@@ -380,8 +379,7 @@ var reportManager = function () {
     function _saveImageTab (tab) {
     // #########################################################################
         if (tab == undefined) {
-            var editor = Ext.getCmp ('editor.id')
-            tab = editor.getActiveTab ()
+            tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
         if (tab != undefined) {
