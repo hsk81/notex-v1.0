@@ -30,12 +30,8 @@ htmlhelp_basename: '${project|quote}doc'
 
 latex_elements:
     papersize: 'a4paper'
-    pointsize: '10pt'
+    pointsize: '12pt'
     preamble: ''
 
 latex_documents:
-    - ['index',
-       '${project|quote}.tex',
-       '${project} Documentation',
-       '${author}',
-       'manual']
+ - ['index', '${project|quote}.tex', '${project} Doc', '${author}', 'manual']
