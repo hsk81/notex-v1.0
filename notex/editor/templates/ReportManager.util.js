@@ -86,8 +86,9 @@ var reportManagerUtil = {
 
     fnSuccessUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
+
         Ext.getCmp ('editor.id').fireEvent (
-            'updateTab', {uuid:res.uuid, id:res.id}, function (tab) {
+            'updateTab', {id:(res.uuid != undefined) ? res.uuid : res.id}, function (tab) {
 
                 var tree = Ext.getCmp ('reportManager.tree.id')
                 var node = tree.getNodeById (
@@ -121,8 +122,9 @@ var reportManagerUtil = {
 
     fnFailureUpdate : function (xhr, opts) {
         var res = Ext.decode (xhr.responseText)[0]
+
         Ext.getCmp ('editor.id').fireEvent (
-            'updateTab', undefined, res.id, function (tab) {
+            'updateTab', {id:(res.uuid != undefined) ? res.uuid : res.id}, function (tab) {
                 tab.el.unmask ()
                 Ext.MessageBox.show ({
                     title : 'Saving failed',

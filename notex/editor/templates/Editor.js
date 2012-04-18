@@ -81,28 +81,8 @@ var editor = function () {
 
     function _updateTab (tabInfo, fn) {
 
-        var tab = this.findById (
-            (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
-        )
-
-        if (tabInfo.uuid != undefined) {
-            var ti = {
-                id : tabInfo.id,
-                title : tab.title,
-                text : tab.getData (),
-                iconCls : tab.iconCls
-            }
-
-            this.remove (tab)
-
-            if (ti.iconCls == 'icon-image') {
-                Ext.getCmp ('editor.id').fireEvent ('createImageTab', ti)
-            } else {
-                Ext.getCmp ('editor.id').fireEvent ('createTextTab', ti)
-            }
-        }
-
-        return (fn != undefined) ? fn (tab) : undefined
+        var tab = this.findById (tabInfo.id)
+        if (tab && fn) return fn (tab)
     }
 
     function _deleteTab (tabInfo) {

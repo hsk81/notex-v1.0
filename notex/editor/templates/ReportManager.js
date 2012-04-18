@@ -256,8 +256,8 @@ var reportManager = function () {
 
         if (selectedNode != null) {
             dialog.openFile.execute ({
-                success: openFileOnSucess,
-                failure: openFileOnFailure
+                success: _openFileOnSucess,
+                failure: _openFileOnFailure
             })
         } else {
             Ext.Msg.alert ("Error", "No report selected; select a report!")
