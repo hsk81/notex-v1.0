@@ -7,8 +7,6 @@ __date__ = "$Mar 10, 2012 12:07:16 AM$"
 from django.db import transaction
 from django.http import HttpResponse
 
-from editor.lib import PathUtil
-
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
