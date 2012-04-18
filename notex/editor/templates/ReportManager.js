@@ -124,7 +124,7 @@ var reportManager = function () {
     }]
 
     // #########################################################################
-    function importReport () {
+    function _importReport () {
     // #########################################################################
         dialog.openFile.execute ({
             success: function (file) {
@@ -166,7 +166,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function exportReport (url) {
+    function _exportReport (url) {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -235,20 +235,20 @@ var reportManager = function () {
         }
     }
     
-    function exportText () {
+    function _exportText () {
         this.fireEvent ('exportReport', urls.exportText)
     }
 
-    function exportLatex () {
+    function _exportLatex () {
         this.fireEvent ('exportReport', urls.exportLatex)
     }
 
-    function exportPdf () {
+    function _exportPdf () {
         this.fireEvent ('exportReport', urls.exportPdf)
     }
     
     // #########################################################################
-    function openFile () {
+    function _openFile () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var selectionModel = tree.getSelectionModel ()
@@ -264,7 +264,7 @@ var reportManager = function () {
         }
     }
     
-    function openFileOnSucess (file) {
+    function _openFileOnSucess (file) {
 
         var tree = Ext.getCmp ('reportManager.tree.id')
         var selectionModel = tree.getSelectionModel ()
@@ -295,16 +295,14 @@ var reportManager = function () {
             imageReader.onload = function (e) {
                 fileInfo.iconCls = 'icon-image'
                 fileInfo.text = e.target.result
+                fileInfo.save = true
                 node.attributes['iconCls'] = fileInfo.iconCls
                 node.attributes['data'] = fileInfo.text
 
                 tree.fireEvent ('createNode', node, {refNode: selectedNode},{
                     success: function (args) {
                         Ext.getCmp ('editor.id').fireEvent (
-                            'createImageTab', fileInfo, function (tab) {
-                                Ext.getCmp ('reportManager.id')
-                                    .fireEvent ('saveImageTab', tab)
-                            }
+                            'createImageTab', fileInfo
                         )
                     },
 
@@ -327,38 +325,33 @@ var reportManager = function () {
             textReader.onload = function (e) {
                 fileInfo.iconCls = 'icon-page'
                 fileInfo.text = e.target.result
+                fileInfo.save = true
                 node.attributes['iconCls'] = fileInfo.iconCls
                 node.attributes['data'] = fileInfo.text
 
-                tree.fireEvent (
-                    'createNode', node, {refNode: selectedNode},{
-                        success: function (args) {
-                            Ext.getCmp ('editor.id').fireEvent (
-                                'createTextTab', fileInfo, function (tab) {
-                                    Ext.getCmp ('reportManager.id').fireEvent (
-                                        'saveTextTab', tab
-                                    )
-                                }
-                            )
-                        },
+                tree.fireEvent ('createNode', node, {refNode: selectedNode},{
+                    success: function (args) {
+                        Ext.getCmp ('editor.id').fireEvent (
+                            'createTextTab', fileInfo
+                        )
+                    },
 
-                        failure: function (args) {
-                            Ext.Msg.alert ("Error", "No node inserted!")
-                        }
+                    failure: function (args) {
+                        Ext.Msg.alert ("Error", "No node inserted!")
                     }
-                )
+                })
             }
 
             textReader.readAsBinaryString (file);
         }
     }
 
-    function openFileOnFailure () {
+    function _openFileOnFailure () {
         Ext.Msg.alert ("Error", "No file or invalid file type selected!")
     }
     
     // #########################################################################
-    function saveTextTab (tab) {
+    function _saveTextTab (tab) {
     // #########################################################################
         if (tab == undefined) {
             var editor = Ext.getCmp ('editor.id')
@@ -384,7 +377,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function saveImageTab (tab) {
+    function _saveImageTab (tab) {
     // #########################################################################
         if (tab == undefined) {
             var editor = Ext.getCmp ('editor.id')
@@ -411,7 +404,7 @@ var reportManager = function () {
     }
     
     // #########################################################################
-    function addReport () {
+    function _addReport () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var rank = tree.root.childNodes.indexOf (tree.root.lastChild)
@@ -435,7 +428,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function addFolder () {
+    function _addFolder () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -469,7 +462,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function addTextFile () {
+    function _addTextFile () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -504,7 +497,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function renameSelectedNode () {
+    function _renameSelectedNode () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -548,7 +541,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function deleteSelectedNode () {
+    function _deleteSelectedNode () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -576,7 +569,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function moveSelectedNodeUp () {
+    function _moveSelectedNodeUp () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -613,7 +606,7 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function moveSelectedNodeDown () {
+    function _moveSelectedNodeDown () {
     // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -671,23 +664,24 @@ var reportManager = function () {
 
         tbar : { items : tbar_items },
         items : [reportManagerTree],
+
         listeners : {
-            importReport : importReport,
-            exportText : exportText,
-            exportLatex : exportLatex,
-            exportPdf : exportPdf,
-            exportReport : exportReport,
-            openFile : openFile,
-            saveTextTab : saveTextTab,
-            saveImageTab : saveImageTab,
-            addReport : addReport,
-            addFolder : addFolder,
-            addTextFile : addTextFile,
-            renameSelectedNode : renameSelectedNode,
-            deleteSelectedNode : deleteSelectedNode,
-            moveSelectedNodeUp : moveSelectedNodeUp,
-            moveSelectedNodeDown : moveSelectedNodeDown
-        }
+            importReport : _importReport,
+            exportText : _exportText,
+            exportLatex : _exportLatex,
+            exportPdf : _exportPdf,
+            exportReport : _exportReport,
+            openFile : _openFile,
+            saveTextTab : _saveTextTab,
+            saveImageTab : _saveImageTab,
+            addReport : _addReport,
+            addFolder : _addFolder,
+            addTextFile : _addTextFile,
+            renameSelectedNode : _renameSelectedNode,
+            deleteSelectedNode : _deleteSelectedNode,
+            moveSelectedNodeUp : _moveSelectedNodeUp,
+            moveSelectedNodeDown : _moveSelectedNodeDown
+        },
     })
 }();
 

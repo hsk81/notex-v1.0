@@ -1,13 +1,11 @@
 var editor = function () {
 
-    function createTextTab (tabInfo, fn) {
+    function _createTextTab (tabInfo) {
 
-        var tab = this.findById (
-            (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
-        )
-
-        if (!tab) {
-
+        var tab = this.findById (tabInfo.id)
+        if (tab) {
+            this.activate (tab)
+        } else {
             tab = this.add ({
                 title : tabInfo.title,
                 id : tabInfo.id,
@@ -17,7 +15,7 @@ var editor = function () {
                 closable : true,
 
                 getEditor : function () {
-                    return this.findById ('htmlEditorId')
+                    return this.findById ('editor' + tabInfo.id)
                 },
 
                 getData : function () {
@@ -26,7 +24,7 @@ var editor = function () {
 
                 items : [{
                     xtype : 'textarea',
-                    id : 'htmlEditorId',
+                    id : 'editor' + tabInfo.id,
                     anchor : '100% 100%',
                     value : tabInfo.text,
                     style :"font-family:monospace; font-size:12px;"
@@ -34,21 +32,19 @@ var editor = function () {
             });
 
             this.activate (tab)
-        } else {
-            this.activate (tab)
         }
 
-        return (fn != undefined) ? fn (tab) : undefined
+        if (tabInfo.save) {
+            Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
+        }
     }
 
-    function createImageTab (tabInfo, fn) {
+    function _createImageTab (tabInfo) {
 
-        var tab = this.findById (
-            (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
-        )
-
-        if (!tab) {
-
+        var tab = this.findById (tabInfo.id)
+        if (tab) {
+            this.activate (tab)
+        } else {
             tab = this.add ({
                 title : tabInfo.title,
                 id : tabInfo.id,
@@ -76,14 +72,14 @@ var editor = function () {
             });
 
             this.activate (tab)
-        } else {
-            this.activate (tab)
         }
 
-        return (fn != undefined) ? fn (tab) : undefined
+        if (tabInfo.save) {
+            Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
+        }
     }
 
-    function readTab (tabInfo, fn) {
+    function _readTab (tabInfo, fn) {
 
         var tab = this.findById (
             (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
@@ -92,7 +88,7 @@ var editor = function () {
         return (fn != undefined) ? fn (tab) : undefined
     }
 
-    function updateTab (tabInfo, fn) {
+    function _updateTab (tabInfo, fn) {
 
         var tab = this.findById (
             (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
@@ -118,17 +114,12 @@ var editor = function () {
         return (fn != undefined) ? fn (tab) : undefined
     }
 
-    function deleteTab (tabInfo, fn) {
+    function _deleteTab (tabInfo) {
 
-        var tab = this.findById (
-            (tabInfo.uuid != undefined) ? tabInfo.uuid : tabInfo.id
-        )
-        
+        var tab = this.findById (tabInfo.id)
         if (tab) {
             this.remove (tab, true)
         }
-
-        return (fn != undefined) ? fn (tab) : undefined
     }
 
     return new Ext.TabPanel ({
@@ -139,11 +130,11 @@ var editor = function () {
         tabPosition : 'bottom',
 
         listeners : {
-            createTextTab : createTextTab,
-            createImageTab : createImageTab,
-            readTab : readTab,
-            updateTab : updateTab,
-            deleteTab : deleteTab
+            createTextTab : _createTextTab,
+            createImageTab : _createImageTab,
+            readTab : _readTab,
+            updateTab : _updateTab,
+            deleteTab : _deleteTab
         }, 
     })
 }();

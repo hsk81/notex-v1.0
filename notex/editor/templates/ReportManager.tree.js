@@ -102,12 +102,11 @@ var reportManagerTree = new Ext.tree.TreePanel ({
     }
 });
 
-Ext.getCmp ('reportManager.tree.id').on ('dblclick', function (node, event) {
+Ext.getCmp ('reportManager.tree.id').on ('click', function (node, event) {
     if (node.attributes['cls'] == "file") {
         var tabInfo = {
             id : node.id,
-            title : node.attributes['text'].replace ('<i>','')
-                .replace ('</i>',''),
+            title : node.attributes['text'].replace ('<i>','').replace ('</i>',''),
             text : node.attributes['data'],
             iconCls : node.attributes['iconCls']
         }
