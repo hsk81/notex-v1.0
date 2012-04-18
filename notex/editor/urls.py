@@ -73,25 +73,25 @@ urlpatterns = patterns ('',
     ## crud : create, read, update & delete
     ##
 
-    url (r'^post/create/project$', views.createProject, name='post.createProject'),
-    url (r'^post/create/folder$', views.createFolder, name='post.createFolder'),
-    url (r'^post/create/text$', views.createText, name='post.createText'),
-    url (r'^post/create/image$', views.createImage, name='post.createImage'),
-    url (r'^post/read/$', views.read, name='post.read'),
-    url (r'^post/update/text$', views.updateText, name='post.updateText'),
-    url (r'^post/update/image$', views.updateImage, name='post.updateImage'),
-    url (r'^post/update/swap-rank/$', views.swapRank, name='post.swapRank'),
-    url (r'^post/rename/$', views.rename, name='post.rename'),
-    url (r'^post/delete/$', views.delete, name='post.delete'),
+    url (r'^create-project$', views.createProject, name='create-project'),
+    url (r'^create-folder$', views.createFolder, name='create-folder'),
+    url (r'^create-text$', views.createText, name='create-text'),
+    url (r'^create-image$', views.createImage, name='create-image'),
+    url (r'^read/$', views.read, name='read'),
+    url (r'^update-text$', views.updateText, name='update-text'),
+    url (r'^update-image$', views.updateImage, name='update-image'),
+    url (r'^swap-rank/$', views.swap_rank, name='swap-rank'),
+    url (r'^rename/$', views.rename, name='rename'),
+    url (r'^delete/$', views.delete, name='delete'),
 
     ##
     ## fetch & store: text, html, latex, pdf, file
     ##
 
-    url (r'^data/fetch-text/(?P<id>.*=)/$', views.fetchText, name='data.fetchText'),
-    url (r'^data/fetch-latex/(?P<id>.*=)/$', views.fetchLatex, name='data.fetchLatex'),
-    url (r'^data/fetch-pdf/(?P<id>.*=)/$', views.fetchPdf, name='data.fetchPdf'),
-    url (r'^data/store-file/(?P<fid>.*)/$', views.storeFile, name='data.storeFile'),
+    url (r'^fetch-text/(?P<id>.*=)/$', views.fetchText, name='fetch-text'),
+    url (r'^fetch-latex/(?P<id>.*=)/$', views.fetchLatex, name='fetch-latex'),
+    url (r'^fetch-pdf/(?P<id>.*=)/$', views.fetchPdf, name='fetch-pdf'),
+    url (r'^store-file/(?P<fid>.*)/$', views.storeFile, name='store-file'),
 )
 
 ################################################################################

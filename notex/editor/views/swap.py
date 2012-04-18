@@ -17,7 +17,7 @@ import json
 ################################################################################
 
 @transaction.commit_on_success
-def swapRank (request):
+def swap_rank (request):
 
     _, ids = json.loads (base64.b32decode (request.POST['id']))
     _, jds = json.loads (base64.b32decode (request.POST['jd']))

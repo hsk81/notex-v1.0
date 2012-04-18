@@ -5,7 +5,7 @@ var reportManagerTree = new Ext.tree.TreePanel ({
     rootVisible : false,
     
     loader : new Ext.tree.TreeLoader({
-        url : '{% url editor:post.read %}'
+        url : '{% url editor:read %}'
     }),
     
     root : {

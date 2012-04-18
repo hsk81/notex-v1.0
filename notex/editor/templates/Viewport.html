@@ -21,25 +21,25 @@
     }
 
     var urls = {
-        createProject : '{% url editor:post.createProject %}', 
-        createFolder : '{% url editor:post.createFolder %}', 
-        createText : '{% url editor:post.createText %}', 
-        createImage : '{% url editor:post.createImage %}', 
+        createProject : '{% url editor:create-project %}', 
+        createFolder : '{% url editor:create-folder %}', 
+        createText : '{% url editor:create-text %}', 
+        createImage : '{% url editor:create-image %}', 
         
-        read : '{% url editor:post.read %}',
+        read : '{% url editor:read %}',
         
-        updateText : '{% url editor:post.updateText %}', 
-        updateImage : '{% url editor:post.updateImage %}', 
-        swapRank : '{% url editor:post.swapRank %}', 
+        updateText : '{% url editor:update-text %}', 
+        updateImage : '{% url editor:update-image %}', 
+        swapRank : '{% url editor:swap-rank %}', 
         
-        rename : '{% url editor:post.rename %}', 
-        del : '{% url editor:post.delete %}',
+        rename : '{% url editor:rename %}', 
+        del : '{% url editor:delete %}',
 
-        fetchText : '{% url editor:data.fetchText "=" %}',
-        fetchLatex : '{% url editor:data.fetchLatex "=" %}',
-        fetchPdf : '{% url editor:data.fetchPdf "=" %}',
+        fetchText : '{% url editor:fetch-text "=" %}',
+        fetchLatex : '{% url editor:fetch-latex "=" %}',
+        fetchPdf : '{% url editor:fetch-pdf "=" %}',
 
-        storeFile : '{% url editor:data.storeFile "*" %}'
+        storeFile : '{% url editor:store-file "*" %}'
     }
 
     dump (session);    
