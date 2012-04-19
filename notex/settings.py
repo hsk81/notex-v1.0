@@ -80,15 +80,11 @@ CACHES = {
 
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
-SESSION_COOKIE_AGE = 259200 ## secs: three days
-SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_AGE = 365 * 24 * 60 * 60 ## secs: a year
 SESSION_COOKIE_NAME = 'sid.'
-SESSION_COOKIE_PATH = '/'
 SESSION_COOKIE_SECURE = False
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_SAVE_EVERY_REQUEST = False
 
 TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'))
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'))
