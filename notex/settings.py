@@ -15,13 +15,12 @@ SITE_NAME = 'notex'
 SITE_HOST = 'blackhan.ch'
 
 import socket
-if socket.gethostname () != SITE_HOST:
-    SITE_HOST = 'localhost'
-    DEBUG = True
-else:
-    DEBUG = False
-
+DEBUG = socket.gethostname () != SITE_HOST
 TEMPLATE_DEBUG = DEBUG
+
+if DEBUG:
+    SITE_HOST = 'localhost'
+
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
 

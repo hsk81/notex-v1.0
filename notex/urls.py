@@ -17,7 +17,6 @@ urlpatterns = patterns ('',
     (r'^admin/doc/', include ('django.contrib.admindocs.urls')),
     (r'^admin/', include (admin.site.urls)),
 
-    (r'^$', include('editor.urls', namespace='editor')),
 )
 
 if not settings.DEBUG:

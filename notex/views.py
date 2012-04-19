@@ -4,7 +4,7 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 ################################################################################
 ################################################################################
 
-from settings import SITE_HOST, SITE_NAME
+from settings import SITE_NAME
 from django.shortcuts import redirect
 
 ################################################################################
@@ -12,10 +12,7 @@ from django.shortcuts import redirect
 
 def page_not_found (request):
 
-    if SITE_HOST != 'localhost':
-        return redirect ('/' + SITE_NAME)
-    else:
-        return redirect ('/')
+    return redirect ('/%s/editor/' % SITE_NAME)
 
 ################################################################################
 ################################################################################
