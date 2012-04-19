@@ -9,15 +9,6 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 ################################################################################
 ################################################################################
 
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    ('admin', 'admin@mail.net'),
-)
-
-MANAGERS = ADMINS
-
 import os
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
@@ -25,8 +16,14 @@ SITE_HOST = 'blackhan.ch'
 
 import socket
 if socket.gethostname () != SITE_HOST:
-
     SITE_HOST = 'localhost'
+    DEBUG = True
+else:
+    DEBUG = False
+
+TEMPLATE_DEBUG = DEBUG
+ADMINS = (('admin', 'admin@mail.net'),)
+MANAGERS = ADMINS
 
 DATABASES = {
     'default' : {
