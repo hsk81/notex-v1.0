@@ -132,7 +132,7 @@ var reportManager = function () {
                 tree.el.mask ('Please wait', 'x-mask-loading')
 
                 var xhr = new XMLHttpRequest ()
-                xhr.open ("POST", urls.storeFile.replace ('*', file.name),
+                xhr.open ("POST", urls.importReport.replace ('=', file.name),
                     true)
                 xhr.onload = function (event) {
                     tree.el.unmask ()

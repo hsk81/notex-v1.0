@@ -83,15 +83,32 @@ var reportManagerTree = function () {
         }
     }
 
+    function _click (node, event) {
+        if (node.attributes['cls'] == "file") {
+            var tabInfo = {
+                id : node.id,
+                title : node.attributes['text'].replace ('<i>','')
+                    .replace ('</i>',''),
+                text : node.attributes['data'],
+                iconCls : node.attributes['iconCls']
+            }
+
+            var iconCls = String (tabInfo.iconCls)
+            if (iconCls.match ("^icon-image$") == "icon-image") {
+                Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
+            } else {
+                Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
+            }
+        }
+    }
+
     return new Ext.tree.TreePanel ({
+
+        loader : new Ext.tree.TreeLoader ({url : urls.read}),
 
         id : 'reportManager.tree.id',
         autoScroll : true,
         rootVisible : false,
-
-        loader : new Ext.tree.TreeLoader({
-            url : '{% url editor:read %}'
-        }),
 
         root : {
             text : 'Root',
@@ -102,27 +119,11 @@ var reportManagerTree = function () {
         },
 
         listeners : {
-            createNode: _createNode,
-            updateNode: _updateNode,
-            readNode: _readNode,
-            deleteNode: _deleteNode
+            createNode : _createNode,
+            updateNode : _updateNode,
+            readNode : _readNode,
+            deleteNode : _deleteNode,
+            click : _click
         }
     })
 }();
-
-Ext.getCmp ('reportManager.tree.id').on ('click', function (node, event) {
-    if (node.attributes['cls'] == "file") {
-        var tabInfo = {
-            id : node.id,
-            title : node.attributes['text'].replace ('<i>','').replace ('</i>',''),
-            text : node.attributes['data'],
-            iconCls : node.attributes['iconCls']
-        }
-
-        if (String (tabInfo.iconCls).match ("^icon-image$") == "icon-image") {
-            Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
-        } else {
-            Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
-        }
-    }
-});
