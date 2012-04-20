@@ -96,12 +96,13 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
         for filename in filenames:
 
             src_path = os.path.join (dirpath, filename)
-            with open (src_path, 'r') as src_file:
-                src_text = src_file.read ()
-            with open (src_path, 'w') as src_file:
-                src_file.write (src_text.replace ('\n','\r\n'))
 
             if not filename.endswith ('pdf'):
+                with open (src_path, 'r') as src_file:
+                    src_text = src_file.read ()
+                with open (src_path, 'w') as src_file:
+                    src_file.write (src_text.replace ('\n','\r\n'))
+
                 zip_path = os.path.join (title, 'latex', filename)
             elif not skipPdf:
                 zip_path = os.path.join (title, urllib.unquote_plus (filename))
