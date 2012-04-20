@@ -79,12 +79,6 @@ var editor = function () {
         }
     }
 
-    function _updateTab (tabInfo, fn) {
-
-        var tab = this.findById (tabInfo.id)
-        if (tab && fn) return fn (tab)
-    }
-
     function _deleteTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id)
@@ -103,7 +97,6 @@ var editor = function () {
         listeners : {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
-            updateTab : _updateTab,
             deleteTab : _deleteTab
         }, 
     })

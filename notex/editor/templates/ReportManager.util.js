@@ -85,56 +85,52 @@ var reportManagerUtil = {
     // #########################################################################
 
     fnSuccessUpdate : function (xhr, opts) {
+
         var res = Ext.decode (xhr.responseText)[0]
+        var id = (res.uuid != undefined) ? res.uuid : res.id
+        var tab = Ext.getCmp ('editor.id').findById (id)
 
-        Ext.getCmp ('editor.id').fireEvent (
-            'updateTab', {id:(res.uuid != undefined) ? res.uuid : res.id}, function (tab) {
+        if (tab) {
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            var node = tree.getNodeById (id)
 
-                var tree = Ext.getCmp ('reportManager.tree.id')
-                var node = tree.getNodeById (
-                    (res.uuid != undefined) ? res.uuid : res.id
-                )
-
-                tree.fireEvent (
-                    'updateNode', node, {uuid:res.uuid, id:res.id}, {
-
-                        success : function (args) {
-                            if (Math.uuidMatch (node.id)) {
-                                var refNode = args.node.parentNode
-                                tree.getLoader().load(
-                                    refNode, function () { refNode.expand() }
-                                );
-                            } else {
-                                args.node.attributes['data'] = tab.getData ()
-                            }
-                        },
-
-                        failure : function (args) {
-                            //@TODO!?
+            tree.fireEvent (
+                'updateNode', node, {uuid:res.uuid, id:res.id}, {
+                    success : function (args) {
+                        if (Math.uuidMatch (node.id)) {
+                            var refNode = args.node.parentNode
+                            tree.getLoader().load(
+                                refNode, function () { refNode.expand () }
+                            )
+                        } else {
+                            args.node.attributes['data'] = tab.getData ()
                         }
+                    },
+                    failure : function (args) {
+                        //@TODO!?
                     }
-                )
+                }
+            )
 
-                tab.el.unmask ()
-            }
-        )
+            tab.el.unmask ()
+        }
     },
 
     fnFailureUpdate : function (xhr, opts) {
-        var res = Ext.decode (xhr.responseText)[0]
 
-        Ext.getCmp ('editor.id').fireEvent (
-            'updateTab', {id:(res.uuid != undefined) ? res.uuid : res.id}, function (tab) {
-                tab.el.unmask ()
-                Ext.MessageBox.show ({
-                    title : 'Saving failed',
-                    msg : String.Format ("Saving failed for tab '{0}'!", tab.title),
-                    closable : false,
-                    width : 256,
-                    buttons : Ext.MessageBox.OK
-                })
-            }
-        )
+        var res = Ext.decode (xhr.responseText)[0]
+        var id = (res.uuid != undefined) ? res.uuid : res.id
+        var tab = Ext.getCmp ('editor.id').findById (id)
+
+        if (tab) {
+            tab.el.unmask (); Ext.MessageBox.show ({
+                title : 'Saving failed',
+                msg : String.Format ("Saving failed for tab '{0}'!", tab.title),
+                closable : false,
+                width : 256,
+                buttons : Ext.MessageBox.OK
+            })
+        }
     },
 
     crudUpdate : function (crudInfo, fn, url) {
