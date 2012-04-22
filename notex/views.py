@@ -15,11 +15,5 @@ def page_not_found (request):
 
     return redirect ('/%s/editor/' % SITE_NAME)
 
-def robots (request):
-
-    return direct_to_template (
-        request, template ='robots.txt', mimetype = 'text/plain'
-    )
-
 ################################################################################
 ################################################################################

@@ -16,13 +16,10 @@ import views
 admin.autodiscover ()
 
 urlpatterns = patterns ('',
-
     (r'^svc/', include('svc.urls', namespace='svc')),
     (r'^editor/', include('editor.urls', namespace='editor')),
     (r'^admin/doc/', include ('django.contrib.admindocs.urls')),
     (r'^admin/', include (admin.site.urls)),
-
-    (r'^robots\.txt$', views.robots),
 )
 
 if not settings.DEBUG:
