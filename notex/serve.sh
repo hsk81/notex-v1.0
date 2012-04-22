@@ -42,7 +42,7 @@ case "$1" in
                 echo "dead: $PID"
             fi
         else
-            echo "dead"            
+            echo "dead"
         fi
         ;;
     *)
