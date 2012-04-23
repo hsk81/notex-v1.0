@@ -27,11 +27,6 @@
         href="{{ MEDIA_URL }}ico/silk/icons.css" />
     {% endblock %}
 
-    {% block css2url %}<script type="text/javascript">
-    var css2url = function (css) {
-        return media.url_ico + css.replace ("icon-","").concat (".png")
-    }</script>{% endblock %}
-
     <!-- Include here your jquery related classes if you have some. -->
     {% block jquery-classes %}{% endblock %}
     <!-- Include here your jquery related javascript file if you have it. -->
