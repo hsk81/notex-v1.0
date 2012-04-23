@@ -42,27 +42,28 @@ def compress (request, id, translate, ext = 'zip', hook = None):
 
     object_key = hash ((request.session.session_key, node.id))
     object_val = cache.get (object_key)
+    cache.delete (object_key)
     
-    if object_val:
-        if not 'refresh' in request.GET:
-            if hook:
-                object_val = hook (object_val)
+    if object_val and not 'refresh' in request.GET:
+        if hook: object_val = hook (object_val)
 
-            size = len (object_val)
-            temp = tempfile.SpooledTemporaryFile (max_size = size)
-            temp.write (object_val)
+        size = len (object_val)
+        temp = tempfile.SpooledTemporaryFile (max_size = size)
+        temp.write (object_val)
 
-            http_response = HttpResponse (FileWrapper (temp))
-            http_response['Content-Disposition'] = \
-                'attachment;filename="%s.%s"' % (node.name, ext)
-            http_response['Content-Length'] = size
+        http_response = HttpResponse (FileWrapper (temp))
+        http_response['Content-Disposition'] = 'attachment;filename="%s.%s"' % \
+            (node.name, ext)
+        http_response['Content-Length'] = size
 
-            temp.seek (0)
-            cache.delete (object_key)
+        temp.seek (0)
+    else:
+        http_response, object_value = to_zip (request, translate, node)
+        cache.set (object_key, object_value)
 
-            return http_response
-        else:
-            cache.delete (object_key)
+    return http_response
+
+def to_zip (request, translate, node):
 
     str_buffer = StringIO ()
     zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
@@ -82,11 +83,13 @@ def compress (request, id, translate, ext = 'zip', hook = None):
             'stdout_log' : getattr (ex, 'stdout_log', None)
         })
 
+    http_response = HttpResponse (js_string, mimetype='application/json')
+
     zip_buffer.close ()
-    cache.set (object_key, str_buffer.getvalue ())
+    object_value = str_buffer.getvalue ()
     str_buffer.close ()
 
-    return HttpResponse (js_string, mimetype='application/json')
+    return http_response, object_value
 
 def export_report (request, id):
     return compress (request, id, translator.processToReport)
