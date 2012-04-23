@@ -3,84 +3,85 @@
  
 {% block head %}<head>
 
-  {% block dump %}<script type="text/javascript">
-  var dump = function (data) {
-      if (typeof (console) != 'undefined') {
-          console.info (data); return data
-      } else {
-          return data
-      }
-  }</script>{% endblock %}
+    {% block dump %}<script type="text/javascript">
+    var dump = function (data) {
+        if (typeof (console) != 'undefined') {
+            console.info (data)
+            return data
+        } else {
+            return data
+        }
+    }</script>{% endblock %}
 
-  <!-- The following line defines content type and utf-8 as character set. -->
-  <!-- If you want your application to work flawlessly with various local  -->
-  <!-- characters, just make ALL strings, on the page, json and db utf-8.  -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- The following line defines content type and utf-8 as character set. -->
+    <!-- If you want your application to work flawlessly with various local  -->
+    <!-- characters, just make ALL strings, on the page, json and db utf-8.  -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!-- Ext relies on its default css so include it here. -->
+    <!-- This must come BEFORE javascript includes! -->
+    <link rel="stylesheet" type="text/css"
+        href="{{ MEDIA_URL }}lib/extjs/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css"
+        href="{{ MEDIA_URL }}lib/extjs/resources/css/xtheme-gray.css">
+
+    <!-- Include here your own css files if you have them. -->
+    {% block icon-css %}
+    <link rel="stylesheet" type="text/css"
+        href="{{ MEDIA_URL }}ico/silk/icons.css" />
+    {% endblock %}
+
+    {% block ico %}<script type="text/javascript">
+    var media = {
+          url     : '{{ MEDIA_URL }}'
+        , url_app : '{{ MEDIA_URL }}app/'
+        , url_css : '{{ MEDIA_URL }}css/'
+        , url_dat : '{{ MEDIA_URL }}dat/'
+        , url_ico : '{{ MEDIA_URL }}ico/silk/'
+        , url_lib : '{{ MEDIA_URL }}lib/'
+        , url_pdf : '{{ MEDIA_URL }}pdf/'
+        , url_pic : '{{ MEDIA_URL }}img/'
+    }</script>{% endblock %}
+
+    {% block css2url %}<script type="text/javascript">
+    var css2url = function (css) {
+        return media.url_ico + css.replace ("icon-","").concat (".png")
+    }</script>{% endblock %}
+
+    <!-- Include here your jquery related classes if you have some. -->
+    {% block jquery-classes %}{% endblock %}
+    <!-- Include here your jquery related javascript file if you have it. -->
+    {% block jquery-js %}
+    <script type="text/javascript"
+        src="{{ MEDIA_URL }}lib/jquery/jquery.min.js"></script>
+    {% endblock %}
+
+    <!-- First of javascript includes must be an adapter .. -->
+    <script type="text/javascript"
+        src="{{ MEDIA_URL }}lib/extjs/adapter/ext/ext-base.js"></script>
+    <!-- then you need the Ext itself, either debug or production version. -->
+    <script type="text/javascript"
+        src="{{ MEDIA_URL }}lib/extjs/ext-all.js"></script>
  
-  <!-- Ext relies on its default css so include it here. -->
-  <!-- This must come BEFORE javascript includes! -->
-  <link rel="stylesheet" type="text/css"
-    href="{{ MEDIA_URL }}lib/extjs/resources/css/ext-all.css">
-  <link rel="stylesheet" type="text/css"
-    href="{{ MEDIA_URL }}lib/extjs/resources/css/xtheme-gray.css">
+    <!-- Include here your extended classes if you have some. -->
+    {% block ext-classes %}{% endblock %}
+    <!-- Include here your application javascript files if you have it. -->
+    {% block app-js %}{% endblock %}
 
-  <!-- Include here your own css files if you have them. -->
-  {% block icon-css %}
-  <link rel="stylesheet" type="text/css"
-    href="{{ MEDIA_URL }}ico/silk/icons.css" />
-  {% endblock %}
+    {% block title %}
+    <title>Notex</title>
+    {% endblock %}
 
-  {% block ico %}<script type="text/javascript">
-  var media = {
-      url     : '{{ MEDIA_URL }}'
-    , url_app : '{{ MEDIA_URL }}app/'
-    , url_css : '{{ MEDIA_URL }}css/'
-    , url_dat : '{{ MEDIA_URL }}dat/'
-    , url_ico : '{{ MEDIA_URL }}ico/silk/'
-    , url_lib : '{{ MEDIA_URL }}lib/'
-    , url_pdf : '{{ MEDIA_URL }}pdf/'
-    , url_pic : '{{ MEDIA_URL }}img/'
-  }</script>{% endblock %}
+    {% block shortcut-icon %}
+    <link rel="shortcut icon" href="{{ MEDIA_URL }}favicon.ico">
+    {% endblock %}
 
-  {% block css2url %}<script type="text/javascript">
-  var css2url = function (css) {
-      return media.url_ico + css.replace ("icon-","").concat (".png")
-  }</script>{% endblock %}
+    {% block blank-image %}<script type="text/javascript">
+    Ext.BLANK_IMAGE_URL = '{{ MEDIA_URL }}lib/extjs/resources/images/default/s.gif'
+    </script>{% endblock %}
 
-  <!-- Include here your jquery related classes if you have some. -->
-  {% block jquery-classes %}{% endblock %}
-  <!-- Include here your jquery related javascript file if you have it. -->
-  {% block jquery-js %}
-  <script type="text/javascript"
-    src="{{ MEDIA_URL }}lib/jquery/jquery.min.js"></script>
-  {% endblock %}
-
-  <!-- First of javascript includes must be an adapter... -->
-  <script type="text/javascript"
-    src="{{ MEDIA_URL }}lib/extjs/adapter/ext/ext-base.js"></script>
-  <!-- ...then you need the Ext itself, either debug or production version. -->
-  <script type="text/javascript"
-    src="{{ MEDIA_URL }}lib/extjs/ext-all.js"></script>
- 
-  <!-- Include here your extended classes if you have some. -->
-  {% block ext-classes %}{% endblock %}
-  <!-- Include here your application javascript files if you have it. -->
-  {% block app-js %}{% endblock %}
-
-  {% block title %}
-  <title>Notex</title>
-  {% endblock %}
-
-  {% block shortcut-icon %}
-  <link rel="shortcut icon" href="{{ MEDIA_URL }}favicon.ico">
-  {% endblock %}
-
-  {% block blank-image %}<script type="text/javascript">
-  Ext.BLANK_IMAGE_URL = '{{ MEDIA_URL }}lib/extjs/resources/images/default/s.gif'
-  </script>{% endblock %}
-
-  {% block map2obj %}<script type="text/javascript">
-  var map2obj = function (objects) {
+    {% block map2obj %}<script type="text/javascript">
+    var map2obj = function (objects) {
 
       //
       // @see: svc/views.py: DATA.object (request, id, cls)
@@ -100,10 +101,10 @@
       }
 
       return res;
-  }</script>{% endblock %}
+    }</script>{% endblock %}
 
-  {% block map2objs %}<script type="text/javascript">
-  var map2objs = function (objects_set) {
+    {% block map2objs %}<script type="text/javascript">
+    var map2objs = function (objects_set) {
 
       //
       // @see: svc/views.py: DATA.objects (request, cls)
@@ -116,13 +117,27 @@
       }
 
       return res_set;
-  }</script>{% endblock %}
+    }</script>{% endblock %}
 
-  {% block main %}<script type="text/javascript">
-  Ext.onReady(function() {
+    {% block main %}<script type="text/javascript">
+    Ext.onReady(function() {
       console.info ("base.html")
-  });</script>{% endblock %}
+    });</script>{% endblock %}
 
+    {% block analytics %}<script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push (['_setAccount', 'UA-6838945-8']);
+        _gaq.push (['_trackPageview']);
+        (function() {
+            var ga = document.createElement ('script');
+            ga.type = 'text/javascript';
+            ga.async = true; ga.src = ('https:' == document.location.protocol 
+                ? 'https://ssl' : 'http://www'
+            ) + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName ('script')[0];
+            s.parentNode.insertBefore (ga, s);
+        })();
+    </script>{% endblock %}
 </head>{% endblock %}
  
 {% block body %}
@@ -130,4 +145,3 @@
 {% endblock %}
 
 </html>{% endblock %}
-
