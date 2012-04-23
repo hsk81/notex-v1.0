@@ -28,7 +28,7 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
-def compress (request, id, fnTranslate):
+def compress (request, id, translate, ext = 'zip', hook = None):
 
     (type, ids) = json.loads (base64.b32decode (id))
     if type == 'leaf':
@@ -45,13 +45,16 @@ def compress (request, id, fnTranslate):
     
     if object_val:
         if not 'refresh' in request.GET:
+            if hook:
+                object_val = hook (object_val)
+
             size = len (object_val)
             temp = tempfile.SpooledTemporaryFile (max_size = size)
             temp.write (object_val)
 
             http_response = HttpResponse (FileWrapper (temp))
             http_response['Content-Disposition'] = \
-                'attachment;filename="%s.%s"' % (node.name, 'zip')
+                'attachment;filename="%s.%s"' % (node.name, ext)
             http_response['Content-Length'] = size
 
             temp.seek (0)
@@ -65,7 +68,7 @@ def compress (request, id, fnTranslate):
     zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
 
     try:
-        fnTranslate (node, node.name, zip_buffer);
+        translate (node, node.name, zip_buffer);
         js_string = json.dumps ([{
             'id' : node.id, 'name' : node.name, 'success' : True}])
     except Exception as ex:
@@ -94,11 +97,24 @@ def export_text (request, id):
 def export_latex (request, id):
     return compress (request, id, translator.processToLatex)
 
-def export_pdf (request, id):
-    return compress (request, id, translator.processToPdf)
-
 def export_html (request, id):
     return compress (request, id, translator.processToHtml)
+
+def export_pdf (request, id):
+
+    def zip2pdf (object_val):
+
+        str_buffer = StringIO (object_val)
+        zip_buffer = zipfile.ZipFile (str_buffer, 'r', zipfile.ZIP_STORED)
+        object_vals = [zip_buffer.read (info) for info in zip_buffer \
+            .infolist () if info.filename.lower ().endswith ('pdf')]
+        result_val = object_vals.pop (0)
+        zip_buffer.close ()
+
+        return result_val
+        
+    return compress (request, id, translator.processToPdf, ext = 'pdf',
+        hook = zip2pdf)
 
 ################################################################################
 ################################################################################
