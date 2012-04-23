@@ -368,9 +368,6 @@ var reportManager = function () {
                 name : node.text.replace('<i>','').replace('</i>',''),
                 data : tab.getData (),
                 rank : node.parentNode.indexOf (node)
-            },{
-                success : reportManager.util.fnSuccessUpdate,
-                failure : reportManager.util.fnFailureUpdate
             }, urls.updateText)
         }
     }
@@ -383,7 +380,6 @@ var reportManager = function () {
         }
 
         if (tab != undefined) {
-
             tab.el.mask ('Please wait', 'x-mask-loading')
             var tree = Ext.getCmp ('reportManager.tree.id')
             var node = tree.getNodeById (tab.id)
@@ -394,9 +390,6 @@ var reportManager = function () {
                 name : node.text.replace('<i>','').replace('</i>',''),
                 data : tab.getData (),
                 rank : node.parentNode.indexOf (node)
-            },{
-                success : reportManager.util.fnSuccessUpdate,
-                failure : reportManager.util.fnFailureUpdate
             }, urls.updateImage)
         }
     }
@@ -416,9 +409,6 @@ var reportManager = function () {
                         nodeId : tree.root.id,
                         name : text,
                         rank : rank + 1
-                    },{
-                        success : reportManager.util.fnSuccessCreate,
-                        failure : reportManager.util.fnFailureCreate
                     })
                 }
             }
@@ -447,9 +437,6 @@ var reportManager = function () {
                             nodeId : node.id,
                             name : text,
                             rank : rank + 1
-                        },{
-                            success : reportManager.util.fnSuccessCreate,
-                            failure : reportManager.util.fnFailureCreate
                         })
                     }
                 }
@@ -482,9 +469,6 @@ var reportManager = function () {
                             name : text,
                             rank : rank + 1,
                             data : '..'
-                        },{
-                            success : reportManager.util.fnSuccessCreate,
-                            failure : reportManager.util.fnFailureCreate
                         })
                     }
                 }
@@ -525,9 +509,6 @@ var reportManager = function () {
                             reportManager.util.crudRename ({
                                 nodeId : node.id,
                                 name : text
-                            },{
-                                success : reportManager.util.fnSuccessRename,
-                                failure : reportManager.util.fnFailureRename
                             })
                         }
                     }
@@ -549,14 +530,9 @@ var reportManager = function () {
             'deleteNode', node, {destroy: true}, {
                 success : function (args) {
                     Ext.getCmp ('editor.id').fireEvent (
-                        'deleteTab', { 'id': args.node.id }
+                        'deleteTab', { 'id' : args.node.id }
                     )
-                    reportManager.util.crudDelete({
-                        id: args.node.id
-                    },{
-                        success: reportManager.util.fnSuccessDelete,
-                        failure: reportManager.util.fnFailureDelete
-                    })
+                    reportManager.util.crudDelete({id : args.node.id})
                 },
 
                 failure : function (args) {
