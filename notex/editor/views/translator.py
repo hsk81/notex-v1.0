@@ -30,8 +30,8 @@ logger = logging.getLogger (__name__)
 def processToReport (root, prefix, zip_buffer):
 
     processToText (root, prefix, zip_buffer)
-    processToLatexPdf (root, prefix, zip_buffer)
-    processToHtml (root, prefix, zip_buffer)
+    process_to (root, prefix, zip_buffer,
+        skipPdf = False, skipLatex = False, skipHtml = False)
 
 def processToText (root, prefix, zip_buffer, target = None):
 
@@ -54,22 +54,25 @@ def processToText (root, prefix, zip_buffer, target = None):
             target = None)
 
 def processToLatex (root, title, zip_buffer):
-
-    processToLatexPdf (root, title, zip_buffer, skipPdf = True)
+    process_to (root, title, zip_buffer, skipLatex = False)
 
 def processToPdf (root, title, zip_buffer):
+    process_to (root, title, zip_buffer, skipPdf = False)
 
-    processToLatexPdf (root, title, zip_buffer, skipLatex = True)
+def processToHtml (root, title, zip_buffer):
+    process_to (root, title, zip_buffer, skipHtml = False)
 
-def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
-    skipLatex = False):
+def process_to (root, title, zip_buffer, 
+    skipPdf = True, skipLatex = True, skipHtml = True):
 
     origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         '00000000-0000-0000-0000-000000000000')
     target_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         str (uuid.uuid4 ()))
+
     build_dir = os.path.join (target_dir, 'build')
     latex_dir = os.path.join (build_dir, 'latex')
+    xhtml_dir = os.path.join (build_dir, 'html')
 
     subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
     unpackTree (root, os.path.join (target_dir, 'source'))
@@ -78,8 +81,9 @@ def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
         with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
             with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                subprocess.check_call (['make','-C', target_dir, 'latex'],
-                    stdout = stdout, stderr = stderr)
+                if not skipPdf or not skipLatex:
+                    subprocess.check_call (['make','-C', target_dir, 'latex'],
+                        stdout = stdout, stderr = stderr)
 
                 if not skipPdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
@@ -88,6 +92,9 @@ def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
                         stdout = stdout, stderr = stderr)
                     subprocess.check_call (['rm', \
                         os.path.join (latex_dir, 'pdflatex')])
+
+                if not skipHtml:
+                    pass ## TODO!
 
     except Exception as ex:
         with open (os.path.join (target_dir, 'stdout.log'), 'r') as stdout:
@@ -99,10 +106,9 @@ def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
 
     for dirpath, dirnames, filenames in os.walk (latex_dir):
         for filename in filenames:
-
             src_path = os.path.join (dirpath, filename)
 
-            if filename.endswith ('pdf') and not skipPdf:
+            if not skipPdf and filename.lower ().endswith ('pdf'):
                 zip_path = os.path.join (title, urllib.unquote_plus (filename))
                 zip_buffer.write (src_path, zip_path)
 
@@ -115,11 +121,14 @@ def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
                 zip_path = os.path.join (title, 'latex', filename)
                 zip_buffer.write (src_path, zip_path)
 
+    for dirpath, dirnames, filenames in os.walk (xhtml_dir):
+        for filename in filenames:
+            src_path = os.path.join (dirpath, filename)
+            
+            if not skipHtml:
+                pass ## TODO!
+            
     subprocess.check_call (['rm', target_dir, '-r'])
-
-def processToHtml (root, prefix, zip_buffer):
-
-    pass ## TODO!
 
 ################################################################################
 
