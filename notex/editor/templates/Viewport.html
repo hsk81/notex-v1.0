@@ -2,40 +2,37 @@
 {% load b64 %}
 
 {% block app-js %}
+<script type="text/javascript">
+var session = { id : '{{ sid }}',  timestamp : '{{ timestamp }}' }
+dump (session);
+</script>
+
 <script type="text/javascript" src="{% url editor:Base64.js %}"></script>
 <script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
-
 <script type="text/javascript" src="{% url editor:Dialog.openFile.js %}"></script>
 <script type="text/javascript" src="{% url editor:Dialog.js %}"></script>
 
 <script type="text/javascript">
-    var session = {
-        id: '{{ sid }}', 
-        timestamp: '{{ timestamp }}'
-    }
+var urls = {
+    createProject : Base64.decode ({% url editor:create-project as uri %}'{{ uri|b64_encode }}'),
+    createFolder : Base64.decode ({% url editor:create-folder as uri %}'{{ uri|b64_encode }}'),
+    createText : Base64.decode ({% url editor:create-text as uri %}'{{ uri|b64_encode }}'),
+    createImage : Base64.decode ({% url editor:create-image as uri %}'{{ uri|b64_encode }}'),
 
-    var urls = {
-        createProject : Base64.decode ({% url editor:create-project as uri %}'{{ uri|b64_encode }}'),
-        createFolder : Base64.decode ({% url editor:create-folder as uri %}'{{ uri|b64_encode }}'),
-        createText : Base64.decode ({% url editor:create-text as uri %}'{{ uri|b64_encode }}'),
-        createImage : Base64.decode ({% url editor:create-image as uri %}'{{ uri|b64_encode }}'),
-        
-        read : Base64.decode ({% url editor:read as uri %}'{{ uri|b64_encode }}'),
-        
-        updateText : Base64.decode ({% url editor:update-text as uri %}'{{ uri|b64_encode }}'),
-        updateImage : Base64.decode ({% url editor:update-image as uri %}'{{ uri|b64_encode }}'),
-        swapRank : Base64.decode ({% url editor:swap-rank as uri %}'{{ uri|b64_encode }}'),
-        rename : Base64.decode ({% url editor:rename as uri %}'{{ uri|b64_encode }}'),
+    read : Base64.decode ({% url editor:read as uri %}'{{ uri|b64_encode }}'),
 
-        del : Base64.decode ({% url editor:delete as uri %}'{{ uri|b64_encode }}'),
+    updateText : Base64.decode ({% url editor:update-text as uri %}'{{ uri|b64_encode }}'),
+    updateImage : Base64.decode ({% url editor:update-image as uri %}'{{ uri|b64_encode }}'),
+    swapRank : Base64.decode ({% url editor:swap-rank as uri %}'{{ uri|b64_encode }}'),
+    rename : Base64.decode ({% url editor:rename as uri %}'{{ uri|b64_encode }}'),
 
-        exportText : Base64.decode ({% url editor:export-text "=" as uri %}'{{ uri|b64_encode }}'),
-        exportLatex : Base64.decode ({% url editor:export-latex "=" as uri %}'{{ uri|b64_encode }}'),
-        exportPdf : Base64.decode ({% url editor:export-pdf "=" as uri %}'{{ uri|b64_encode }}'),
-        importReport : Base64.decode ({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}'),
-    }
+    del : Base64.decode ({% url editor:delete as uri %}'{{ uri|b64_encode }}'),
 
-    dump (session);    
+    exportText : Base64.decode ({% url editor:export-text "=" as uri %}'{{ uri|b64_encode }}'),
+    exportLatex : Base64.decode ({% url editor:export-latex "=" as uri %}'{{ uri|b64_encode }}'),
+    exportPdf : Base64.decode ({% url editor:export-pdf "=" as uri %}'{{ uri|b64_encode }}'),
+    importReport : Base64.decode ({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}'),
+}
 </script>
 
 <script type="text/javascript" src="{% url editor:ReportManager.util.js %}"></script>
@@ -70,8 +67,8 @@ Ext.onReady (function () {
             layout : 'fit',
             items : [reportManager]
         }]
-    })
+    });
 
-    viewport.show ()
+    viewport.show ();
 });</script>
 {% endblock %}

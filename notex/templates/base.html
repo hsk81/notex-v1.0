@@ -5,12 +5,8 @@
 
     {% block dump %}<script type="text/javascript">
     var dump = function (data) {
-        if (typeof (console) != 'undefined') {
-            console.info (data)
-            return data
-        } else {
-            return data
-        }
+        if (typeof (console) != 'undefined') { console.info (data); }
+        return data
     }</script>{% endblock %}
 
     <!-- The following line defines content type and utf-8 as character set. -->
@@ -30,18 +26,6 @@
     <link rel="stylesheet" type="text/css"
         href="{{ MEDIA_URL }}ico/silk/icons.css" />
     {% endblock %}
-
-    {% block ico %}<script type="text/javascript">
-    var media = {
-          url     : '{{ MEDIA_URL }}'
-        , url_app : '{{ MEDIA_URL }}app/'
-        , url_css : '{{ MEDIA_URL }}css/'
-        , url_dat : '{{ MEDIA_URL }}dat/'
-        , url_ico : '{{ MEDIA_URL }}ico/silk/'
-        , url_lib : '{{ MEDIA_URL }}lib/'
-        , url_pdf : '{{ MEDIA_URL }}pdf/'
-        , url_pic : '{{ MEDIA_URL }}img/'
-    }</script>{% endblock %}
 
     {% block css2url %}<script type="text/javascript">
     var css2url = function (css) {
@@ -82,66 +66,47 @@
 
     {% block map2obj %}<script type="text/javascript">
     var map2obj = function (objects) {
-
-      //
-      // @see: svc/views.py: DATA.object (request, id, cls)
-      //
-
-      var res = objects[0]
-      res.mro = {}
-
-      for (var idx=objects.length-1; idx>=0; idx--) {
-          var obj = objects[idx]
-
-          for (var key in obj.fields) {
-              res.fields[key] = obj.fields[key]
-          }
-
-          res.mro[idx] = obj.model
-      }
-
-      return res;
+        var res = objects[0]
+        res.mro = {}
+        for (var idx=objects.length-1; idx>=0; idx--) {
+            var obj = objects[idx]
+            for (var key in obj.fields) { res.fields[key] = obj.fields[key]; }
+            res.mro[idx] = obj.model
+        }
+        return res;
     }</script>{% endblock %}
 
     {% block map2objs %}<script type="text/javascript">
     var map2objs = function (objects_set) {
-
-      //
-      // @see: svc/views.py: DATA.objects (request, cls)
-      //
-
-      var res_set = []
-
-      for (var idx=0; idx<objects_set.length; idx++) {
-          res_set.push (map2obj (objects_set[idx]))
-      }
-
-      return res_set;
+        var res_set = []
+        for (var idx=0; idx<objects_set.length; idx++) {
+            res_set.push (map2obj (objects_set[idx]))
+        }
+        return res_set;
     }</script>{% endblock %}
 
+    {% block analytics %}<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push (['_setAccount', 'UA-6838945-8']);
+    _gaq.push (['_trackPageview']);
+    (function() {
+        var ga = document.createElement ('script');
+        ga.type = 'text/javascript';
+        ga.async = true; ga.src = ('https:' == document.location.protocol
+            ? 'https://ssl' : 'http://www'
+        ) + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName ('script')[0];
+        s.parentNode.insertBefore (ga, s);
+    })();</script>{% endblock %}
+</head>{% endblock %}
+ 
+{% block body %}
+<body>
     {% block main %}<script type="text/javascript">
     Ext.onReady(function() {
       console.info ("base.html")
     });</script>{% endblock %}
-
-    {% block analytics %}<script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push (['_setAccount', 'UA-6838945-8']);
-        _gaq.push (['_trackPageview']);
-        (function() {
-            var ga = document.createElement ('script');
-            ga.type = 'text/javascript';
-            ga.async = true; ga.src = ('https:' == document.location.protocol 
-                ? 'https://ssl' : 'http://www'
-            ) + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName ('script')[0];
-            s.parentNode.insertBefore (ga, s);
-        })();
-    </script>{% endblock %}
-</head>{% endblock %}
- 
-{% block body %}
-<body></body>
+</body>
 {% endblock %}
 
 </html>{% endblock %}
