@@ -27,13 +27,13 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
-def processToReport (root, prefix, zipBuffer):
+def processToReport (root, prefix, zip_buffer):
 
-    processToText (root, prefix, zipBuffer)
-    processToLatexPdf (root, prefix, zipBuffer)
-    processToHtml (root, prefix, zipBuffer)
+    processToText (root, prefix, zip_buffer)
+    processToLatexPdf (root, prefix, zip_buffer)
+    processToHtml (root, prefix, zip_buffer)
 
-def processToText (root, prefix, zipBuffer, target = None):
+def processToText (root, prefix, zip_buffer, target = None):
 
     if target != None:
         prefix = os.path.join (prefix, target)
@@ -43,25 +43,26 @@ def processToText (root, prefix, zipBuffer, target = None):
 
     for leaf in ls:
         if leaf.type.code == 'image':
-            zipBuffer.writestr (os.path.join (prefix, leaf.name),
+            zip_buffer.writestr (os.path.join (prefix, leaf.name),
                 decodestring (leaf.text.split (',')[1]))
         else:
-            zipBuffer.writestr (os.path.join (prefix, leaf.name),
+            zip_buffer.writestr (os.path.join (prefix, leaf.name),
                 leaf.text.replace ('\n','\r\n'))
 
     for node in ns:
-        processToText (node, os.path.join (prefix, node.name), zipBuffer,
+        processToText (node, os.path.join (prefix, node.name), zip_buffer,
             target = None)
 
-def processToLatex (root, title, zipBuffer):
+def processToLatex (root, title, zip_buffer):
 
-    processToLatexPdf (root, title, zipBuffer, skipPdf = True)
+    processToLatexPdf (root, title, zip_buffer, skipPdf = True)
 
-def processToPdf (root, title, zipBuffer):
+def processToPdf (root, title, zip_buffer):
 
-    processToLatexPdf (root, title, zipBuffer, skipLatex = True)
+    processToLatexPdf (root, title, zip_buffer, skipLatex = True)
 
-def processToLatexPdf (root, title, zipBuffer, skipPdf = False, skipLatex = False):
+def processToLatexPdf (root, title, zip_buffer, skipPdf = False,
+    skipLatex = False):
 
     origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         '00000000-0000-0000-0000-000000000000')
@@ -103,7 +104,7 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False, skipLatex = Fals
 
             if filename.endswith ('pdf') and not skipPdf:
                 zip_path = os.path.join (title, urllib.unquote_plus (filename))
-                zipBuffer.write (src_path, zip_path)
+                zip_buffer.write (src_path, zip_path)
 
             elif not skipLatex:
                 with open (src_path, 'r') as src_file:
@@ -112,11 +113,11 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False, skipLatex = Fals
                     src_file.write (src_text.replace ('\n','\r\n'))
 
                 zip_path = os.path.join (title, 'latex', filename)
-                zipBuffer.write (src_path, zip_path)
+                zip_buffer.write (src_path, zip_path)
 
     subprocess.check_call (['rm', target_dir, '-r'])
 
-def processToHtml (root, prefix, zipBuffer):
+def processToHtml (root, prefix, zip_buffer):
 
     pass ## TODO!
 

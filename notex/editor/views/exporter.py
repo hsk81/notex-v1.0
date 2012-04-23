@@ -51,7 +51,7 @@ def compress (request, id, fnTranslate):
 
             http_response = HttpResponse (FileWrapper (temp))
             http_response['Content-Disposition'] = \
-                'attachment;filename="%s.zip"' % node.name
+                'attachment;filename="%s.%s"' % (node.name, 'zip')
             http_response['Content-Length'] = size
 
             temp.seek (0)
@@ -61,11 +61,11 @@ def compress (request, id, fnTranslate):
         else:
             cache.delete (object_key)
 
-    strBuffer = StringIO ()
-    zipBuffer = zipfile.ZipFile (strBuffer, 'w', zipfile.ZIP_DEFLATED)
+    str_buffer = StringIO ()
+    zip_buffer = zipfile.ZipFile (str_buffer, 'w', zipfile.ZIP_DEFLATED)
 
     try:
-        fnTranslate (node, node.name, zipBuffer);
+        fnTranslate (node, node.name, zip_buffer);
         js_string = json.dumps ([{
             'id' : node.id, 'name' : node.name, 'success' : True}])
     except Exception as ex:
@@ -79,9 +79,9 @@ def compress (request, id, fnTranslate):
             'stdout_log' : getattr (ex, 'stdout_log', None)
         })
 
-    zipBuffer.close ()
-    cache.set (object_key, strBuffer.getvalue ())
-    strBuffer.close ()
+    zip_buffer.close ()
+    cache.set (object_key, str_buffer.getvalue ())
+    str_buffer.close ()
 
     return HttpResponse (js_string, mimetype='application/json')
 
