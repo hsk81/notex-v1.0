@@ -94,7 +94,8 @@ def process_to (root, title, zip_buffer,
                         os.path.join (latex_dir, 'pdflatex')])
 
                 if not skipHtml:
-                    pass ## TODO!
+                    subprocess.check_call (['make','-C', target_dir, 'html'],
+                        stdout = stdout, stderr = stderr)
 
     except Exception as ex:
         with open (os.path.join (target_dir, 'stdout.log'), 'r') as stdout:
@@ -126,7 +127,13 @@ def process_to (root, title, zip_buffer,
             src_path = os.path.join (dirpath, filename)
             
             if not skipHtml:
-                pass ## TODO!
+                with open (src_path, 'r') as src_file:
+                    src_text = src_file.read ()
+                with open (src_path, 'w') as src_file:
+                    src_file.write (src_text.replace ('\n','\r\n'))
+
+                zip_path = os.path.join (title, 'html', filename)
+                zip_buffer.write (src_path, zip_path)
             
     subprocess.check_call (['rm', target_dir, '-r'])
 
