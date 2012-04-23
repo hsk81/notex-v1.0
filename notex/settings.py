@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-################################################################################
-
 __author__ = "hsk81"
 __date__ = "$Mar 27, 2012 1:12:57 PM$"
 
@@ -28,10 +23,6 @@ DATABASES = {
     'default' : {
         'ENGINE' : 'django.db.backends.sqlite3',
         'NAME' : os.path.join (SITE_ROOT, 'sqlite.db'),
-        'USER' : '',
-        'PASSWORD' : '',
-        'HOST' : '',
-        'PORT' : '',
     }
 }
 
@@ -40,6 +31,8 @@ LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
+
+ROOT_URLCONF = '%s.urls' % SITE_NAME
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
 MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
@@ -77,16 +70,14 @@ CACHES = {
     }
 }
 
-ROOT_URLCONF = '%s.urls' % SITE_NAME
-
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60 ## secs: a year
 SESSION_COOKIE_NAME = 'sid.'
 SESSION_COOKIE_SECURE = False
 
-TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'))
-FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'))
+TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
+FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
 
 SENTRY_DSN = 'http://%s:%s@localhost:9000/1' % (
     '76296a08393f45acb48ffa6717c1ae2b', 'c9fe5d6842cc4263b555d12be86ad340'
