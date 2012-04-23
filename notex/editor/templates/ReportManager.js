@@ -15,7 +15,9 @@ var reportManager = function () {
         split : true,
 
         handler : function (button, event) {
-            Ext.getCmp ('reportManager.id').fireEvent ('exportText')
+            Ext.getCmp ('reportManager.id').fireEvent (
+                'exportReport', urls.exportReport
+            )
         },
 
         menu : {
@@ -24,7 +26,7 @@ var reportManager = function () {
 
           items : [{
               iconCls : 'icon-page_white_compressed',
-              text : 'Text Report',
+              text : 'Text Files',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportText')
               }
@@ -36,9 +38,15 @@ var reportManager = function () {
               }
           },{
               iconCls : 'icon-page_white_acrobat',
-              text : 'PDF Document',
+              text : 'PDF Report',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
+              }
+          },{
+              iconCls : 'icon-page_white_world',
+              text : 'HTML Files',
+              handler : function (button, event) {
+                  Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
               }
           }]
         }
@@ -175,7 +183,7 @@ var reportManager = function () {
 
             tree.el.mask ('Please wait', 'x-mask-loading')
 
-            var fnSuccess = function (xhr, opts) {
+            var _onSuccess = function (xhr, opts) {
                 var body = Ext.getBody()
 
                 var frame_old = Ext.get ('iframe')
@@ -203,7 +211,7 @@ var reportManager = function () {
                 form.dom.submit ()
             }
 
-            var fnFailure = function (xhr, opts, res) {
+            var _onFailure = function (xhr, opts, res) {
 
                 if (res) {
                     msg = "Exporting <i>" + res.name + "</i> report failed!"
@@ -221,12 +229,12 @@ var reportManager = function () {
                     if (status) {
                         var res = Ext.decode (xhr.responseText)[0]
                         if (res.success) {
-                            fnSuccess (xhr, opts)
+                            _onSuccess (xhr, opts)
                         } else {
-                            fnFailure (xhr, opts, res)
+                            _onFailure (xhr, opts, res)
                         }
                     } else {
-                        fnFailure (xhr, opts)
+                        _onFailure (xhr, opts)
                     }
                 }
             });
@@ -247,6 +255,10 @@ var reportManager = function () {
         this.fireEvent ('exportReport', urls.exportPdf)
     }
     
+    function _exportHtml () {
+        this.fireEvent ('exportReport', urls.exportHtml)
+    }
+
     // #########################################################################
     function _openFile () {
     // #########################################################################
@@ -641,10 +653,11 @@ var reportManager = function () {
 
         listeners : {
             importReport : _importReport,
+            exportReport : _exportReport,
             exportText : _exportText,
             exportLatex : _exportLatex,
             exportPdf : _exportPdf,
-            exportReport : _exportReport,
+            exportHtml : _exportHtml,
             openFile : _openFile,
             saveTextTab : _saveTextTab,
             saveImageTab : _saveImageTab,

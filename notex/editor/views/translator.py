@@ -27,6 +27,12 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
+def processToReport (root, prefix, zipBuffer):
+
+    processToText (root, prefix, zipBuffer)
+    processToLatexPdf (root, prefix, zipBuffer)
+    processToHtml (root, prefix, zipBuffer)
+
 def processToText (root, prefix, zipBuffer, target = None):
 
     if target != None:
@@ -53,11 +59,9 @@ def processToLatex (root, title, zipBuffer):
 
 def processToPdf (root, title, zipBuffer):
 
-    processToLatexPdf (root, title, zipBuffer)
+    processToLatexPdf (root, title, zipBuffer, skipLatex = True)
 
-def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
-
-    processToText (root, title, zipBuffer)
+def processToLatexPdf (root, title, zipBuffer, skipPdf = False, skipLatex = False):
 
     origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         '00000000-0000-0000-0000-000000000000')
@@ -97,19 +101,24 @@ def processToLatexPdf (root, title, zipBuffer, skipPdf = False):
 
             src_path = os.path.join (dirpath, filename)
 
-            if not filename.endswith ('pdf'):
+            if filename.endswith ('pdf') and not skipPdf:
+                zip_path = os.path.join (title, urllib.unquote_plus (filename))
+                zipBuffer.write (src_path, zip_path)
+
+            elif not skipLatex:
                 with open (src_path, 'r') as src_file:
                     src_text = src_file.read ()
                 with open (src_path, 'w') as src_file:
                     src_file.write (src_text.replace ('\n','\r\n'))
 
                 zip_path = os.path.join (title, 'latex', filename)
-            elif not skipPdf:
-                zip_path = os.path.join (title, urllib.unquote_plus (filename))
-
-            zipBuffer.write (src_path, zip_path)
+                zipBuffer.write (src_path, zip_path)
 
     subprocess.check_call (['rm', target_dir, '-r'])
+
+def processToHtml (root, prefix, zipBuffer):
+
+    pass ## TODO!
 
 ################################################################################
 

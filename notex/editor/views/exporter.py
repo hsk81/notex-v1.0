@@ -85,6 +85,9 @@ def compress (request, id, fnTranslate):
 
     return HttpResponse (js_string, mimetype='application/json')
 
+def export_report (request, id):
+    return compress (request, id, translator.processToReport)
+
 def export_text (request, id):
     return compress (request, id, translator.processToText)
 
@@ -93,6 +96,9 @@ def export_latex (request, id):
 
 def export_pdf (request, id):
     return compress (request, id, translator.processToPdf)
+
+def export_html (request, id):
+    return compress (request, id, translator.processToHtml)
 
 ################################################################################
 ################################################################################
