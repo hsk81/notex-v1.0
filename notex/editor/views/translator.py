@@ -79,17 +79,17 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     unpackTree (root, os.path.join (target_dir, 'source'))
 
     try:
-        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+        if not skip_latex or not skip_pdf:
+            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                if not skip_pdf or not skip_latex:
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
                         stdout = stdout, stderr = stderr)
 
-        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+        if not skip_pdf:
+            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                if not skip_pdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
                         os.path.join (latex_dir, 'pdflatex')])
 
@@ -102,10 +102,10 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                     subprocess.check_call (['rm', \
                         os.path.join (latex_dir, 'pdflatex')])
 
-        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+        if not skip_html:
+            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                if not skip_html:
                     subprocess.check_call (['make', '-C', target_dir, 'html'],
                         stdout = stdout, stderr = stderr)
 
