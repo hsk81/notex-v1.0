@@ -12,6 +12,7 @@ from base64 import decodestring
 
 import subprocess
 import tempfile
+import os.path
 import logging
 import urllib
 import types
@@ -62,7 +63,7 @@ def processToPdf (root, title, zip_buffer):
 def processToHtml (root, title, zip_buffer):
     process_to (root, title, zip_buffer, skipHtml = False)
 
-def process_to (root, title, zip_buffer, 
+def process_to (root, title, zip_buffer,
     skipPdf = True, skipLatex = True, skipHtml = True):
 
     origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
@@ -110,7 +111,8 @@ def process_to (root, title, zip_buffer,
             src_path = os.path.join (dirpath, filename)
 
             if not skipPdf and filename.lower ().endswith ('pdf'):
-                zip_path = os.path.join (title, urllib.unquote_plus (filename))
+                uqp_name = urllib.unquote_plus (filename)
+                zip_path = os.path.join (title, 'pdf', uqp_name)
                 zip_buffer.write (src_path, zip_path)
 
             elif not skipLatex:
@@ -119,20 +121,22 @@ def process_to (root, title, zip_buffer,
                 with open (src_path, 'w') as src_file:
                     src_file.write (src_text.replace ('\n','\r\n'))
 
-                zip_path = os.path.join (title, 'latex', filename)
+                rel_path = os.path.relpath (dirpath, latex_dir)
+                zip_path = os.path.join (title, 'latex', rel_path, filename)
                 zip_buffer.write (src_path, zip_path)
 
     for dirpath, dirnames, filenames in os.walk (xhtml_dir):
         for filename in filenames:
             src_path = os.path.join (dirpath, filename)
-            
+
             if not skipHtml:
                 with open (src_path, 'r') as src_file:
                     src_text = src_file.read ()
                 with open (src_path, 'w') as src_file:
                     src_file.write (src_text.replace ('\n','\r\n'))
 
-                zip_path = os.path.join (title, 'html', filename)
+                rel_path = os.path.relpath (dirpath, xhtml_dir)
+                zip_path = os.path.join (title, 'html', rel_path, filename)
                 zip_buffer.write (src_path, zip_path)
             
     subprocess.check_call (['rm', target_dir, '-r'])
