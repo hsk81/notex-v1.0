@@ -31,8 +31,8 @@ logger = logging.getLogger (__name__)
 def processToReport (root, prefix, zip_buffer):
 
     processToText (root, prefix, zip_buffer)
-    process_to (root, prefix, zip_buffer,
-        skipPdf = False, skipLatex = False, skipHtml = False)
+    process_to (root, prefix, zip_buffer, skip_pdf = False, skip_latex = False,
+        skip_html = False)
 
 def processToText (root, prefix, zip_buffer, target = None):
 
@@ -55,16 +55,16 @@ def processToText (root, prefix, zip_buffer, target = None):
             target = None)
 
 def processToLatex (root, title, zip_buffer):
-    process_to (root, title, zip_buffer, skipLatex = False)
+    process_to (root, title, zip_buffer, skip_latex = False)
 
 def processToPdf (root, title, zip_buffer):
-    process_to (root, title, zip_buffer, skipPdf = False)
+    process_to (root, title, zip_buffer, skip_pdf = False)
 
 def processToHtml (root, title, zip_buffer):
-    process_to (root, title, zip_buffer, skipHtml = False)
+    process_to (root, title, zip_buffer, skip_html = False)
 
-def process_to (root, title, zip_buffer,
-    skipPdf = True, skipLatex = True, skipHtml = True):
+def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
+    skip_html = True):
 
     origin_dir = os.path.join (MEDIA_ROOT, 'dat', 'reports',
         '00000000-0000-0000-0000-000000000000')
@@ -73,7 +73,7 @@ def process_to (root, title, zip_buffer,
 
     build_dir = os.path.join (target_dir, 'build')
     latex_dir = os.path.join (build_dir, 'latex')
-    xhtml_dir = os.path.join (build_dir, 'html')
+    html_dir = os.path.join (build_dir, 'html')
 
     subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
     unpackTree (root, os.path.join (target_dir, 'source'))
@@ -82,11 +82,11 @@ def process_to (root, title, zip_buffer,
         with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
             with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                if not skipPdf or not skipLatex:
+                if not skip_pdf or not skip_latex:
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
                         stdout = stdout, stderr = stderr)
 
-                if not skipPdf:
+                if not skip_pdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
                         os.path.join (latex_dir, 'pdflatex')])
 
@@ -99,7 +99,7 @@ def process_to (root, title, zip_buffer,
                     subprocess.check_call (['rm', \
                         os.path.join (latex_dir, 'pdflatex')])
 
-                if not skipHtml:
+                if not skip_html:
                     subprocess.check_call (['make', '-C', target_dir, 'html'],
                         stdout = stdout, stderr = stderr)
 
@@ -111,40 +111,60 @@ def process_to (root, title, zip_buffer,
                 ex.stdout_log = stdout.read ()
                 raise
 
-    for dirpath, dirnames, filenames in os.walk (latex_dir):
-        for filename in filenames:
-            src_path = os.path.join (dirpath, filename)
+    if not skip_latex:
+        zip_to_latex (zip_buffer, latex_dir, title)
+    if not skip_pdf:
+        zip_to_pdf (zip_buffer, latex_dir, title)
+    if not skip_html:
+        zip_to_html (zip_buffer, html_dir, title)
 
-            if not skipPdf and filename.lower ().endswith ('pdf'):
-                uqp_name = urllib.unquote_plus (filename)
-                zip_path = os.path.join (title, 'pdf', uqp_name)
-                zip_buffer.write (src_path, zip_path)
-
-            elif not skipLatex:
-                with open (src_path, 'r') as src_file:
-                    src_text = src_file.read ()
-                with open (src_path, 'w') as src_file:
-                    src_file.write (src_text.replace ('\n','\r\n'))
-
-                rel_path = os.path.relpath (dirpath, latex_dir)
-                zip_path = os.path.join (title, 'latex', rel_path, filename)
-                zip_buffer.write (src_path, zip_path)
-
-    for dirpath, dirnames, filenames in os.walk (xhtml_dir):
-        for filename in filenames:
-            src_path = os.path.join (dirpath, filename)
-
-            if not skipHtml:
-                with open (src_path, 'r') as src_file:
-                    src_text = src_file.read ()
-                with open (src_path, 'w') as src_file:
-                    src_file.write (src_text.replace ('\n','\r\n'))
-
-                rel_path = os.path.relpath (dirpath, xhtml_dir)
-                zip_path = os.path.join (title, 'html', rel_path, filename)
-                zip_buffer.write (src_path, zip_path)
-            
     subprocess.check_call (['rm', target_dir, '-r'])
+
+################################################################################
+
+def zip_to_latex (zip_buffer, source_dir, title):
+
+    for dirpath, dirnames, filenames in os.walk (source_dir):
+        for filename in filenames:
+            if filename.lower ().endswith ('pdf'):
+                continue
+
+            src_path = os.path.join (dirpath, filename)
+            with open (src_path, 'r') as src_file:
+                src_text = src_file.read ()
+            with open (src_path, 'w') as src_file:
+                src_file.write (src_text.replace ('\n','\r\n'))
+
+            rel_path = os.path.relpath (dirpath, source_dir)
+            zip_path = os.path.join (title, 'latex', rel_path, filename)
+            zip_buffer.write (src_path, zip_path)
+
+def zip_to_pdf (zip_buffer, source_dir, title):
+
+    for dirpath, dirnames, filenames in os.walk (source_dir):
+        for filename in filenames:
+            if not filename.lower ().endswith ('pdf'):
+                continue
+
+            src_path = os.path.join (dirpath, filename)
+            uqp_name = urllib.unquote_plus (filename)
+            zip_path = os.path.join (title, 'pdf', uqp_name)
+            zip_buffer.write (src_path, zip_path)
+
+def zip_to_html (zip_buffer, source_dir, title):
+
+    for dirpath, dirnames, filenames in os.walk (source_dir):
+        for filename in filenames:
+
+            src_path = os.path.join (dirpath, filename)
+            with open (src_path, 'r') as src_file:
+                src_text = src_file.read ()
+            with open (src_path, 'w') as src_file:
+                src_file.write (src_text.replace ('\n','\r\n'))
+
+            rel_path = os.path.relpath (dirpath, source_dir)
+            zip_path = os.path.join (title, 'html', rel_path, filename)
+            zip_buffer.write (src_path, zip_path)
 
 ################################################################################
 
