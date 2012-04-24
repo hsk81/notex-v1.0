@@ -86,6 +86,9 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
                         stdout = stdout, stderr = stderr)
 
+        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+
                 if not skip_pdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
                         os.path.join (latex_dir, 'pdflatex')])
@@ -98,6 +101,9 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
 
                     subprocess.check_call (['rm', \
                         os.path.join (latex_dir, 'pdflatex')])
+
+        with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+            with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
                 if not skip_html:
                     subprocess.check_call (['make', '-C', target_dir, 'html'],
