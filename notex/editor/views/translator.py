@@ -84,7 +84,7 @@ def process_to (root, title, zip_buffer,
 
                 if not skipPdf or not skipLatex:
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
-                        stdout = stdout, stderr = stderr, env = os.environ)
+                        stdout = stdout, stderr = stderr)
 
                 if not skipPdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
