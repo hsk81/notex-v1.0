@@ -83,19 +83,24 @@ def process_to (root, title, zip_buffer,
             with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
                 if not skipPdf or not skipLatex:
-                    subprocess.check_call (['make','-C', target_dir, 'latex'],
-                        stdout = stdout, stderr = stderr)
+                    subprocess.check_call (['make', '-C', target_dir, 'latex'],
+                        stdout = stdout, stderr = stderr, env = os.environ)
 
                 if not skipPdf:
                     subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
                         os.path.join (latex_dir, 'pdflatex')])
-                    subprocess.check_call (['make','-C', latex_dir, 'all-pdf'],
-                        stdout = stdout, stderr = stderr)
+
+                    os.environ['LATEXOPTS']="-no-shell-escape -halt-on-error"
+                    subprocess.check_call (
+                        ['make', '-e', '-C', latex_dir, 'all-pdf'],
+                        stdout = stdout, stderr = stderr, env = os.environ)
+                    del (os.environ['LATEXOPTS'])
+
                     subprocess.check_call (['rm', \
                         os.path.join (latex_dir, 'pdflatex')])
 
                 if not skipHtml:
-                    subprocess.check_call (['make','-C', target_dir, 'html'],
+                    subprocess.check_call (['make', '-C', target_dir, 'html'],
                         stdout = stdout, stderr = stderr)
 
     except Exception as ex:
