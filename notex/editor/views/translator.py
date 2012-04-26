@@ -213,7 +213,7 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
         line = "# -*- coding: utf-8 -*-\n"
         file.write (line)
-        line = "extensions = ['sphinx.ext.mathjax', 'sphinx.ext.ifconfig']\n"
+        line = "extensions = ['sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.mathjax']\n"
         file.write (line)
 
         for key,value in data:
