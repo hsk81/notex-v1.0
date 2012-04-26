@@ -191,7 +191,7 @@ def unpackTree (root, prefix):
                 yaml2py (leaf, prefix); continue
 
             with open (os.path.join (prefix, leaf.name), 'w') as file:
-                file.write (leaf.text)
+                file.write (leaf.text.encode ("utf-8"))
 
         elif leaf.type.code == 'image':
             with open (os.path.join (prefix, leaf.name), 'w') as file:
@@ -211,10 +211,12 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     with open (os.path.join (prefix, filename), 'w+') as file:
 
-        line = "# -*- coding: utf-8 -*-\n"
-        file.write (line)
-        line = "extensions = ['sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.mathjax']\n"
-        file.write (line)
+        file.write ("# -*- coding: utf-8 -*-\n")
+        file.write ("extensions = ['%s','%s','%s']\n" % (
+            'sphinx.ext.ifconfig',
+            'sphinx.ext.todo',
+            'sphinx.ext.mathjax'
+        ))
 
         for key,value in data:
             if key != 'extensions': # security: pre-defined!
