@@ -162,6 +162,10 @@ def zip_to_html (zip_buffer, source_dir, title):
     for dirpath, dirnames, filenames in os.walk (source_dir):
         for filename in filenames:
 
+            ##
+            ## TODO: Avoid conversion for binary files like PNG etc.!
+            ##
+
             src_path = os.path.join (dirpath, filename)
             with open (src_path, 'r') as src_file:
                 src_text = src_file.read ()
@@ -209,7 +213,7 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
         line = "# -*- coding: utf-8 -*-\n"
         file.write (line)
-        line = "extensions = ['sphinx.ext.pngmath', 'sphinx.ext.ifconfig']\n"
+        line = "extensions = ['sphinx.ext.mathjax', 'sphinx.ext.ifconfig']\n"
         file.write (line)
 
         for key,value in data:
