@@ -88,11 +88,11 @@ urlpatterns = patterns ('',
     ## export & import: text, html, latex, pdf, file
     ##
 
-    url (r'^export-report/(?P<id>.*=)/$', views.export_report, name='export-report'),
-    url (r'^export-text/(?P<id>.*=)/$', views.export_text, name='export-text'),
-    url (r'^export-latex/(?P<id>.*=)/$', views.export_latex, name='export-latex'),
-    url (r'^export-pdf/(?P<id>.*=)/$', views.export_pdf, name='export-pdf'),
-    url (r'^export-html/(?P<id>.*=)/$', views.export_html, name='export-html'),
+    url (r'^export-report/(?P<id>.*)/$', views.export_report, name='export-report'),
+    url (r'^export-text/(?P<id>.*)/$', views.export_text, name='export-text'),
+    url (r'^export-latex/(?P<id>.*)/$', views.export_latex, name='export-latex'),
+    url (r'^export-pdf/(?P<id>.*)/$', views.export_pdf, name='export-pdf'),
+    url (r'^export-html/(?P<id>.*)/$', views.export_html, name='export-html'),
     url (r'^import-file/(?P<fid>.*)/$', views.import_file, name='import-file'),
 )
 
