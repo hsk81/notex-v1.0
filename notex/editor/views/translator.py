@@ -11,6 +11,7 @@ from editor.models import NODE, LEAF
 from base64 import decodestring
 
 import subprocess
+import mimetypes
 import tempfile
 import os.path
 import logging
@@ -28,6 +29,26 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
+def is_text (path, bin_path = '/usr/bin'):
+
+    mimetype, encoding = mimetypes.guess_type (path)
+    if mimetype and mimetype.startswith ('text'):
+        return True
+
+    arguments = [os.path.join (bin_path, 'file'), '-Lib', path]
+    process = subprocess.Popen (arguments, stdout = subprocess.PIPE)
+    result = process.stdout.read ()
+
+    mimetype, encoding = result.split (';')
+    if mimetype.startswith ('text'):
+        path_to, ext = os.path.splitext (path)
+        mimetypes.add_type (mimetype, ext)
+        return True
+
+    return False
+
+################################################################################
+
 def processToReport (root, prefix, zip_buffer):
 
     processToText (root, prefix, zip_buffer)
@@ -43,16 +64,27 @@ def processToText (root, prefix, zip_buffer, target = None):
     ns = NODE.objects.filter (_node = root)
 
     for leaf in ls:
+        zip_path = os.path.join (prefix, leaf.name)
         if leaf.type.code == 'image':
-            zip_buffer.writestr (os.path.join (prefix, leaf.name),
+            zip_buffer.writestr (zip_path,
                 decodestring (leaf.text.split (',')[1]))
         else:
-            zip_buffer.writestr (os.path.join (prefix, leaf.name),
-                leaf.text.replace ('\n','\r\n'))
+            tmp_desc, tmp_path = tempfile.mkstemp ()
+            with os.fdopen (tmp_desc, 'w') as temp:
+                temp.write (leaf.text)
+                temp.flush ()
+
+                if is_text (tmp_path):
+                    zip_buffer.writestr (zip_path,
+                        leaf.text.replace ('\n','\r\n'))
+                else:
+                    zip_buffer.writestr (zip_path, leaf.text)
+
+            os.remove (tmp_path)
 
     for node in ns:
-        processToText (node, os.path.join (prefix, node.name), zip_buffer,
-            target = None)
+        zip_path = os.path.join (prefix, leaf.name)
+        processToText (node, zip_path, zip_buffer, target = None)
 
 def processToLatex (root, title, zip_buffer):
     process_to (root, title, zip_buffer, skip_latex = False)
@@ -136,10 +168,11 @@ def zip_to_latex (zip_buffer, source_dir, title):
                 continue
 
             src_path = os.path.join (dirpath, filename)
-            with open (src_path, 'r') as src_file:
-                src_text = src_file.read ()
-            with open (src_path, 'w') as src_file:
-                src_file.write (src_text.replace ('\n','\r\n'))
+            if is_text (src_path):
+                with open (src_path, 'r') as src_file:
+                    src_text = src_file.read ()
+                with open (src_path, 'w') as src_file:
+                    src_file.write (src_text.replace ('\n','\r\n'))
 
             rel_path = os.path.relpath (dirpath, source_dir)
             zip_path = os.path.join (title, 'latex', rel_path, filename)
@@ -161,16 +194,12 @@ def zip_to_html (zip_buffer, source_dir, title):
 
     for dirpath, dirnames, filenames in os.walk (source_dir):
         for filename in filenames:
-
-            ##
-            ## TODO: Avoid conversion for binary files like PNG etc.!
-            ##
-
             src_path = os.path.join (dirpath, filename)
-            with open (src_path, 'r') as src_file:
-                src_text = src_file.read ()
-            with open (src_path, 'w') as src_file:
-                src_file.write (src_text.replace ('\n','\r\n'))
+            if is_text (src_path):
+                with open (src_path, 'r') as src_file:
+                    src_text = src_file.read ()
+                with open (src_path, 'w') as src_file:
+                    src_file.write (src_text.replace ('\n','\r\n'))
 
             rel_path = os.path.relpath (dirpath, source_dir)
             zip_path = os.path.join (title, 'html', rel_path, filename)
