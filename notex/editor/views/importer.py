@@ -69,12 +69,18 @@ def create_project (root, fid, zip_buffer):
         prefix = os.path.commonprefix (filter (lambda el: el != '',
             map (lambda el: re.subn ('^' + common, '', el)[0], namelist)))
 
-    latex_path = os.path.join (origin,'latex')
+    latex_path = os.path.join (origin, 'latex')
+    html_path = os.path.join (origin, 'html')
+    pdf_path = os.path.join (origin, 'pdf')
 
     for zip_info in infolist:
         with zip_buffer.open (zip_info) as file:
-            if not zip_info.filename.startswith (latex_path):
-                process_zip_info (zip_info, rankdict, parent, file)
+
+            if zip_info.filename.startswith (latex_path): continue
+            if zip_info.filename.startswith (html_path): continue
+            if zip_info.filename.startswith (pdf_path): continue
+
+            process_zip_info (zip_info, rankdict, parent, file)
 
     return success (message = None, file_id = fid)
 
