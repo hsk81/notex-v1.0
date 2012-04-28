@@ -167,8 +167,7 @@ var reportManager = function () {
 
             failure: function () {
                 Ext.Msg.alert (
-                    "Error", "No file or invalid file type selected!"
-                )
+                    "Error", "No file or invalid file type selected!")
             }
         })
     }
@@ -300,8 +299,7 @@ var reportManager = function () {
 
             imageReader.onerror = function (e) {
                 Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                )
+                    "Error", "Reading <i>" + file.name + "</i> failed!")
             }
 
             imageReader.onload = function (e) {
@@ -330,8 +328,7 @@ var reportManager = function () {
 
             textReader.onerror = function (e) {
                 Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                )
+                    "Error", "Reading <i>" + file.name + "</i> failed!")
             }
 
             textReader.onload = function (e) {
@@ -538,20 +535,39 @@ var reportManager = function () {
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
 
-        tree.fireEvent (
-            'deleteNode', node, {destroy: true}, {
-                success : function (args) {
-                    Ext.getCmp ('editor.id').fireEvent (
-                        'deleteTab', { 'id' : args.node.id }
-                    )
-                    reportManager.util.crudDelete({id : args.node.id})
-                },
-
-                failure : function (args) {
-                    Ext.Msg.alert ("Error", "No node selected; select a node!")
+        if (node) {
+            function _onConfirm (id) {
+                if (id != 'yes') {
+                    return
                 }
+
+                tree.fireEvent (
+                    'deleteNode', node, {destroy: true}, {
+                        success : function (args) {
+                            Ext.getCmp ('editor.id').fireEvent ('deleteTab',
+                                { 'id' : args.node.id })
+                            reportManager.util.crudDelete ({id : args.node.id})
+                        },
+
+                        failure : function (args) {
+                            Ext.Msg.alert ("Error", 
+                                "No node selected; select a node!")
+                        }
+                    }
+                )
             }
-        )
+
+            Ext.Msg.show ({
+               title : 'Delete',
+               msg : 'Are you sure you want to delete selection?',
+               buttons : Ext.Msg.YESNO,
+               fn : _onConfirm,
+               scope : this
+            });
+
+        } else {
+            Ext.Msg.alert ("Error", "No node selected; select a node!")
+        }
     }
 
     // #########################################################################
@@ -624,8 +640,7 @@ var reportManager = function () {
                 tree.el.unmask ()
                 move.enable ()
                 Ext.Msg.alert (
-                    "Error", "Moving down '" + node.text + "' failed!"
-                )
+                    "Error", "Moving down '" + node.text + "' failed!")
             }
         });
     }
