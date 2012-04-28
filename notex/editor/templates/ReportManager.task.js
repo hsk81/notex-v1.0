@@ -30,7 +30,7 @@ var reportManagerTask = {
     
 }
 
-Ext.TaskMgr.start({
+Ext.TaskMgr.start ({
     run: reportManagerTask.run,
     interval: 3 * 60 * 1000 // [ms]
 });
