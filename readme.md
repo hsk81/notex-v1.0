@@ -1,7 +1,7 @@
 Notex Editor
 ============
 
-This editor helps you to write reports using the lightweight markup language *reStructuredText* aka *reST*. Once you've written your report, it can easily be translated to various formats like HTML, LaTex and PDF.
+This editor helps you to write reports using the lightweight markup language *re-structured text* aka *RST*. Once you've written your report, it can easily be translated to various formats like HTML, LaTex and PDF.
 
 It's features are:
 
