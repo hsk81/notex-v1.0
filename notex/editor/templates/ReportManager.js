@@ -360,14 +360,17 @@ var reportManager = function () {
     }
     
     // #########################################################################
-    function _saveTextTab (tab) {
+    function _saveTextTab (tab, skipMask) {
     // #########################################################################
         if (tab == undefined) {
             tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
         if (tab != undefined) {
-            tab.el.mask ('Please wait', 'x-mask-loading')
+            if (skipMask == undefined || skipMask != true) {
+                tab.el.mask ('Please wait', 'x-mask-loading')
+            }
+
             var tree = Ext.getCmp ('reportManager.tree.id')
             var node = tree.getNodeById (tab.id)
 
@@ -382,14 +385,17 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function _saveImageTab (tab) {
+    function _saveImageTab (tab, skipMask) {
     // #########################################################################
         if (tab == undefined) {
             tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
         if (tab != undefined) {
-            tab.el.mask ('Please wait', 'x-mask-loading')
+            if (skipMask == undefined || skipMask != true) {
+                tab.el.mask ('Please wait', 'x-mask-loading')
+            }
+
             var tree = Ext.getCmp ('reportManager.tree.id')
             var node = tree.getNodeById (tab.id)
 

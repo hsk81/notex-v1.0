@@ -17,9 +17,9 @@ var reportManagerTask = {
 
                         if (String (attr['iconCls']).match ("^icon-image$") == 
                             "icon-image") {
-                            reportManager.fireEvent ('saveImageTab', tabs[i])
+                            reportManager.fireEvent ('saveImageTab', tabs[i], true)
                         } else {
-                            reportManager.fireEvent ('saveTextTab', tabs[i])
+                            reportManager.fireEvent ('saveTextTab', tabs[i], true)
                         }
                     }
                 }
