@@ -2,12 +2,7 @@
 Notex' Quickstart
 =================
 
-.. tip::
-
-    For a quick demonstration, just click on the *black arrow* next
-    to the export button in the report manager's toolbar and select
-    ``PDF Report``. This very document will morph auto-magically in
-    to a publication quality PDF.
+.. tip:: For a quick demonstration, just click on the *black arrow* next to the export button in the report manager's toolbar and select ``PDF Report``. This very document will morph auto-magically in to a publication quality PDF.
 
 When I had to write my thesis I had to choose between *LaTex* [#1]_ and *Word*: I did not like LaTex much, because of it's horrible to read markup language. On the other hand using *Word* was for me also not an option, since its output is not comparable to LaTex' in terms of quality. So I ended up using *Open Office*, although it can also not compete with LaTex' publication ready output.
 
