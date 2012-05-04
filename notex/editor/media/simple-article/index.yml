@@ -1,0 +1,40 @@
+# -----------------------------------------------------------------------------
+# General: http://sphinx.pocoo.org/config.html#general-configuration
+# -----------------------------------------------------------------------------
+
+project: 'Simple Article'
+author: 'Blackhan.ch'
+copyright: '${date %Y}, ${author}'
+
+version: '0.1'
+release: '0.1'
+
+master_doc: 'index'
+source_suffix: '.txt'
+
+templates_path: ['_templates']
+exclude_patterns: []
+pygments_style: 'sphinx'
+
+# -----------------------------------------------------------------------------
+# HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
+# -----------------------------------------------------------------------------
+
+html_theme: 'default'
+html_static_path: ['_static']
+htmlhelp_basename: '${project|quote}doc'
+
+# -----------------------------------------------------------------------------
+# LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
+# -----------------------------------------------------------------------------
+
+latex_elements:
+    papersize: 'a4paper'
+    pointsize: '12pt'
+    preamble: ''
+    tableofcontents: ''
+    printindex: ''
+
+latex_documents:
+ - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+

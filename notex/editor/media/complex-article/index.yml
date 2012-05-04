@@ -2,8 +2,8 @@
 # General: http://sphinx.pocoo.org/config.html#general-configuration
 # -----------------------------------------------------------------------------
 
-project: 'Tutorial'
-author: 'Anonymous'
+project: 'Complex Article'
+author: 'Blackhan.ch'
 copyright: '${date %Y}, ${author}'
 
 version: '0.1'
@@ -34,4 +34,5 @@ latex_elements:
     preamble: ''
 
 latex_documents:
- - ['index', '${project|quote}.tex', '${project} Doc', '${author}', 'manual']
+ - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+

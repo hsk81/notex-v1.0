@@ -26,7 +26,7 @@ def init_prj01 (root, path):
     prj = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='project'),
         root = root,
-        name = 'Tutorial',
+        name = 'Quickstart',
         rank = 0
     )
 
@@ -34,7 +34,7 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.txt',
-        text = open (os.path.join (path,'tutorial/index.rst')).read (),
+        text = open (os.path.join (path,'quickstart/index.rst')).read (),
         rank = 0,
     )
 
@@ -42,7 +42,7 @@ def init_prj01 (root, path):
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.cfg',
-        text = open (os.path.join (path,'tutorial/index.yml')).read (),
+        text = open (os.path.join (path,'quickstart/index.yml')).read (),
         rank = 1,
     )
 
@@ -51,48 +51,74 @@ def init_prj02 (root, path):
     prj = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='project'),
         root = root,
-        name = 'Lorem Ipsum',
-        rank = 1,
-    )
-
-    _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'lorem-ipsum.txt',
-        text = open (os.path.join (path,'lorem-ipsum/part-000.rst')).read (),
-        rank = 0,
-    )
-
-    _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'suspendisse-potenti.txt',
-        text = open (os.path.join (path,'lorem-ipsum/part-001.rst')).read (),
-        rank = 1,
-    )
-
-    _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'cras-rutrum.txt',
-        text = open (os.path.join (path,'lorem-ipsum/part-002.rst')).read (),
-        rank = 2,
+        name = 'Simple Article',
+        rank = 1
     )
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.txt',
-        text = open (os.path.join (path,'lorem-ipsum/index.rst')).read (),
-        rank = 3,
+        text = open (os.path.join (path,'simple-article/index.rst')).read (),
+        rank = 0,
     )
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
         name = 'index.cfg',
-        text = open (os.path.join (path,'lorem-ipsum/index.yml')).read (),
-        rank = 4,
+        text = open (os.path.join (path,'simple-article/index.yml')).read (),
+        rank = 1,
+    )
+
+def init_prj03 (root, path):
+
+    prj = NODE.objects.create (
+        type = NODE_TYPE.objects.get (_code='project'),
+        root = root,
+        name = 'Complex Article',
+        rank = 2
+    )
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='text'),
+        node = prj,
+        name = 'index.txt',
+        text = open (os.path.join (path,'complex-article/index.rst')).read (),
+        rank = 0,
+    )
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='text'),
+        node = prj,
+        name = 'index.cfg',
+        text = open (os.path.join (path,'complex-article/index.yml')).read (),
+        rank = 1,
+    )
+
+def init_prj04 (root, path):
+
+    prj = NODE.objects.create (
+        type = NODE_TYPE.objects.get (_code='project'),
+        root = root,
+        name = 'Report',
+        rank = 3
+    )
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='text'),
+        node = prj,
+        name = 'index.txt',
+        text = open (os.path.join (path,'report/index.rst')).read (),
+        rank = 0,
+    )
+
+    _ = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='text'),
+        node = prj,
+        name = 'index.cfg',
+        text = open (os.path.join (path,'report/index.yml')).read (),
+        rank = 1,
     )
 
 def init (request):
@@ -104,6 +130,8 @@ def init (request):
 
     init_prj01 (root, MEDIA_ROOT + 'app/editor/')
     init_prj02 (root, MEDIA_ROOT + 'app/editor/')
+    init_prj03 (root, MEDIA_ROOT + 'app/editor/')
+    init_prj04 (root, MEDIA_ROOT + 'app/editor/')
 
 def main (request):
 
