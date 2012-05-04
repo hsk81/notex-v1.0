@@ -9,14 +9,11 @@ Notex' Quickstart
     ``PDF Report``. This very document will morph auto-magically in
     to a publication quality PDF.
 
-When I had to write my thesis I had to choose between *LaTex* [#1]_ and *Word*: I did not like LaTex much, because of it's horrible to read markup language. On the other hand using *Word* was for me also not an option, since its output is not comparable to LaTex' in terms of quality. So I ended up using *Open Office* [#2]_, although it can also not compete with LaTex' publication ready output.
+When I had to write my thesis I had to choose between *LaTex* [#1]_ and *Word*: I did not like LaTex much, because of it's horrible to read markup language. On the other hand using *Word* was for me also not an option, since its output is not comparable to LaTex' in terms of quality. So I ended up using *Open Office*, although it can also not compete with LaTex' publication ready output.
 
 .. [#1] http://www.latex-project.org
-.. [#2] http://www.openoffice.org
 
-Later on, I discovered easier to read markup languages like *Markdown* [#3]_ and **Re-Structured Text** aka **RST**. The former is good enough to write comments in blogs or read-me files, but only the latter has the power to translate a complex manuscript into an easy to read and useful digital format. This document itself is written in (or was produced from) RST.
-
-.. [#3] http://daringfireball.net/projects/markdown
+Later on, I discovered easier to read markup languages like *Markdown* and **Re-Structured Text** aka **RST**. The former is good enough to write comments in blogs or read-me files, but only the latter has the power to translate a complex manuscript into an easy to read and useful digital format. This document itself is written in (or was produced from) RST.
 
 Still, although it is an easy to read markup language, RST alone is not able the produce something even comparable to LaTex' output. You need a piece of software that can take RST and translate it to LaTex: After some time I stumbled upon **Sphinx**, which is exactly doing this translation, thus enabling people to use a markup that feels as natural to write as if you'd be typing on an old fashioned typewriter but still produces publication ready material.
 
