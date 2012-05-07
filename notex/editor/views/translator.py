@@ -71,12 +71,12 @@ def processToText (root, prefix, zip_buffer, target = None):
         else:
             tmp_desc, tmp_path = tempfile.mkstemp ()
             with os.fdopen (tmp_desc, 'w') as temp:
-                temp.write (leaf.text)
+                temp.write (leaf.text.encode ("utf-8"))
                 temp.flush ()
 
                 if is_text (tmp_path):
                     zip_buffer.writestr (zip_path,
-                        leaf.text.replace ('\n','\r\n'))
+                        leaf.text.replace ('\n','\r\n').encode ("utf-8"))
                 else:
                     zip_buffer.writestr (zip_path, leaf.text)
 
