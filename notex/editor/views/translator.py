@@ -118,6 +118,14 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
                         stdout = stdout, stderr = stderr)
 
+                    subprocess.check_call (['cp', '-f',
+                        os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
+                        latex_dir])
+
+                    subprocess.check_call (['cp', '-f',
+                        os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
+                        latex_dir])
+
         if not skip_pdf:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
