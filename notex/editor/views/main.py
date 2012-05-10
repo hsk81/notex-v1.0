@@ -143,6 +143,14 @@ def init_prj02 (root, path, prj_rank = 0):
         rank = rank,
     ), rank + 1
 
+    _, rank = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='image'),
+        node = prj,
+        name = "wiki.jpg",
+        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
+        rank = rank,
+    ), rank + 1
+
 def init_prj03 (root, path, prj_rank = 0):
 
     prj_name = 'Complex Article'
@@ -192,6 +200,14 @@ def init_prj03 (root, path, prj_rank = 0):
         node = prj,
         name = "tm'49.jpg",
         text = get_image_data (path, os.path.join (prj_path,"tm'49.jpg")),
+        rank = rank,
+    ), rank + 1
+
+    _, rank = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='image'),
+        node = prj,
+        name = "wiki.jpg",
+        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
         rank = rank,
     ), rank + 1
 
@@ -265,6 +281,14 @@ def init_prj04 (root, path, prj_rank = 0):
         node = prj,
         name = "tm'49.jpg",
         text = get_image_data (path, os.path.join (prj_path,"tm'49.jpg")),
+        rank = rank,
+    ), rank + 1
+
+    _, rank = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='image'),
+        node = prj,
+        name = "wiki.jpg",
+        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
         rank = rank,
     ), rank + 1
 

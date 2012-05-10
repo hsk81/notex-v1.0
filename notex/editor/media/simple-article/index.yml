@@ -6,8 +6,8 @@ project: 'Mass-Energy Equivalence'
 author: 'Wikipedia.org'
 copyright: '${date %Y}, ${author}'
 
-version: '2012-05-06‎'
-release: '1.0'
+version: '2012.0506'
+release: '0704'
 today: '${date %B %d, %Y}'
 
 master_doc: 'index'
@@ -33,19 +33,42 @@ latex_elements:
     pointsize: '11pt' ## or '10pt' or '12pt'
     fontpkg: '\\usepackage{lmodern}'
     fontenc: '\\usepackage[T2A,T1]{fontenc}'
+
     preamble: '
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}
         \\markboth{${project}}{${author}}'
+
     maketitle: '
+        \\begin{minipage}[t][0.382\\textheight]{\\textwidth}
         \\rule{\\textwidth}{2pt}
-        \\maketitle'
+        \\begin{center}
+        \\begin{minipage}{0.700\\textwidth}
+        \\begin{center}
+        \\medskip\\huge\\textsc{${project}}
+        \\end{center}
+        \\end{minipage}
+        \\begin{minipage}{0.075\\textwidth}
+        \\medskip\\includegraphics{wiki.jpg}
+        \\end{minipage}
+        \\begin{minipage}{0.200\\textwidth}
+        \\begin{flushright}
+        \\small\\textsc{${author}}\\\\
+        \\tiny{${version}--${release}}
+        \\end{flushright}
+        \\end{minipage}
+        \\end{center}
+        \\medskip\\rule{\\textwidth}{2pt}
+        \\end{minipage}'
+
     tableofcontents: ''
     footer: '\\rule{\\textwidth}{2pt}'
     printindex: ''
 
 latex_documents:
  - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+
+latex_additional_files: ['wiki.jpg']
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html

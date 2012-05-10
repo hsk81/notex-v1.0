@@ -34,22 +34,41 @@ latex_elements:
     pointsize: '10pt' ## or '11pt' or '12pt'
     fontpkg: '\\usepackage{lmodern}'
     fontenc: '\\usepackage[T2A,T1]{fontenc}'
+
     preamble: '
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}
         \\markboth{${project}}{${author}}
         \\twocolumn'
+
     maketitle: '
-        \\rule{\\linewidth}{2pt}
-        \\maketitle'
+        \\begin{minipage}[t][0.382\\textheight]{\\linewidth}
+        \\rule{\\textwidth}{2pt}
+        \\begin{center}
+        \\huge\\textsc{${project}}
+        \\vfill
+        \\begin{center}
+        \\bigskip\\includegraphics[scale=0.175]{wiki.jpg}
+        \\end{center}
+        \\begin{center}
+        \\bigskip\\small\\textsc{${author}}\\\\
+        \\tiny{${version}--${release}}
+        \\end{center}
+        \\end{center}
+        \\rule{\\textwidth}{2pt}
+        \\end{minipage}'
+
     tableofcontents: '
         \\tableofcontents
         \\hrule'
+
     footer: '\\rule{\\linewidth}{2pt}'
     printindex: ''
 
 latex_documents:
  - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+
+latex_additional_files: ['wiki.jpg']
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html

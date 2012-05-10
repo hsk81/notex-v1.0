@@ -34,13 +34,36 @@ latex_elements:
     fontpkg: '\\usepackage{lmodern}'
     fontenc: '\\usepackage[T2A,T1]{fontenc}'
     preamble: ''
-    maketitle: '\\maketitle'
+
+    maketitle: '
+        \\begin{titlepage}
+        \\begin{center}
+        \\begin{minipage}[t][0.550\\textheight]{\\textwidth}
+        \\rule{\\textwidth}{2pt}
+        \\begin{center}
+        \\huge\\textsc{${project}}
+        \\end{center}
+        \\rule{\\textwidth}{2pt}
+        \\end{minipage}
+        \\begin{minipage}[b][0.425\\textheight]{\\textwidth}
+        \\begin{center}
+        \\includegraphics[scale=0.250]{wiki.jpg}\\\\
+        \\bigskip\\textsc{${author}}\\\\
+        \\tiny{${version}--${release}}
+        \\end{center}
+        \\rule{\\textwidth}{2pt}
+        \\end{minipage}
+        \\end{center}
+        \\end{titlepage}'
+
     tableofcontents: '\\tableofcontents'
     footer: ''
     printindex: '\\printindex'
 
 latex_documents:
  - ['index', '${project|quote}.tex', '${project}', '${author}', 'manual']
+
+latex_additional_files: ['wiki.jpg']
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html
