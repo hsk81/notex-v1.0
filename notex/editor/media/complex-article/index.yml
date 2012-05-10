@@ -32,6 +32,8 @@ htmlhelp_basename: '${project|quote}doc'
 latex_elements:
     papersize: 'letterpaper' ## or 'a4paper'
     pointsize: '10pt' ## or '11pt' or '12pt'
+    fontpkg: '\\usepackage{lmodern}'
+    fontenc: '\\usepackage[T2A,T1]{fontenc}'
     preamble: '
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}

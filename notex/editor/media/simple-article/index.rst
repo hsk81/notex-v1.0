@@ -317,7 +317,7 @@ There were many attempts in the 19th and the beginning of the 20th century—lik
 
 .. math::
 
-   m_L = \frac{m_0}{\left(\sqrt{1 - \frac{v^2}{c^2}}\right)^3},\
+   m_L = \frac{m_0}{\left(\sqrt{1 - \frac{v^2}{c^2}}\right)^3},\ 
    m_T = \frac{m_0}{\sqrt{1 - \frac{v^2}{c^2}}},
 
 where
@@ -467,7 +467,7 @@ While Serber's view of the strict lack of need to use mass–energy equivalence 
 
 .. [#f12] `[2] <http://homepage.eircom.net/~louiseboylan/Pages/Cockroft_walton.htm>`_ Cockcroft-Walton experiment
 
-.. [#f13] Conversions used: 1956 International (Steam) Table (IT) values where one calorie eq. 4.1868 J and one BTU |≡| 1055.05585262 J. Weapons designers' conversion value of one gram TNT |≡| 1000 calories used.
+.. [#f13] Conversions used: 1956 International (Steam) Table (IT) values where one calorie eq. 4.1868 J and one BTU |≡| 1055.05585262 J. Weapons designers' conversion value of one gram TNT |≡| 1000 calories used. 
 
 .. [#f14] The 6.2 kg core comprised 0.8% gallium by weight. Also, about 20% of the Gadget's yield was due to fast fissioning in its natural uranium tamper. This resulted in 4.1 moles of Pu fissioning with 180 MeV per atom actually contributing prompt kinetic energy to the explosion. Note too that the term "*Gadget*"-style is used here instead of "Fat Man" because this general design of bomb was very rapidly upgraded to a more efficient one requiring only 5 kg of the Pu/gallium alloy.
 
@@ -529,7 +529,17 @@ While Serber's view of the strict lack of need to use mass–energy equivalence 
 
 .. [#f43] Helge Kragh, "Fin-de-Siècle Physics: A World Picture in Flux" in Quantum Generations: A History of Physics in the Twentieth Century (Princeton, NJ: Princeton University Press, 1999.
 
-.. [#f44] ...
+.. [#f44]
+   .. only:: not latex
+
+      Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
+   .. only:: latex
+
+      .. raw:: latex
+
+         \fontencoding{T2A}\selectfont\ 
+         Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
+         \fontencoding{T1}\selectfont
 
 .. [#f45] Preston, S. T., Physics of the Ether, E. & F. N. Spon, London, (1875).
 

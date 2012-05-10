@@ -1,4 +1,4 @@
-.. this file contains *shortcuts* for frequently used mathematical symbols and equations: These shortcuts are called *substitutions*. You can not only create substitutions for math but for any text or markup! They increase the readability of a source file significantly.
+.. This file contains *shortcuts* for frequently used mathematical symbols and equations: These shortcuts are called *substitutions*. You can not only create substitutions for math but for any text or markup! They increase the readability of a source file significantly.
 
 .. |E=mc²| replace:: :math:`E = mc ^ 2`
 .. |E| replace:: :math:`E`
