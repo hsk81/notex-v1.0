@@ -56,7 +56,7 @@ latex_elements:
         \\end{center}
         \\end{titlepage}'
 
-    tableofcontents: '\\tableofcontents'
+    tableofcontents: '\\cleardoublepage\\tableofcontents'
     footer: ''
     printindex: '\\printindex'
 
