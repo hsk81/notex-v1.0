@@ -1,70 +1,48 @@
-=================
-Notex' Quickstart
-=================
+================
+NoTex Quickstart
+================
 
-.. hint::
+.. |NoTex| replace:: :math:`\textsc{NoTex}`
 
-    For a quick demonstration, just click on the *black arrow* next
-    to the export button in the report manager's toolbar and select
-    ``PDF Report``. This very document will morph auto-magically in
-    to a publication like PDF.
+|NoTex| is about separating **content** from **presentation**: It is an *editor* that allows you to concentrate on writing your manuscript first and to care about presentation later. During the process of formulating your thoughts, you do not want to get distracted about how things will end up looking on paper or screen. That's something you want to deal later with, *after* you have written your manuscript!
 
-When I had to write my thesis I had to choose between *LaTex* [#]_ and *Word*: I did not like LaTex much, because of it's horrible to read markup language. On the other hand using *Word* was for me also not an option, since its output is not comparable to LaTex' in terms of quality. So I ended up using *Open Office*, although it can also not compete with LaTex' publication ready output.
+Once you've entered some significant amount of text, you can transform your input into a nice looking PDF or HTML. Since you have separated content from presentation, multiple target formats become feasible and it is easy for |NoTex| to produce the desired PDF or HTML documents.
 
-.. [#] http://www.latex-project.org
+While you write though, you may want to *emphasize* certain words or thoughts: Just put them between two asterisks "*". Emphasizing does not mean to write words in an italic script, since the italic script is just *one* way of expressing emphasis: You could underline them, use another color or just capital letters; it does not matter, since in all cases your one and only intent is *emphasis*. Therefore |NoTex| has one form of a simple emphasis, which is putting the words between asterisks. In the PDF/HTML the emphasized words are indeed put into italics, but that is a presentation issue not a matter of content.
 
-Later on, I discovered easier to read markup languages like *Markdown* and **Re-Structured Text** aka **RST**. The former is good enough to write comments in blogs or read-me files, but only the latter has the power to translate a complex manuscript into an easy to read and useful digital format. This document itself is written in (or was produced from) RST.
+Similarly if you feel that some of your thoughts are **very** important, just use double asterisks "**". They will be rendered bold since |NoTex| *defines* that very important elements of a text should be presented boldfaced, but that's again presentation and not content.
 
-Still, although it is an easy to read markup language, RST alone is not able the produce something even comparable to LaTex' output. You need a piece of software that can take RST and translate it to LaTex: After some time I stumbled upon **Sphinx**, which is exactly doing this translation, thus enabling people to use a markup that feels as natural to write as if you'd be typing on an old fashioned typewriter but still produces publication ready material.
+This separation of content from presentation w.r.t. simple and strong emphasis may seem minuscule, but if you think about the many elements a standard text is build of then things start to make sense: |NoTex| allows you to express structures like
 
-But for many people using Sphinx in combination with LaTex is difficult: You need to install two complex software packages and read manuals to get it to work. This is where *Notex* jumps in: With Notex you do not need to install, configure and maintain anything, but just visit http://blackhan.ch/notex and start writing. That simple.
+   table of content, headings, rubrics, paragraphs, simple and strong
+   emphasis's, images, tables, lists, quotations, links, mathematical
+   expressions, source code, comments, citations, footnotes, indices,
+   glossaries
 
-It takes your RST documents (which are simple text files), put's them through Sphinx, which spits out LaTex, which in turn then is translated to PDF. Sphinx can even produce HTML (and other formats) from the very *same* RST documents: One set of source files, multiple outputs!
+and many more in a very *natural* and *textual* form. This form or way of writing has a name: **Re-Structured Text** or simply **RST**. [#f01]_
 
-There are some disadvantages though: LaTex is compared to RST/Sphinx more mature and offers more configuration possibilities. If you feel, that the standard choices for your LaTex (or other) output are unsatisfactory, you can tweak them to some extent (see http://sphinx.pocoo.org/config.html). But if you want to do fancy stuff, like e.g. arbitrary mixing of one column and two column text, then I'd suggest to use Notex, export the LaTex files and tweak them. This would mean that you've to setup your own LaTex environment.
+RST is an easy to read (and to learn!) language, which enables you to write manuscripts in the most obvious way. Plus it maintains the required precision such that a software like |NoTex| is able to convert the manuscript to publication quality PDF or HTML documents.
 
-Like all other systems, there is also some learning curve involved: To tackle it, some people like to read tutorial and references to learn how things work, and others prefer to learn by example. If you're in the former group then check out the links from the list below, and otherwise skip it and read the descriptions of the provided examples:
+Each |NoTex| report has at least two documents:
 
-* `RST primer`_ is an excellent introduction, plus
-* you should also become familiar with the additional `Sphinx markup`_ constructs, and
-* if you want to tweak your reports' output, then check also the `configuration options`_;
+index.txt
+   Contains the main corpus of your manuscript; if it's lengthy then you should split it into multiple documents and *index.txt* [#f02]_ should just "collect" these various parts.
 
-* finally at http://sphinx.pocoo.org/index.html you'll find all of Sphinx' documentation.
+and
 
-.. _RST primer: http://sphinx.pocoo.org/rest.html
-.. _Sphinx markup: http://sphinx.pocoo.org/markup/index.html
-.. _configuration options: http://sphinx.pocoo.org/config.html
+index.cfg
+   Describes how the PDF or HTML exports should *look* like: Novice users should use the defaults provided by |NoTex|, but advanced users can study the examples and the wiki [#f03]_ for further details.
 
-These are the three examples which you can learn from:
+As you may have noticed while *index.txt* is about the **content**, *index.cfg* is about the **presentation**. If all you want to do is to write your content as quickly as possible, then just create a new *report* and start typing in *index.txt*. But if you also wish to precisely control your presentation then you need to edit *index.cfg*.
 
-1) **Simple Article**
+.. note:: Give it a try and export this quick start -- itself an RST document -- as a PDF and/or HTML: Press the export button in the *report manager* and the application should offer you a ZIP archive for download. Unpack and investigate the content!
 
-   The *simple article* is just like an essay or a short encyclopedia entry: It does not have a table of contents, no glossary and also no index. Use this one as a guideline, if you're going to write a short to medium length text.
+Would you like to provide feedback [#f04]_ or perhaps even participate in the development of |NoTex| then please feel free to visit http://github.com/hsk81/notex.
 
-2) **Complex Article**
+.. [#f01] `"Re-Structured Text" <http://sphinx.pocoo.org/rest.html>`_ provides an excellent introduction.
 
-   If you're going to write a lengthy article (or a small report, semester thesis etc.), but it would still *not* be considered a book, a report, a masters or doctoral thesis, I'd recommend to use the *complex article* example as a template: It starts with a table of contents, has the main corpus immediately following and may have a glossary.
+.. [#f02] `index.txt <http://github.com/hsk81/notex/wiki/Configuration-File:-index.text>`_ explains the main file of a report.
 
-3) **Report**
+.. [#f03] `index.cfg <http://github.com/hsk81/notex/wiki/Configuration-File:-index.cfg>`_ explains the configuration file.
 
-   A *report* is actually just like a *complex article* in its structure (plus an index at the end), but the final result will resemble a book because the system introduces between the title page, table of contents, main corpus etc. empty pages clearly separating the various parts of a report.
-
-The main differences between the three examples originate from the settings in the *configuration* file (usually *index.cfg*) and to some degree also from the *main* file of the report (usually *index.txt*). If you really want to know how to tweak you report w.r.t. the LaTex/PDF or HTML outputs you should checkout the wiki pages for `index.cfg`_ and `index.txt`_.
-
-.. _index.cfg: https://github.com/hsk81/notex/wiki/Configuration-File:-index.cfg
-.. _index.txt: https://github.com/hsk81/notex/wiki/Main-File:-index.txt
-
-I hope you'll enjoy working with Notex and I'm looking forward to your feedback:
-
-* Should you have a *question*, check out the `FAQ`_ first, maybe it has already been addressed. If not then check out `Questions & Answers`_; if you cannot find a relevant question, edit the wiki and enter your own question. Please follow the guidelines and do not enter duplicates.
-
-* Should you think there is a *bug*, again check out the `FAQ`_ and `Questions & Answers`_ pages first; maybe it's just a misunderstanding and the "bug" has already been addressed by somebody else. If not, check out `issues`_ if a similar bug has already been filed; look also at the bug issues that have already been closed. If your bug is still open, don't take any further action or provide additional information (if need be), otherwise simply re-open a closed bug with a relevant comment.
-
-  Only if there is no corresponding (open or closed) bug issue present, then (and only then!) file a new bug report. It should be precise and to the point and enable the developer to *reproduce* the described bug. Don't forget to **label** it as a bug!
-
-* If you've an idea for a new feature, fork the project http://github.com/hsk81/notex, implement it yourself, and send me a pull request. If you're a person without any programming skills, then you may request a feature or post your idea at `Feature Requests`_.
-
-.. _FAQ: http://github.com/hsk81/notex/wiki/FAQ
-.. _Questions & Answers: http://github.com/hsk81/notex/wiki/Questions-&-Answers
-.. _Feature Requests: http://github.com/hsk81/notex/wiki/Feature-Requests
-.. _issues: http://github.com/hsk81/notex/issues
+.. [#f04] See `"Feedback Guidelines" <http://github.com/hsk81/notex/wiki/Feedback-Guidelines>`_ to learn how to give proper feedback.
