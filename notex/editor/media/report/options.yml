@@ -16,6 +16,8 @@ source_suffix: '.txt'
 templates_path: ['_templates']
 exclude_patterns: []
 
+highlight_language: 'python'
+
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
 # -----------------------------------------------------------------------------
@@ -35,7 +37,7 @@ latex_elements:
     fontenc: '\\usepackage[T2A,T1]{fontenc}'
     preamble: ''
 
-    maketitle: '
+    maketitle: |
         \\begin{titlepage}
         \\begin{center}
         \\begin{minipage}[t][0.550\\textheight]{\\textwidth}
@@ -54,7 +56,7 @@ latex_elements:
         \\rule{\\textwidth}{2pt}
         \\end{minipage}
         \\end{center}
-        \\end{titlepage}'
+        \\end{titlepage}
 
     tableofcontents: '\\cleardoublepage\\tableofcontents'
     footer: ''

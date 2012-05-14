@@ -45,13 +45,13 @@ latex_elements:
     fontpkg: '\\usepackage{lmodern}'
     fontenc: '\\usepackage[T1]{fontenc}'
 
-    preamble: '
+    preamble: |
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}
         \\markboth{\\textsc{${project}}}{\\textsc{${author}}}
-        \\usepackage{multicol}'
+        \\usepackage{multicol}
 
-    maketitle: '
+    maketitle: |
         \\begin{minipage}[t][0.618\\textheight]{\\textwidth}
         \\begin{center}
         \\rule{\\textwidth}{2pt}\\\\\\smallskip
@@ -61,15 +61,17 @@ latex_elements:
         \\end{center}
         \\end{minipage}
         \\rule{\\linewidth}{2pt}
-        \\begin{multicols}{2}'
+        \\begin{multicols}{2}
 
     tableofcontents: ''
-    footer: '\\rule{\\linewidth}{2pt}\\end{multicols}'
 
-    printindex: '\\vfill
+    footer: |
+        \\rule{\\linewidth}{2pt}\\end{multicols}\\vfill
         \\begin{center}
         \\small\\textsc{${author} -- ${date %B %d, %Y}}
-        \\end{center}'
+        \\end{center}
+
+    printindex: ''
 
 latex_documents:
  - ['content', '${project|quote}.tex', '${project}', '${author}', 'howto']

@@ -15,6 +15,7 @@ source_suffix: '.txt'
 
 templates_path: ['_templates']
 exclude_patterns: []
+
 highlight_language: 'python'
 
 # -----------------------------------------------------------------------------
@@ -35,13 +36,13 @@ latex_elements:
     fontpkg: '\\usepackage{lmodern}'
     fontenc: '\\usepackage[T2A,T1]{fontenc}'
 
-    preamble: '
+    preamble: |
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}
         \\markboth{${project}}{${author}}
-        \\twocolumn'
+        \\twocolumn
 
-    maketitle: '
+    maketitle: |
         \\begin{minipage}[t][0.382\\textheight]{\\linewidth}
         \\rule{\\textwidth}{2pt}
         \\begin{center}
@@ -56,12 +57,9 @@ latex_elements:
         \\end{center}
         \\end{center}
         \\rule{\\textwidth}{2pt}
-        \\end{minipage}'
+        \\end{minipage}
 
-    tableofcontents: '
-        \\tableofcontents
-        \\hrule'
-
+    tableofcontents: '\\tableofcontents\\hrule'
     footer: '\\rule{\\linewidth}{2pt}'
     printindex: ''
 
