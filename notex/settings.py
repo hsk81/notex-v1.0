@@ -43,20 +43,15 @@ SECRET_KEY = 'd1ykmma4mf3y=#c3t%u5!u(luzt^c*$zny%u8+4)a4@8n0+jju'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
- ## 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
-    'raven.contrib.django.middleware.SentryResponseErrorIdMiddleware',
-
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
  ## 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-
-    'raven.contrib.django.middleware.Sentry404CatchMiddleware',
 )
 
 if DEBUG:
@@ -79,12 +74,7 @@ SESSION_COOKIE_SECURE = False
 TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
 
-SENTRY_DSN = 'http://%s:%s@localhost:9000/1' % (
-    '76296a08393f45acb48ffa6717c1ae2b', 'c9fe5d6842cc4263b555d12be86ad340'
-)
-
 INSTALLED_APPS = (
-    'raven.contrib.django', 
     'django_pdb',
 
     'django.contrib.auth',
@@ -105,40 +95,31 @@ LOGGING = {
     'disable_existing_loggers': True,
     'root': {
         'level': 'WARNING',
-        'handlers': ['sentry'],
+        'handlers': ['console', 'file'],
     },
     'formatters': {
         'verbose': {
             'format': '[%(asctime)s] %(levelname)s -- ' \
-                '%(module)s (pid:%(process)d,tid:%(thread)d): %(message)s'
+                '%(module)s (pid:%(process)d,tid:%(thread)d): %(message)s',
         },
     },
     'handlers': {
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.handlers.SentryHandler',
+        'null': {
+            'level':'DEBUG',
+            'class':'django.utils.log.NullHandler',
         },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
+            'formatter': 'verbose',
         },
-        'raven': {
+        'file': {
             'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'log/notex.log',
+            'when': 'D',
+            'interval': 1,
+            'formatter': 'verbose',
         },
     },
 }
