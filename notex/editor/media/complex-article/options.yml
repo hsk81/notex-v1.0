@@ -10,7 +10,7 @@ version: '2012-05-06'
 release: '1.0'
 today_fmt: '%B %d, %Y'
 
-master_doc: 'index'
+master_doc: 'content'
 source_suffix: '.txt'
 
 templates_path: ['_templates']
@@ -66,7 +66,7 @@ latex_elements:
     printindex: ''
 
 latex_documents:
- - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+ - ['content', '${project|quote}.tex', '${project}', '${author}', 'howto']
 
 latex_additional_files: ['wiki.jpg']
 

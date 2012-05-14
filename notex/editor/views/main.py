@@ -78,16 +78,24 @@ def init_prj01 (root, path, prj_rank = 0):
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'index.yml')),
+        name = 'options.cfg',
+        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
         rank = rank,
     ), rank + 1
 
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.txt',
-        text = get_text_data (path, os.path.join (prj_path,'index.rst')),
+        name = 'content.txt',
+        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
+        rank = rank,
+    ), rank + 1
+
+    _, rank = LEAF.objects.create (
+        type = LEAF_TYPE.objects.get (_code='image'),
+        node = prj,
+        name = "quill.jpg",
+        text = get_image_data (path, os.path.join (prj_path,"quill.jpg")),
         rank = rank,
     ), rank + 1
 
@@ -106,16 +114,16 @@ def init_prj02 (root, path, prj_rank = 0):
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'index.yml')),
+        name = 'options.cfg',
+        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
         rank = rank,
     ), rank + 1
 
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.txt',
-        text = get_text_data (path, os.path.join (prj_path,'index.rst')),
+        name = 'content.txt',
+        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
         rank = rank,
     ), rank + 1
 
@@ -166,16 +174,16 @@ def init_prj03 (root, path, prj_rank = 0):
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'index.yml')),
+        name = 'options.cfg',
+        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
         rank = rank,
     ), rank + 1
 
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.txt',
-        text = get_text_data (path, os.path.join (prj_path,'index.rst')),
+        name = 'content.txt',
+        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
         rank = rank,
     ), rank + 1
 
@@ -226,16 +234,16 @@ def init_prj04 (root, path, prj_rank = 0):
     _, rank = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'index.yml')),
+        name = 'options.cfg',
+        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
         rank = rank,
     ), rank + 1
 
     _, rank  = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='text'),
         node = prj,
-        name = 'index.txt',
-        text = get_text_data (path, os.path.join (prj_path,'index.rst')),
+        name = 'content.txt',
+        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
         rank = rank,
     ), rank + 1
 

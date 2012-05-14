@@ -268,6 +268,7 @@ def emit (value, type, key = None):
     elif type == types.IntType: return emit_number (value, key)
     elif type == types.FloatType: return emit_number (value, key)
     elif type == types.StringType: return emit_string (value, key)
+    elif type == types.NoneType: return emit_none (key)
 
     else: return None ## security: ignore other types!
 
@@ -297,9 +298,16 @@ def emit_number (value, key):
 def emit_string (value, key):
 
     if key:
-        return '%s = "%s"' % (key, Interpolator.apply (value, key))
+        return '%s = """%s"""' % (key, Interpolator.apply (value, key))
     else:
-        return      '"%s"' %       Interpolator.apply (value)
+        return      '"""%s"""' %       Interpolator.apply (value)
+
+def emit_none (key):
+
+    if key:
+        return '%s = None' % key
+    else:
+        return      'None'
 
 ################################################################################
 ################################################################################

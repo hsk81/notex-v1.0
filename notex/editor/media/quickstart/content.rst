@@ -1,8 +1,6 @@
-================
-NoTex Quickstart
-================
-
-.. |NoTex| replace:: :math:`\textsc{NoTex}`
+==================
+|NoTex| Quickstart
+==================
 
 |NoTex| is about separating **content** from **presentation**: It is an *editor* that allows you to concentrate on writing your manuscript first and to care about presentation later. During the process of formulating your thoughts, you do not want to get distracted about how things will end up looking on paper or screen. That's something you want to deal later with, *after* you have written your manuscript!
 
@@ -25,15 +23,15 @@ RST is an easy to read (and to learn!) language, which enables you to write manu
 
 Each |NoTex| report has at least two documents:
 
-index.txt
-   Contains the main corpus of your manuscript; if it's lengthy then you should split it into multiple documents and *index.txt* [#f02]_ should just "collect" these various parts.
+content.txt
+   Contains the main corpus of your manuscript; if it's lengthy then you should split it into multiple documents and *content.txt* [#f02]_ should just "collect" these various parts.
 
 and
 
-index.cfg
-   Describes how the PDF or HTML exports should *look* like: Novice users should use the defaults provided by |NoTex|, but advanced users can study the examples and the wiki [#f03]_ for further details.
+options.cfg
+   Describes how the PDF or HTML exports should *look* like: Novice users should use the default options provided by |NoTex|, but advanced users can study the examples and the wiki [#f03]_ for further details.
 
-As you may have noticed while *index.txt* is about the **content**, *index.cfg* is about the **presentation**. If all you want to do is to write your content as quickly as possible, then just create a new *report* and start typing in *index.txt*. But if you also wish to precisely control your presentation then you need to edit *index.cfg*.
+As you may have noticed while *content.txt* is about **content**, *options.cfg* is about **presentation**. If all you want to do is to write your manuscript as quickly as possible, then just create a new *report* and start typing in *content.txt*. But if you also wish to control your presentation then you need to edit *options.cfg*.
 
 .. note:: Give it a try and export this quick start -- itself an RST document -- as a PDF and/or HTML: Press the export button in the *report manager* and the application should offer you a ZIP archive for download. Unpack and investigate the content!
 
@@ -41,8 +39,8 @@ Would you like to provide feedback [#f04]_ or perhaps even participate in the de
 
 .. [#f01] `"Re-Structured Text" <http://sphinx.pocoo.org/rest.html>`_ provides an excellent introduction.
 
-.. [#f02] `index.txt <http://github.com/hsk81/notex/wiki/Configuration-File:-index.text>`_ explains the main file of a report.
+.. [#f02] `content.txt <http://github.com/hsk81/notex/wiki/Configuration-File:-content.txt>`_ explains the main file of a report.
 
-.. [#f03] `index.cfg <http://github.com/hsk81/notex/wiki/Configuration-File:-index.cfg>`_ explains the configuration file.
+.. [#f03] `options.cfg <http://github.com/hsk81/notex/wiki/Configuration-File:-options.cfg>`_ explains the configuration file.
 
 .. [#f04] See `"Feedback Guidelines" <http://github.com/hsk81/notex/wiki/Feedback-Guidelines>`_ to learn how to give proper feedback.

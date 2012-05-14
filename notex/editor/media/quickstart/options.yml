@@ -10,11 +10,22 @@ version: '1.0'
 release: '1.0'
 today: ~
 
-master_doc: 'index'
+master_doc: 'content'
 source_suffix: '.txt'
 
 templates_path: ['_templates']
 exclude_patterns: []
+
+rst_prolog: |
+   .. role:: latex(raw)
+      :format: latex
+   .. role:: html(raw)
+      :format: html
+
+rst_epilog: |
+   .. |NoTex| replace::
+      :latex:`\\textsc{NoTex}`
+      :html:`<span style="font-variant: small-caps;">NoTex</span>`
 
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
@@ -61,7 +72,7 @@ latex_elements:
         \\end{center}'
 
 latex_documents:
- - ['index', '${project|quote}.tex', '${project}', '${author}', 'howto']
+ - ['content', '${project|quote}.tex', '${project}', '${author}', 'howto']
 
 latex_additional_files: ['quill.jpg']
 
