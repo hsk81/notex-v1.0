@@ -19,6 +19,7 @@ import logging
 import zipfile
 import base64
 import json
+import os
 
 ################################################################################
 ################################################################################
@@ -40,26 +41,32 @@ def compress (request, id, translate, ext = 'zip', hook = None):
     while node.node:
         node = node.node
 
-    object_key = hash ((request.session.session_key, node.id))
-    object_val = cache.get (object_key)
+    object_key = hex (hash ((request.session.session_key, node.id)))
+    object_uri = cache.get (object_key)
     cache.delete (object_key)
-    
-    if object_val and not 'refresh' in request.GET:
-        if hook: object_val = hook (object_val)
+
+    if object_uri and not 'refresh' in request.GET:
+
+        with open (object_uri, 'r') as temp:
+            object_val = temp.read ()
+        if hook:
+            object_val = hook (object_val)
 
         size = len (object_val)
         temp = tempfile.SpooledTemporaryFile (max_size = size)
         temp.write (object_val)
 
         http_response = HttpResponse (FileWrapper (temp))
-        http_response['Content-Disposition'] = 'attachment;filename="%s.%s"' % \
-            (node.name, ext)
+        http_response['Content-Disposition'] = \
+            'attachment;filename="%s.%s"' % (node.name, ext)
         http_response['Content-Length'] = size
 
-        temp.seek (0)
+        temp.seek (0); os.remove (object_uri)
     else:
-        http_response, object_value = to_zip (request, translate, node)
-        cache.set (object_key, object_value)
+        http_response, object_val = to_zip (request, translate, node)
+        descriptor, object_uri = tempfile.mkstemp ()
+        with os.fdopen (descriptor, 'w') as temp: temp.write (object_val)
+        cache.set (object_key, object_uri)
 
     return http_response
 
