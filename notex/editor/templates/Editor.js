@@ -15,7 +15,7 @@ var editor = function () {
                 closable : true,
 
                 getEditor : function () {
-                    return this.findById ('editor' + tabInfo.id)
+                    return this.findById ('editorId' + tabInfo.id)
                 },
 
                 getData : function () {
@@ -24,7 +24,7 @@ var editor = function () {
 
                 items : [{
                     xtype : 'textarea',
-                    id : 'editor' + tabInfo.id,
+                    id : 'editorId' + tabInfo.id,
                     anchor : '100% 100%',
                     value : tabInfo.text,
                     style :"font-family:monospace; font-size:12px;"
@@ -60,13 +60,13 @@ var editor = function () {
                 },
 
                 getData : function () {
-                    return $('#imageId').attr ('src')
+                    return $('#imageId' + tabInfo.id).attr ('src')
                 },
 
                 items : [{
                     html : String.format (
-                        '<img id="imageId" src="{0}" width="100%" />',
-                        tabInfo.text
+                        '<img id="imageId{0}" src="{1}" width="100%" />',
+                        tabInfo.id, tabInfo.text
                     )
                 }]
             });
