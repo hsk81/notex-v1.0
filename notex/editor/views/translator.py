@@ -77,7 +77,7 @@ def processToText (root, prefix, zip_buffer, target = None):
             os.remove (tmp_path)
 
     for node in ns:
-        zip_path = os.path.join (prefix, leaf.name)
+        zip_path = os.path.join (prefix, node.name)
         processToText (node, zip_path, zip_buffer, target = None)
 
 def processToLatex (root, title, zip_buffer):
