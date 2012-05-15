@@ -52,6 +52,7 @@ MIDDLEWARE_CLASSES = (
  ## 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'logger.ExceptionLoggerMiddleware'
 )
 
 if DEBUG:
@@ -98,9 +99,13 @@ LOGGING = {
         'handlers': ['console', 'file'],
     },
     'formatters': {
-        'verbose': {
+        'simplis': {
             'format': '[%(asctime)s] %(levelname)s -- ' \
-                '%(module)s (pid:%(process)d,tid:%(thread)d): %(message)s',
+                '%(message)s',
+        },
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s:%(lineno)d -- ' \
+                '%(message)s',
         },
     },
     'handlers': {
@@ -122,6 +127,13 @@ LOGGING = {
             'formatter': 'verbose',
         },
     },
+    'loggers': {
+        'logger.ExceptionLoggerMiddleware': {
+            'level':'ERROR',
+            'handlers':['console', 'file'],
+            'propagate': False,
+        },
+    }
 }
 
 ################################################################################
