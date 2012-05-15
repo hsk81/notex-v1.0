@@ -98,6 +98,6 @@ var editor = function () {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
             deleteTab : _deleteTab
-        }, 
+        }
     })
 }();
