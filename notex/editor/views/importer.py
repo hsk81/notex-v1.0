@@ -14,6 +14,7 @@ from editor.models import LEAF, LEAF_TYPE
 import subprocess
 import mimetypes
 import tempfile
+import logging
 import zipfile
 import os.path
 import base64
@@ -25,6 +26,11 @@ import re
 ################################################################################
 ################################################################################
 
+logger = logging.getLogger (__name__)
+
+################################################################################
+################################################################################
+
 @transaction.commit_manually
 def import_file (request, fid):
 
@@ -32,15 +38,30 @@ def import_file (request, fid):
         zip_file.write (''.join (request.readlines ()))
         zip_file.flush ()
 
-        if not zipfile.is_zipfile (zip_file):
-            return failure (message = 'ZIP format expected', file_id = fid)
+        return from_zip (request, fid, zip_file)
 
-        root = ROOT.objects.get (
-            _type = ROOT_TYPE.objects.get (_code='root'),
-            _usid = request.session.session_key)
+def from_zip (request, fid, zip_file):
 
+    if not zipfile.is_zipfile (zip_file):
+        return failure (message = 'ZIP format expected', file_id = fid)
+
+    try:
         with zipfile.ZipFile (zip_file, 'r') as zip_buffer:
+
+            root = ROOT.objects.get (
+                _type = ROOT_TYPE.objects.get (_code='root'),
+                _usid = request.session.session_key)
+
             return create_project (root, fid, zip_buffer)
+
+    except Exception as ex:
+        logger.error (ex, exc_info = True, extra =
+        {
+            'request' : request,
+            'file_id' : fid
+        })
+
+        return failure (message = 'Unknown reason', file_id = fid)
 
 def create_project (root, fid, zip_buffer):
 
@@ -179,7 +200,7 @@ def create_image (zip_info, rankdict, parent, file):
 
     mimetype, encoding = mimetypes.guess_type (name)
     text = 'data:%s;base64,%s' % \
-        (mimetype, base64.encodestring (file.readlines ()))
+        (mimetype, base64.encodestring (file.read ()))
 
     _ = LEAF.objects.create (
         type = LEAF_TYPE.objects.get (_code='image'),

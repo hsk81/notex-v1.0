@@ -126,11 +126,37 @@ LOGGING = {
             'interval': 1,
             'formatter': 'verbose',
         },
+        'file-exporter': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'log/exporter.log',
+            'when': 'D',
+            'interval': 1,
+            'formatter': 'verbose',
+        },
+        'file-importer': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'log/importer.log',
+            'when': 'D',
+            'interval': 1,
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'logger.ExceptionLoggerMiddleware': {
             'level':'ERROR',
             'handlers':['console', 'file'],
+            'propagate': False,
+        },
+        'editor.views.exporter': {
+            'level':'ERROR',
+            'handlers':['console', 'file-exporter'],
+            'propagate': False,
+        },
+        'editor.views.importer': {
+            'level':'ERROR',
+            'handlers':['console', 'file-importer'],
             'propagate': False,
         },
     }
