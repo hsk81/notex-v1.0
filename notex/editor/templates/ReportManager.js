@@ -588,18 +588,29 @@ var reportManager = function () {
             return
         }
 
-        if (node.parentNode == undefined) return;
-        if (node.previousSibling == undefined) return;
+        var prev = _prev (node)
+        if (prev == undefined || prev.attributes['iconCls']
+            .match ("^icon-report$") == "icon-report")
+        {
+            return
+        }
 
         var move = Ext.getCmp ('btnMoveUp').disable ()
         tree.el.mask ('Please wait', 'x-mask-loading')
 
         Ext.Ajax.request ({
-            params : {id: node.id, jd: node.previousSibling.id },
-            url : urls.swapRank,
+            params : {id: node.id, jd: prev.id},
+            url : urls.decreaseRank,
 
             success : function (xhr, opts) {
-                node.parentNode.insertBefore (node, node.previousSibling)
+
+                if (node.parentNode == prev.parentNode.parentNode) {
+                    prev.parentNode.insertBefore (node, prev)
+                    prev.parentNode.insertBefore (prev, node)
+                } else {
+                    prev.parentNode.insertBefore (node, prev)
+                }
+
                 tree.selectPath (node.getPath ())
                 tree.el.unmask ()
                 move.enable ()
@@ -608,9 +619,30 @@ var reportManager = function () {
             failure : function (xhr, opts) {
                 tree.el.unmask ()
                 move.enable ()
-                Ext.Msg.alert ("Error", "Moving up '" + node.text + "' failed!")
+                Ext.Msg.alert (
+                    "Error", "Moving up '" + node.text + "' failed!"
+                )
             }
         });
+    }
+
+    function _prev (node) {
+
+        var prev = node.previousSibling
+        if (prev) {
+            return _last (prev)
+        } else {
+            return node.parentNode
+        }
+    }
+
+    function _last (node) {
+
+        if (node.lastChild) {
+            return _last (node.lastChild)
+        } else {
+            return node
+        }
     }
 
     // #########################################################################
@@ -625,18 +657,28 @@ var reportManager = function () {
             return;
         }
 
-        if (node.parentNode == undefined) return;
-        if (node.nextSibling == undefined) return;
+        var next = _next (node)
+        if (next == undefined || next.attributes['iconCls']
+            .match ("^icon-report$") == "icon-report")
+        {
+            return
+        }
 
         var move = Ext.getCmp ('btnMoveDown').disable ()
         tree.el.mask ('Please wait', 'x-mask-loading')
 
         Ext.Ajax.request ({
-            params : {id: node.id, jd: node.nextSibling.id },
-            url : urls.swapRank,
+            params : {id: node.id, jd: next.id },
+            url : urls.increaseRank,
 
             success : function (xhr, opts) {
-                node.parentNode.insertBefore (node.nextSibling, node)
+
+                if (next.parentNode == node.parentNode) {
+                    next.parentNode.insertBefore (next, node)
+                } else {
+                    next.parentNode.insertBefore (node, next)
+                }
+
                 tree.selectPath (node.getPath ())
                 tree.el.unmask ()
                 move.enable ()
@@ -646,9 +688,29 @@ var reportManager = function () {
                 tree.el.unmask ()
                 move.enable ()
                 Ext.Msg.alert (
-                    "Error", "Moving down '" + node.text + "' failed!")
+                    "Error", "Moving down '" + node.text + "' failed!"
+                )
             }
         });
+    }
+
+    function _next (node) {
+
+        var next = node.nextSibling
+        if (next) {
+            return _first (next)
+        } else {
+            return node.parentNode.nextSibling
+        }
+    }
+
+    function _first (node) {
+
+        if (node.firstChild) {
+            return node.firstChild
+        } else {
+            return node
+        }
     }
 
     // #########################################################################
@@ -663,7 +725,16 @@ var reportManager = function () {
             qtip : '<b>Refresh</b><br/>Refresh report manager\'s view',
             handler : function (event, toolEl, panel) {
                 var tree = Ext.getCmp ('reportManager.tree.id')
-                tree.getLoader ().load (tree.root, null, this)
+                var model = tree.getSelectionModel ()
+                var node = model.getSelectedNode ()
+
+                if (node) {
+                    tree.getLoader ().load (node.parentNode, function (root) {
+                        root.expand ()
+                    }, this)
+                } else {
+                    tree.getLoader ().load (tree.root, null, this)
+                }
             }
         }],
 

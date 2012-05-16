@@ -3,7 +3,7 @@ from create import *
 from read import *
 from update import *
 from delete import *
-from swap import *
+from rank import *
 from rename import *
 from translator import *
 from exporter import *
