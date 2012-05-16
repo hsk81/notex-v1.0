@@ -27,8 +27,21 @@ var editor = function () {
                     id : 'editorId' + tabInfo.id,
                     anchor : '100% 100%',
                     value : tabInfo.text,
-                    style :"font-family:monospace; font-size:12px;"
-                }]
+                    style :"font-family:monospace; font-size:12px;",
+                }],
+
+                listeners : {
+                    activate : function (pnlTab) {
+                        if (pnlTab.scroll) {
+                            pnlTab.getEditor ().getEl ().scroll (
+                                'down', pnlTab.scroll.top
+                            )
+                            pnlTab.getEditor ().getEl ().scroll (
+                                'right', pnlTab.scroll.left
+                            )
+                        }
+                    }
+                }
             });
 
             this.activate (tab)
@@ -59,8 +72,12 @@ var editor = function () {
                     pack : 'center'
                 },
 
+                getViewer : function () {
+                    return Ext.get ('imageId' + tabInfo.id)
+                },
+
                 getData : function () {
-                    return $('#imageId' + tabInfo.id).attr ('src')
+                    return this.getViewer ().dom.src
                 },
 
                 items : [{
@@ -68,7 +85,7 @@ var editor = function () {
                         '<img id="imageId{0}" src="{1}" width="100%" />',
                         tabInfo.id, tabInfo.text
                     )
-                }]
+                }],
             });
 
             this.activate (tab)
@@ -87,6 +104,23 @@ var editor = function () {
         }
     }
 
+    function _beforeTabChange (tabPanel, newTab, curTab) {
+        if (curTab) {
+            if (curTab.getEditor) {
+                var editor = curTab.getEditor ()
+                if (editor && editor.getEl) {
+                    var element = editor.getEl ()
+                    if (element && element.getScroll) {
+                        var scroll = element.getScroll ()
+                        if (scroll) {
+                            curTab.scroll = scroll
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return new Ext.TabPanel ({
 
         activeTab : 0,
@@ -97,7 +131,8 @@ var editor = function () {
         listeners : {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
-            deleteTab : _deleteTab
+            deleteTab : _deleteTab,
+            beforetabchange: _beforeTabChange,
         }
     })
 }();
