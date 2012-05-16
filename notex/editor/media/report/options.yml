@@ -2,39 +2,35 @@
 # General: http://sphinx.pocoo.org/config.html#general-configuration
 # -----------------------------------------------------------------------------
 
-project: 'Mass-Energy Equivalence'
-author: 'Wikipedia.org'
-copyright: '${date %Y}, ${author}'
+project: Mass-Energy Equivalence
+author: Wikipedia.org
+copyright: ${date %Y}, ${author}
 
-version: '2012-05-06'
-release: '1.0'
-today: 'May 6, 2012'
+version: '2012.0506'
+release: '0704'
 
-master_doc: 'content'
-source_suffix: '.txt'
+master_doc: content
+source_suffix: .txt
 
-templates_path: ['_templates']
-exclude_patterns: []
-
-highlight_language: 'python'
+highlight_language: python
 
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
 # -----------------------------------------------------------------------------
 
-html_theme: 'default'
-html_static_path: ['_static']
-htmlhelp_basename: '${project|quote}doc'
+html_theme: default
+html_static_path: [_static]
+htmlhelp_basename: ${project|quote}doc
 
 # -----------------------------------------------------------------------------
 # LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
 # -----------------------------------------------------------------------------
 
 latex_elements:
-    papersize: 'letterpaper' ## or 'a4paper'
-    pointsize: '12pt' ## or '11pt' or '10pt'
-    fontpkg: '\\usepackage{lmodern}'
-    fontenc: '\\usepackage[T2A,T1]{fontenc}'
+    papersize: letterpaper ## or a4paper
+    pointsize: 12pt ## or 11pt or 10pt
+    fontpkg: \\usepackage{lmodern}
+    fontenc: \\usepackage[T2A,T1]{fontenc}
     preamble: ''
 
     maketitle: |
@@ -58,14 +54,14 @@ latex_elements:
         \\end{center}
         \\end{titlepage}
 
-    tableofcontents: '\\cleardoublepage\\tableofcontents'
+    tableofcontents: \\cleardoublepage\\tableofcontents
     footer: ''
-    printindex: '\\printindex'
+    printindex: \\printindex
 
 latex_documents:
- - ['content', '${project|quote}.tex', '${project}', '${author}', 'manual']
+ - [content, '${project|quote}.tex', '${project}', '${author}', manual]
 
-latex_additional_files: ['wiki.jpg']
+latex_additional_files: [wiki.jpg]
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html

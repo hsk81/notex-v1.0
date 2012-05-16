@@ -2,19 +2,12 @@
 # General: http://sphinx.pocoo.org/config.html#general-configuration
 # -----------------------------------------------------------------------------
 
-project: 'NoTex Quickstart'
-author: 'Blackhan.ch'
-copyright: '${date %Y}, ${author}'
+project: NoTex Quickstart
+author: Blackhan.ch
+copyright: ${date %Y}, ${author}
 
-version: '1.0'
-release: '1.0'
-today: ~
-
-master_doc: 'content'
-source_suffix: '.txt'
-
-templates_path: ['_templates']
-exclude_patterns: []
+master_doc: content
+source_suffix: .txt
 
 rst_prolog: |
    .. role:: latex(raw)
@@ -31,19 +24,19 @@ rst_epilog: |
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
 # -----------------------------------------------------------------------------
 
-html_theme: 'default'
-html_static_path: ['_static']
-htmlhelp_basename: '${project|quote}doc'
+html_theme: default
+html_static_path: [_static]
+htmlhelp_basename: ${project|quote}doc
 
 # -----------------------------------------------------------------------------
 # LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
 # -----------------------------------------------------------------------------
 
 latex_elements:
-    papersize: 'letterpaper' ## or 'a4paper'
-    pointsize: '12pt' ## or '10pt' or '11pt'
-    fontpkg: '\\usepackage{lmodern}'
-    fontenc: '\\usepackage[T1]{fontenc}'
+    papersize: letterpaper ## or a4paper
+    pointsize: 12pt ## or 10pt or 11pt
+    fontpkg: \\usepackage{lmodern}
+    fontenc: \\usepackage[T1]{fontenc}
 
     preamble: |
         \\pagestyle{myheadings}
@@ -74,9 +67,9 @@ latex_elements:
     printindex: ''
 
 latex_documents:
- - ['content', '${project|quote}.tex', '${project}', '${author}', 'howto']
+ - [content, '${project|quote}.tex', '${project}', '${author}', howto]
 
-latex_additional_files: ['quill.jpg']
+latex_additional_files: [quill.jpg]
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html
