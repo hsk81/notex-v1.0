@@ -81,10 +81,12 @@ var editor = function () {
                 },
 
                 items : [{
-                    html : String.format (
-                        '<img id="imageId{0}" src="{1}" width="100%" />',
-                        tabInfo.id, tabInfo.text
-                    )
+                    xtype : 'box',
+                    autoEl : {
+                        tag : 'img',
+                        id : 'imageId' + tabInfo.id,
+                        src : tabInfo.text,
+                    },
                 }],
             });
 
