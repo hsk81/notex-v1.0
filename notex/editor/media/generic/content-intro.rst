@@ -11,7 +11,7 @@ Re-Structured Text
 
 .. highlightlang:: rest
 
-This section is a brief introduction to re-structured text (RST) concepts and syntax, intended to provide authors with enough information to write documents productively.  Since RST was designed to be a simple, unobtrusive markup language, this will not take too long. 
+This section is a brief introduction to :index:`re-structured text` (RST) concepts and syntax, intended to provide authors with enough information to write documents productively.  Since RST was designed to be a simple, unobtrusive markup language, this will not take too long.
 
 Paragraphs
 ----------
@@ -21,7 +21,7 @@ The paragraph is the most basic block in a RST document. Paragraphs are simply c
 Inline markup
 -------------
 
-The standard RST inline markup is quite simple: use
+The standard RST :index:`inline markup` is quite simple: use
 
 * one asterisk: ``*text*`` for emphasis (italics),
 * two asterisks: ``**text**`` for strong emphasis (boldface), and
@@ -51,7 +51,7 @@ See `inline-markup <http://sphinx.pocoo.org/markup/inline.html#inline-markup>`_ 
 Lists and Quote-like blocks
 ---------------------------
 
-List markup is natural: just place an asterisk at the start of a paragraph and indent properly. The same goes for numbered lists; they can also be autonumbered using a ``#`` sign::
+:index:`List markup` is natural: just place an asterisk at the start of a paragraph and indent properly. The same goes for numbered lists; they can also be autonumbered using a ``#`` sign::
 
    * This is a bulleted list.
    * It has two items, the second
@@ -105,7 +105,7 @@ There are also several more special blocks available:
 Source Code
 -----------
 
-Literal code blocks are introduced by ending a paragraph with the special marker ``::``. The literal block must be indented (and, like all paragraphs, separated from the surrounding ones by blank lines)::
+:index:`Literal code` blocks are introduced by ending a paragraph with the special marker ``::``. The :index:`literal block` must be indented (and, like all paragraphs, separated from the surrounding ones by blank lines)::
 
    This is a normal text paragraph. The
    next paragraph is a code sample::
@@ -129,7 +129,7 @@ That way, the second sentence in the above example's first paragraph would be re
 Tables
 ------
 
-Two forms of tables are supported. For *grid tables*, you have to "paint" the cell grid yourself. They look like this::
+Two forms of :index:`tables` are supported. For *grid tables*, you have to "paint" the cell grid yourself. They look like this::
 
    +------------------------+------------+
    | Header row, column 1   | Header 2   |
@@ -159,7 +159,7 @@ Hyperlinks
 External links
 ^^^^^^^^^^^^^^
 
-Use ```link text <http://e.g.com/>`_`` for inline web links.  If the link text should be the web address, you don't need special markup at all, the parser finds links and mail addresses in ordinary text.
+Use ```link text <http://e.g.com/>`_`` for inline :index:`web links`. If the link text should be the web address, you don't need special markup at all, the parser finds links and mail addresses in ordinary text.
 
 You can also separate the link and the target definition, like this::
 
@@ -171,12 +171,12 @@ You can also separate the link and the target definition, like this::
 Internal links
 ^^^^^^^^^^^^^^
 
-Internal linking is done via a special RST role provided by |NoTex|, see the section on specific markup, `cross referencing arbitrary locations <http://sphinx.pocoo.org/markup/inline.html#ref-role>`_.
+:index:`Internal linking` is done via a special RST role provided by |NoTex|, see the section on specific markup, `cross referencing arbitrary locations <http://sphinx.pocoo.org/markup/inline.html#ref-role>`_.
 
 Sections
 --------
 
-Section headers are created by underlining (and optionally overlining) the section title with a punctuation character, at least as long as the text::
+Section :index:`headers` are created by underlining (and optionally overlining) the section title with a punctuation character, at least as long as the text::
 
    =================
    This is a heading
@@ -198,12 +198,12 @@ Explicit Markup
 
 `"Explicit markup" <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#explicit-markup-blocks>`_ is used in RST for most constructs that need special handling, such as footnotes, specially-highlighted paragraphs, comments, and generic directives.
 
-An explicit markup block begins with a line starting with ``..`` followed by whitespace and is terminated by the next paragraph at the same level of indentation. (There needs to be a blank line between explicit markup and normal paragraphs. This may all sound a bit complicated, but it is intuitive enough when you write it.)
+An :index:`explicit markup` block begins with a line starting with ``..`` followed by whitespace and is terminated by the next paragraph at the same level of indentation. (There needs to be a blank line between explicit markup and normal paragraphs. This may all sound a bit complicated, but it is intuitive enough when you write it.)
 
 Directives
 ----------
 
-A directive is a generic block of explicit markup. Besides roles, it is one of the extension mechanisms of RST, and |NoTex| makes heavy use of it. The following directives are supported:
+A :index:`directive` is a generic block of explicit markup. Besides roles, it is one of the extension mechanisms of RST, and |NoTex| makes heavy use of it. The following directives are supported:
 
 * Admonitions: `attention`, `caution`, `danger`, `error`, `hint`, `important`, `note`, `tip`, `warning` and the generic `admonition`. (Most themes style only "note" and "warning" specially.)
 
@@ -232,7 +232,7 @@ A directive is a generic block of explicit markup. Besides roles, it is one of t
 * Special directives:
 
   - `raw` (include raw target-format markup),
-  - `include` (include re-structured text from another file),
+  - `include` (include :index:`re-structured text` from another file),
   
     -- in |NoTex| when given an absolute include file path, this directive takes it as relative to the source directory, and
        
@@ -269,7 +269,7 @@ The directive content follows after a blank line and is indented relative to the
 Images
 ------
 
-RST supports an image directive, used like so::
+RST supports an :index:`image` directive, used like so::
 
    .. image:: gnu.png
       (options)
@@ -289,7 +289,7 @@ Interpretation of image size options (``width`` and ``height``) is as follows: i
 Footnotes
 ---------
 
-For footnotes, use ``[#name]_`` to mark the footnote location, and add the footnote body at the bottom of the document after a "Footnotes" rubric heading, like so::
+For :index:`footnotes`, use ``[#name]_`` to mark the footnote location, and add the footnote body at the bottom of the document after a "Footnotes" rubric heading, like so::
 
    Lorem ipsum [#f1]_ dolor ... [#f2]_
 
@@ -303,7 +303,7 @@ You can also explicitly number the footnotes (``[1]_``) or use auto-numbered foo
 Citations
 ---------
 
-Standard RST citations are supported, with the additional feature that they are "global", i.e. all citations can be referenced from all files. Use them like so::
+Standard RST :index:`citations` are supported, with the additional feature that they are "global", i.e. all citations can be referenced from all files. Use them like so::
 
    Lorem ipsum [Ref]_ dolor sit amet.
 
@@ -311,11 +311,10 @@ Standard RST citations are supported, with the additional feature that they are 
 
 Citation usage is similar to footnote usage, but with a label that is not numeric or begins with ``#``.
 
-
 Substitutions
 -------------
 
-RST supports "substitutions", which are pieces of text and/or markup referred to in the text by ``|name|``. They are defined like footnotes with explicit markup blocks, like this::
+RST supports ":index:`substitutions`", which are pieces of text and/or markup referred to in the text by ``|name|``. They are defined like footnotes with explicit markup blocks, like this::
 
    .. |name| replace:: replacement *text*
 
@@ -334,7 +333,7 @@ If you want to use some substitutions for all documents, put them into `rst_prol
 Comments
 --------
 
-Every explicit markup block which isn't a valid markup construct (like the footnotes above) is regarded as a comment. For example::
+Every explicit markup block which isn't a valid markup construct (like the footnotes above) is regarded as a :index:`comment`. For example::
 
    .. This is a comment.
 
@@ -349,7 +348,7 @@ You can indent text after a comment start to form multiline comments::
 Source encoding
 ---------------
 
-Since the easiest way to include special characters like em dashes or copyright signs in RST is to directly write them as Unicode characters, one has to specify an encoding. |NoTex| assumes source files to be encoded in UTF-8 by default; you can change this with the `source_encoding` config value.
+Since the easiest way to include special characters like em dashes or copyright signs in RST is to directly write them as :index:`Unicode` characters, one has to specify an :index:`encoding`. |NoTex| assumes source files to be encoded in UTF-8 by default; you can change this with the `source_encoding` config value.
 
 Gotchas
 -------

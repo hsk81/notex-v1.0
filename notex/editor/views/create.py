@@ -31,30 +31,53 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
 
     project = data['project']
     authors = data['authors']
+    fontpsz = data['fontSize']
 
     if data['documentType'] == 'report':
-        doctype = 'manual'
+        if data['columns'] == 1:
+            columns = '\\\\onecolumn'
+        else:
+            columns = '\\\\twocolumn'
+        if data['title']:
+            mktitle = "\\\\maketitle"
+        else:
+            mktitle = "''"
+        if data['toc']:
+            mktable = "\\\\tableofcontents"
+            mkamble = "''"
+        else:
+            mktable = ""
+            mkamble = """|
+            \\\\pagestyle{myheadings}
+            \\\\pagenumbering{arabic}
+            \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}
+            """
+
         ymlfile = 'generic/options-manual.yml'
+        doctype = 'manual'
+
     else:
-        doctype = 'howto'
+        if data['columns'] == 1:
+            columns = '\\\\onecolumn'
+        else:
+            columns = '\\\\twocolumn'
+        if data['title']:
+            mktitle = """|
+            \\\\rule{\\\\linewidth}{2pt}
+            \\\\maketitle
+            \\\\rule{\\\\linewidth}{2pt}
+            """
+        else:
+            mktitle = "''"
+        if data['toc']:
+            mktable = "\\\\tableofcontents\\\\hrule"
+            mkamble = "" ## ignored
+        else:
+            mktable = "''"
+            mkamble = "" ## ignored
+
         ymlfile = 'generic/options-howto.yml'
-
-    fontpsz = data['fontSize']
-    columns = {1:'\\\\onecolumn',2:'\\\\twocolumn'}[data['columns']]
-
-    if data['title']:
-        mktitle = """|
-        \\\\rule{\\\\linewidth}{2pt}
-        \\\\maketitle
-        \\\\rule{\\\\linewidth}{2pt}
-        """
-    else:
-        mktitle = "''"
-
-    if data['toc']:
-        mktable = "\\\\tableofcontents\\\\hrule"
-    else:
-        mktable = "''"
+        doctype = 'howto'
 
     if data['index']:
         mkindex = "\\\\printindex"
@@ -88,6 +111,7 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
 
     type = LEAF_TYPE.objects.get (_code='text')
     text = open (os.path.join (path, ymlfile)).read () \
+        .replace ('${MKAMBLE}', mkamble) \
         .replace ('${PROJECT}', project) \
         .replace ('${AUTHORS}', authors) \
         .replace ('${DOCTYPE}', doctype) \

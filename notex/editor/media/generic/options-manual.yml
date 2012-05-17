@@ -44,15 +44,10 @@ latex_elements:
     fontpkg: \\usepackage{lmodern}
     fontenc: \\usepackage[T1]{fontenc}
 
-    preamble: |
-        \\pagestyle{myheadings}
-        \\pagenumbering{arabic}
-        \\markboth{\\textsc{${project}}}{\\textsc{${author}}}
-        ${COLUMNS}
-
+    preamble: ${MKAMBLE}
     maketitle: ${MKTITLE}
-    tableofcontents: ${MKTABLE}
-    footer: \\rule{\\linewidth}{2pt}
+    tableofcontents: ${MKTABLE}${COLUMNS}
+    footer: ''
     printindex: ${MKINDEX}
 
 latex_documents:

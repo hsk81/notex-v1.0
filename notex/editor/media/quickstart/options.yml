@@ -50,7 +50,7 @@ latex_elements:
         \\rule{\\textwidth}{2pt}\\\\\\smallskip
         \\resizebox{\\linewidth}{!}{\\itshape\\textsc{${project}}}
         \\rule{\\textwidth}{2pt}\\vfill
-        \\includegraphics[scale=1.000]{quill.jpg}\\vfill
+        \\includegraphics[scale=0.800]{quill.jpg}\\vfill
         \\end{center}
         \\end{minipage}
         \\rule{\\linewidth}{2pt}
