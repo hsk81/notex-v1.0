@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 
 project: ${PROJECT}
-author: ${AUTHORs}
+author: ${AUTHORS}
 copyright: '${date %Y}, ${author}'
 
 version: '0.1'
@@ -40,7 +40,7 @@ htmlhelp_basename: ${project|quote}doc
 
 latex_elements:
     papersize: letterpaper ## or a4paper
-    pointsize: 10pt ## or 11pt or 12pt
+    pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
     fontpkg: \\usepackage{lmodern}
     fontenc: \\usepackage[T1]{fontenc}
 
@@ -48,17 +48,13 @@ latex_elements:
         \\pagestyle{myheadings}
         \\pagenumbering{arabic}
         \\markboth{\\textsc{${project}}}{\\textsc{${author}}}
-        \\twocolumn
+        ${COLUMNS}
 
-    maketitle: |
-        \\rule{\\linewidth}{2pt}
-        \\maketitle
-        \\rule{\\linewidth}{2pt}
-
-    tableofcontents: '\\tableofcontents\\hrule'
+    maketitle: ${MKTITLE}
+    tableofcontents: ${MKTABLE}
     footer: \\rule{\\linewidth}{2pt}
-    printindex: ''
+    printindex: ${MKINDEX}
 
 latex_documents:
- - [content, '${project|quote}.tex', '${project}', '${author}', howto]
+ - [content, '${project|quote}.tex', '${project}', '${author}', ${DOCTYPE}]
 

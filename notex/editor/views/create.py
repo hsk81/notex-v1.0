@@ -27,18 +27,57 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
 
     (_, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
 
+    data = json.loads (request.POST['data'])
+
+    project = data['project']
+    authors = data['authors']
+
+    if data['documentType'] == 'report':
+        doctype = 'manual'
+        ymlfile = 'generic/options-manual.yml'
+    else:
+        doctype = 'howto'
+        ymlfile = 'generic/options-howto.yml'
+
+    fontpsz = data['fontSize']
+    columns = {1:'\\\\onecolumn',2:'\\\\twocolumn'}[data['columns']]
+
+    if data['title']:
+        mktitle = """|
+        \\\\rule{\\\\linewidth}{2pt}
+        \\\\maketitle
+        \\\\rule{\\\\linewidth}{2pt}
+        """
+    else:
+        mktitle = "''"
+
+    if data['toc']:
+        mktable = "\\\\tableofcontents\\\\hrule"
+    else:
+        mktable = "''"
+
+    if data['index']:
+        mkindex = "\\\\printindex"
+    else:
+        mkindex = "''"
+
+    if data['content'] == 'tutorial':
+        rstfile = 'generic/content-intro.rst'
+    else:
+        rstfile = 'generic/content-empty.rst'
+
     type = NODE_TYPE.objects.get (_code='project')
     root = ROOT.objects.get (_usid=request.session.session_key)
 
     node = NODE.objects.create (
         type = type,
         root = root,
-        name = request.POST['name'],
-        rank = get_next_rank (root))
+        name = data['project'],
+        rank = request.POST['rank'])
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path,'generic/content.rst')).read () \
-        .replace ('${PROJECT}', request.POST['name'])
+    text = open (os.path.join (path, rstfile)).read () \
+        .replace ('${PROJECT}', project)
 
     _ = LEAF.objects.create (
         type = type,
@@ -48,9 +87,15 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         rank = 0)
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path,'generic/options.yml')).read () \
-        .replace ('${PROJECT}', request.POST['name']) \
-        .replace ('${AUTHORs}', 'AUTHORs')
+    text = open (os.path.join (path, ymlfile)).read () \
+        .replace ('${PROJECT}', project) \
+        .replace ('${AUTHORS}', authors) \
+        .replace ('${DOCTYPE}', doctype) \
+        .replace ('${FONTPSZ}', fontpsz) \
+        .replace ('${COLUMNS}', columns) \
+        .replace ('${MKTITLE}', mktitle) \
+        .replace ('${MKTABLE}', mktable) \
+        .replace ('${MKINDEX}', mkindex)
 
     _ = LEAF.objects.create (
         type = type,

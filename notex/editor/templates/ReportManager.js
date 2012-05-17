@@ -415,19 +415,117 @@ var reportManager = function () {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var rank = tree.root.childNodes.indexOf (tree.root.lastChild)
 
-        Ext.Msg.prompt ('Create Report', 'Enter a name:',
-            function (btn, text) {
-                if (btn == 'ok') {
-                    tree.el.mask ('Please wait', 'x-mask-loading')
+        var cmbDocumentType = new Ext.form.ComboBox ({
+            fieldLabel : 'Document',
+            name : 'document',
+                allowBlank : false,
+                store : ['article', 'report'],
+            mode : 'local',
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : false,
+        });
 
+        var cmbFontSize = new Ext.form.ComboBox ({
+            fieldLabel : 'Font Size',
+            name : 'fontSize',
+                allowBlank : false,
+                store : ['10pt', '11pt', '12pt'],
+            mode : 'local',
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : false,
+        });
+
+        var cmbColumns = new Ext.form.ComboBox ({
+            fieldLabel : 'Columns',
+            name : 'columns',
+                allowBlank : false,
+                store : [1, 2],
+            mode : 'local',
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : false,
+        });
+
+        var cmbContent = new Ext.form.ComboBox ({
+            fieldLabel : 'Content',
+            name : 'content',
+                allowBlank : false,
+                store : ['empty', 'tutorial'],
+            mode : 'local',
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : false,
+        });
+
+        var propertyGrid = new Ext.grid.PropertyGrid ({
+            width: 512,
+            autoHeight: true,
+            propertyNames : {
+                project : 'Project',
+                authors : 'Author(s)',
+                documentType : 'Document Type',
+                fontSize : 'Font Size',
+                columns : 'Columns',
+                title : 'Title',
+                toc : 'Table of Content',
+                index : 'Index',
+                content : 'Content',
+            },
+            source : {
+                project : 'PROJECT',
+                authors : 'AUTHORs',
+                documentType : 'article',
+                fontSize : '12pt',
+                columns : 1,
+                title : true,
+                toc : false,
+                index : false,
+                content : 'tutorial',
+            },
+            viewConfig : {
+                forceFit : true,
+                scrollOffset : 2
+            },
+            customEditors: {
+                documentType : new Ext.grid.GridEditor (cmbDocumentType),
+                fontSize : new Ext.grid.GridEditor (cmbFontSize),
+                columns : new Ext.grid.GridEditor (cmbColumns),
+                content : new Ext.grid.GridEditor (cmbContent),
+            }
+        });
+
+        delete propertyGrid.getStore().sortInfo;
+        propertyGrid.getColumnModel().getColumnById('name').sortable = false
+
+        var win = new Ext.Window ({
+
+            title : 'Create Report',
+            plain : true,
+            resizable : false,
+            modal : true,
+
+            buttons: [{
+                text : 'Cancel',
+                handler : function () { win.close () }
+            },{
+                text : 'Create',
+                handler : function () {
+                    tree.el.mask ('Please wait', 'x-mask-loading')
+                    var source = propertyGrid.getSource ()
                     reportManager.util.crudCreate (urls.createProject, {
                         nodeId : tree.root.id,
-                        name : text,
+                        data : Ext.encode (source),
                         rank : rank + 1
-                    })
+                    }); win.close ()
                 }
-            }
-        )
+            }],
+
+            items : [propertyGrid],
+        })
+
+        win.show (this);
     }
 
     // #########################################################################

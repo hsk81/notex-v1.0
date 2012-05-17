@@ -1,0 +1,60 @@
+# -----------------------------------------------------------------------------
+# General: http://sphinx.pocoo.org/config.html#general-configuration
+# -----------------------------------------------------------------------------
+
+project: ${PROJECT}
+author: ${AUTHORS}
+copyright: '${date %Y}, ${author}'
+
+version: '0.1'
+release: '0.1'
+
+master_doc: content
+source_suffix: .txt
+
+rst_prolog: |
+   .. role:: latex(raw)
+      :format: latex
+   .. role:: html(raw)
+      :format: html
+
+rst_epilog: |
+   .. |NoTex| replace::
+      :latex:`\\textsc{NoTex}`
+      :html:`<span style="font-variant: small-caps;">NoTex</span>`
+
+templates_path: [_templates]
+exclude_patterns: []
+
+# -----------------------------------------------------------------------------
+# HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
+# -----------------------------------------------------------------------------
+
+html_theme: default
+html_static_path: [_static]
+htmlhelp_basename: ${project|quote}doc
+
+# -----------------------------------------------------------------------------
+# LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
+# -----------------------------------------------------------------------------
+
+latex_elements:
+    papersize: letterpaper ## or a4paper
+    pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
+    fontpkg: \\usepackage{lmodern}
+    fontenc: \\usepackage[T1]{fontenc}
+
+    preamble: |
+        \\pagestyle{myheadings}
+        \\pagenumbering{arabic}
+        \\markboth{\\textsc{${project}}}{\\textsc{${author}}}
+        ${COLUMNS}
+
+    maketitle: ${MKTITLE}
+    tableofcontents: ${MKTABLE}
+    footer: \\rule{\\linewidth}{2pt}
+    printindex: ${MKINDEX}
+
+latex_documents:
+ - [content, '${project|quote}.tex', '${project}', '${author}', ${DOCTYPE}]
+

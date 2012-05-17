@@ -4,7 +4,7 @@ ${PROJECT}
 
 This is the main document *content.txt* of your article/report: It is written in **re-structured text** and you see the title above. If you change it, then you'll see in the HTML output the corresponding difference. But you have to apply the same change to the **project** setting in the *options.cfg* configuration, to have the same effect on the Latex/PDF output.
 
-*Experienced* user can just erase the content of this document and start writing their own, but if you're a *novice* user just make sure to read *quickstart* to |NoTex| and then continue here. The remainder is a tutorial about re-structured text. [#f01]_
+*Experienced* user can just erase the content of this document and start writing their own, but if you're a *novice* user just make sure to read *quickstart* to |NoTex| and then continue here. The remainder is a tutorial about re-structured text.\ [#f01]_
 
 Re-Structured Text
 ==================
@@ -259,7 +259,8 @@ Basically, a directive consists of a name, arguments, options and content. (Keep
                  foo(y, z)
       :module: some.module.name
 
-      Return a line of text input from the user.
+      Return a line of text input
+      from the user.
 
 ``function`` is the directive name. It is given two arguments here, the remainder of the first line and the second line, as well as one option ``module`` (as you can see, options are given in the lines immediately following the arguments and indicated by the colons). Options must be indented to the same level as the directive content.
 
