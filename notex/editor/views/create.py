@@ -5,6 +5,7 @@ __date__ = "$Mar 10, 2012 1:07:38 AM$"
 ################################################################################
 
 from settings import MEDIA_ROOT
+
 from django.db import transaction
 from django.http import HttpResponse
 from django.db.models import Max
@@ -36,24 +37,25 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         rank = get_next_rank (root))
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path,'generic/index.rst')).read ()
+    text = open (os.path.join (path,'generic/content.rst')).read () \
+        .replace ('${PROJECT}', request.POST['name'])
 
     _ = LEAF.objects.create (
         type = type,
         node = node,
-        name = 'index.txt',
+        name = 'content.txt',
         text = text,
         rank = 0)
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path,'generic/index.yml')).read () \
+    text = open (os.path.join (path,'generic/options.yml')).read () \
         .replace ('${PROJECT}', request.POST['name']) \
         .replace ('${AUTHORs}', 'AUTHORs')
 
     _ = LEAF.objects.create (
         type = type,
         node = node,
-        name = 'index.cfg',
+        name = 'options.cfg',
         text = text,
         rank = 1)
 
