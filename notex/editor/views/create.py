@@ -39,19 +39,19 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         else:
             columns = '\\\\twocolumn'
         if data['title']:
-            mktitle = "\\\\maketitle"
+            mktitle = '\\\\maketitle'
         else:
             mktitle = "''"
         if data['toc']:
-            mktable = "\\\\tableofcontents"
+            mktable = '\\\\tableofcontents'
             mkamble = "''"
         else:
-            mktable = ""
-            mkamble = """|
+            mktable = ''
+            mkamble = '''|
             \\\\pagestyle{myheadings}
             \\\\pagenumbering{arabic}
             \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}
-            """
+            '''
 
         ymlfile = 'generic/options-manual.yml'
         doctype = 'manual'
@@ -62,25 +62,21 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         else:
             columns = '\\\\twocolumn'
         if data['title']:
-            mktitle = """|
-            \\\\rule{\\\\linewidth}{2pt}
-            \\\\maketitle
-            \\\\rule{\\\\linewidth}{2pt}
-            """
+            mktitle = '\\\\maketitle'
         else:
             mktitle = "''"
         if data['toc']:
-            mktable = "\\\\tableofcontents\\\\hrule"
-            mkamble = "" ## ignored
+            mktable = '\\\\tableofcontents\\\\hrule'
+            mkamble = '' ## ignored
         else:
             mktable = "''"
-            mkamble = "" ## ignored
+            mkamble = '' ## ignored
 
         ymlfile = 'generic/options-howto.yml'
         doctype = 'howto'
 
     if data['index']:
-        mkindex = "\\\\printindex"
+        mkindex = '\\\\printindex'
     else:
         mkindex = "''"
 

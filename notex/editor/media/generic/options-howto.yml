@@ -4,10 +4,9 @@
 
 project: ${PROJECT}
 author: ${AUTHORS}
-copyright: '${date %Y}, ${author}'
+copyright: ${date %Y}, ${author}
 
-version: '0.1'
-release: '0.1'
+today: ${date %B %d, %Y}
 
 master_doc: content
 source_suffix: .txt
