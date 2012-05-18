@@ -23,9 +23,6 @@ rst_epilog: |
       :latex:`\\textsc{NoTex}`
       :html:`<span style="font-variant: small-caps;">NoTex</span>`
 
-templates_path: [_templates]
-exclude_patterns: []
-
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
 # -----------------------------------------------------------------------------
