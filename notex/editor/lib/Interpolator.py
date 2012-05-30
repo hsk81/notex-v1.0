@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
 __author__ ="hsk81"
 __date__ ="$Apr 6, 2012 12:34:39 PM$"
@@ -29,8 +30,10 @@ class Interpolator:
         }
 
         self._filter_tbl = {
-            'quote' : lambda value,*args: urllib.quote_plus (value),
-            'swap' : lambda value,lhs,rhs,*args: value.replace (lhs,rhs)
+            'quote' : lambda value,*args: \
+                urllib.quote_plus (value.encode ("utf-8")),
+            'swap' : lambda value,lhs,rhs,*args: \
+                value.replace (lhs,rhs)
         }
 
         self._lookup_tbl = {}
@@ -38,6 +41,21 @@ class Interpolator:
 
     def apply (self, value, key = None, strict = None):
         """
+        >>> self.apply ("άλφα", "alpha")
+        '\\xce\\xac\\xce\\xbb\\xcf\\x86\\xce\\xb1'
+        >>> self.apply ("${alpha}")
+        '\\xce\\xac\\xce\\xbb\\xcf\\x86\\xce\\xb1'
+        >>> print self.apply ("άλφα", "alpha")
+        άλφα
+        >>> print self.apply ("${alpha}")
+        άλφα
+        >>> self.apply ("α & β", "albe")
+        '\\xce\\xb1 & \\xce\\xb2'
+        >>> self.apply ("${albe|quote}")
+        '%CE%B1+%26+%CE%B2'
+        >>> self.apply ("${albe|swap α a|swap β b|swap & -|quote}")
+        'a+-+b'
+
         >>> self.apply ("lorem ipsum", "tag")
         'lorem ipsum'
         >>> self.apply ("${tag}")
@@ -66,6 +84,7 @@ class Interpolator:
         >>> self.apply ("${tag}|${tag}")
         'lorem&ipsum|lorem&ipsum'
         """
+
         for head, rest in re.findall ("\${([^|}]+)\|?(.*?)}", value):
 
             if rest != '':
@@ -161,9 +180,6 @@ class Interpolator:
 
     def clear (self, key = None):
         """
-        >>> self.apply ("lorem ipsum", "tag")
-        'lorem ipsum'
-        >>> self.clear ("tag")
         >>> self.clear ("tag")
         >>> self.clear ()
         """

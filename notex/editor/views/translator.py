@@ -14,7 +14,6 @@ import subprocess
 import mimetypes
 import tempfile
 import os.path
-import urllib
 import types
 import uuid
 import yaml
@@ -120,21 +119,19 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                         os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
                         latex_dir])
 
+                    subprocess.check_call (['cp', '-f',
+                        os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
+                        latex_dir])
+
         if not skip_pdf:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
-
-                    subprocess.check_call (['ln', '-s', '/usr/bin/pdflatex',
-                        os.path.join (latex_dir, 'pdflatex')])
 
                     os.environ['LATEXOPTS']="-no-shell-escape -halt-on-error"
                     subprocess.check_call (
                         ['make', '-e', '-C', latex_dir, 'all-pdf'],
                         stdout = stdout, stderr = stderr, env = os.environ)
                     del (os.environ['LATEXOPTS'])
-
-                    subprocess.check_call (['rm', \
-                        os.path.join (latex_dir, 'pdflatex')])
 
         if not skip_html:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
@@ -177,7 +174,7 @@ def zip_to_latex (zip_buffer, source_dir, title):
                     src_file.write (src_text.replace ('\n','\r\n'))
 
             rel_path = os.path.relpath (dirpath, source_dir)
-            zip_path = os.path.join (title, 'latex', rel_path, filename)
+            zip_path = os.path.join (title.encode ("utf-8"), 'latex', rel_path, filename)
             zip_buffer.write (src_path, zip_path)
 
 def zip_to_pdf (zip_buffer, source_dir, title):
@@ -188,8 +185,7 @@ def zip_to_pdf (zip_buffer, source_dir, title):
                 continue
 
             src_path = os.path.join (dirpath, filename)
-            uqp_name = urllib.unquote_plus (filename)
-            zip_path = os.path.join (title, 'pdf', uqp_name)
+            zip_path = os.path.join (title.encode ("utf-8"), 'pdf', '%s.pdf' % title.encode ("utf-8"))
             zip_buffer.write (src_path, zip_path)
 
 def zip_to_html (zip_buffer, source_dir, title):
@@ -204,7 +200,7 @@ def zip_to_html (zip_buffer, source_dir, title):
                     src_file.write (src_text.replace ('\n','\r\n'))
 
             rel_path = os.path.relpath (dirpath, source_dir)
-            zip_path = os.path.join (title, 'html', rel_path, filename)
+            zip_path = os.path.join (title.encode ("utf-8"), 'html', rel_path, filename)
             zip_buffer.write (src_path, zip_path)
 
 ################################################################################
@@ -251,7 +247,8 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
         for key,value in data:
             if key != 'extensions': # security: pre-defined!
-                file.write ('%s\n' % emit (value, type (value), key))
+                file.write ('%s\n' % \
+                    emit (value, type (value), key).encode ("utf-8"))
 
 ################################################################################
 
@@ -262,6 +259,7 @@ def emit (value, type, key = None):
     elif type == types.IntType: return emit_number (value, key)
     elif type == types.FloatType: return emit_number (value, key)
     elif type == types.StringType: return emit_string (value, key)
+    elif type == types.UnicodeType: return emit_string (value, key)
     elif type == types.NoneType: return emit_none (key)
 
     else: return None ## security: ignore other types!
@@ -292,9 +290,9 @@ def emit_number (value, key):
 def emit_string (value, key):
 
     if key:
-        return '%s = """%s"""' % (key, Interpolator.apply (value, key))
+        return '%s = u"""%s"""' % (key, Interpolator.apply (value, key))
     else:
-        return      '"""%s"""' %       Interpolator.apply (value)
+        return      'u"""%s"""' %       Interpolator.apply (value)
 
 def emit_none (key):
 

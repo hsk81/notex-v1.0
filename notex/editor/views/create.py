@@ -43,11 +43,12 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
         else:
             mktitle = "''"
         if data['toc']:
-            mktable = '\\\\tableofcontents'
-            mkamble = "''"
+            mktable = '\\\\cleardoublepage\\\\tableofcontents'
+            mkamble = '\\\\usepackage{xltxtra}'
         else:
-            mktable = ''
+            mktable = "''"
             mkamble = '''|
+            \\\\usepackage{xltxtra}
             \\\\pagestyle{myheadings}
             \\\\pagenumbering{arabic}
             \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}
@@ -67,11 +68,15 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
             mktitle = "''"
         if data['toc']:
             mktable = '\\\\tableofcontents\\\\hrule'
-            mkamble = '' ## ignored
         else:
             mktable = "''"
-            mkamble = '' ## ignored
 
+        mkamble = '''|
+        \\\\usepackage{xltxtra}
+        \\\\pagestyle{myheadings}
+        \\\\pagenumbering{arabic}
+        \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}
+        '''
         ymlfile = 'generic/options-howto.yml'
         doctype = 'howto'
 

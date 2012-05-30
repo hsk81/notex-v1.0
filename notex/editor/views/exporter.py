@@ -58,7 +58,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
 
         http_response = HttpResponse (FileWrapper (temp))
         http_response['Content-Disposition'] = \
-            'attachment;filename="%s.%s"' % (node.name, ext)
+            'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
         http_response['Content-Length'] = size
 
         temp.seek (0); os.remove (object_uri)
