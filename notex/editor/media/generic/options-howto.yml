@@ -28,7 +28,7 @@ rst_epilog: |
 
 html_theme: default
 html_static_path: [_static]
-htmlhelp_basename: ${project|quote}doc
+htmlhelp_basename: sourcedoc
 
 # -----------------------------------------------------------------------------
 # LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
@@ -37,13 +37,10 @@ htmlhelp_basename: ${project|quote}doc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
-    fontpkg: \\usepackage{lmodern}
+    fontpkg: \\usepackage{libertine}
     fontenc: \\usepackage[T1]{fontenc}
 
-    preamble: |
-        \\pagestyle{myheadings}
-        \\pagenumbering{arabic}
-        \\markboth{\\textsc{${project}}}{\\textsc{${author}}}
+    preamble: ${MKAMBLE}
         ${COLUMNS}
 
     maketitle: ${MKTITLE}
@@ -52,5 +49,5 @@ latex_elements:
     printindex: ${MKINDEX}
 
 latex_documents:
- - [content, '${project|quote}.tex', '${project}', '${author}', ${DOCTYPE}]
+ - [content, 'source.tex', '${project}', '${author}', ${DOCTYPE}]
 
