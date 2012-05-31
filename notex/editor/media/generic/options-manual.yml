@@ -47,5 +47,5 @@ latex_elements:
     printindex: ${MKINDEX}
 
 latex_documents:
- - [content, 'source.tex', '${project}', '${author}', ${DOCTYPE}]
+ - [content, source.tex, '${project}', '${author}', ${DOCTYPE}]
 
