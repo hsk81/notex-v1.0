@@ -38,7 +38,6 @@ latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
     fontpkg: \\usepackage{libertine}
-    fontenc: \\usepackage[T1]{fontenc}
 
     preamble: ${MKAMBLE}${COLUMNS}
     maketitle: ${MKTITLE}

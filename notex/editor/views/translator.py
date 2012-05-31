@@ -101,7 +101,7 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     html_dir = os.path.join (build_dir, 'html')
 
     subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
-    unpackTree (root, os.path.join (target_dir, 'source'))
+    texexec = unpackTree (root, os.path.join (target_dir, 'source')) or 'xelatex'
 
     try:
         if not skip_latex or not skip_pdf:
@@ -127,11 +127,15 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                    os.environ['LATEXOPTS']="-no-shell-escape -halt-on-error"
+                    os.environ['TEXEXEC'] = "/usr/bin/%s" % texexec
+                    os.environ['TEXOPTS'] = "-no-shell-escape -halt-on-error"
+
                     subprocess.check_call (
                         ['make', '-e', '-C', latex_dir, 'all-pdf'],
                         stdout = stdout, stderr = stderr, env = os.environ)
-                    del (os.environ['LATEXOPTS'])
+
+                    del (os.environ['TEXEXEC'])
+                    del (os.environ['TEXOPTS'])
 
         if not skip_html:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
@@ -205,7 +209,7 @@ def zip_to_html (zip_buffer, source_dir, title):
 
 ################################################################################
 
-def unpackTree (root, prefix):
+def unpackTree (root, prefix, texexec = None):
 
     ls = LEAF.objects.filter (_node = root)
     ns = NODE.objects.filter (_node = root)
@@ -215,7 +219,7 @@ def unpackTree (root, prefix):
         if leaf.type.code == 'text':
             _, ext = os.path.splitext (leaf.name)
             if ext.lower () in ['.cfg','.yml','.conf','.yaml']:
-                yaml2py (leaf, prefix); continue
+                texexec = yaml2py (leaf, prefix); continue
 
             with open (os.path.join (prefix, leaf.name), 'w') as file:
                 file.write (leaf.text.encode ("utf-8"))
@@ -226,7 +230,9 @@ def unpackTree (root, prefix):
 
     for node in ns:
         subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
-        unpackTree (node, os.path.join (prefix, node.name))
+        texexec = unpackTree (node, os.path.join (prefix, node.name), texexec)
+
+    return texexec
 
 ################################################################################
 
@@ -235,6 +241,12 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
     constructor = lambda loader, node: loader.construct_pairs (node)
     yaml.CSafeLoader.add_constructor (u'!omap', constructor)
     data = yaml.load (u'!omap\n' + leaf.text, Loader = yaml.CSafeLoader)
+
+    umap = dict (data)
+    if not umap.has_key ('latex_backend'):
+        umap['latex_backend'] = 'xelatex' # default
+    if umap['latex_backend'] != 'xelatex' and umap['latex_backend'] != 'pdflatex':
+        umap['latex_backend'] = 'xelatex' # security: validation!
 
     with open (os.path.join (prefix, filename), 'w+') as file:
 
@@ -246,9 +258,18 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
         ))
 
         for key,value in data:
-            if key != 'extensions': # security: pre-defined!
-                file.write ('%s\n' % \
-                    emit (value, type (value), key).encode ("utf-8"))
+
+            if key == 'extensions': # security: pre-defined!
+                continue
+
+            if key == 'latex_elements' and umap['latex_backend'] == 'xelatex':
+                value['inputenc'] = '\\\\newcommand{\\\\DeclareUnicodeCharacter}[2]{}'
+                value['fontenc'] = '\\\\usepackage{xltxtra}'
+
+            file.write ('%s\n' % \
+                emit (value, type (value), key).encode ("utf-8"))
+
+    return umap['latex_backend']
 
 ################################################################################
 

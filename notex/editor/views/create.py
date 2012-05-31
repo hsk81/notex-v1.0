@@ -44,11 +44,10 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
             mktitle = "''"
         if data['toc']:
             mktable = '\\\\cleardoublepage\\\\tableofcontents'
-            mkamble = '\\\\usepackage{xltxtra}'
+            mkamble = "''"
         else:
             mktable = "''"
             mkamble = '''|
-            \\\\usepackage{xltxtra}
             \\\\pagestyle{myheadings}
             \\\\pagenumbering{arabic}
             \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}
@@ -72,7 +71,6 @@ def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
             mktable = "''"
 
         mkamble = '''|
-        \\\\usepackage{xltxtra}
         \\\\pagestyle{myheadings}
         \\\\pagenumbering{arabic}
         \\\\markboth{\\\\textsc{${project}}}{\\\\textsc{${author}}}

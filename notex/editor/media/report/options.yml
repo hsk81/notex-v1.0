@@ -20,7 +20,7 @@ highlight_language: python
 
 html_theme: default
 html_static_path: [_static]
-htmlhelp_basename: ${project|quote}doc
+htmlhelp_basename: sourcedoc
 
 # -----------------------------------------------------------------------------
 # LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
@@ -29,8 +29,7 @@ htmlhelp_basename: ${project|quote}doc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 12pt ## or 11pt or 10pt
-    fontpkg: \\usepackage{lmodern}
-    fontenc: \\usepackage[T2A,T1]{fontenc}
+    fontpkg: \\usepackage{libertine}
     preamble: ''
 
     maketitle: |
@@ -59,7 +58,7 @@ latex_elements:
     printindex: \\printindex
 
 latex_documents:
- - [content, '${project|quote}.tex', '${project}', '${author}', manual]
+ - [content, source.tex, '${project}', '${author}', manual]
 
 latex_additional_files: [wiki.jpg]
 

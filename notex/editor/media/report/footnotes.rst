@@ -84,17 +84,7 @@
 
 .. [#f43] Helge Kragh, "Fin-de-Siècle Physics: A World Picture in Flux" in Quantum Generations: A History of Physics in the Twentieth Century (Princeton, NJ: Princeton University Press, 1999.
 
-.. [#f44]
-   .. only:: not latex
-
-      Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
-   .. only:: latex
-
-      .. raw:: latex
-
-         \fontencoding{T2A}\selectfont\ 
-         Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
-         \fontencoding{T1}\selectfont
+.. [#f44] Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
 
 .. [#f45] Preston, S. T., Physics of the Ether, E. & F. N. Spon, London, (1875).
 
