@@ -47,7 +47,7 @@ latex_elements:
         \\begin{minipage}[t][0.618\\textheight]{\\textwidth}
         \\begin{center}
         \\rule{\\textwidth}{2pt}\\\\\\smallskip
-        \\resizebox{\\linewidth}{!}{\\itshape\\textsc{${project}}}
+        \\resizebox{\\linewidth}{!}{\\textsc{${project}}}
         \\rule{\\textwidth}{2pt}\\vfill
         \\includegraphics[scale=0.800]{quill.jpg}\\vfill
         \\end{center}
