@@ -37,7 +37,7 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
-    fontpkg: \\usepackage{libertine}
+    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O}
 
     preamble: ${MKAMBLE}
     maketitle: ${MKTITLE}

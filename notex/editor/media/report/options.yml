@@ -29,9 +29,9 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 12pt ## or 11pt or 10pt
-    fontpkg: \\usepackage{libertine}
-    preamble: ''
+    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O}
 
+    preamble: ''
     maketitle: |
         \\begin{titlepage}
         \\begin{center}

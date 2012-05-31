@@ -29,7 +29,7 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 10pt ## or 11pt or 12pt
-    fontpkg: \\usepackage{libertine}
+    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O}
 
     preamble: |
         \\pagestyle{myheadings}
