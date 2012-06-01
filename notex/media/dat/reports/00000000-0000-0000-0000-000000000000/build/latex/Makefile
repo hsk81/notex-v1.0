@@ -1,7 +1,7 @@
 ALLDOCS=$(basename $(wildcard *.tex))
 ALLPDF=$(addsuffix .pdf,$(ALLDOCS))
 
-TEXEXEC=/usr/bin/xelatex
+TEXEXEC=xelatex
 TEXOPTS=-no-shell-escape -halt-on-error
 
 all: $(ALLPDF)

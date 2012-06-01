@@ -127,15 +127,27 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
-                    os.environ['TEXEXEC'] = "/usr/bin/%s" % texexec
+                    os.environ['TEXEXEC'] = texexec
                     os.environ['TEXOPTS'] = "-no-shell-escape -halt-on-error"
+
+                    if texexec == 'pdflatex':
+                        subprocess.check_call (['ln', '-s',
+                            os.path.join (os.path.sep, 'usr', 'bin', 'pdflatex'),
+                            latex_dir])
+                    else:
+                        subprocess.check_call (['ln', '-s',
+                            os.path.join (os.path.sep, 'usr', 'bin', 'xelatex'),
+                            latex_dir])
+                        subprocess.check_call (['ln', '-s',
+                            os.path.join (os.path.sep, 'usr', 'bin', 'xdvipdfmx'),
+                            latex_dir])
+                        subprocess.check_call (['ln', '-s',
+                            os.path.join (os.path.sep, 'usr', 'bin', 'makeindex'),
+                            latex_dir])
 
                     subprocess.check_call (
                         ['make', '-e', '-C', latex_dir, 'all-pdf'],
                         stdout = stdout, stderr = stderr, env = os.environ)
-
-                    del (os.environ['TEXEXEC'])
-                    del (os.environ['TEXOPTS'])
 
         if not skip_html:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
