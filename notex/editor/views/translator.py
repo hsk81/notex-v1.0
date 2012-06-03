@@ -149,6 +149,20 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                         ['make', '-e', '-C', latex_dir, 'all-pdf'],
                         stdout = stdout, stderr = stderr, env = os.environ)
 
+                    if texexec == 'pdflatex':
+                        subprocess.check_call (['rm', '-f',
+                            os.path.join (latex_dir, 'pdflatex')])
+                    else:
+                        subprocess.check_call (['rm', '-f',
+                            os.path.join (latex_dir, 'xelatex')])
+                        subprocess.check_call (['rm', '-f',
+                            os.path.join (latex_dir, 'xdvipdfmx')])
+                        subprocess.check_call (['rm', '-f',
+                            os.path.join (latex_dir, 'makeindex')])
+
+                    del os.environ['TEXEXEC']
+                    del os.environ['TEXOPTS']
+
         if not skip_html:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
