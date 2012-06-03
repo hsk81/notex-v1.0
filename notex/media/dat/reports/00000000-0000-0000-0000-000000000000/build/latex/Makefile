@@ -9,10 +9,7 @@ all-pdf: $(ALLPDF)
 
 %.pdf: %.tex
 	${TEXEXEC} $(TEXOPTS) '$<'
-	${TEXEXEC} $(TEXOPTS) '$<'
-	${TEXEXEC} $(TEXOPTS) '$<'
-	-makeindex -s python.ist '$(basename $<).idx'
-	${TEXEXEC} $(TEXOPTS) '$<'
+	${TEXEXEC} $(TEXOPTS) '$<' -makeindex -s python.ist '$(basename $<).idx'
 	${TEXEXEC} $(TEXOPTS) '$<'
 
 clean:
