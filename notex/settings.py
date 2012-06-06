@@ -29,30 +29,39 @@ DATABASES = {
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
+
 USE_I18N = True
 USE_L10N = True
-
-ROOT_URLCONF = '%s.urls' % SITE_NAME
+USE_TZ = True
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
 MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
-ADMIN_MEDIA_PREFIX = '/media/'
 
-SECRET_KEY = 'd1ykmma4mf3y=#c3t%u5!u(luzt^c*$zny%u8+4)a4@8n0+jju'
+STATIC_ROOT = os.path.join (SITE_ROOT, 'static/')
+STATIC_URL = 'http://static.%s/%s/' % (SITE_HOST, SITE_NAME)
+STATICFILES_DIRS = ()
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+ ## 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+SECRET_KEY = 'u_rzhb_@f=2_ha)x=$*1zazaoqwvgxhwqaiv)jafy^qnho(096'
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
+ ## 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
  ## 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'logger.ExceptionLoggerMiddleware'
+ ## 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 if DEBUG:
@@ -72,6 +81,9 @@ SESSION_COOKIE_AGE = 3 * 24 * 60 * 60 ## secs: 3 days
 SESSION_COOKIE_NAME = 'sid.'
 SESSION_COOKIE_SECURE = False
 
+ROOT_URLCONF = '%s.urls' % SITE_NAME
+#WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
+
 TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
 
@@ -82,6 +94,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
 
@@ -164,3 +178,4 @@ LOGGING = {
 
 ################################################################################
 ################################################################################
+

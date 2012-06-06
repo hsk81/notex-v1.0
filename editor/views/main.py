@@ -4,9 +4,9 @@ __date__ ="$Mar 27, 2012 1:02:55 PM$"
 ################################################################################
 ################################################################################
 
-from settings import MEDIA_ROOT
 from datetime import datetime
 
+from django.conf import settings
 from django.views.generic.simple import direct_to_template
 
 from editor.models import ROOT, ROOT_TYPE
@@ -17,7 +17,6 @@ import mimetypes
 import os.path
 import base64
 import sys
-import cgi
 import os
 
 ################################################################################
@@ -54,7 +53,7 @@ def init (request):
         usid = request.session.session_key,
     )
 
-    media_path = os.path.join (MEDIA_ROOT, 'app', 'editor')
+    media_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
 
     init_prj01 (root, media_path, prj_rank = 0)
     init_prj02 (root, media_path, prj_rank = 1)

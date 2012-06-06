@@ -5,8 +5,6 @@ __date__ = "$Apr 17, 2012 12:03:15 PM$"
 ################################################################################
 
 from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
-
 import views
 
 ################################################################################

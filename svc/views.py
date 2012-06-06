@@ -4,8 +4,7 @@ __date__ = "$Apr 17, 2012 12:03:15 PM$"
 ################################################################################
 ################################################################################
 
-from settings import MEDIA_ROOT
-
+from django.conf import settings
 from django.http import HttpResponse
 from django.http import Http404
 from django.views.generic.simple import direct_to_template
@@ -41,7 +40,8 @@ def direct_to_template_with_query (request, template, extra_context):
     except TemplateDoesNotExist:
         raise Http404 ()
 
-def lorem_ipsum (request, path = MEDIA_ROOT+'app/svc/txt/lorem-ipsum.txt'):
+def lorem_ipsum (request, path = os.path.join \
+    (settings.STATIC_ROOT, 'app', 'svc', 'txt', 'lorem-ipsum.txt')):
 
     mimetype = request.GET.get('mimetype', 'text/plain')
     if mimetype == 'text/html':

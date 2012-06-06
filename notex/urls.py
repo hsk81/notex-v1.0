@@ -22,7 +22,14 @@ urlpatterns = patterns ('',
     (r'^admin/', include (admin.site.urls)),
 )
 
-if not settings.DEBUG:
+if settings.DEBUG:
+    urlpatterns += patterns ('',
+        url (r'^(?P<path>favicon.ico)$', 'django.views.static.serve', {
+            'document_root': settings.STATIC_ROOT,
+        }),
+    )
+
+else:
     handler404 = views.page_not_found
 
 ################################################################################

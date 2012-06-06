@@ -4,8 +4,7 @@ __date__ = "$Mar 10, 2012 1:07:38 AM$"
 ################################################################################
 ################################################################################
 
-from settings import MEDIA_ROOT
-
+from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
 from django.db.models import Max
@@ -23,10 +22,9 @@ import os
 ################################################################################
 
 @transaction.commit_on_success
-def createProject (request, path = MEDIA_ROOT + 'app/editor/'):
+def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')):
 
     (_, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
-
     data = json.loads (request.POST['data'])
 
     project = data['project']

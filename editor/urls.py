@@ -4,7 +4,7 @@ __date__ = "$Mar 27, 2012 1:12:13 PM$"
 ################################################################################
 ################################################################################
 
-from django.conf.urls.defaults   import *
+from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 
 import views
@@ -95,6 +95,7 @@ urlpatterns = patterns ('',
     url (r'^export-pdf/(?P<id>.*)/$', views.export_pdf, name='export-pdf'),
     url (r'^export-html/(?P<id>.*)/$', views.export_html, name='export-html'),
     url (r'^import-file/(?P<fid>.*)/$', views.import_file, name='import-file'),
+
 )
 
 ################################################################################

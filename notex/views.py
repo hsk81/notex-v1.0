@@ -6,7 +6,6 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 
 from settings import SITE_NAME
 from django.shortcuts import redirect
-from django.views.generic.simple import direct_to_template
 
 ################################################################################
 ################################################################################
