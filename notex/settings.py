@@ -82,7 +82,7 @@ SESSION_COOKIE_NAME = 'sid.'
 SESSION_COOKIE_SECURE = False
 
 ROOT_URLCONF = '%s.urls' % SITE_NAME
-#WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
+WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
 
 TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
