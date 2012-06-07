@@ -2,7 +2,7 @@
 
 git submodule update --init
 
-virtualenv .
+virtualenv . --prompt="[notex] "
 source bin/activate
 
 pip install django
