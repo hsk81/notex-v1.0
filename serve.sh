@@ -1,12 +1,11 @@
 #!/bin/bash
 
 PROJDIR="$(pwd)"
-PROJECT="$(basename $PROJDIR)"
 
 SRVMETH="threaded"
 HOSTVAL="${2-127.0.0.1}"
 PORTVAL="${3-3001}"
-PIDFILE="$PROJDIR/$PROJECT.pid"
+PIDFILE="$PROJDIR/.pid"
 
 case "$1" in
 	start)
@@ -46,7 +45,7 @@ case "$1" in
         fi
         ;;
     *)
-		$0 restart
+        $0 restart
 esac
 
 exit 0
