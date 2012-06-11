@@ -45,12 +45,11 @@ class BASE (Model):
     _type = ForeignKey (BASE_TYPE)
 
     name = property (
-        lambda s: getattr (s, '_name'), lambda s, v: setattr (s, '_name', v)
-    )
-
+        lambda s: getattr (s, '_name'), lambda s, v: setattr (s, '_name', v))
     rank = property (
-        lambda s: getattr (s, '_rank'), lambda s, v: setattr (s, '_rank', v)
-    )
+        lambda s: getattr (s, '_rank'), lambda s, v: setattr (s, '_rank', v))
+    type = property (
+        lambda s: getattr (s, '_type'), set_type)
 
     def set_type (self, value):
 
@@ -58,10 +57,6 @@ class BASE (Model):
             setattr (self, '_type', value)
         else:
             raise FieldError ('invalid type: %s' % value.__class__.__name__)
-
-    type = property (
-        lambda s: getattr (s, '_type'), set_type
-    )
 
     def to_type (self):
 
@@ -74,7 +69,6 @@ class BASE (Model):
 class ROOT_TYPE (BASE_TYPE):
 
     class Meta:
-
         verbose_name = 'Root Type'
 
 class ROOT (BASE):
@@ -82,13 +76,11 @@ class ROOT (BASE):
     _usid = CharField (max_length=32, null=True, default=None)
 
     usid = property (
-        lambda s: getattr (s, '_usid'), lambda s, v: setattr (s, '_usid', v)
-    )
+        lambda s: getattr (s, '_usid'), lambda s, v: setattr (s, '_usid', v))
 
 class NODE_TYPE (BASE_TYPE):
 
     class Meta:
-
         verbose_name = 'Node Type'
 
 class NODE (BASE):
@@ -97,17 +89,13 @@ class NODE (BASE):
     _node = ForeignKey ('NODE', null=True, default=None)
 
     root = property (
-        lambda s: getattr (s, '_root'), lambda s, v: setattr (s, '_root', v)
-    )
-
+        lambda s: getattr (s, '_root'), lambda s, v: setattr (s, '_root', v))
     node = property (
-        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
-    )
+        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v))
 
 class LEAF_TYPE (BASE_TYPE):
 
     class Meta:
-
         verbose_name = 'Leaf Type'
 
 class LEAF (BASE):
@@ -116,12 +104,9 @@ class LEAF (BASE):
     _file = CharField (max_length=256)
 
     node = property (
-        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
-    )
-
+        lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v))
     file = property (
-        lambda s: getattr (s, '_file'), lambda s, v: setattr (s, '_file', v)
-    )
+        lambda s: getattr (s, '_file'), lambda s, v: setattr (s, '_file', v))
 
 @receiver(pre_delete, sender=LEAF)
 def on_delete (sender, **kwargs):
