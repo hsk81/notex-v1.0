@@ -107,14 +107,14 @@ class LEAF_TYPE (BASE_TYPE):
 class LEAF (BASE):
 
     _node = ForeignKey (NODE)
-    _text = TextField (blank=True, default='')
+    _file = CharField (max_length=256)
 
     node = property (
         lambda s: getattr (s, '_node'), lambda s, v: setattr (s, '_node', v)
     )
 
-    text = property (
-        lambda s: getattr (s, '_text'), lambda s, v: setattr (s, '_text', v)
+    file = property (
+        lambda s: getattr (s, '_file'), lambda s, v: setattr (s, '_file', v)
     )
 
 ###############################################################################################

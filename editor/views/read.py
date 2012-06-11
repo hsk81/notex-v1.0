@@ -35,16 +35,18 @@ def nodes (ns):
 
 def leaf (leaf):
 
-    return {
-        'text' : leaf.name,
-        'data' : leaf.text,
-        'id' : base64.b32encode (json.dumps \
-            (('leaf', [leaf.node.pk, leaf.pk]))),
-        'cls' : "file",
-        'iconCls' : leaf.type.icon,
-        'leaf' : True,
-        'expanded' : False
-    }
+    with open (leaf.file, 'r') as uuid_file:
+
+        return {
+            'text' : leaf.name,
+            'data' : uuid_file.read (),
+            'id' : base64.b32encode (json.dumps \
+                (('leaf', [leaf.node.pk, leaf.pk]))),
+            'cls' : "file",
+            'iconCls' : leaf.type.icon,
+            'leaf' : True,
+            'expanded' : False
+        }
 
 def leafs (ls):
 
@@ -56,11 +58,9 @@ def tree (ns, ls):
 
     tns = map (lambda n: (n.rank,n), ns)
     tls = map (lambda l: (l.rank,l), ls)
+    sel = lambda nal: (type (nal) == NODE) and node (nal) or leaf (nal)
 
-    return json.dumps (map (
-        lambda nal: (type (nal) == NODE) and node (nal) or leaf (nal),
-        dict(tns + tls).values ()
-    ))
+    return json.dumps (map (sel, dict(tns + tls).values ()))
 
 def texts (ts):
 

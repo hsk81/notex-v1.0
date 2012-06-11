@@ -4,14 +4,15 @@ __date__ ="$Mar 27, 2012 1:02:55 PM$"
 ################################################################################
 ################################################################################
 
-from datetime import datetime
-
 from django.conf import settings
 from django.views.generic.simple import direct_to_template
 
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
+
+from datetime import datetime
+from uuid import uuid4 as uuid
 
 import mimetypes
 import os.path
@@ -74,29 +75,38 @@ def init_prj01 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'options.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'content.txt',
-        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'options.cfg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "quill.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"quill.jpg")),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'content.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,"quill.jpg")))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "quill.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
 def init_prj02 (root, path, prj_rank = 0):
 
@@ -110,53 +120,71 @@ def init_prj02 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'options.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'content.txt',
-        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'options.cfg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'math.txt',
-        text = get_text_data (path, os.path.join (prj_path,'math.rst')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = 'emcc.jpg',
-        text = get_image_data (path, os.path.join (prj_path,'emcc.jpg')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'content.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "tm'49.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"tm'49.jpg")),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "wiki.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'math.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = 'emcc.jpg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "tm'49.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "wiki.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
 def init_prj03 (root, path, prj_rank = 0):
 
@@ -170,53 +198,71 @@ def init_prj03 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'options.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'content.txt',
-        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'options.cfg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'math.txt',
-        text = get_text_data (path, os.path.join (prj_path,'math.rst')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = 'emcc.jpg',
-        text = get_image_data (path, os.path.join (prj_path,'emcc.jpg')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'content.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "tm'49.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"tm'49.jpg")),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "wiki.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'math.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = 'emcc.jpg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "tm'49.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "wiki.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
 def init_prj04 (root, path, prj_rank = 0):
 
@@ -230,74 +276,104 @@ def init_prj04 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'options.cfg',
-        text = get_text_data (path, os.path.join (prj_path,'options.yml')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
 
-    _, rank  = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'content.txt',
-        text = get_text_data (path, os.path.join (prj_path,'content.rst')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'options.cfg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank  = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'math.txt',
-        text = get_text_data (path, os.path.join (prj_path,'math.rst')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'content.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = prj,
+            name = 'math.txt',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
     for index in range (9):
     
         name = 'chapter-%02d.txt' % index
         rest = 'chapter-%02d.rst' % index
 
+        with open (get_uuid_path (), 'w') as uuid_file:
+            uuid_file.write (get_text_data (path, os.path.join (prj_path,rest)))
+
+            _, rank  = LEAF.objects.create (
+                type = LEAF_TYPE.objects.get (_code='text'),
+                node = prj,
+                name = name,
+                file = uuid_file.name,
+                rank = rank,
+            ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_text_data (path, os.path.join (prj_path,'footnotes.rst')))
+
         _, rank  = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
             node = prj,
-            name = name,
-            text = get_text_data (path, os.path.join (prj_path, rest)),
+            name = 'footnotes.txt',
+            file = uuid_file.name,
             rank = rank,
         ), rank + 1
 
-    _, rank  = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = prj,
-        name = 'footnotes.txt',
-        text = get_text_data (path, os.path.join (prj_path,'footnotes.rst')),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = 'emcc.jpg',
-        text = get_image_data (path, os.path.join (prj_path,'emcc.jpg')),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = 'emcc.jpg',
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "tm'49.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"tm'49.jpg")),
-        rank = rank,
-    ), rank + 1
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
 
-    _, rank = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = prj,
-        name = "wiki.jpg",
-        text = get_image_data (path, os.path.join (prj_path,"wiki.jpg")),
-        rank = rank,
-    ), rank + 1
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "tm'49.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+    with open (get_uuid_path (), 'w') as uuid_file:
+        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+
+        _, rank = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = prj,
+            name = "wiki.jpg",
+            file = uuid_file.name,
+            rank = rank,
+        ), rank + 1
+
+################################################################################
+
+def get_uuid_path ():
+
+    return os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
 
 ################################################################################
 

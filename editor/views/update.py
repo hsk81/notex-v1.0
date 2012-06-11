@@ -4,16 +4,19 @@ __date__ = "$Mar 10, 2012 12:40:30 AM$"
 ################################################################################
 ################################################################################
 
+from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
 
 from editor.models import LEAF
+from uuid import uuid4 as uuid
 
 import editor.views
+import os.path
 import logging
 import base64
 import json
-import uuid
+import os
 
 ################################################################################
 ################################################################################
@@ -36,7 +39,7 @@ def updateImage (request):
 @transaction.commit_manually
 def update (request, create_leaf = None):
 
-    try:    id = uuid.UUID (request.POST['leafId'])
+    try: id = uuid.UUID (request.POST['leafId'])
     except: id = None
 
     if id != None:
@@ -44,15 +47,18 @@ def update (request, create_leaf = None):
         
     (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
     if type == 'leaf':
-        try:
+
+        uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+        with open (uuid_path, 'w') as uuid_file:
+
+            uuid_file.write (request.POST['data'].encode ("utf-8"))
+
             leaf = LEAF.objects.get (pk = ids[1])
             leaf.name = request.POST['name']
-            leaf.text = request.POST['data']
+            leaf.file = uuid_file.name
             leaf.save ()
 
             response = success (request)
-        except:
-            response = failure (request)
     else:
         response = failure (request)
 

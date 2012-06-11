@@ -58,22 +58,15 @@ def processToText (root, prefix, zip_buffer, target = None):
 
     for leaf in ls:
         zip_path = os.path.join (prefix, leaf.name)
+        src_path = os.path.join (settings.MEDIA_ROOT, 'dat', leaf.file)
+        with open (src_path, 'r') as uuid_file: text = uuid_file.read ()
+
         if leaf.type.code == 'image':
-            zip_buffer.writestr (zip_path,
-                decodestring (leaf.text.split (',')[1]))
+            zip_buffer.writestr (zip_path, decodestring (text.split (',')[1]))
+
         else:
-            tmp_desc, tmp_path = tempfile.mkstemp ()
-            with os.fdopen (tmp_desc, 'w') as temp:
-                temp.write (leaf.text.encode ("utf-8"))
-                temp.flush ()
-
-                if is_text (tmp_path):
-                    zip_buffer.writestr (zip_path,
-                        leaf.text.replace ('\n','\r\n').encode ("utf-8"))
-                else:
-                    zip_buffer.writestr (zip_path, leaf.text)
-
-            os.remove (tmp_path)
+            if is_text (src_path): text = text.replace ('\n','\r\n')
+            zip_buffer.writestr (zip_path, text)
 
     for node in ns:
         zip_path = os.path.join (prefix, node.name)
@@ -248,11 +241,13 @@ def unpackTree (root, prefix, texexec = None):
                 texexec = yaml2py (leaf, prefix); continue
 
             with open (os.path.join (prefix, leaf.name), 'w') as file:
-                file.write (leaf.text.encode ("utf-8"))
+                with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
+                file.write (text)
 
         elif leaf.type.code == 'image':
             with open (os.path.join (prefix, leaf.name), 'w') as file:
-                file.write (decodestring (leaf.text.split (',')[1]))
+                with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
+                file.write (decodestring (text.split (',')[1]))
 
     for node in ns:
         subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
@@ -265,8 +260,10 @@ def unpackTree (root, prefix, texexec = None):
 def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     constructor = lambda loader, node: loader.construct_pairs (node)
-    yaml.CSafeLoader.add_constructor (u'!omap', constructor)
-    data = yaml.load (u'!omap\n' + leaf.text, Loader = yaml.CSafeLoader)
+    yaml.CSafeLoader.add_constructor ('!omap', constructor)
+
+    with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
+    data = yaml.load ('!omap\n' + text, Loader = yaml.CSafeLoader)
 
     umap = dict (data)
     if not umap.has_key ('latex_backend'):

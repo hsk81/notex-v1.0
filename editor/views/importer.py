@@ -4,6 +4,7 @@ __date__ = "$Mar 10, 2012 12:07:16 AM$"
 ################################################################################
 ################################################################################
 
+from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
 
@@ -11,15 +12,14 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
-import subprocess
+from uuid import uuid4 as uuid
+
 import mimetypes
-import tempfile
 import logging
 import zipfile
 import os.path
 import base64
 import json
-import cgi
 import os
 import re
 
@@ -199,27 +199,33 @@ def create_image (zip_info, rankdict, parent, file):
     path = os.path.normpath (path)
 
     mimetype, encoding = mimetypes.guess_type (name)
-    text = 'data:%s;base64,%s' % \
-        (mimetype, base64.encodestring (file.read ()))
+    text = 'data:%s;base64,%s' % (mimetype, base64.encodestring (file.read ()))
 
-    _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='image'),
-        node = parent[path],
-        name = name,
-        text = text,
-        rank = rankdict[zip_info])
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='image'),
+            node = parent[path],
+            name = name,
+            file = uuid_file.name,
+            rank = rankdict[zip_info])
 
 def create_text (zip_info, rankdict, parent, file):
 
     path, name = os.path.split (zip_info.filename)
     path = os.path.normpath (path)
+    text = file.read ().replace ('\r\n','\n')
 
-    _ = LEAF.objects.create (
-        type = LEAF_TYPE.objects.get (_code='text'),
-        node = parent[path],
-        name = name,
-        text = file.read ().replace ('\r\n','\n'),
-        rank = rankdict[zip_info])
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        _ = LEAF.objects.create (
+            type = LEAF_TYPE.objects.get (_code='text'),
+            node = parent[path],
+            name = name,
+            file = uuid_file.name,
+            rank = rankdict[zip_info])
 
 ################################################################################
 ################################################################################

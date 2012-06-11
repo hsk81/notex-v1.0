@@ -13,6 +13,8 @@ from editor.models import ROOT
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
+from uuid import uuid4 as uuid
+
 import os.path
 import base64
 import json
@@ -99,12 +101,15 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
     text = open (os.path.join (path, rstfile)).read () \
         .replace ('${PROJECT}', project)
 
-    _ = LEAF.objects.create (
-        type = type,
-        node = node,
-        name = 'content.txt',
-        text = text,
-        rank = 0)
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        _ = LEAF.objects.create (
+            type = type,
+            node = node,
+            name = 'content.txt',
+            file = uuid_file.name,
+            rank = 0)
 
     type = LEAF_TYPE.objects.get (_code='text')
     text = open (os.path.join (path, ymlfile)).read () \
@@ -118,12 +123,15 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
         .replace ('${MKTABLE}', mktable) \
         .replace ('${MKINDEX}', mkindex)
 
-    _ = LEAF.objects.create (
-        type = type,
-        node = node,
-        name = 'options.cfg',
-        text = text,
-        rank = 1)
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        _ = LEAF.objects.create (
+            type = type,
+            node = node,
+            name = 'options.cfg',
+            file = uuid_file.name,
+            rank = 1)
 
     js_string = json.dumps ([{
         'success' : True,
@@ -160,13 +168,17 @@ def createText (request):
 
     type = LEAF_TYPE.objects.get (_code='text')
     node = NODE.objects.get (pk=ids[0])
+    text = request.POST['data'].replace ('\r\n','\n')
 
-    leaf = LEAF.objects.create (
-        type = type,
-        node = node,
-        name = request.POST['name'],
-        text = request.POST['data'].replace ('\r\n','\n'),
-        rank = get_next_rank (node))
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        leaf = LEAF.objects.create (
+            type = type,
+            node = node,
+            name = request.POST['name'],
+            file = uuid_file.name,
+            rank = get_next_rank (node))
 
     if 'leafId' in request.POST:
         js_string = json.dumps ([{
@@ -190,13 +202,17 @@ def createImage (request):
 
     type = LEAF_TYPE.objects.get (_code='image')
     node = NODE.objects.get (pk=ids[0])
+    text = request.POST['data']
 
-    leaf = LEAF.objects.create (
-        type = type,
-        node = node,
-        name = request.POST['name'],
-        text = request.POST['data'],
-        rank = get_next_rank (node))
+    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+        uuid_file.write (text)
+
+        leaf = LEAF.objects.create (
+            type = type,
+            node = node,
+            name = request.POST['name'],
+            file = uuid_file.name,
+            rank = get_next_rank (node))
 
     if 'leafId' in request.POST:
         js_string = json.dumps ([{
