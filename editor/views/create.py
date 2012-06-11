@@ -101,7 +101,8 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
     text = open (os.path.join (path, rstfile)).read () \
         .replace ('${PROJECT}', project)
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+    with open (uuid_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
@@ -123,7 +124,8 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
         .replace ('${MKTABLE}', mktable) \
         .replace ('${MKINDEX}', mkindex)
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+    with open (uuid_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
@@ -170,7 +172,8 @@ def createText (request):
     node = NODE.objects.get (pk=ids[0])
     text = request.POST['data'].replace ('\r\n','\n')
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+    with open (uuid_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         leaf = LEAF.objects.create (
@@ -204,7 +207,8 @@ def createImage (request):
     node = NODE.objects.get (pk=ids[0])
     text = request.POST['data']
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+    with open (uuid_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         leaf = LEAF.objects.create (
