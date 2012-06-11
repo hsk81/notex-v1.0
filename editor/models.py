@@ -44,13 +44,6 @@ class BASE (Model):
     _rank = IntegerField (default=0)
     _type = ForeignKey (BASE_TYPE)
 
-    name = property (
-        lambda s: getattr (s, '_name'), lambda s, v: setattr (s, '_name', v))
-    rank = property (
-        lambda s: getattr (s, '_rank'), lambda s, v: setattr (s, '_rank', v))
-    type = property (
-        lambda s: getattr (s, '_type'), set_type)
-
     def set_type (self, value):
 
         if isinstance (value, eval ('%s_TYPE' % self.__class__.__name__)):
@@ -58,9 +51,12 @@ class BASE (Model):
         else:
             raise FieldError ('invalid type: %s' % value.__class__.__name__)
 
-    def to_type (self):
-
-        return eval (self.clsname).objects.get (id=self.id)
+    name = property (
+        lambda s: getattr (s, '_name'), lambda s, v: setattr (s, '_name', v))
+    rank = property (
+        lambda s: getattr (s, '_rank'), lambda s, v: setattr (s, '_rank', v))
+    type = property (
+        lambda s: getattr (s, '_type'), set_type)
 
     def __unicode__ (self):
 
