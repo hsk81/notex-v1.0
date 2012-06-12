@@ -23,16 +23,11 @@ class BASE_TYPE (Model):
     _desc = CharField (max_length=256)
 
     code = property (
-        lambda s: getattr (s, '_code'), lambda s, v: setattr (s, '_code', v)
-    )
-
+        lambda s: getattr (s, '_code'), lambda s, v: setattr (s, '_code', v))
     icon = property (
-        lambda s: getattr (s, '_icon'), lambda s, v: setattr (s, '_icon', v)
-    )
-
+        lambda s: getattr (s, '_icon'), lambda s, v: setattr (s, '_icon', v))
     desc = property (
-        lambda s: getattr (s, '_desc'), lambda s, v: setattr (s, '_desc', v)
-    )
+        lambda s: getattr (s, '_desc'), lambda s, v: setattr (s, '_desc', v))
 
     def __unicode__ (self):
 
