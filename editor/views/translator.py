@@ -84,9 +84,9 @@ def processToHtml (root, title, zip_buffer):
 def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     skip_html = True):
 
-    origin_dir = os.path.join (settings.STATIC_ROOT, 'dat', 'reports',
+    origin_dir = os.path.join (settings.MEDIA_ROOT, 'tmp',
         '00000000-0000-0000-0000-000000000000')
-    target_dir = os.path.join (settings.STATIC_ROOT, 'dat', 'reports',
+    target_dir = os.path.join (settings.MEDIA_ROOT, 'tmp',
         str (uuid.uuid4 ()))
 
     build_dir = os.path.join (target_dir, 'build')
