@@ -162,6 +162,10 @@ var reportManager = function () {
                     }
                 }
 
+                xhr.setRequestHeader (
+                    'X-CSRFToken', Ext.util.Cookies.get ('csrftoken')
+                );
+
                 xhr.send (file);
             },
 
