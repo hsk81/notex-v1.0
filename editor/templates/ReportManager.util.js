@@ -5,25 +5,23 @@ var reportManagerUtil = {
 
         function _onSuccess (xhr, opts) {
             var tree = Ext.getCmp ('reportManager.tree.id')
-            var model = tree.getSelectionModel ()
-            var node = model.getSelectedNode ()
 
-            if (node != undefined) {
-                tree.getLoader ().load (node, function (node) {
-                    var path = node.getPath ()
-                    tree.getLoader ().load (tree.root, function (root) {
-                        tree.expandPath (path, null, function (success, node) {
-                            if (success) {
-                                tree.getSelectionModel ().select (node)
-                            }
-                            tree.el.unmask ()
-                        })
-                    })
-                })
-            } else {
-                tree.getLoader ().load (tree.root)
-                tree.el.unmask ()
-            }
+            var rootId = opts.params.nodeId
+            var root = tree.getNodeById (rootId)
+            var nodeId = Ext.decode (xhr.responseText)[0].id
+
+            tree.getLoader ().load (root, function (root) {
+                var createdNode = tree.getNodeById (nodeId);
+                var path = createdNode.getPath ();
+                tree.expandPath (path, undefined, function (success, node) {
+                    if (success) {
+                        var model = tree.getSelectionModel ();
+                        model.select (node);
+                    }
+                });
+            });
+
+            tree.el.unmask ();
         }
 
         function _onFailure (xhr, opts) {
