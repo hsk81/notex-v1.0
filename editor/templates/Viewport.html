@@ -47,31 +47,44 @@ var urls = {
 
 {% block main %}
 <script type="text/javascript">
+Ext.Ajax.on ('beforerequest', function (conn, options) {
+    if (!(/^http:.*/.test (options.url) || /^https:.*/.test (options.url))) {
+        if (typeof (options.headers) == "undefined") {
+            options.headers = {
+                'X-CSRFToken': Ext.util.Cookies.get ('csrftoken')
+            };
+        } else {
+            options.headers.extend ({
+                'X-CSRFToken': Ext.util.Cookies.get ('csrftoken')
+            });
+        }
+    }
+}, this);
+</script>
+
+<script type="text/javascript">
 Ext.onReady (function () {
+Ext.QuickTips.init ()
+var viewport = new Ext.Viewport ({
+    layout : 'border',
+    id : 'viewportId',
 
-    Ext.QuickTips.init ()
-    var viewport = new Ext.Viewport ({
-
-        layout : 'border', 
-        id : 'viewportId',
-
-        items : [{
-            region : 'center',
-            layout : 'fit',
-            items : [editor]
-        },{
-            region : 'west',
-            split : true,
-            minWidth : 260,
-            width : 260,
-            collapsed : false,
-            collapseMode : 'mini',
-            hidden : false,
-            layout : 'fit',
-            items : [reportManager]
-        }]
-    });
-
-    viewport.show ();
+    items : [{
+        region : 'center',
+        layout : 'fit',
+        items : [editor]
+    },{
+        region : 'west',
+        split : true,
+        minWidth : 260,
+        width : 260,
+        collapsed : false,
+        collapseMode : 'mini',
+        hidden : false,
+        layout : 'fit',
+        items : [reportManager]
+    }]
+});
+viewport.show ();
 });</script>
 {% endblock %}

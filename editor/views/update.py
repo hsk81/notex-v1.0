@@ -9,6 +9,7 @@ from django.db import transaction
 from django.http import HttpResponse
 
 from editor.models import LEAF
+from uuid import UUID
 from uuid import uuid4 as uuid
 
 import editor.views
@@ -39,7 +40,7 @@ def updateImage (request):
 @transaction.commit_manually
 def update (request, create_leaf = None):
 
-    try: id = uuid.UUID (request.POST['leafId'])
+    try: id = UUID (request.POST['leafId'])
     except: id = None
 
     if id != None:

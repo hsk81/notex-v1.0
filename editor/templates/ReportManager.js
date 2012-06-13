@@ -179,7 +179,6 @@ var reportManager = function () {
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
         if (node != undefined) {
-
             tree.el.mask ('Please wait', 'x-mask-loading')
 
             var _onSuccess = function (xhr, opts) {
@@ -206,6 +205,7 @@ var reportManager = function () {
                     target : 'iframe'
                 })
 
+                form.insertHtml ('beforeend', "{% csrf_token %}")
                 tree.el.unmask ()
                 form.dom.submit ()
             }
