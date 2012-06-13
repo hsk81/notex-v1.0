@@ -2,7 +2,7 @@ var editor = function () {
 
     function _createTextTab (tabInfo) {
 
-        var tab = this.findById (tabInfo.id)
+        var tab = this.findById (tabInfo.id);
         if (tab) {
             this.activate (tab)
         } else {
@@ -15,7 +15,7 @@ var editor = function () {
                 closable : true,
 
                 getEditor : function () {
-                    return this.findById ('editorId' + tabInfo.id)
+                    return this.findById ('editorId' + tabInfo.id);
                 },
 
                 getData : function () {
@@ -27,18 +27,16 @@ var editor = function () {
                     id : 'editorId' + tabInfo.id,
                     anchor : '100% 100%',
                     value : tabInfo.text,
-                    style :"font-family:monospace; font-size:12px;",
+                    style :"font-family:monospace; font-size:12px;"
                 }],
 
                 listeners : {
                     activate : function (pnlTab) {
                         if (pnlTab.scroll) {
-                            pnlTab.getEditor ().getEl ().scroll (
-                                'down', pnlTab.scroll.top
-                            )
-                            pnlTab.getEditor ().getEl ().scroll (
-                                'right', pnlTab.scroll.left
-                            )
+                            pnlTab.getEditor ().getEl ()
+                                .scroll ('down', pnlTab.scroll.top);
+                            pnlTab.getEditor ().getEl ()
+                                .scroll ('right', pnlTab.scroll.left);
                         }
                     }
                 }
@@ -54,7 +52,7 @@ var editor = function () {
 
     function _createImageTab (tabInfo) {
 
-        var tab = this.findById (tabInfo.id)
+        var tab = this.findById (tabInfo.id);
         if (tab) {
             this.activate (tab)
         } else {
@@ -85,9 +83,9 @@ var editor = function () {
                     autoEl : {
                         tag : 'img',
                         id : 'imageId' + tabInfo.id,
-                        src : tabInfo.text,
-                    },
-                }],
+                        src : tabInfo.text
+                    }
+                }]
             });
 
             this.activate (tab)
@@ -100,7 +98,7 @@ var editor = function () {
 
     function _deleteTab (tabInfo) {
 
-        var tab = this.findById (tabInfo.id)
+        var tab = this.findById (tabInfo.id);
         if (tab) {
             this.remove (tab, true)
         }
@@ -109,11 +107,11 @@ var editor = function () {
     function _beforeTabChange (tabPanel, newTab, curTab) {
         if (curTab) {
             if (curTab.getEditor) {
-                var editor = curTab.getEditor ()
+                var editor = curTab.getEditor ();
                 if (editor && editor.getEl) {
-                    var element = editor.getEl ()
+                    var element = editor.getEl ();
                     if (element && element.getScroll) {
-                        var scroll = element.getScroll ()
+                        var scroll = element.getScroll ();
                         if (scroll) {
                             curTab.scroll = scroll
                         }
@@ -134,7 +132,7 @@ var editor = function () {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
             deleteTab : _deleteTab,
-            beforetabchange: _beforeTabChange,
+            beforetabchange: _beforeTabChange
         }
     })
 }();
