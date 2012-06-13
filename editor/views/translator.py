@@ -12,7 +12,6 @@ from base64 import decodestring
 
 import subprocess
 import mimetypes
-import tempfile
 import os.path
 import types
 import uuid
@@ -50,7 +49,7 @@ def processToReport (root, prefix, zip_buffer):
 
 def processToText (root, prefix, zip_buffer, target = None):
 
-    if target != None:
+    if target is not None:
         prefix = os.path.join (prefix, target)
 
     ls = LEAF.objects.filter (_node = root)
