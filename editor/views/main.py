@@ -25,15 +25,14 @@ import os
 
 def main (request):
 
-    if request.session.has_key ('timestamp') != True:
+    if request.session.has_key('timestamp'):
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
-
-        init (request)
 
     else:
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
+        init (request)
 
     print >> sys.stderr, "Session ID: %s" % request.session.session_key
     print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
@@ -54,16 +53,16 @@ def init (request):
         usid = request.session.session_key,
     )
 
-    media_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
+    source_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
 
-    init_prj01 (root, media_path, prj_rank = 0)
-    init_prj02 (root, media_path, prj_rank = 1)
-    init_prj03 (root, media_path, prj_rank = 2)
-    init_prj04 (root, media_path, prj_rank = 3)
+    init_prj01 (root, source_path, prj_rank = 0)
+    init_prj02 (root, source_path, prj_rank = 1)
+    init_prj03 (root, source_path, prj_rank = 2)
+    init_prj04 (root, source_path, prj_rank = 3)
 
 ################################################################################
 
-def init_prj01 (root, path, prj_rank = 0):
+def init_prj01 (root, source_path, prj_rank = 0):
 
     prj_name = 'Quickstart'
     prj_path = 'quickstart'
@@ -75,8 +74,8 @@ def init_prj01 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'options.yml')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -86,8 +85,8 @@ def init_prj01 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'content.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -97,8 +96,8 @@ def init_prj01 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,"quill.jpg")))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,"quill.jpg")))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -108,7 +107,7 @@ def init_prj01 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-def init_prj02 (root, path, prj_rank = 0):
+def init_prj02 (root, source_path, prj_rank = 0):
 
     prj_name = 'Simple Article'
     prj_path = 'simple-article'
@@ -120,8 +119,8 @@ def init_prj02 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'options.yml')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -131,8 +130,8 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'content.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -142,8 +141,8 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'math.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -153,8 +152,8 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'emcc.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -164,8 +163,8 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,"tm'49.jpg")))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -175,8 +174,8 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'wiki.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -186,7 +185,7 @@ def init_prj02 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-def init_prj03 (root, path, prj_rank = 0):
+def init_prj03 (root, source_path, prj_rank = 0):
 
     prj_name = 'Complex Article'
     prj_path = 'complex-article'
@@ -198,8 +197,8 @@ def init_prj03 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'options.yml')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -209,8 +208,8 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'content.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -220,8 +219,8 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'math.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -231,8 +230,8 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'emcc.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -242,8 +241,8 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,"tm'49.jpg")))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -253,8 +252,8 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'wiki.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -264,7 +263,7 @@ def init_prj03 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-def init_prj04 (root, path, prj_rank = 0):
+def init_prj04 (root, source_path, prj_rank = 0):
 
     prj_name = 'Report'
     prj_path = 'report'
@@ -276,8 +275,8 @@ def init_prj04 (root, path, prj_rank = 0):
         rank = prj_rank
     ), 0
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'options.yml')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'options.yml')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -287,8 +286,8 @@ def init_prj04 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'content.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'content.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -298,8 +297,8 @@ def init_prj04 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'math.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'math.rst')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -314,8 +313,8 @@ def init_prj04 (root, path, prj_rank = 0):
         name = 'chapter-%02d.txt' % index
         rest = 'chapter-%02d.rst' % index
 
-        with open (get_uuid_path (), 'w') as uuid_file:
-            uuid_file.write (get_text_data (path, os.path.join (prj_path,rest)))
+        with open (get_uuid_path (root.usid), 'w') as uuid_file:
+            uuid_file.write (get_text_data (source_path, os.path.join (prj_path,rest)))
 
             _, rank  = LEAF.objects.create (
                 type = LEAF_TYPE.objects.get (_code='text'),
@@ -325,8 +324,8 @@ def init_prj04 (root, path, prj_rank = 0):
                 rank = rank,
             ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_text_data (path, os.path.join (prj_path,'footnotes.rst')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_text_data (source_path, os.path.join (prj_path,'footnotes.rst')))
 
         _, rank  = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='text'),
@@ -336,8 +335,8 @@ def init_prj04 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'emcc.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'emcc.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -347,8 +346,8 @@ def init_prj04 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,"tm'49.jpg")))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,"tm'49.jpg")))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -358,8 +357,8 @@ def init_prj04 (root, path, prj_rank = 0):
             rank = rank,
         ), rank + 1
 
-    with open (get_uuid_path (), 'w') as uuid_file:
-        uuid_file.write (get_image_data (path, os.path.join (prj_path,'wiki.jpg')))
+    with open (get_uuid_path (root.usid), 'w') as uuid_file:
+        uuid_file.write (get_image_data (source_path, os.path.join (prj_path,'wiki.jpg')))
 
         _, rank = LEAF.objects.create (
             type = LEAF_TYPE.objects.get (_code='image'),
@@ -371,11 +370,12 @@ def init_prj04 (root, path, prj_rank = 0):
 
 ################################################################################
 
-def get_uuid_path ():
+def get_uuid_path (session_key):
 
-    return os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
+    session_path = os.path.join (settings.MEDIA_DATA, session_key)
+    if not os.path.exists (session_path): os.mkdir (session_path)
 
-################################################################################
+    return os.path.join (session_path, str (uuid ()))
 
 def get_text_data (path, filename):
 

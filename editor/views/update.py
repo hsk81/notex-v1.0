@@ -43,23 +43,20 @@ def update (request, create_leaf = None):
     try: id = UUID (request.POST['leafId'])
     except: id = None
 
-    if id != None:
+    if id is not None:
         return create_on_update (request, create_leaf)
-        
+
     (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
     if type == 'leaf':
 
-        uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
-        with open (uuid_path, 'w') as uuid_file:
+        leaf = LEAF.objects.get (pk = ids[1])
+        with open (leaf.file, 'w') as uuid_file:
 
             uuid_file.write (request.POST['data'].encode ("utf-8"))
-
-            leaf = LEAF.objects.get (pk = ids[1])
             leaf.name = request.POST['name']
-            leaf.file = uuid_file.name
             leaf.save ()
 
-            response = success (request)
+        response = success (request)
     else:
         response = failure (request)
 
@@ -68,7 +65,7 @@ def update (request, create_leaf = None):
 @transaction.commit_manually
 def create_on_update (request, create_leaf):
 
-    if create_leaf != None:
+    if create_leaf is not None:
         response = create_leaf (request)
     else:
         response = failure (request)
@@ -77,6 +74,13 @@ def create_on_update (request, create_leaf):
     return response
 
 ################################################################################
+
+def get_path (session_key, filename = str (uuid ())):
+
+    path_to = os.path.join (settings.MEDIA_DATA, session_key)
+    if not os.path.exists (path_to): os.mkdir (path_to)
+
+    return os.path.join (path_to, filename)
 
 def success (request):
 

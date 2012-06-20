@@ -1,11 +1,11 @@
-__author__ ="hsk81"
-__date__ ="$Mar 27, 2012 1:13:38 PM$"
+__author__ = "hsk81"
+__date__ = "$Mar 27, 2012 1:13:38 PM$"
 
 ################################################################################
 ################################################################################
 
-from django.conf import settings
 from django.db.models import *
+from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.core.exceptions import FieldError
 from django.dispatch import receiver
@@ -69,6 +69,13 @@ class ROOT (BASE):
     usid = property (
         lambda s: getattr (s, '_usid'), lambda s, v: setattr (s, '_usid', v))
 
+@receiver(pre_delete, sender=ROOT)
+def on_delete_root (sender, **kwargs):
+
+    root = kwargs['instance']
+    path_to = os.path.join (settings.MEDIA_DATA, root.usid)
+    if os.path.exists (path_to): os.rmdir (path_to)
+
 class NODE_TYPE (BASE_TYPE):
 
     class Meta:
@@ -100,11 +107,11 @@ class LEAF (BASE):
         lambda s: getattr (s, '_file'), lambda s, v: setattr (s, '_file', v))
 
 @receiver(pre_delete, sender=LEAF)
-def on_delete (sender, **kwargs):
+def on_delete_leaf (sender, **kwargs):
 
     leaf = kwargs['instance']
-    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', leaf.file)
-    if os.path.exists (uuid_path): os.remove (uuid_path)
+    path_to = os.path.join (settings.MEDIA_DATA, leaf.file)
+    if os.path.exists (path_to): os.remove (path_to)
 
 ################################################################################
 ################################################################################

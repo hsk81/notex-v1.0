@@ -25,7 +25,7 @@ def delete (request):
     except:
         id = None
 
-    if id != None: ## not created yet
+    if id is not None: ## not created yet
         response = failure (id = None)
 
     else:

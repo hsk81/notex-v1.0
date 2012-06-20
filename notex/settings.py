@@ -34,10 +34,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-MEDIA_ROOT = os.path.join (SITE_ROOT, 'media/')
+MEDIA_ROOT = os.path.join (SITE_ROOT, 'media')
 MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
 
-STATIC_ROOT = os.path.join (SITE_ROOT, 'static/')
+MEDIA_DATA = os.path.join (MEDIA_ROOT , 'dat')
+MEDIA_TEMP = os.path.join (MEDIA_ROOT , 'tmp')
+
+STATIC_ROOT = os.path.join (SITE_ROOT, 'static')
 STATIC_URL = 'http://static.%s/%s/' % (SITE_HOST, SITE_NAME)
 STATICFILES_DIRS = ()
 
@@ -75,7 +78,7 @@ CACHES = {
     }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 3 * 24 * 60 * 60 ## secs: 3 days
 SESSION_COOKIE_NAME = 'sid.'
@@ -178,4 +181,3 @@ LOGGING = {
 
 ################################################################################
 ################################################################################
-

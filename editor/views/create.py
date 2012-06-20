@@ -101,8 +101,8 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
     text = open (os.path.join (path, rstfile)).read () \
         .replace ('${PROJECT}', project)
 
-    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
-    with open (uuid_path, 'w') as uuid_file:
+    uuid_path = os.path.join (settings.MEDIA_DATA, str (uuid ()))
+    with open (get_path (request.session.session_key), 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
@@ -124,8 +124,7 @@ def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'e
         .replace ('${MKTABLE}', mktable) \
         .replace ('${MKINDEX}', mkindex)
 
-    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
-    with open (uuid_path, 'w') as uuid_file:
+    with open (get_path (request.session.session_key), 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
@@ -172,8 +171,7 @@ def createText (request):
     node = NODE.objects.get (pk=ids[0])
     text = request.POST['data'].replace ('\r\n','\n')
 
-    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
-    with open (uuid_path, 'w') as uuid_file:
+    with open (get_path (request.session.session_key), 'w') as uuid_file:
         uuid_file.write (text)
 
         leaf = LEAF.objects.create (
@@ -207,8 +205,7 @@ def createImage (request):
     node = NODE.objects.get (pk=ids[0])
     text = request.POST['data']
 
-    uuid_path = os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ()))
-    with open (uuid_path, 'w') as uuid_file:
+    with open (get_path (request.session.session_key), 'w') as uuid_file:
         uuid_file.write (text)
 
         leaf = LEAF.objects.create (
@@ -234,6 +231,13 @@ def createImage (request):
     return HttpResponse (js_string, mimetype='application/json')
 
 ################################################################################
+
+def get_path (session_key, filename = str (uuid ())):
+
+    path_to = os.path.join (settings.MEDIA_DATA, session_key)
+    if not os.path.exists (path_to): os.mkdir (path_to)
+
+    return os.path.join (path_to, filename)
 
 def get_next_rank (node):
 
