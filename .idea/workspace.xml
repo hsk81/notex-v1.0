@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f6eb2862-65bf-4b5b-9e4f-91408ba56360" name="Default" comment="" />
+    <list default="true" id="f6eb2862-65bf-4b5b-9e4f-91408ba56360" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notex/settings.py" afterPath="$PROJECT_DIR$/notex/settings.py" />
+    </list>
     <ignored path="notex.git.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,7 +32,27 @@
       <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/notex/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="21" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.3048576">
+            <state line="82" column="21" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.60636514">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cleanup.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/notex/management/commands/cleanup.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="115" column="25" selection-start="3776" selection-end="3776" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#224#256#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/editor/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="78" column="60" selection-start="2329" selection-end="2345" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -38,50 +61,8 @@
       <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/editor/views/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="386" column="0" selection-start="12647" selection-end="12647" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#222#254#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="create.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/editor/views/create.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="234" column="12" selection-start="7179" selection-end="7187" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#224#256#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="read.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/editor/views/read.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="49" selection-start="2082" selection-end="2082" vertical-scroll-proportion="0.0">
+            <state line="7" column="27" selection-start="282" selection-end="282" vertical-scroll-proportion="0.0">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="update.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/editor/views/update.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="0" selection-start="1627" selection-end="1627" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/editor/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="0" selection-start="2373" selection-end="2373" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#224#254#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -102,8 +83,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/editor/views/translator.py" />
-        <option value="$PROJECT_DIR$/editor/templates/Editor.js" />
         <option value="$PROJECT_DIR$/editor/templates/ReportManager.tree.js" />
         <option value="$PROJECT_DIR$/editor/templates/ReportManager.util.js" />
         <option value="$PROJECT_DIR$/notex/templates/base.html" />
@@ -111,11 +90,13 @@
         <option value="$PROJECT_DIR$/editor/templates/ReportManager.js" />
         <option value="$PROJECT_DIR$/editor/views/__init__.py" />
         <option value="$PROJECT_DIR$/editor/views/delete.py" />
-        <option value="$PROJECT_DIR$/editor/views/main.py" />
         <option value="$PROJECT_DIR$/editor/views/read.py" />
         <option value="$PROJECT_DIR$/editor/views/create.py" />
         <option value="$PROJECT_DIR$/editor/views/update.py" />
+        <option value="$PROJECT_DIR$/editor/views/translator.py" />
+        <option value="$PROJECT_DIR$/editor/views/main.py" />
         <option value="$PROJECT_DIR$/editor/models.py" />
+        <option value="$PROJECT_DIR$/notex/management/commands/cleanall.py" />
         <option value="$PROJECT_DIR$/notex/management/commands/cleanup.py" />
         <option value="$PROJECT_DIR$/notex/settings.py" />
       </list>
@@ -152,18 +133,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Default" />
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-        <subPane subId="Changed Files" />
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -250,25 +219,19 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Default" />
+        <subPane subId="Project Files">
           <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="notex.git" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="notex.git" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="editor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
+        <subPane subId="Changed Files" />
       </pane>
     </panes>
   </component>
@@ -303,6 +266,14 @@
     <option name="myDjangoConsoleState">
       <PyConsoleSettings />
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/notex/management/commands" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.ReportManager.js">
     <configuration default="false" name="importer" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -545,9 +516,8 @@
       <window_info id="Data Sources" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.32954547" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" x="465" y="75" width="435" height="623" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.32253087" sideWeight="0.49707174" order="7" side_tool="false" content_ui="tabs" x="0" y="0" width="1378" height="774" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905295" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.317817" sideWeight="0.48243046" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28667164" sideWeight="0.44301766" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28667164" sideWeight="0.5457464" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28667164" sideWeight="0.45585874" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28667164" sideWeight="0.5329053" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39969134" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.3258427" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32744783" sideWeight="0.4978038" order="8" side_tool="true" content_ui="tabs" />
@@ -556,6 +526,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.317817" sideWeight="0.48243046" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.49707174" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24963397" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -627,26 +598,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/setup.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/templates/ReportManager.util.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="928" selection-end="928" vertical-scroll-proportion="-0.05466238" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notex/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="0" selection-start="1879" selection-end="1879" vertical-scroll-proportion="-21.791666" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/templates/dialog/Dialog.openFile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="0" selection-start="1115" selection-end="1115" vertical-scroll-proportion="1.1093248" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/editor/templates/Viewport.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="53" column="16" selection-start="2855" selection-end="2904" vertical-scroll-proportion="-10.791667" />
@@ -659,80 +610,90 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/delete.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="9" selection-start="789" selection-end="789" vertical-scroll-proportion="0.5527638" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/update.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="0" selection-start="1627" selection-end="1627" vertical-scroll-proportion="0.4924623" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/read.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="49" selection-start="2082" selection-end="2082" vertical-scroll-proportion="0.52261305" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/create.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="234" column="12" selection-start="7179" selection-end="7187" vertical-scroll-proportion="5.879397" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/translator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="364" selection-end="382" vertical-scroll-proportion="-1.4204355" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notex/management/commands/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/notex/management/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/__init__.py">
+    <entry file="file://$PROJECT_DIR$/notex/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/delete.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="9" selection-start="789" selection-end="789" vertical-scroll-proportion="0.5527638">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/create.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="234" column="12" selection-start="7179" selection-end="7187" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#224#256#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/read.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="49" selection-start="2082" selection-end="2082" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="386" column="0" selection-start="12647" selection-end="12647" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#222#254#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/views/update.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="0" selection-start="1627" selection-end="1627" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notex/management/commands/cleanup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="0" selection-start="3394" selection-end="3394" vertical-scroll-proportion="0.48958334">
-          <folding>
-            <element signature="e#224#256#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="0" selection-start="2373" selection-end="2373" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#224#254#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/notex/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#225#264#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="60" selection-start="2329" selection-end="2345" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/views/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="27" selection-start="282" selection-end="282" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notex/management/commands/cleanup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="115" column="25" selection-start="3776" selection-end="3776" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#224#256#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/notex/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="21" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.3048576">
+        <state line="82" column="21" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.60636514">
           <folding />
         </state>
       </provider>
