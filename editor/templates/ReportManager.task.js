@@ -1,5 +1,5 @@
 var reportManagerTask = {
-    
+
     run: function () {
         var reportManager = Ext.getCmp ('reportManager.id')
         if (reportManager != undefined) {
@@ -15,10 +15,7 @@ var reportManagerTask = {
                         var node = tree.getNodeById (tabs[i].id)
                         var attr = node.attributes
 
-                        if (String (attr['iconCls']).match ("^icon-image$") == 
-                            "icon-image") {
-                            reportManager.fireEvent ('saveImageTab', tabs[i], true)
-                        } else {
+                        if (String (attr['iconCls']).match ("^icon-page$") == "icon-page") {
                             reportManager.fireEvent ('saveTextTab', tabs[i], true)
                         }
                     }
@@ -27,7 +24,7 @@ var reportManagerTask = {
             }
         }
     }
-    
+
 }
 
 Ext.TaskMgr.start ({
