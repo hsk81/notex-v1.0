@@ -15,7 +15,6 @@ import django.contrib.sessions.backends.db
 import django.contrib.sessions.backends.cache
 import django.contrib.sessions.backends.file
 import django.contrib.sessions.backends.cached_db
-import django.contrib.sessions.backends.signed_cookies
 
 import re
 import logging
