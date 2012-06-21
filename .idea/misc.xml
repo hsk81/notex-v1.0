@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="CppTools.Loader" reportImplicitCastToBool="false" reportNameReferencedOnce="false" version="3" currentProject="$PROJECT_DIR$/lib/python2.7/config/Makefile" compilerSelect="AUTO" />
-  <component name="ProjectResources">
-    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
-  </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.3 virtualenv at ~/Local/notex.git" project-jdk-type="Python SDK" />
-</project>
-
