@@ -130,6 +130,11 @@ LOGGING = {
             'level':'DEBUG',
             'class':'django.utils.log.NullHandler',
         },
+        'console-simplis': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simplis',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
@@ -159,6 +164,14 @@ LOGGING = {
             'interval': 1,
             'formatter': 'verbose',
         },
+        'file-cleanup': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'log/cleanup.log',
+            'when': 'D',
+            'interval': 1,
+            'formatter': 'simplis',
+        },
     },
     'loggers': {
         'logger.ExceptionLoggerMiddleware': {
@@ -174,6 +187,11 @@ LOGGING = {
         'editor.views.importer': {
             'level':'ERROR',
             'handlers':['console', 'file-importer'],
+            'propagate': False,
+        },
+        'notex.management.commands.cleanup': {
+            'level':'ERROR',
+            'handlers':['console-simplis', 'file-cleanup'],
             'propagate': False,
         },
     }

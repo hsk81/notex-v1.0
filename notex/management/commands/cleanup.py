@@ -23,6 +23,11 @@ import subprocess
 ################################################################################
 ################################################################################
 
+logger = logging.getLogger (__name__)
+
+################################################################################
+################################################################################
+
 class Command (BaseCommand):
 
     ############################################################################
@@ -108,11 +113,11 @@ class Command (BaseCommand):
             )
         ),
 
-        make_option ('-a', '--clean-admin',
+        make_option ('-a', '--include-admin',
             action='store_true',
             dest='clean_admin',
             default=False,
-            help='cleanup admin sessions'
+            help='include admin sessions in cleanup'
         ),
 
         make_option ('-d', '--dry-run',
@@ -127,14 +132,11 @@ class Command (BaseCommand):
     def handle (self, *args, **options):
     ############################################################################
 
-        logging.basicConfig (format='[%(asctime)s] %(levelname)s: %(message)s')
-
         log_level = getattr (logging, options['log_level'].upper(), None)
         if not isinstance (log_level, int):
             raise CommandError ('invalid level: %s' % options['log_level'])
 
-        log = logging.getLogger ('srv')
-        log.setLevel (options['verbose'] and logging.DEBUG or log_level)
+        logger.setLevel (options['verbose'] and logging.DEBUG or log_level)
 
         interval = {
             'beg_datetime': options['beg_datetime'],
@@ -152,19 +154,22 @@ class Command (BaseCommand):
 
         try:
             if interval['beg_datetime'] > datetime.min:
-                log.info ('cleaning from %s &&' % interval['beg_datetime'])
-                log.info ('cleaning till %s ..' % interval['end_datetime'])
+                logger.info ('cleaning from %s &&' % interval['beg_datetime']
+                    .strftime ('%Y-%m-%d %H:%M:%S'))
+                logger.info ('cleaning till %s ..' % interval['end_datetime']
+                    .strftime ('%Y-%m-%d %H:%M:%S'))
             else:
-                log.info ('cleaning till %s ..' % interval['end_datetime'])
+                logger.info ('cleaning till %s ..' % interval['end_datetime']
+                    .strftime ('%Y-%m-%d %H:%M:%S'))
 
             Command.main (interval, skip_flags, clean_admin, dry_run)
-            log.info ('done')
+            logger.info ('done')
 
         except KeyboardInterrupt:
             pass
 
         except Exception, ex:
-            log.exception (ex)
+            logger.exception (ex)
 
     ############################################################################
     def main (interval, skip_flags, clean_admin, dry_run):
@@ -173,7 +178,6 @@ class Command (BaseCommand):
         beg_datetime = interval['beg_datetime']
         end_datetime = interval['end_datetime']
 
-        log = logging.getLogger ('srv')
         session_engine = eval (settings.SESSION_ENGINE)
         regex = settings.SESSION_COOKIE_NAME + r'[0-9a-f]{32}'
 
@@ -186,14 +190,14 @@ class Command (BaseCommand):
             if session.has_key ('timestamp') and \
                beg_datetime <= session['timestamp'] < end_datetime:
 
-                log.info ('processing session %s' % sid)
-                log.debug ('session is expired')
+                logger.info ('processing session %s' % sid)
+                logger.debug ('session is expired')
                 Command.cleanup (session, skip_flags, dry_run)
 
             elif not session.has_key ('timestamp') and clean_admin:
 
-                log.info ('processing session %s' % sid)
-                log.debug ('no timestamp, assume admin session')
+                logger.info ('processing session %s' % sid)
+                logger.debug ('no timestamp, assume admin session')
                 Command.cleanup (session, skip_flags, dry_run)
 
 
@@ -203,8 +207,6 @@ class Command (BaseCommand):
     def cleanup (session, skip_flags, dry_run):
     ############################################################################
 
-        log = logging.getLogger ('srv')
-
         delete_usid = not skip_flags['skip_usid']
         delete_data = not skip_flags['skip_data']
         delete_temp = not skip_flags['skip_temp']
@@ -213,7 +215,7 @@ class Command (BaseCommand):
 
             roots = ROOT.objects.filter (_usid = session.session_key)
             for root in roots:
-                log.debug ('deleting root %s' % root.id)
+                logger.debug ('deleting root %s' % root.id)
 
                 root.delete_usid = delete_usid
                 root.delete_data = delete_usid or delete_data
@@ -222,8 +224,8 @@ class Command (BaseCommand):
                 if not dry_run: root.delete ()
 
             if not roots.count():
-                log.debug ('no root node found')
-                log.debug ("cleaning session's remainder (if any)")
+                logger.debug ('no root node found')
+                logger.debug ("cleaning session's remainder (if any)")
 
                 path_to_data = os.path.join (settings.MEDIA_DATA,
                     session.session_key)
@@ -245,7 +247,7 @@ class Command (BaseCommand):
                         subprocess.check_call (['rm', path_to_temp, '-r'])
 
         except Exception, ex:
-            log.exception (ex)
+            logger.exception (ex)
 
     cleanup = staticmethod (cleanup)
 
