@@ -57,7 +57,7 @@ def processToText (root, prefix, zip_buffer, target = None):
 
     for leaf in ls:
         zip_path = os.path.join (prefix, leaf.name)
-        src_path = os.path.join (settings.MEDIA_ROOT, 'dat', leaf.file)
+        src_path = os.path.join (settings.MEDIA_DATA, root.usid, leaf.file)
         with open (src_path, 'r') as uuid_file: text = uuid_file.read ()
 
         if leaf.type.code == 'image':
@@ -83,10 +83,13 @@ def processToHtml (root, title, zip_buffer):
 def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     skip_html = True):
 
-    origin_dir = os.path.join (settings.MEDIA_ROOT, 'tmp',
+    origin_dir = os.path.join (settings.MEDIA_TEMP,
         '00000000-0000-0000-0000-000000000000')
-    target_dir = os.path.join (settings.MEDIA_ROOT, 'tmp',
-        str (uuid.uuid4 ()))
+    target_dir = os.path.join (settings.MEDIA_TEMP,
+        root.root.usid, str (uuid.uuid4 ()))
+
+    target_sid = os.path.join (settings.MEDIA_TEMP, root.root.usid)
+    subprocess.check_call (['mkdir', target_sid, '-p'])
 
     build_dir = os.path.join (target_dir, 'build')
     latex_dir = os.path.join (build_dir, 'latex')
@@ -177,7 +180,8 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     if not skip_html:
         zip_to_html (zip_buffer, html_dir, title)
 
-    subprocess.check_call (['rm', target_dir, '-r'])
+    if os.path.exists (target_dir): subprocess.check_call (['rm', target_dir, '-r'])
+    if not os.listdir (target_sid): subprocess.check_call (['rm', target_sid, '-r'])
 
 ################################################################################
 

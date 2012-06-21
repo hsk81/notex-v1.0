@@ -32,6 +32,7 @@ def main (request):
     else:
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
+
         init (request)
 
     print >> sys.stderr, "Session ID: %s" % request.session.session_key
@@ -48,10 +49,9 @@ def main (request):
 
 def init (request):
 
-    root = ROOT.objects.create (
-        type = ROOT_TYPE.objects.get (_code='root'),
-        usid = request.session.session_key,
-    )
+    type = ROOT_TYPE.objects.get (_code='root')
+    usid = request.session.session_key
+    root = ROOT.objects.create (type = type, usid = usid)
 
     source_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
 

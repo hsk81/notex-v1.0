@@ -9,11 +9,17 @@ from django.core.management.base import *
 
 from optparse import *
 from datetime import *
-
 from editor.models import ROOT
 
-import time
+import django.contrib.sessions.backends.db
+import django.contrib.sessions.backends.cache
+import django.contrib.sessions.backends.file
+import django.contrib.sessions.backends.cached_db
+import django.contrib.sessions.backends.signed_cookies
+
+import re
 import logging
+import subprocess
 
 ################################################################################
 ################################################################################
@@ -37,7 +43,7 @@ class Command (BaseCommand):
 
         else: result = None
 
-        setattr(parser.values, option.dest, result)
+        setattr (parser.values, option.dest, result)
 
     ############################################################################
     ############################################################################
@@ -63,7 +69,7 @@ class Command (BaseCommand):
             action='callback',
             dest='beg_datetime',
             callback=check_datetime,
-            default=None,
+            default=datetime.min,
             help='beg datetime for interval [default: %default]'
         ),
 
@@ -72,12 +78,52 @@ class Command (BaseCommand):
             action='callback',
             dest='end_datetime',
             callback=check_datetime,
-            default=None,
+            default=datetime.now ()-timedelta (0, settings.SESSION_COOKIE_AGE),
             help='end datetime for interval [default: %default]'
         ),
 
-    )
-    
+        make_option ('--skip-data',
+            action='store_true',
+            dest='skip_data',
+            default=False,
+            help='%s files will not be deleted' % os.path.join (
+                settings.MEDIA_DATA, '*'
+            )
+        ),
+
+        make_option ('--skip-temp',
+            action='store_true',
+            dest='skip_temp',
+            default=False,
+            help='%s files will not be deleted' % os.path.join (
+                settings.MEDIA_TEMP, '*'
+            )
+        ),
+
+        make_option ('--skip-usid',
+            action='store_true',
+            dest='skip_usid',
+            default=False,
+            help='%s files will not be deleted' % os.path.join (
+                settings.SESSION_FILE_PATH, settings.SESSION_COOKIE_NAME + '*'
+            )
+        ),
+
+        make_option ('-a', '--clean-admin',
+            action='store_true',
+            dest='clean_admin',
+            default=False,
+            help='cleanup admin sessions'
+        ),
+
+        make_option ('-d', '--dry-run',
+            action='store_true',
+            dest='dry_run',
+            default=False,
+            help='disables actual cleanup'
+        ),
+        )
+
     ############################################################################
     def handle (self, *args, **options):
     ############################################################################
@@ -90,22 +136,29 @@ class Command (BaseCommand):
 
         log = logging.getLogger ('srv')
         log.setLevel (options['verbose'] and logging.DEBUG or log_level)
-        
-        log.debug ('determining beg datetime')
-        if options['beg_datetime'] is not None:
-            beg_datetime = options['beg_datetime']
-        else:
-            beg_datetime = datetime.min
 
-        log.debug ('determining end datetime')
-        if options['end_datetime'] is not None:
-            end_datetime = options['end_datetime']
-        else:
-            end_datetime = datetime.now () - timedelta (0, settings.SESSION_COOKIE_AGE)
+        interval = {
+            'beg_datetime': options['beg_datetime'],
+            'end_datetime': options['end_datetime']
+        }
+
+        skip_flags = {
+            'skip_data': options['skip_data'],
+            'skip_temp': options['skip_temp'],
+            'skip_usid': options['skip_usid']
+        }
+
+        clean_admin = options['clean_admin']
+        dry_run = options['dry_run']
 
         try:
-            log.info ('cleaning up from [%s, %s]' % (beg_datetime, end_datetime))
-            Command.main (beg_datetime, end_datetime)
+            if interval['beg_datetime'] > datetime.min:
+                log.info ('cleaning from %s &&' % interval['beg_datetime'])
+                log.info ('cleaning till %s ..' % interval['end_datetime'])
+            else:
+                log.info ('cleaning till %s ..' % interval['end_datetime'])
+
+            Command.main (interval, skip_flags, clean_admin, dry_run)
             log.info ('done')
 
         except KeyboardInterrupt:
@@ -115,28 +168,85 @@ class Command (BaseCommand):
             log.exception (ex)
 
     ############################################################################
-    def main (beg_datetime, end_datetime, root = 'notex/session'):
+    def main (interval, skip_flags, clean_admin, dry_run):
     ############################################################################
 
-        session_engine = eval (settings.SESSION_ENGINE)
-        for sid in os.listdir (root):
+        beg_datetime = interval['beg_datetime']
+        end_datetime = interval['end_datetime']
 
+        log = logging.getLogger ('srv')
+        session_engine = eval (settings.SESSION_ENGINE)
+        regex = settings.SESSION_COOKIE_NAME + r'[0-9a-f]{32}'
+
+        for sid in os.listdir (settings.SESSION_FILE_PATH):
+
+            if not re.match (regex, sid): continue
             prefix, uuid = sid.split ('.')
             session = session_engine.SessionStore (session_key=uuid)
 
-            if not session.has_key ('timestamp'):
-                Command.cleanup (session)
+            if session.has_key ('timestamp') and \
+               beg_datetime <= session['timestamp'] < end_datetime:
 
-            elif beg_datetime <= session['timestamp'] < end_datetime:
-                Command.cleanup (session)
+                log.info ('processing session %s' % sid)
+                log.debug ('session is expired')
+                Command.cleanup (session, skip_flags, dry_run)
+
+            elif not session.has_key ('timestamp') and clean_admin:
+
+                log.info ('processing session %s' % sid)
+                log.debug ('no timestamp, assume admin session')
+                Command.cleanup (session, skip_flags, dry_run)
+
 
     main = staticmethod (main)
 
     ############################################################################
-    def cleanup (session):
+    def cleanup (session, skip_flags, dry_run):
     ############################################################################
 
-        pass
+        log = logging.getLogger ('srv')
+
+        delete_usid = not skip_flags['skip_usid']
+        delete_data = not skip_flags['skip_data']
+        delete_temp = not skip_flags['skip_temp']
+
+        try:
+
+            roots = ROOT.objects.filter (_usid = session.session_key)
+            for root in roots:
+                log.debug ('deleting root %s' % root.id)
+
+                root.delete_usid = delete_usid
+                root.delete_data = delete_usid or delete_data
+                root.delete_temp = delete_usid or delete_temp
+
+                if not dry_run: root.delete ()
+
+            if not roots.count():
+                log.debug ('no root node found')
+                log.debug ("cleaning session's remainder (if any)")
+
+                path_to_data = os.path.join (settings.MEDIA_DATA,
+                    session.session_key)
+                path_to_temp = os.path.join (settings.MEDIA_TEMP,
+                    session.session_key)
+                path_to_usid = os.path.join (settings.SESSION_FILE_PATH,
+                    settings.SESSION_COOKIE_NAME + session.session_key)
+
+                if delete_usid:
+                    if os.path.exists (path_to_usid) and not dry_run:
+                        subprocess.check_call (['rm', path_to_usid, '-f'])
+
+                if delete_usid or delete_data:
+                    if os.path.exists (path_to_data) and not dry_run:
+                        subprocess.check_call (['rm', path_to_data, '-r'])
+
+                if delete_usid or delete_temp:
+                    if os.path.exists (path_to_data) and not dry_run:
+                        subprocess.check_call (['rm', path_to_temp, '-r'])
+
+        except Exception, ex:
+            log.exception (ex)
 
     cleanup = staticmethod (cleanup)
 

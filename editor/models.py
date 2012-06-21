@@ -4,12 +4,13 @@ __date__ = "$Mar 27, 2012 1:13:38 PM$"
 ################################################################################
 ################################################################################
 
-from django.db.models import *
-from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.core.exceptions import FieldError
 from django.dispatch import receiver
+from django.conf import settings
+from django.db.models import *
 
+import subprocess
 import os.path
 import os
 
@@ -67,14 +68,25 @@ class ROOT (BASE):
     _usid = CharField (max_length=32, null=True, default=None)
 
     usid = property (
-        lambda s: getattr (s, '_usid'), lambda s, v: setattr (s, '_usid', v))
+        lambda s: getattr (s, '_usid'), lambda s, v: setattr (s, '_usid', v)
+    )
 
 @receiver(pre_delete, sender=ROOT)
 def on_delete_root (sender, **kwargs):
 
     root = kwargs['instance']
-    path_to = os.path.join (settings.MEDIA_DATA, root.usid)
-    if os.path.exists (path_to): os.rmdir (path_to)
+
+    if not hasattr (root, 'delete_data') or root.delete_data:
+        path_to = os.path.join (settings.MEDIA_DATA, root.usid)
+        if os.path.exists (path_to): subprocess.check_call (['rm', path_to, '-r'])
+
+    if not hasattr (root, 'delete_temp') or root.delete_temp:
+        path_to = os.path.join (settings.MEDIA_TEMP, root.usid)
+        if os.path.exists (path_to): subprocess.check_call (['rm', path_to, '-r'])
+
+    if not hasattr (root, 'delete_usid') or root.delete_usid:
+        path_to = os.path.join (settings.SESSION_FILE_PATH, settings.SESSION_COOKIE_NAME + root.usid)
+        if os.path.exists (path_to): subprocess.check_call (['rm', path_to, '-f'])
 
 class NODE_TYPE (BASE_TYPE):
 
