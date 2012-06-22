@@ -4,3 +4,6 @@
 [submodule "notex/static/lib/extjs.git"]
 	path = notex/static/lib/extjs.git
 	url = git@github.com:hsk81/extjs.git
+[submodule "notex/static/ico/fatcow.git"]
+	path = notex/static/ico/fatcow.git
+	url = git@github.com:hsk81/fatcow-hosting-icon.git
