@@ -4,13 +4,13 @@ var reportManager = function () {
     var tbar_items = [
     // #########################################################################
     {
-        iconCls : 'icon-disk_download',
+        iconCls : 'icon-report_add',
         tooltip : '<b>Import</b><br/>Open a report from a <b>ZIP</b> archive (at <i>local</i> storage)',
         handler : function (button, event) {
             Ext.getCmp ('reportManager.id').fireEvent ('importReport')
         }
     },{
-        iconCls : 'icon-disk_upload',
+        iconCls : 'icon-page_white_zip',
         tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
         split : true,
 
@@ -25,7 +25,7 @@ var reportManager = function () {
           plain : true,
 
           items : [{
-              iconCls : 'icon-page_white_compressed',
+              iconCls : 'icon-page_white_text',
               text : 'Text Files',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportText')
