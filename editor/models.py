@@ -76,13 +76,13 @@ def on_delete_root (sender, **kwargs):
 
     root = kwargs['instance']
 
-    if not hasattr (root, 'delete_data') or root.delete_data:
-        path_to = os.path.join (settings.MEDIA_DATA, root.usid)
+    if not hasattr (root, 'delete_temp') or root.delete_temp:
+        path_to = os.path.join (settings.MEDIA_TEMP, root.usid)
         if os.path.exists (path_to):
             subprocess.check_call (['rm', path_to, '-r'])
 
-    if not hasattr (root, 'delete_temp') or root.delete_temp:
-        path_to = os.path.join (settings.MEDIA_TEMP, root.usid)
+    if not hasattr (root, 'delete_data') or root.delete_data:
+        path_to = os.path.join (settings.MEDIA_DATA, root.usid)
         if os.path.exists (path_to):
             subprocess.check_call (['rm', path_to, '-r'])
 

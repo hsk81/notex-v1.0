@@ -200,7 +200,6 @@ class Command (BaseCommand):
                 logger.debug ('no timestamp, assume admin session')
                 Command.cleanup (session, skip_flags, dry_run)
 
-
     main = staticmethod (main)
 
     ############################################################################
@@ -212,7 +211,6 @@ class Command (BaseCommand):
         delete_temp = not skip_flags['skip_temp']
 
         try:
-
             roots = ROOT.objects.filter (_usid = session.session_key)
             for root in roots:
                 logger.debug ('deleting root %s' % root.id)
@@ -234,17 +232,17 @@ class Command (BaseCommand):
                 path_to_usid = os.path.join (settings.SESSION_FILE_PATH,
                     settings.SESSION_COOKIE_NAME + session.session_key)
 
-                if delete_usid:
-                    if os.path.exists (path_to_usid) and not dry_run:
-                        subprocess.check_call (['rm', path_to_usid, '-f'])
+                if delete_usid or delete_temp:
+                    if os.path.exists (path_to_data) and not dry_run:
+                        subprocess.check_call (['rm', path_to_temp, '-r'])
 
                 if delete_usid or delete_data:
                     if os.path.exists (path_to_data) and not dry_run:
                         subprocess.check_call (['rm', path_to_data, '-r'])
 
-                if delete_usid or delete_temp:
-                    if os.path.exists (path_to_data) and not dry_run:
-                        subprocess.check_call (['rm', path_to_temp, '-r'])
+                if delete_usid:
+                    if os.path.exists (path_to_usid) and not dry_run:
+                        subprocess.check_call (['rm', path_to_usid, '-f'])
 
         except Exception, ex:
             logger.exception (ex)
