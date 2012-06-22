@@ -219,13 +219,13 @@ def createImage (request):
         js_string = json.dumps ([{
             'success' : True,
             'uuid' : request.POST['leafId'],
-            'id' :  base64.b32encode (
+            'id' : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     else:
         js_string = json.dumps ([{
             'success' : True,
-            'id' :  base64.b32encode (
+            'id' : base64.b32encode (
                 json.dumps (('leaf', [leaf.node.pk, leaf.pk])))}])
 
     return HttpResponse (js_string, mimetype='application/json')
