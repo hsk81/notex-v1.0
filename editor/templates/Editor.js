@@ -154,6 +154,14 @@ var editor = function () {
 
     }]
 
+    function _restoreScrollPosition (pnlTab) {
+
+        if (pnlTab.scroll) {
+            pnlTab.getEditor ().getEl ().scroll ('down', pnlTab.scroll.top);
+            pnlTab.getEditor ().getEl ().scroll ('right', pnlTab.scroll.left);
+        }
+    }
+
     function _createTextTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id);
@@ -185,14 +193,7 @@ var editor = function () {
                 }],
 
                 listeners : {
-                    activate : function (pnlTab) {
-                        if (pnlTab.scroll) {
-                            pnlTab.getEditor ().getEl ()
-                                .scroll ('down', pnlTab.scroll.top);
-                            pnlTab.getEditor ().getEl ()
-                                .scroll ('right', pnlTab.scroll.left);
-                        }
-                    }
+                    activate : _restoreScrollPosition
                 }
             });
 
@@ -201,6 +202,31 @@ var editor = function () {
 
         if (tabInfo.save) {
             Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
+        }
+    }
+
+    /**
+     * @see http://stackoverflow.com/questions/4776670/
+     *      should-setting-an-image-src-to-data-url-be-available-immediately
+     */
+    function _centerImage (pnlTab) {
+
+        var imageEl = pnlTab.getImage ()
+        imageEl.dom.onload = function (event) {
+
+            var imgView = pnlTab.getViewer ()
+            var innerEl = imgView.el
+            var outerEl = Ext.get (innerEl.up ('div').id)
+
+            var W = outerEl.getWidth ()
+            var H = outerEl.getHeight ()
+            var w = innerEl.getWidth ()
+            var h = innerEl.getHeight ()
+
+            var innerDx = (W - w) / 2.0
+            var innerDy = (H - h) / 2.0
+
+            imgView.setPosition (innerDx, innerDy)
         }
     }
 
@@ -225,21 +251,30 @@ var editor = function () {
                 },
 
                 getViewer : function () {
+                    return Ext.getCmp ('imageBoxId' + tabInfo.id)
+                },
+
+                getImage : function () {
                     return Ext.get ('imageId' + tabInfo.id)
                 },
 
                 getData : function () {
-                    return this.getViewer ().dom.src
+                    return this.getImage ().dom.src
                 },
 
                 items : [{
                     xtype : 'box',
+                    id : 'imageBoxId' + tabInfo.id,
                     autoEl : {
                         tag : 'img',
                         id : 'imageId' + tabInfo.id,
                         src : tabInfo.text
                     }
-                }]
+                }],
+
+                listeners : {
+                    activate : _centerImage
+                }
             });
 
             this.activate (tab)
@@ -311,7 +346,7 @@ var editor = function () {
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
             deleteTab : _deleteTab,
-            beforetabchange: _beforeTabChange
+            beforetabchange : _beforeTabChange
         }
     })
 }();
