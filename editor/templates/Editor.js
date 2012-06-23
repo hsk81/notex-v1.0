@@ -6,7 +6,7 @@ var editor = function () {
 
         xtype: 'buttongroup',
         title: 'Document',
-        columns: 4,
+        columns: 2,
         defaults: { scale: 'large'},
         items: [{
             text : 'Save',
