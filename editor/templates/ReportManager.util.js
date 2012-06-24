@@ -86,7 +86,6 @@ var reportManagerUtil = {
     // #########################################################################
 
         function _onSuccess (xhr, opts) {
-
             var res = Ext.decode (xhr.responseText)[0]
             var id = (res.uuid != undefined) ? res.uuid : res.id
             var tab = Ext.getCmp ('editor.id').findById (id)
@@ -118,7 +117,6 @@ var reportManagerUtil = {
         }
 
         function _onFailure (xhr, opts) {
-
             var res = Ext.decode (xhr.responseText)[0]
             var id = (res.uuid != undefined) ? res.uuid : res.id
             var tab = Ext.getCmp ('editor.id').findById (id)
@@ -163,6 +161,7 @@ var reportManagerUtil = {
             var res = Ext.decode (xhr.responseText)
             var tabs = Ext.getCmp ('editor.id')
             var tab = tabs.findById (res.id)
+
             if (tab != undefined) {
                 tab.setTitle (res.name)
                 tab.el.unmask ()
