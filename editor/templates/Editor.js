@@ -341,7 +341,6 @@ var editor = function () {
     }
 
     return new Ext.TabPanel ({
-
         activeTab : 0,
         id : 'editor.id',
         enableTabScroll : true,
