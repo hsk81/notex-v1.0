@@ -688,6 +688,15 @@ var reportManager = function () {
             return
         }
 
+        if (node.previousSibling)
+        {
+            if (node.previousSibling.attributes['iconCls']
+                .match ("^icon-report$") == "icon-report")
+            {
+                return
+            }
+        }
+
         var prev = _prev (node)
         if (prev == undefined || prev.attributes['iconCls']
             .match ("^icon-report$") == "icon-report")
@@ -755,6 +764,15 @@ var reportManager = function () {
         if (node == undefined) {
             Ext.Msg.alert ("Error", "No node selected; select a node!")
             return;
+        }
+
+        if (node.nextSibling)
+        {
+            if (node.nextSibling.attributes['iconCls']
+                .match ("^icon-report$") == "icon-report")
+            {
+                return
+            }
         }
 
         var next = _next (node)
