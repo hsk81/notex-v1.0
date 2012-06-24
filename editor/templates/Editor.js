@@ -19,11 +19,12 @@ var editor = function () {
                 if (tab != undefined) {
                     var tree = Ext.getCmp ('reportManager.tree.id')
                     var node = tree.getNodeById (tab.id)
-                    var attr = node.attributes
 
-                    if (String (attr['iconCls']).match ("^icon-image$") == "icon-image") {
+                    if (tree.isImage (node)) {
                         Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
-                    } else {
+                    }
+
+                    if (tree.isText (node)) {
                         Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
                     }
                 }

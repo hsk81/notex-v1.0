@@ -11,11 +11,12 @@ var reportManager = function () {
             if (tab != undefined) {
                 var tree = Ext.getCmp ('reportManager.tree.id')
                 var node = tree.getNodeById (tab.id)
-                var attr = node.attributes
 
-                if (String (attr['iconCls']).match ("^icon-image$") == "icon-image") {
+                if (this.tree.isImage (node)) {
                     Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
-                } else {
+                }
+
+                if (this.tree.isText (node)) {
                     Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
                 }
             }
@@ -425,7 +426,7 @@ var reportManager = function () {
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
-            editable : false,
+            editable : false
         });
 
         var cmbFontSize = new Ext.form.ComboBox ({
@@ -436,7 +437,7 @@ var reportManager = function () {
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
-            editable : false,
+            editable : false
         });
 
         var cmbColumns = new Ext.form.ComboBox ({
@@ -447,7 +448,7 @@ var reportManager = function () {
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
-            editable : false,
+            editable : false
         });
 
         var cmbContent = new Ext.form.ComboBox ({
@@ -458,7 +459,7 @@ var reportManager = function () {
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
-            editable : false,
+            editable : false
         });
 
         var propertyGrid = new Ext.grid.PropertyGrid ({
@@ -473,7 +474,7 @@ var reportManager = function () {
                 title : 'Title',
                 toc : 'Table of Content',
                 index : 'Index',
-                content : 'Content',
+                content : 'Content'
             },
             source : {
                 project : 'PROJECT',
@@ -484,7 +485,7 @@ var reportManager = function () {
                 title : true,
                 toc : true,
                 index : false,
-                content : 'tutorial',
+                content : 'tutorial'
             },
             viewConfig : {
                 forceFit : true,
@@ -494,7 +495,7 @@ var reportManager = function () {
                 documentType : new Ext.grid.GridEditor (cmbDocumentType),
                 fontSize : new Ext.grid.GridEditor (cmbFontSize),
                 columns : new Ext.grid.GridEditor (cmbColumns),
-                content : new Ext.grid.GridEditor (cmbContent),
+                content : new Ext.grid.GridEditor (cmbContent)
             }
         });
 
@@ -524,7 +525,7 @@ var reportManager = function () {
                 }
             }],
 
-            items : [propertyGrid],
+            items : [propertyGrid]
         })
 
         win.show (this);
@@ -688,18 +689,13 @@ var reportManager = function () {
             return
         }
 
-        if (node.previousSibling)
+        if (this.tree.isReport (node.previousSibling))
         {
-            if (node.previousSibling.attributes['iconCls']
-                .match ("^icon-report$") == "icon-report")
-            {
-                return
-            }
+            return
         }
 
         var prev = _prev (node)
-        if (prev == undefined || prev.attributes['iconCls']
-            .match ("^icon-report$") == "icon-report")
+        if (this.tree.isReport (prev))
         {
             return
         }
@@ -766,18 +762,13 @@ var reportManager = function () {
             return;
         }
 
-        if (node.nextSibling)
+        if (this.tree.isReport (node.nextSibling))
         {
-            if (node.nextSibling.attributes['iconCls']
-                .match ("^icon-report$") == "icon-report")
-            {
-                return
-            }
+            return
         }
 
         var next = _next (node)
-        if (next == undefined || next.attributes['iconCls']
-            .match ("^icon-report$") == "icon-report")
+        if (this.tree.isReport (next))
         {
             return
         }
@@ -876,7 +867,7 @@ var reportManager = function () {
             deleteSelectedNode : _deleteSelectedNode,
             moveSelectedNodeUp : _moveSelectedNodeUp,
             moveSelectedNodeDown : _moveSelectedNodeDown
-        },
+        }
     })
 }();
 

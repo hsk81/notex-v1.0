@@ -1,5 +1,8 @@
 var reportManagerTree = function () {
 
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     function _createNode (node, args, fn) {
         if (node != null && args != null && args.refNode != null) {
             var gn = function (refNode) {
@@ -83,35 +86,70 @@ var reportManagerTree = function () {
         }
     }
 
+    function _selectNode (node) {
+        if (!node.isSelected()) { node.select (); }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     function _click (node, event) {
-        if (node.attributes['cls'] == "file") {
+        if (this.isLeaf (node)) {
             var tabInfo = {
                 id : node.id,
-                title : node.attributes['text'].replace ('<i>','')
-                    .replace ('</i>',''),
+                title : node.attributes['text']
+                    .replace ('<i>','').replace ('</i>',''),
                 text : node.attributes['data'],
                 iconCls : node.attributes['iconCls']
             }
 
-            var iconCls = String (tabInfo.iconCls)
-            if (iconCls.match ("^icon-image$") == "icon-image") {
-                Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
-            } else {
+            if (this.isText (node)) {
                 Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
+            }
+
+            if (this.isImage (node)) {
+                Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
             }
         }
     }
 
-    function _selectNode (node) {
-        if (!node.isSelected()) {
-            node.select ()
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    function _isOfClass (node, cls) {
+        if (node && node.attributes) {
+            var attribute = node.attributes['cls']
+            if (attribute) {
+                return attribute.match (String.format ('^{0}$', cls)) != null;
+            } else {
+                return undefined;
+            }
+        } else {
+            return undefined;
         }
     }
+
+    function _isOfIconClass (node, cls) {
+        if (node && node.attributes) {
+            var attribute = node.attributes['iconCls']
+            if (attribute) {
+                return attribute.match (
+                    String.format ('^{0}$|^{0}-16$|^{0}-32$', cls)
+                ) != null;
+            } else {
+                return undefined;
+            }
+        } else {
+            return undefined;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     return new Ext.tree.TreePanel ({
 
         loader : new Ext.tree.TreeLoader ({url : urls.read}),
-
         id : 'reportManager.tree.id',
         autoScroll : true,
         rootVisible : false,
@@ -129,8 +167,45 @@ var reportManagerTree = function () {
             updateNode : _updateNode,
             readNode : _readNode,
             deleteNode : _deleteNode,
-            click : _click,
-            selectNode : _selectNode
+            selectNode : _selectNode,
+            click : _click
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+
+        isRootNode : function (node) {
+            if (node && node.id) {
+                return this.rood.id == node.id;
+            } else {
+                return undefined;
+            }
+        },
+
+        isReport : function (node) {
+            return _isOfIconClass (node, 'icon-report');
+        },
+
+        isFolder : function (node) {
+            return _isOfIconClass (node, 'icon-folder');
+        },
+
+        isText : function (node) {
+            return _isOfIconClass (node, 'icon-page');
+        },
+
+        isImage : function (node) {
+            return _isOfIconClass (node, 'icon-image');
+        },
+
+        isLeaf : function (node) {
+            return _isOfClass (node, 'file');
+        },
+
+        isNotLeaf : function (node) {
+            return _isOfClass (node, 'folder'); // includes root!
         }
-    })
+    });
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 }();
