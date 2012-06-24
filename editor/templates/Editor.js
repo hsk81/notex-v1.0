@@ -193,7 +193,10 @@ var editor = function () {
                 }],
 
                 listeners : {
-                    activate : _restoreScrollPosition
+                    activate : function (pnlTab) {
+                        _restoreScrollPosition (pnlTab);
+                        _selectTreeNode (pnlTab);
+                    }
                 }
             });
 
@@ -273,7 +276,10 @@ var editor = function () {
                 }],
 
                 listeners : {
-                    activate : _centerImage
+                    activate : function (pnlTab) {
+                        _centerImage (pnlTab);
+                        _selectTreeNode (pnlTab);
+                    }
                 }
             });
 
@@ -283,6 +289,12 @@ var editor = function () {
         if (tabInfo.save) {
             Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
         }
+    }
+
+    function _selectTreeNode (pnlTab) {
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var node = tree.getNodeById (pnlTab.id)
+        tree.fireEvent ('selectNode', node)
     }
 
     function _deleteTab (tabInfo) {

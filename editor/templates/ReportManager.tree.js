@@ -102,6 +102,12 @@ var reportManagerTree = function () {
         }
     }
 
+    function _selectNode (node) {
+        if (!node.isSelected()) {
+            node.select ()
+        }
+    }
+
     return new Ext.tree.TreePanel ({
 
         loader : new Ext.tree.TreeLoader ({url : urls.read}),
@@ -123,7 +129,8 @@ var reportManagerTree = function () {
             updateNode : _updateNode,
             readNode : _readNode,
             deleteNode : _deleteNode,
-            click : _click
+            click : _click,
+            selectNode : _selectNode
         }
     })
 }();
