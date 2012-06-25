@@ -57,7 +57,7 @@ def processToText (root, prefix, zip_buffer, target = None):
 
     for leaf in ls:
         zip_path = os.path.join (prefix, leaf.name)
-        src_path = os.path.join (settings.MEDIA_DATA, root.usid, leaf.file)
+        src_path = os.path.join (settings.MEDIA_DATA, root.root.usid, leaf.file)
         with open (src_path, 'r') as uuid_file: text = uuid_file.read ()
 
         if leaf.type.code == 'image':
