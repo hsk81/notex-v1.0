@@ -187,6 +187,7 @@ var reportManager = function () {
 
     function _exportReport (url) {
         var statusBar = Ext.getCmp ('statusBarId');
+        var progressBar = Ext.getCmp ('progressBarId');
 
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -195,6 +196,11 @@ var reportManager = function () {
         if (node != undefined) {
             _disableExport ()
             statusBar.showBusy ({text: 'Please wait ..'})
+            progressBar.show ()
+            progressBar.wait ({
+                increment : progressBar.increment,
+                interval : progressBar.interval
+            })
 
             var _onSuccess = function (xhr, opts) {
                 var body = Ext.getBody()
@@ -221,6 +227,7 @@ var reportManager = function () {
                 })
 
                 form.insertHtml ('beforeend', "{% csrf_token %}")
+                progressBar.reset (true)
                 statusBar.clearStatus ({useDefaults:true})
                 form.dom.submit ()
                 _enableExport ()
@@ -234,6 +241,7 @@ var reportManager = function () {
                     msg = "Exporting report failed!"
                 }
 
+                progressBar.reset (true)
                 statusBar.clearStatus ({useDefaults:true})
                 Ext.Msg.alert ("Error", msg)
                 _enableExport ()

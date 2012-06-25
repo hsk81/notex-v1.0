@@ -24,36 +24,32 @@ var statusBar = function () {
         }
     });
 
-    return new Ext.ux.StatusBar({
+    var progressBar = new Ext.ProgressBar({
+        id : 'progressBarId',
+        width : 256,
+        value : 0.0,
+        hidden : true,
 
+        interval : 125, //[ms]
+        total : 0, //[ms]
+        increment : 100, // #segments
+
+        listeners : {
+            update : function (self, value, text) {
+                self.total += self.interval
+                self.updateText (sprintf ('Exporting ..  %0.3f [s]', self.total / 1000.0));
+            },
+
+            hide : function (self) {
+                self.total = 0
+            }
+        }
+    });
+
+    return new Ext.ux.StatusBar({
         id: 'statusBarId',
         defaultText: 'NoTex',
         text: 'NoTex',
-
-        items: ['-', slider]
-
-        /*items: [{
-            text: 'Error',
-            handler: function (){
-                var sb = Ext.getCmp ('statusBarId');
-                sb.setStatus({
-                    text: 'Error',
-                    iconCls: 'x-status-error',
-                    clear: true // auto-clear after a set interval
-                });
-            }
-        },{
-            text: 'Busy',
-            handler: function (){
-                var sb = Ext.getCmp ('statusBarId');
-                sb.showBusy ();
-            }
-        },{
-            text: 'Clear',
-            handler: function (){
-                var sb = Ext.getCmp ('statusBarId');
-                sb.clearStatus ({useDefaults:true});
-            }
-        }]*/
+        items: [progressBar, '-', slider]
     });
 }();

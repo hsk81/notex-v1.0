@@ -12,6 +12,8 @@ var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
 dump (session);
 </script>
 
+<script type="text/javascript" src="{{ STATIC_URL }}lib/sprintf/sprintf.js"></script>
+
 <script type="text/javascript" src="{% url editor:Base64.js %}"></script>
 <script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
 <script type="text/javascript" src="{% url editor:Dialog.openFile.js %}"></script>
