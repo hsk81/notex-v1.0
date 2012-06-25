@@ -1,7 +1,8 @@
 var statusBar = function () {
 
     function _change (slider, newValue, thumb) {
-        Ext.getCmp ('editor.id').fireEvent ('zoom', newValue)
+        Ext.util.Cookies.set ('zoom', newValue);
+        Ext.getCmp ('editor.id').fireEvent ('zoom', newValue);
     }
 
     var tip = new Ext.slider.Tip ({
@@ -10,11 +11,25 @@ var statusBar = function () {
         }
     });
 
+    function _getInitialValue () {
+        var strValue = Ext.util.Cookies.get ('zoom')
+        var value = null;
+
+        if (strValue) {
+            value = parseInt (strValue);
+        } else {
+            value = 100;
+        }
+
+        Ext.getCmp ('editor.id').fireEvent ('zoom', value);
+        return value;
+    }
+
     var slider = new Ext.Slider ({
         id : 'sliderId',
         width : 128,
         increment : 25,
-        value : 100,
+        value : _getInitialValue (),
         minValue : 50,
         maxValue : 150,
         plugins : tip,
