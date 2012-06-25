@@ -75,6 +75,7 @@ var reportManager = function () {
             Ext.getCmp ('reportManager.id').fireEvent ('importReport')
         }
     },{
+        id : 'btn.export.report-manager.id',
         iconCls : 'icon-report_go',
         tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
         split : true,
@@ -90,24 +91,28 @@ var reportManager = function () {
           plain : true,
 
           items : [{
+              id : 'btn.export-text.report-manager.id',
               iconCls : 'icon-page_white_text',
               text : 'Text Files',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportText')
               }
           },{
+              id : 'btn.export-latex.report-manager.id',
               iconCls : 'icon-page_white_code',
               text : 'Latex Files',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
               }
           },{
+              id : 'btn.export-pdf.report-manager.id',
               iconCls : 'icon-page_white_acrobat',
               text : 'PDF Report',
               handler : function (button, event) {
                   Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
               }
           },{
+              id : 'btn.export-html.report-manager.id',
               iconCls : 'icon-page_white_world',
               text : 'HTML Files',
               handler : function (button, event) {
@@ -132,8 +137,9 @@ var reportManager = function () {
     }]}
 
     // #########################################################################
-    function _importReport () {
     // #########################################################################
+
+    function _importReport () {
         dialog.openFile.execute ({
             success: function (file) {
                 var tree = Ext.getCmp ('reportManager.tree.id')
@@ -177,13 +183,18 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    function _exportReport (url) {
     // #########################################################################
+
+    function _exportReport (url) {
+        var statusBar = Ext.getCmp ('statusBarId');
+
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
+
         if (node != undefined) {
-            tree.el.mask ('Please wait', 'x-mask-loading')
+            _disableExport ()
+            statusBar.showBusy ({text: 'Please wait ..'})
 
             var _onSuccess = function (xhr, opts) {
                 var body = Ext.getBody()
@@ -210,8 +221,9 @@ var reportManager = function () {
                 })
 
                 form.insertHtml ('beforeend', "{% csrf_token %}")
-                tree.el.unmask ()
+                statusBar.clearStatus ({useDefaults:true})
                 form.dom.submit ()
+                _enableExport ()
             }
 
             var _onFailure = function (xhr, opts, res) {
@@ -222,8 +234,9 @@ var reportManager = function () {
                     msg = "Exporting report failed!"
                 }
 
-                tree.el.unmask ()
+                statusBar.clearStatus ({useDefaults:true})
                 Ext.Msg.alert ("Error", msg)
+                _enableExport ()
             }
 
             Ext.Ajax.request ({
@@ -260,6 +273,41 @@ var reportManager = function () {
     
     function _exportHtml () {
         this.fireEvent ('exportReport', urls.exportHtml)
+    }
+
+    function _getExportButtons () {
+        return [
+            Ext.getCmp ('btn.export.report-manager.id'),
+            Ext.getCmp ('btn.export-text.report-manager.id'),
+            Ext.getCmp ('btn.export-latex.report-manager.id'),
+            Ext.getCmp ('btn.export-pdf.report-manager.id'),
+            Ext.getCmp ('btn.export-html.report-manager.id'),
+            Ext.getCmp ('btn.export.editor.id'),
+            Ext.getCmp ('btn.export-text.editor.id'),
+            Ext.getCmp ('btn.export-latex.editor.id'),
+            Ext.getCmp ('btn.export-pdf.editor.id'),
+            Ext.getCmp ('btn.export-html.editor.id'),
+        ];
+    }
+
+    function _enableExport () {
+        var buttons = _getExportButtons ();
+        for (var idx in buttons) {
+            var button = buttons[idx]
+            if (button.enable) {
+                button.enable ();
+            }
+        }
+    }
+
+    function _disableExport () {
+        var buttons = _getExportButtons ();
+        for (var idx in buttons) {
+            var button = buttons[idx]
+            if (button.disable) {
+                button.disable ();
+            }
+        }
     }
 
     // #########################################################################

@@ -109,6 +109,7 @@ var editor = function () {
                 Ext.getCmp ('reportManager.id').fireEvent ('importReport')
             }
         },{
+            id : 'btn.export.editor.id',
             text: 'Export',
             iconCls: 'icon-report_go-32',
             iconAlign: 'left',
@@ -125,7 +126,7 @@ var editor = function () {
         columns: 4,
         defaults: { scale: 'large'},
         items: [{
-            id : 'btnExportTextId',
+            id : 'btn.export-text.editor.id',
             text : 'Text',
             iconCls : 'icon-page_white_text-32',
             iconAlign: 'left',
@@ -133,6 +134,7 @@ var editor = function () {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportText')
             }
         },{
+            id : 'btn.export-latex.editor.id',
             text : 'LaTex',
             iconCls : 'icon-page_white_code-32',
             iconAlign: 'left',
@@ -140,6 +142,7 @@ var editor = function () {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
             }
         },{
+            id : 'btn.export-pdf.editor.id',
             text : 'PDF',
             iconCls : 'icon-page_white_acrobat-32',
             iconAlign: 'left',
@@ -147,6 +150,7 @@ var editor = function () {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
             }
         },{
+            id : 'btn.export-html.editor.id',
             text : 'HTML',
             iconCls : 'icon-page_white_world-32',
             iconAlign: 'left',
