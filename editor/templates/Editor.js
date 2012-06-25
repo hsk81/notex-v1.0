@@ -1,13 +1,15 @@
 var editor = function () {
 
-    // #########################################################################
-    var tbar_items = [{
-    // #########################################################################
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    var tbar = { enableOverflow : true, items : [{
 
         xtype: 'buttongroup',
         title: 'Document',
         columns: 2,
         defaults: { scale: 'large'},
+
         items: [{
             text : 'Save',
             iconCls : 'icon-disk-32',
@@ -153,7 +155,27 @@ var editor = function () {
             }
         }]
 
-    }]
+    }], listeners: { overflowchange : _changeIconClassFrom32To16}}
+
+    function _changeIconClassFrom32To16 (toolbar, lastOverflow) {
+        if (lastOverflow) {
+            for (var idx in toolbar.items.items) {
+                var group = toolbar.items.items[idx]
+                if (group.hidden) {
+                    var buttons = group.findByType ('button')
+                    for (var jdx in buttons) {
+                        var button = buttons[jdx]
+                        if (button && button.iconCls) {
+                            button.iconCls = button.iconCls.replace('-32', '')
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function _restoreScrollPosition (pnlTab) {
 
@@ -190,7 +212,9 @@ var editor = function () {
                     id : 'editorId' + tabInfo.id,
                     anchor : '100% 100%',
                     value : tabInfo.text,
-                    style :"font-family:monospace; font-size:12px;"
+                    style : String.format ("font-family:{0}; font-size:{1};",
+                        this['font-family'], this['font-size']
+                    )
                 }],
 
                 listeners : {
@@ -209,30 +233,25 @@ var editor = function () {
         }
     }
 
-    /**
-     * @see http://stackoverflow.com/questions/4776670/
-     *      should-setting-an-image-src-to-data-url-be-available-immediately
-     */
-    function _centerImage (pnlTab) {
-
-        var imageEl = pnlTab.getImage ()
-        imageEl.dom.onload = function (event) {
-
-            var imgView = pnlTab.getViewer ()
-            var innerEl = imgView.el
-            var outerEl = Ext.get (innerEl.up ('div').id)
-
-            var W = outerEl.getWidth ()
-            var H = outerEl.getHeight ()
-            var w = innerEl.getWidth ()
-            var h = innerEl.getHeight ()
-
-            var innerDx = (W - w) / 2.0
-            var innerDy = (H - h) / 2.0
-
-            imgView.setPosition (innerDx, innerDy)
+    function _beforeTabChange (tabPanel, newTab, curTab) {
+        if (curTab) {
+            if (curTab.getEditor) {
+                var editor = curTab.getEditor ();
+                if (editor && editor.getEl) {
+                    var element = editor.getEl ();
+                    if (element && element.getScroll) {
+                        var scroll = element.getScroll ();
+                        if (scroll) {
+                            curTab.scroll = scroll
+                        }
+                    }
+                }
+            }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function _createImageTab (tabInfo) {
 
@@ -292,73 +311,94 @@ var editor = function () {
         }
     }
 
+    /**
+     * @see http://stackoverflow.com/questions/4776670/
+     *      should-setting-an-image-src-to-data-url-be-available-immediately
+     */
+    function _centerImage (pnlTab) {
+
+        var imageEl = pnlTab.getImage ()
+        imageEl.dom.onload = function (event) {
+
+            var imgView = pnlTab.getViewer ()
+            var innerEl = imgView.el
+            var outerEl = Ext.get (innerEl.up ('div').id)
+
+            var W = outerEl.getWidth ()
+            var H = outerEl.getHeight ()
+            var w = innerEl.getWidth ()
+            var h = innerEl.getHeight ()
+
+            var innerDx = (W - w) / 2.0
+            var innerDy = (H - h) / 2.0
+
+            imgView.setPosition (innerDx, innerDy)
+        }
+    }
+
     function _selectTreeNode (pnlTab) {
         var tree = Ext.getCmp ('reportManager.tree.id');
         var node = tree.getNodeById (pnlTab.id)
         tree.fireEvent ('selectNode', node)
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     function _deleteTab (tabInfo) {
-
         var tab = this.findById (tabInfo.id);
-        if (tab) {
-            this.remove (tab, true)
-        }
+        if (tab) { this.remove (tab, true); }
     }
 
-    function _beforeTabChange (tabPanel, newTab, curTab) {
-        if (curTab) {
-            if (curTab.getEditor) {
-                var editor = curTab.getEditor ();
-                if (editor && editor.getEl) {
-                    var element = editor.getEl ();
-                    if (element && element.getScroll) {
-                        var scroll = element.getScroll ();
-                        if (scroll) {
-                            curTab.scroll = scroll
-                        }
-                    }
-                }
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    function _zoom (value) {
+
+        var def_font_size_px = this.defaults['font-size'];
+        var def_font_size = def_font_size_px.replace ('px','');
+        var new_font_size = def_font_size * value / 100.0;
+        if (new_font_size == NaN) { return; }
+        var new_font_size_px = new_font_size + 'px';
+
+        var textareas = this.findByType ('textarea')
+        for (var idx in textareas) {
+            var textarea = textareas[idx];
+            if (textarea.el && textarea.el.getStyle ('font-size'))
+            {
+                textarea.el.setStyle ('font-size', new_font_size_px);
             }
         }
+
+        this['font-size'] = new_font_size_px;
     }
 
-    function _changeIconClassFrom32To16 (toolbar, lastOverflow) {
-        if (lastOverflow) {
-            for (var idx in toolbar.items.items) {
-                var group = toolbar.items.items[idx]
-                if (group.hidden) {
-                    var buttons = group.findByType ('button')
-                    for (var jdx in buttons) {
-                        var button = buttons[jdx]
-                        if (button && button.iconCls) {
-                            button.iconCls = button.iconCls.replace('-32', '')
-                        }
-                    }
-                }
-            }
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     return new Ext.TabPanel ({
+
+        defaults : {
+            'font-family' : 'monospace',
+            'font-size' : '12px'
+        },
+
+        'font-family' : 'monospace',
+        'font-size' : '12px',
+
         activeTab : 0,
         id : 'editor.id',
         enableTabScroll : true,
         tabPosition : 'bottom',
 
-        tbar : {
-            items : tbar_items,
-            enableOverflow: true,
-            listeners: {
-                overflowchange : _changeIconClassFrom32To16
-            }
-        },
+        tbar : tbar,
 
         listeners : {
+            beforetabchange : _beforeTabChange,
             createTextTab : _createTextTab,
             createImageTab : _createImageTab,
             deleteTab : _deleteTab,
-            beforetabchange : _beforeTabChange
+            zoom : _zoom
         }
     })
 }();

@@ -42,10 +42,16 @@ urlpatterns = patterns ('',
         }, name='ReportManager.task.js'),
 
     url (r'^Editor.js$', direct_to_template, {
-            'template' : 'Editor.js',
-            'mimetype' : 'text/javascript',
-            'extra_context' : {}
-        }, name='Editor.js'),
+        'template' : 'Editor.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='Editor.js'),
+
+    url (r'^StatusBar.js$', direct_to_template, {
+        'template' : 'StatusBar.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='StatusBar.js'),
 
     url (r'^Dialog.js$', direct_to_template, {
             'template' : 'dialog/Dialog.js',

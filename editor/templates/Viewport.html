@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load b64 %}
 
+{%  block ext-classes %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
+<script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/StatusBar.js"></script>
+{%  endblock %}
+
 {% block app-js %}
 <script type="text/javascript">
 var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
@@ -43,6 +48,7 @@ var urls = {
 <script type="text/javascript" src="{% url editor:ReportManager.task.js %}"></script>
 <script type="text/javascript" src="{% url editor:ReportManager.js %}"></script>
 <script type="text/javascript" src="{% url editor:Editor.js %}"></script>
+<script type="text/javascript" src="{% url editor:StatusBar.js %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -64,7 +70,8 @@ Ext.Ajax.on ('beforerequest', function (conn, options) {
 
 <script type="text/javascript">
 Ext.onReady (function () {
-Ext.QuickTips.init ()
+Ext.QuickTips.init ();
+
 var viewport = new Ext.Viewport ({
     layout : 'border',
     id : 'viewportId',
@@ -73,6 +80,11 @@ var viewport = new Ext.Viewport ({
         region : 'center',
         layout : 'fit',
         items : [editor]
+    },{
+        region: 'south',
+        xtype: 'panel',
+        height: 26,
+        items : [statusBar]
     },{
         region : 'west',
         split : true,
@@ -85,6 +97,7 @@ var viewport = new Ext.Viewport ({
         items : [reportManager]
     }]
 });
+
 viewport.show ();
 });</script>
 {% endblock %}

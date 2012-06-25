@@ -1,8 +1,9 @@
 var reportManager = function () {
 
     // #########################################################################
-    var tbar_items = [{
     // #########################################################################
+
+    var tbar = { items: [{
         iconCls : 'icon-disk',
         tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
         handler : function (button, event) {
@@ -128,7 +129,7 @@ var reportManager = function () {
         handler : function (button, event) {
             Ext.getCmp ('reportManager.id').fireEvent ('moveSelectedNodeDown')
         }
-    }]
+    }]}
 
     // #########################################################################
     function _importReport () {
@@ -823,8 +824,9 @@ var reportManager = function () {
     }
 
     // #########################################################################
-    return new Ext.Panel ({
     // #########################################################################
+
+    return new Ext.Panel ({
         title : 'Report Manager',
         id : 'reportManager.id',
         layout : 'fit',
@@ -847,7 +849,7 @@ var reportManager = function () {
             }
         }],
 
-        tbar : { items : tbar_items },
+        tbar : tbar,
         items : [reportManagerTree],
 
         listeners : {
