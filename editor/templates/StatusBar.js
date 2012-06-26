@@ -52,7 +52,9 @@ var statusBar = function () {
         listeners : {
             update : function (self, value, text) {
                 self.total += self.interval
-                self.updateText (sprintf ('Exporting ..  %0.3f [s]', self.total / 1000.0));
+                self.updateText (
+                    sprintf ('Exporting ..  %0.3f [s]', self.total / 1000.0)
+                );
             },
 
             hide : function (self) {
@@ -61,7 +63,7 @@ var statusBar = function () {
         }
     });
 
-    return new Ext.ux.StatusBar({
+    return new Ext.ux.StatusBar ({
         id: 'statusBarId',
         defaultText: 'NoTex',
         text: 'NoTex',

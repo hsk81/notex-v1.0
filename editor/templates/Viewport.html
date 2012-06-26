@@ -41,7 +41,7 @@ var urls = {
     exportLatex : Base64.decode ({% url editor:export-latex "=" as uri %}'{{ uri|b64_encode }}'),
     exportPdf : Base64.decode ({% url editor:export-pdf "=" as uri %}'{{ uri|b64_encode }}'),
     exportHtml : Base64.decode ({% url editor:export-html "=" as uri %}'{{ uri|b64_encode }}'),
-    importReport : Base64.decode ({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}'),
+    importReport : Base64.decode ({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}')
 }
 </script>
 
