@@ -263,10 +263,10 @@ def unpackTree (root, prefix, texexec = None):
 def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     constructor = lambda loader, node: loader.construct_pairs (node)
-    yaml.CSafeLoader.add_constructor ('!omap', constructor)
+    yaml.SafeLoader.add_constructor ('!omap', constructor)
 
     with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
-    data = yaml.load ('!omap\n' + text, Loader = yaml.CSafeLoader)
+    data = yaml.load ('!omap\n' + text, Loader = yaml.SafeLoader)
 
     umap = dict (data)
     if not umap.has_key ('latex_backend'):
