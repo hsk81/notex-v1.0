@@ -2,9 +2,12 @@
 
 PROJDIR="$(pwd)"
 
-SRVMETH="threaded"
-HOSTVAL="${2-127.0.0.1}"
-PORTVAL="${3-3001}"
+DAEMOON="${2-true}"
+HOSTVAL="${3-127.0.0.1}"
+PORTVAL="${4-3001}"
+CGIPROT="${5-fcgi}"
+SRVMETH="${6-threaded}"
+
 PIDFILE="$PROJDIR/.pid"
 
 case "$1" in
@@ -22,9 +25,10 @@ case "$1" in
             source bin/activate
         fi
 
-        exec /usr/bin/env - PYTHONPATH="../python:.." \
-            ./manage.py runfcgi method=$SRVMETH host=$HOSTVAL port=$PORTVAL \
-                pidfile=$PIDFILE
+        exec ./manage.py runfcgi \
+            method=$SRVMETH protocol=$CGIPROT \
+            host=$HOSTVAL port=$PORTVAL \
+            pidfile=$PIDFILE daemonize=$DAEMOON
 
         if [ -f bin/activate ] ; then
             deactivate
