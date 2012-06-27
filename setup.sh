@@ -13,6 +13,6 @@ pip install pyyaml
 pip install flup
 
 ./manage.py syncdb --noinput
-./serve.sh # lighttpd & memcached!
+./serve.sh # webserver & cache!
 
 deactivate
