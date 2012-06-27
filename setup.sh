@@ -12,7 +12,8 @@ pip install numpy
 pip install pyyaml
 pip install flup
 
-./manage.py syncdb --noinput
-./serve.sh # webserver & cache!
+if [ ! -f notex/*.db ] ; then
+    ./manage.py syncdb --noinput
+fi
 
 deactivate
