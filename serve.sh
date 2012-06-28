@@ -1,16 +1,16 @@
 #!/bin/bash
 
-PROJDIR="$(pwd)"
-
+ACTMETH="${1-restart}"
 DAEMOON="${2-true}"
 HOSTVAL="${3-127.0.0.1}"
 PORTVAL="${4-3001}"
 CGIPROT="${5-fcgi}"
 SRVMETH="${6-threaded}"
 
+PROJDIR="$(pwd)"
 PIDFILE="$PROJDIR/.pid"
 
-case "$1" in
+case $ACTMETH in
     start)
         if [ -f $PIDFILE ]; then
             PID=$(cat -- $PIDFILE)
