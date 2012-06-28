@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ACTMETH="${1-restart}"
-DAEMOON="${2-true}"
-HOSTVAL="${3-127.0.0.1}"
-PORTVAL="${4-3001}"
-CGIPROT="${5-fcgi}"
-SRVMETH="${6-threaded}"
+HOSTVAL="${2-127.0.0.1}"
+PORTVAL="${3-3001}"
+CGIPROT="${4-fcgi}"
+SRVMETH="${5-threaded}"
+DAEMOON="${6-true}"
 
 PROJDIR="$(pwd)"
 PIDFILE="$PROJDIR/.pid"

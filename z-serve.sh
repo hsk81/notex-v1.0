@@ -6,19 +6,19 @@ EXECGRP="${3-http}"
 
 case $ACTMETH in
     start)
-        $0 chown
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh start
+        sudo chown $EXECUSR:$EXECGRP . -R
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh start $4 $5 $6 $7 $8
         ;;
     stop)
-        $0 chown
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop
+        sudo chown $EXECUSR:$EXECGRP . -R
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop $4 $5 $6 $7 $8
         ;;
     restart)
-        $0 chown
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart
+        sudo chown $EXECUSR:$EXECGRP . -R
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart $4 $5 $6 $7 $8
         ;;
     status)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $4 $5 $6 $7 $8
         ;;
     chown)
         sudo chown $EXECUSR:$EXECGRP . -R
