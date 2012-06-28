@@ -1,14 +1,16 @@
 #!/bin/bash
 
-EXECUSR="${1-http}"
-EXECGRP="${2-http}"
+ACTMETH="${1}"
+EXECUSR="${2-http}"
+EXECGRP="${3-http}"
 
-case "$1" in
+case $ACTMETH in
     start)
         $0 chown
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh start
         ;;
     stop)
+        $0 chown
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop
         ;;
     restart)
