@@ -29,10 +29,6 @@ case "$1" in
             method=$SRVMETH protocol=$CGIPROT \
             host=$HOSTVAL port=$PORTVAL \
             pidfile=$PIDFILE daemonize=$DAEMOON
-
-        if [ -f bin/activate ] ; then
-            deactivate
-        fi
         ;;
     stop)
         if [ -f $PIDFILE ]; then
