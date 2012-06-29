@@ -18,16 +18,8 @@ case $ACTMETH in
     status)
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $3 $4 $5 $6 $7
         ;;
-    chown)
+    as)
         sudo chown $EXECUSR:$EXECGRP . -R
-        ;;
-    pull-as)
-        sudo chown $EXECUSR:$EXECGRP . -R
-        git pull
-        ;;
-    push-as)
-        sudo chown $EXECUSR:$EXECGRP . -R
-        git push
         ;;
     *)
         sudo chown $EXECUSR:$EXECGRP . -R
