@@ -21,7 +21,12 @@ case $ACTMETH in
     chown)
         sudo chown $EXECUSR:$EXECGRP . -R
         ;;
+    pull)
+        sudo chown $EXECUSR:$EXECGRP . -R
+        git pull
+        ;;
     *)
+        sudo chown $EXECUSR:$EXECGRP . -R
         $0 restart
 esac
 
