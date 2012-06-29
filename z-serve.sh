@@ -1,24 +1,22 @@
 #!/bin/bash
 
 ACTMETH="${1}"
-EXECUSR="${2-http}"
-EXECGRP="${3-http}"
+USRNGRP="${2-http:http}"
+EXECUSR="${USRNGRP/:*/}"
+EXECGRP="${USRNGRP/*:/}"
 
 case $ACTMETH in
     start)
-        sudo chown $EXECUSR:$EXECGRP . -R
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh start $4 $5 $6 $7 $8
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh start $3 $4 $5 $6 $7
         ;;
     stop)
-        sudo chown $EXECUSR:$EXECGRP . -R
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop $4 $5 $6 $7 $8
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop $3 $4 $5 $6 $7
         ;;
     restart)
-        sudo chown $EXECUSR:$EXECGRP . -R
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart $4 $5 $6 $7 $8
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart $3 $4 $5 $6 $7
         ;;
     status)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $4 $5 $6 $7 $8
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $3 $4 $5 $6 $7
         ;;
     chown)
         sudo chown $EXECUSR:$EXECGRP . -R
