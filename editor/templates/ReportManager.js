@@ -152,18 +152,34 @@ var reportManager = function () {
                 })
 
                 var xhr = new XMLHttpRequest ()
+
                 xhr.open (
                     "POST", urls.importReport.replace ('=', file.name), true
                 )
 
+                xhr.onerror = function (event) {
+                    progressBar.reset (true)
+                    if (this.response) {
+                        var response = Ext.util.JSON.decode (this.response)
+                        Ext.Msg.alert ("Error", "Importing <i>" +
+                            file.name + "</i> failed: " +
+                            response.message + "!"
+                        )
+                    } else {
+                        Ext.Msg.alert ("Error", "Importing <i>" +
+                            file.name + "</i> failed: " +
+                            "Ensure that file is less than 512 KB" + "!"
+                        )
+                    }
+                }
+
                 xhr.onload = function (event) {
                     progressBar.reset (true)
-
                     if (this.status == 200) {
                         var response = Ext.util.JSON.decode (this.response)
                         if (response.success) {
                             Ext.Msg.alert ("Info", "Importing <i>" +
-                                file.name + "</i> file was sucessful."
+                                file.name + "</i> was sucessful."
                             )
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
