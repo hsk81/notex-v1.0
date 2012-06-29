@@ -24,8 +24,9 @@ import os
 ################################################################################
 
 @transaction.commit_on_success
-def createProject (request, path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')):
+def createProject (request, path = None):
 
+    if not path: path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
     (_, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
     data = json.loads (request.POST['data'])
 
@@ -232,8 +233,9 @@ def createImage (request):
 
 ################################################################################
 
-def get_path (session_key, filename = str (uuid ())):
+def get_path (session_key, filename = None):
 
+    if not filename: filename = str (uuid ())
     path_to = os.path.join (settings.MEDIA_DATA, session_key)
     if not os.path.exists (path_to): os.mkdir (path_to)
 

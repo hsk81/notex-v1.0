@@ -75,8 +75,9 @@ def create_on_update (request, create_leaf):
 
 ################################################################################
 
-def get_path (session_key, filename = str (uuid ())):
+def get_path (session_key, filename = None):
 
+    if not filename: filename = str (uuid ())
     path_to = os.path.join (settings.MEDIA_DATA, session_key)
     if not os.path.exists (path_to): os.mkdir (path_to)
 
