@@ -143,8 +143,13 @@ var reportManager = function () {
         dialog.openFile.setTitle ('Open ZIP Archive')
         dialog.openFile.execute ({
             success: function (file) {
-                var tree = Ext.getCmp ('reportManager.tree.id')
-                tree.el.mask ('Please wait', 'x-mask-loading')
+                var progressBar = Ext.getCmp ('progressBarId')
+                progressBar.show ()
+                progressBar.setMode ('import')
+                progressBar.wait ({
+                    increment : progressBar.increment,
+                    interval : progressBar.interval
+                })
 
                 var xhr = new XMLHttpRequest ()
                 xhr.open (
@@ -152,7 +157,7 @@ var reportManager = function () {
                 )
 
                 xhr.onload = function (event) {
-                    tree.el.unmask ()
+                    progressBar.reset (true)
 
                     if (this.status == 200) {
                         var response = Ext.util.JSON.decode (this.response)
@@ -160,6 +165,7 @@ var reportManager = function () {
                             Ext.Msg.alert ("Info", "Importing <i>" +
                                 file.name + "</i> file was sucessful."
                             )
+                            var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
                         } else {
                             Ext.Msg.alert ("Error", "Importing <i>" +
@@ -204,6 +210,7 @@ var reportManager = function () {
             _disableExport ()
             statusBar.showBusy ({text: 'Please wait ..'})
             progressBar.show ()
+            progressBar.setMode ('export')
             progressBar.wait ({
                 increment : progressBar.increment,
                 interval : progressBar.interval
@@ -301,7 +308,7 @@ var reportManager = function () {
             Ext.getCmp ('btn.export-text.editor.id'),
             Ext.getCmp ('btn.export-latex.editor.id'),
             Ext.getCmp ('btn.export-pdf.editor.id'),
-            Ext.getCmp ('btn.export-html.editor.id'),
+            Ext.getCmp ('btn.export-html.editor.id')
         ];
     }
 

@@ -49,12 +49,26 @@ var statusBar = function () {
         total : 0, //[ms]
         increment : 100, // #segments
 
+        setMode : function (mode) {
+            if (mode == 'import') {
+                this.mode = 'Importing'
+            }
+
+            else if (mode == 'export') {
+                this.mode = 'Exporting'
+            }
+
+            else {
+                this.mode = 'Waiting'
+            }
+        },
+
         listeners : {
             update : function (self, value, text) {
                 self.total += self.interval
-                self.updateText (
-                    sprintf ('Exporting ..  %0.3f [s]', self.total / 1000.0)
-                );
+                self.updateText (sprintf (
+                    '%s ..  %0.3f [s]', self.mode, self.total / 1000.0
+                ));
             },
 
             hide : function (self) {
