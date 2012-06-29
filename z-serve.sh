@@ -21,9 +21,13 @@ case $ACTMETH in
     chown)
         sudo chown $EXECUSR:$EXECGRP . -R
         ;;
-    pull)
+    pull-as)
         sudo chown $EXECUSR:$EXECGRP . -R
         git pull
+        ;;
+    push-as)
+        sudo chown $EXECUSR:$EXECGRP . -R
+        git push
         ;;
     *)
         sudo chown $EXECUSR:$EXECGRP . -R
