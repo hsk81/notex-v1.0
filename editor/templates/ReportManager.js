@@ -365,9 +365,82 @@ var reportManager = function () {
             Ext.Msg.alert ("Error", "No report selected; select a report!")
         }
     }
-    
-    function _openFileOnSucess (file) {
 
+    function _openImageFile (file, fileInfo, node, tree, selectedNode) {
+        var imageReader = new FileReader();
+
+        imageReader.onerror = function (e) {
+            Ext.Msg.alert(
+                "Error", "Reading <i>" + file.name + "</i> failed!"
+            )
+        }
+
+        imageReader.onload = function (e) {
+            if (e.loaded >= 524288) {
+                Ext.Msg.alert("Error", "File larger than 512 KB!")
+                return
+            }
+
+            fileInfo.iconCls = 'icon-image'
+            fileInfo.text = e.target.result
+            fileInfo.save = true
+            node.attributes['iconCls'] = fileInfo.iconCls
+            node.attributes['data'] = fileInfo.text
+
+            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
+                success: function (args) {
+                    Ext.getCmp ('editor.id').fireEvent (
+                        'createImageTab', fileInfo
+                    )
+                },
+
+                failure: function (args) {
+                    Ext.Msg.alert("Error", "No node inserted!")
+                }
+            })
+        }
+
+        imageReader.readAsDataURL (file);
+    }
+
+    function _openTextFile (file, fileInfo, node, tree, selectedNode) {
+        var textReader = new FileReader();
+
+        textReader.onerror = function (e) {
+            Ext.Msg.alert(
+                "Error", "Reading <i>" + file.name + "</i> failed!"
+            )
+        }
+
+        textReader.onload = function (e) {
+            if (e.loaded >= 524288) {
+                Ext.Msg.alert("Error", "File larger than 512 KB!")
+                return
+            }
+
+            fileInfo.iconCls = 'icon-page'
+            fileInfo.text = e.target.result
+            fileInfo.save = true
+            node.attributes['iconCls'] = fileInfo.iconCls
+            node.attributes['data'] = fileInfo.text
+
+            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
+                success: function (args) {
+                    Ext.getCmp ('editor.id').fireEvent (
+                        'createTextTab', fileInfo
+                    )
+                },
+
+                failure: function (args) {
+                    Ext.Msg.alert("Error", "No node inserted!")
+                }
+            })
+        }
+
+        textReader.readAsText (file);
+    }
+
+    function _openFileOnSucess (file) {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var selectionModel = tree.getSelectionModel ()
         var selectedNode = selectionModel.getSelectedNode ()
@@ -386,77 +459,9 @@ var reportManager = function () {
         })
 
         if (String (file.type).match("^image") == "image") {
-            var imageReader = new FileReader ();
-
-            imageReader.onerror = function (e) {
-                Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                )
-            }
-
-            imageReader.onload = function (e) {
-                if (e.loaded >= 524288)
-                {
-                    Ext.Msg.alert ("Error", "File larger than 512 KB!")
-                    return
-                }
-
-                fileInfo.iconCls = 'icon-image'
-                fileInfo.text = e.target.result
-                fileInfo.save = true
-                node.attributes['iconCls'] = fileInfo.iconCls
-                node.attributes['data'] = fileInfo.text
-
-                tree.fireEvent ('createNode', node, {refNode: selectedNode},{
-                    success: function (args) {
-                        Ext.getCmp ('editor.id').fireEvent (
-                            'createImageTab', fileInfo
-                        )
-                    },
-
-                    failure: function (args) {
-                        Ext.Msg.alert ("Error", "No node inserted!")
-                    }
-                })
-            }
-
-            imageReader.readAsDataURL (file);
+            _openImageFile (file, fileInfo, node, tree, selectedNode);
         } else { // assume text
-            var textReader = new FileReader ();
-
-            textReader.onerror = function (e) {
-                Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!"
-                )
-            }
-
-            textReader.onload = function (e) {
-                if (e.loaded >= 524288)
-                {
-                    Ext.Msg.alert ("Error", "File larger than 512 KB!")
-                    return
-                }
-
-                fileInfo.iconCls = 'icon-page'
-                fileInfo.text = e.target.result
-                fileInfo.save = true
-                node.attributes['iconCls'] = fileInfo.iconCls
-                node.attributes['data'] = fileInfo.text
-
-                tree.fireEvent ('createNode', node, {refNode: selectedNode},{
-                    success: function (args) {
-                        Ext.getCmp ('editor.id').fireEvent (
-                            'createTextTab', fileInfo
-                        )
-                    },
-
-                    failure: function (args) {
-                        Ext.Msg.alert ("Error", "No node inserted!")
-                    }
-                })
-            }
-
-            textReader.readAsText (file);
+            _openTextFile (file, fileInfo, node, tree, selectedNode);
         }
     }
 
