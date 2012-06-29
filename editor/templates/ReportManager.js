@@ -140,6 +140,7 @@ var reportManager = function () {
     // #########################################################################
 
     function _importReport () {
+        dialog.openFile.setTitle ('Open ZIP Archive')
         dialog.openFile.execute ({
             success: function (file) {
                 var tree = Ext.getCmp ('reportManager.tree.id')
@@ -326,6 +327,7 @@ var reportManager = function () {
         var selectedNode = selectionModel.getSelectedNode ()
 
         if (selectedNode != null) {
+            dialog.openFile.setTitle ('Open Text/Image File')
             dialog.openFile.execute ({
                 success: _openFileOnSucess,
                 failure: _openFileOnFailure
@@ -708,14 +710,16 @@ var reportManager = function () {
                 tree.fireEvent (
                     'deleteNode', node, {destroy: true}, {
                         success : function (args) {
-                            Ext.getCmp ('editor.id').fireEvent ('deleteTab',
-                                { 'id' : args.node.id })
+                            Ext.getCmp ('editor.id').fireEvent (
+                                'deleteTab', { 'id' : args.node.id }
+                            )
                             reportManager.util.crudDelete ({id : args.node.id})
                         },
 
                         failure : function (args) {
-                            Ext.Msg.alert ("Error", 
-                                "No node selected; select a node!")
+                            Ext.Msg.alert (
+                                "Error", "No node selected; select a node!"
+                            )
                         }
                     }
                 )

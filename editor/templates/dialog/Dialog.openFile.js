@@ -1,8 +1,7 @@
 var dialogOpenFile = new Ext.Window ({
-
     layout : 'fit',
     id : 'dialog.openFile.id',
-    title : 'Open File',
+    title : 'Open file',
     frame : true,
     modal : true,
     draggable : true,
@@ -42,7 +41,7 @@ var dialogOpenFile = new Ext.Window ({
     },{
         text : 'Open',
         style : 'padding: 5 0 5 0;',
-        iconCls : 'icon-folder_page',
+        iconCls : 'icon-folder',
         handler : function (btn) {
 
             var cmp = Ext.getCmp("inputOpenFileId")
