@@ -172,7 +172,7 @@ def createText (request):
     text = request.POST['data'].replace ('\r\n','\n')
 
     with open (get_path (request.session.session_key), 'w') as uuid_file:
-        uuid_file.write (text)
+        uuid_file.write (text.encode ("utf-8"))
 
         leaf = LEAF.objects.create (
             type = type,

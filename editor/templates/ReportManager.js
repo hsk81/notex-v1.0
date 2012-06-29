@@ -386,14 +386,21 @@ var reportManager = function () {
         })
 
         if (String (file.type).match("^image") == "image") {
-            var imageReader = new FileReader();
+            var imageReader = new FileReader ();
 
             imageReader.onerror = function (e) {
                 Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!")
+                    "Error", "Reading <i>" + file.name + "</i> failed!"
+                )
             }
 
             imageReader.onload = function (e) {
+                if (e.loaded >= 524288)
+                {
+                    Ext.Msg.alert ("Error", "File larger than 512 KB!")
+                    return
+                }
+
                 fileInfo.iconCls = 'icon-image'
                 fileInfo.text = e.target.result
                 fileInfo.save = true
@@ -415,14 +422,21 @@ var reportManager = function () {
 
             imageReader.readAsDataURL (file);
         } else { // assume text
-            var textReader = new FileReader();
+            var textReader = new FileReader ();
 
             textReader.onerror = function (e) {
                 Ext.Msg.alert (
-                    "Error", "Reading <i>" + file.name + "</i> failed!")
+                    "Error", "Reading <i>" + file.name + "</i> failed!"
+                )
             }
 
             textReader.onload = function (e) {
+                if (e.loaded >= 524288)
+                {
+                    Ext.Msg.alert ("Error", "File larger than 512 KB!")
+                    return
+                }
+
                 fileInfo.iconCls = 'icon-page'
                 fileInfo.text = e.target.result
                 fileInfo.save = true
@@ -442,7 +456,7 @@ var reportManager = function () {
                 })
             }
 
-            textReader.readAsBinaryString (file);
+            textReader.readAsText (file);
         }
     }
 
