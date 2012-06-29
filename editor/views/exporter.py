@@ -56,13 +56,16 @@ def compress (request, id, translate, ext = 'zip', hook = None):
         temp = tempfile.SpooledTemporaryFile (max_size = size)
         temp.write (object_val)
 
-        http_response = HttpResponse (FileWrapper (temp))
+        http_response = HttpResponse (
+            FileWrapper (temp), content_type = 'application/%s' % ext)
         http_response['Content-Disposition'] = \
             'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
         http_response['Content-Length'] = size
 
         temp.seek (0); os.remove (object_uri)
+
     else:
+
         http_response, object_val = to_zip (request, translate, node)
         descriptor, object_uri = tempfile.mkstemp ()
         with os.fdopen (descriptor, 'w') as temp: temp.write (object_val)
