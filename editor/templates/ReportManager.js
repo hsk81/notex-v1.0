@@ -147,8 +147,10 @@ var reportManager = function () {
                 tree.el.mask ('Please wait', 'x-mask-loading')
 
                 var xhr = new XMLHttpRequest ()
-                xhr.open ("POST", urls.importReport.replace ('=', file.name),
-                    true)
+                xhr.open (
+                    "POST", urls.importReport.replace ('=', file.name), true
+                )
+
                 xhr.onload = function (event) {
                     tree.el.unmask ()
 
@@ -156,16 +158,19 @@ var reportManager = function () {
                         var response = Ext.util.JSON.decode (this.response)
                         if (response.success) {
                             Ext.Msg.alert ("Info", "Importing <i>" +
-                                file.name + "</i> file was sucessful.")
+                                file.name + "</i> file was sucessful."
+                            )
                             tree.getLoader ().load (tree.root, null, this)
                         } else {
                             Ext.Msg.alert ("Error", "Importing <i>" +
                                 file.name + "</i> file failed: " +
-                                response.message + "!")
+                                response.message + "!"
+                            )
                         }
                     } else {
                         Ext.Msg.alert ("Error", "Importing <i>" +
-                            file.name + "</i> file failed: Unknown error!")
+                            file.name + "</i> file failed: Unknown error!"
+                        )
                     }
                 }
 
@@ -178,7 +183,8 @@ var reportManager = function () {
 
             failure: function () {
                 Ext.Msg.alert (
-                    "Error", "No file or invalid file type selected!")
+                    "Error", "No file or invalid file type selected!"
+                )
             }
         })
     }
