@@ -87,7 +87,7 @@ var reportManagerTree = function () {
     }
 
     function _selectNode (node) {
-        if (!node.isSelected()) { node.select (); }
+        if (node && !node.isSelected()) { node.select (); }
     }
 
     ////////////////////////////////////////////////////////////////////////////
