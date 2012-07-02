@@ -570,7 +570,7 @@ var reportManager = function () {
         });
 
         var propertyGrid = new Ext.grid.PropertyGrid ({
-            width: 512,
+            layout: 'fit',
             autoHeight: true,
             propertyNames : {
                 project : 'Project',
@@ -615,6 +615,7 @@ var reportManager = function () {
             plain : true,
             resizable : false,
             modal : true,
+            width: 512,
 
             buttons: [{
                 text : 'Cancel',
