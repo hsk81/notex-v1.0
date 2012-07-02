@@ -189,6 +189,14 @@ var editor = function () {
         }
     }
 
+    function _refreshEditor (pnlTab) {
+
+        var editor = pnlTab.getEditor ()
+        if (editor.codeEditor) {
+            editor.codeEditor.refresh ();
+        }
+    }
+
     function _getFilenameWithExtension (filename_ext, delimiter) {
 
         if (!filename_ext) return {}
@@ -244,10 +252,10 @@ var editor = function () {
                     initialConfig : {
                         id : 'editorId' + tabInfo.id,
                         value : tabInfo.text,
+                        fontSize : this.fontSize,
                         mode : _mapExtensionToMode(
-                            _getFilenameWithExtension (tabInfo.title).extension),
-                        style : String.format ("font-family:{0}; font-size:{1};",
-                            this['font-family'], this['font-size'])
+                            _getFilenameWithExtension (tabInfo.title).extension
+                        )
                     }
                 }],
 
@@ -255,6 +263,7 @@ var editor = function () {
                     activate : function (pnlTab) {
                         _restoreScrollPosition (pnlTab);
                         _selectTreeNode (pnlTab);
+                        _refreshEditor (pnlTab);
                     }
                 }
             });
@@ -389,22 +398,18 @@ var editor = function () {
 
     function _zoom (value) {
 
-        var def_font_size_px = this.defaults['font-size'];
+        var def_font_size_px = this.defaults.fontSize;
         var def_font_size = def_font_size_px.replace ('px','');
         var new_font_size = def_font_size * value / 100.0;
         if (new_font_size == NaN) { return; }
         var new_font_size_px = new_font_size + 'px';
 
-        var textareas = this.findByType ('textarea')
-        for (var idx in textareas) {
-            var textarea = textareas[idx];
-            if (textarea.el && textarea.el.getStyle ('font-size'))
-            {
-                textarea.el.setStyle ('font-size', new_font_size_px);
-            }
-        }
+        var textareas = this.findByType ('ux-codemirror');
+        Ext.each (textareas, function (textarea, index) {
+            textarea.setFontSize (new_font_size_px)
+        });
 
-        this['font-size'] = new_font_size_px;
+        this.fontSize = new_font_size_px
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -412,13 +417,7 @@ var editor = function () {
 
     return new Ext.TabPanel ({
 
-        defaults : {
-            'font-family' : 'monospace',
-            'font-size' : '12px'
-        },
-
-        'font-family' : 'monospace',
-        'font-size' : '12px',
+        defaults : { fontSize: '12px' },
 
         activeTab : 0,
         id : 'editor.id',

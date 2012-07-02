@@ -21,7 +21,11 @@ var statusBar = function () {
             value = 100;
         }
 
-        Ext.getCmp ('editor.id').fireEvent ('zoom', value);
+        var editor = Ext.getCmp ('editor.id');
+        if (editor) {
+            editor.fireEvent ('zoom', value);
+        }
+
         return value;
     }
 

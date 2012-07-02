@@ -19,6 +19,7 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                 });
 
                 this.codeEditor.setValue (this.initialConfig.value);
+                this.setFontSize (this.initialConfig.fontSize)
             }
         });
     },
@@ -34,6 +35,16 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
     setValue: function (value) {
         if (this.codeEditor) {
             this.codeEditor.setValue (value);
+        }
+    },
+
+    setFontSize: function (value) {
+        if (this.codeEditor) {
+            var codeEditorEl = this.el.next ();
+            if (codeEditorEl) {
+                codeEditorEl.setStyle ('font-size', value);
+                this.codeEditor.refresh ();
+            }
         }
     }
 });
