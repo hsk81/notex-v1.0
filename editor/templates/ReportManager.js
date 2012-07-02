@@ -935,7 +935,7 @@ var reportManager = function () {
     // #########################################################################
 
     return new Ext.Panel ({
-        title : 'Report Manager',
+        title : 'NoTex - Report Manager',
         id : 'reportManager.id',
         layout : 'fit',
 
