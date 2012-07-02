@@ -64,11 +64,22 @@ urlpatterns = patterns ('',
             'extra_context' : {}
         }, name='Dialog.openFile.js'),
 
+    url (r'^CodeMirror.js$', direct_to_template, {
+        'template' : 'lib/CodeMirror.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='CodeMirror.js'),
+    url (r'^CodeMirror.css$', direct_to_template, {
+        'template' : 'lib/CodeMirror.css',
+        'mimetype' : 'text/css',
+        'extra_context' : {}
+    }, name='CodeMirror.css'),
+
     url (r'^Math.uuid.js$', direct_to_template, {
-            'template' : 'lib/Math.uuid.js',
-            'mimetype' : 'text/javascript',
-            'extra_context' : {}
-        }, name='Math.uuid.js'),
+        'template' : 'lib/Math.uuid.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='Math.uuid.js'),
     url (r'^Base64.js$', direct_to_template, {
             'template' : 'lib/Base64.js',
             'mimetype' : 'text/javascript',

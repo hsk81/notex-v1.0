@@ -2,8 +2,9 @@
 {% load b64 %}
 
 {%  block ext-classes %}
+<link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="{% url editor:CodeMirror.css %}" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
-<script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/StatusBar.js"></script>
 {%  endblock %}
 
 {% block app-js %}
@@ -18,6 +19,13 @@ dump (session);
 <script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
 <script type="text/javascript" src="{% url editor:Dialog.openFile.js %}"></script>
 <script type="text/javascript" src="{% url editor:Dialog.js %}"></script>
+
+<script src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
+<script type="text/javascript" src="{% url editor:CodeMirror.js %}"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/StatusBar.js"></script>
 
 <script type="text/javascript">
 var urls = {

@@ -13,11 +13,11 @@ var reportManager = function () {
                 var tree = Ext.getCmp ('reportManager.tree.id')
                 var node = tree.getNodeById (tab.id)
 
-                if (this.tree.isImage (node)) {
+                if (tree.isImage (node)) {
                     Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
                 }
 
-                if (this.tree.isText (node)) {
+                if (tree.isText (node)) {
                     Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
                 }
             }
@@ -798,13 +798,13 @@ var reportManager = function () {
             return
         }
 
-        if (this.tree.isReport (node.previousSibling))
+        if (tree.isReport (node.previousSibling))
         {
             return
         }
 
         var prev = _prev (node)
-        if (this.tree.isReport (prev))
+        if (tree.isReport (prev))
         {
             return
         }
@@ -871,13 +871,13 @@ var reportManager = function () {
             return;
         }
 
-        if (this.tree.isReport (node.nextSibling))
+        if (tree.isReport (node.nextSibling))
         {
             return
         }
 
         var next = _next (node)
-        if (this.tree.isReport (next))
+        if (tree.isReport (next))
         {
             return
         }

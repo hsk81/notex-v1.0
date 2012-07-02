@@ -7,3 +7,6 @@
 [submodule "notex/static/ico/fatcow.git"]
 	path = notex/static/ico/fatcow.git
 	url = git@github.com:hsk81/fatcow-hosting-icon.git
+[submodule "notex/static/lib/codemirror.git"]
+	path = notex/static/lib/codemirror.git
+	url = git@github.com:hsk81/CodeMirror.git

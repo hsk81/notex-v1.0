@@ -189,6 +189,31 @@ var editor = function () {
         }
     }
 
+    function _getFilenameWithExtension (filename_ext, delimiter) {
+
+        if (!filename_ext) return {}
+        if (!delimiter) { delimiter = '.' }
+
+        var array = filename_ext.split (delimiter)
+        if (array.length == 0) {
+            return {};
+        }
+        else if (array.length == 1) {
+            return { filename: array[0] };
+        }
+        else {
+            return { filename: array[0], extension: array[1] };
+        }
+    }
+
+    function _mapExtensionToMode (extension) {
+        if (extension == 'cfg') {
+            return 'yaml';
+        } else {
+            return 'rst';
+        }
+    }
+
     function _createTextTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id);
@@ -199,7 +224,7 @@ var editor = function () {
                 title : tabInfo.title,
                 id : tabInfo.id,
                 layout : 'fit',
-                autoScroll : true,
+                autoScroll : false,
                 iconCls : tabInfo.iconCls,
                 closable : true,
 
@@ -212,13 +237,19 @@ var editor = function () {
                 },
 
                 items : [{
-                    xtype : 'textarea',
-                    id : 'editorId' + tabInfo.id,
+                    xtype : 'ux-codemirror',
                     anchor : '100% 100%',
+                    layout : 'fit',
                     value : tabInfo.text,
-                    style : String.format ("font-family:{0}; font-size:{1};",
-                        this['font-family'], this['font-size']
-                    )
+
+                    initialConfig : {
+                        id : 'editorId' + tabInfo.id,
+                        value : tabInfo.text,
+                        mode : _mapExtensionToMode(
+                            _getFilenameWithExtension (tabInfo.title).extension),
+                        style : String.format ("font-family:{0}; font-size:{1};",
+                            this['font-family'], this['font-size'])
+                    }
                 }],
 
                 listeners : {
@@ -229,7 +260,7 @@ var editor = function () {
                 }
             });
 
-            this.activate (tab)
+            this.activate (tab);
         }
 
         if (tabInfo.save) {
