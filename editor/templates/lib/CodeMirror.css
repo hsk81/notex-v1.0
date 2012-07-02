@@ -1,3 +1,4 @@
-.CodeMirror-scroll {
-    height: 100%;
-}
+.CodeMirror-scroll { height: 100%; }
+.activeline {background: #f7f7f7 !important;}
+span.CodeMirror-matchhighlight { background: #e9e9e9 }
+.CodeMirror-focused span.CodeMirror-matchhighlight { background: #e7e4ff; !important }

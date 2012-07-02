@@ -190,11 +190,18 @@ var editor = function () {
     }
 
     function _refreshEditor (pnlTab) {
-
         var editor = pnlTab.getEditor ()
-        if (editor.codeEditor) {
-            editor.codeEditor.refresh ();
-        }
+        editor.fireEvent ('refresh', editor);
+    }
+
+    function _focusEditor (pnlTab) {
+        var editor = pnlTab.getEditor ();
+        editor.fireEvent ('focus', editor);
+    }
+
+    function _blurEditor (pnlTab) {
+        var editor = pnlTab.getEditor ();
+        editor.fireEvent ('blur', editor);
     }
 
     function _getFilenameWithExtension (filename_ext, delimiter) {
@@ -264,6 +271,11 @@ var editor = function () {
                         _restoreScrollPosition (pnlTab);
                         _selectTreeNode (pnlTab);
                         _refreshEditor (pnlTab);
+                        _focusEditor (pnlTab);
+                    },
+
+                    deactivate : function (pnlTab) {
+                        _blurEditor (pnlTab);
                     }
                 }
             });

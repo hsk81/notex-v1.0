@@ -20,7 +20,10 @@ dump (session);
 <script type="text/javascript" src="{% url editor:Dialog.openFile.js %}"></script>
 <script type="text/javascript" src="{% url editor:Dialog.js %}"></script>
 
+
 <script src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/lib/util/searchcursor.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/lib/util/match-highlighter.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
 <script type="text/javascript" src="{% url editor:CodeMirror.js %}"></script>
