@@ -239,7 +239,6 @@ var editor = function () {
                 items : [{
                     xtype : 'ux-codemirror',
                     anchor : '100% 100%',
-                    layout : 'fit',
                     value : tabInfo.text,
 
                     initialConfig : {
