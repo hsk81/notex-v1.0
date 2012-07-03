@@ -105,9 +105,9 @@ class Interpolator:
                 value = value.replace (tpl, self._filter \
                     (self._predef (tag, ps), filters, **{'strict':strict}))
 
-            elif (strict != None) and strict:
+            elif (strict is not None) and strict:
                 raise UnknownTemplateError (tpl)
-            elif (strict == None) and self._strict:
+            elif (strict is None) and self._strict:
                 raise UnknownTemplateError (tpl)
 
         if key:

@@ -7,20 +7,7 @@ var reportManager = function () {
         iconCls : 'icon-disk',
         tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
         handler : function (button, event) {
-            var editor = Ext.getCmp ('editor.id')
-            var tab = editor.getActiveTab ()
-            if (tab != undefined) {
-                var tree = Ext.getCmp ('reportManager.tree.id')
-                var node = tree.getNodeById (tab.id)
-
-                if (tree.isImage (node)) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
-                }
-
-                if (tree.isText (node)) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
-                }
-            }
+            Ext.getCmp ('reportManager.id').fireEvent ('saveTab')
         }
     },{
         iconCls : 'icon-folder_page',
@@ -468,7 +455,28 @@ var reportManager = function () {
     function _openFileOnFailure () {
         Ext.Msg.alert ("Error", "No file or invalid file type selected!")
     }
-    
+
+    // #########################################################################
+    function _saveTab (tab, skipMask) {
+    // #########################################################################
+        if (tab == undefined) {
+            tab = Ext.getCmp ('editor.id').getActiveTab ()
+        }
+
+        if (tab != undefined) {
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            var node = tree.getNodeById (tab.id)
+
+            if (tree.isText (node)) {
+                _saveTextTab (tab, skipMask); return
+            }
+
+            if (tree.isImage (node)) {
+                _saveImageTab (tab, skipMask); return
+            }
+        }
+    }
+
     // #########################################################################
     function _saveTextTab (tab, skipMask) {
     // #########################################################################
@@ -497,26 +505,7 @@ var reportManager = function () {
     // #########################################################################
     function _saveImageTab (tab, skipMask) {
     // #########################################################################
-        if (tab == undefined) {
-            tab = Ext.getCmp ('editor.id').getActiveTab ()
-        }
-
-        if (tab != undefined) {
-            if (skipMask == undefined || skipMask != true) {
-                tab.el.mask ('Please wait', 'x-mask-loading')
-            }
-
-            var tree = Ext.getCmp ('reportManager.tree.id')
-            var node = tree.getNodeById (tab.id)
-
-            reportManager.util.crudUpdate ({
-                leafId : node.id,
-                nodeId : node.parentNode.id,
-                name : node.text.replace('<i>','').replace('</i>',''),
-                data : tab.getData (),
-                rank : node.parentNode.indexOf (node)
-            }, urls.updateImage)
-        }
+        return;
     }
     
     // #########################################################################
@@ -969,8 +958,7 @@ var reportManager = function () {
             exportPdf : _exportPdf,
             exportHtml : _exportHtml,
             openFile : _openFile,
-            saveTextTab : _saveTextTab,
-            saveImageTab : _saveImageTab,
+            saveTab : _saveTab,
             addReport : _addReport,
             addFolder : _addFolder,
             addTextFile : _addTextFile,

@@ -12,6 +12,51 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
             },
 
             afterrender : function () {
+
+                CodeMirror.defineMode ("yaml-plus", function (config, parserConfig) {
+                    var overlay = {
+                        token: function (stream, state) {
+                            var ch;
+
+                            if (stream.match ("${"))
+                            {
+                                while ((ch = stream.next ()) != null) {
+                                    if (ch == "}") { break; }
+                                }
+
+                                return "yaml-plus";
+                            }
+
+                            while (stream.next () != null) {
+                                if (stream.match ("${", false)) { break; }
+                            }
+
+                            return null;
+                        }
+                    };
+
+                    var mode = CodeMirror.getMode (
+                        config, parserConfig.backdrop || "text/x-yaml"
+                    );
+
+                    return CodeMirror.overlayMode (mode, overlay);
+                });
+
+                var keymap = {
+                    'Ctrl-S' : function (cm) {
+                        Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
+                    },
+                    'Ctrl-O' : function (cm) {
+                        Ext.getCmp ('reportManager.id').fireEvent ('openFile');
+                    },
+                    'Ctrl-B' : function (cm) {
+                        console.info (cm);
+                    },
+                    'Ctrl-I' : function (cm) {
+                        console.info (cm);
+                    }
+                }
+
                 this.codeEditor = new CodeMirror.fromTextArea (this.el.dom, {
                     autofocus: true,
                     matchBrackets: true,
@@ -19,6 +64,7 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                     lineWrapping: true,
                     lineNumbers: true,
                     mode: this.initialConfig.mode,
+                    extraKeys: keymap,
 
                     onCursorActivity: function (self) {
                         self.matchHighlight ("CodeMirror-matchhighlight");

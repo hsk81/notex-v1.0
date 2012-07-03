@@ -16,20 +16,7 @@ var editor = function () {
             iconAlign: 'left',
             tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
             handler : function (button, event) {
-                var editor = Ext.getCmp ('editor.id')
-                var tab = editor.getActiveTab ()
-                if (tab != undefined) {
-                    var tree = Ext.getCmp ('reportManager.tree.id')
-                    var node = tree.getNodeById (tab.id)
-
-                    if (tree.isImage (node)) {
-                        Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
-                    }
-
-                    if (tree.isText (node)) {
-                        Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
-                    }
-                }
+                Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
             }
         },{
             text : 'Open',
@@ -37,7 +24,7 @@ var editor = function () {
             iconAlign: 'left',
             tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)',
             handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('openFile')
+                Ext.getCmp ('reportManager.id').fireEvent ('openFile');
             }
         }]
 
@@ -223,7 +210,7 @@ var editor = function () {
 
     function _mapExtensionToMode (extension) {
         if (extension == 'cfg') {
-            return 'yaml';
+            return 'yaml-plus';
         } else {
             return 'rst';
         }

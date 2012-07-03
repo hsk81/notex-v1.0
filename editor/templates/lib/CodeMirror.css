@@ -12,3 +12,7 @@
 {
     background: #ffff80; !important;
 }
+
+.CodeMirror .cm-yaml-plus {
+    color: #ff0000;
+}

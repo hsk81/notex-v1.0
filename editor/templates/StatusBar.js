@@ -18,7 +18,7 @@ var statusBar = function () {
         if (strValue) {
             value = parseInt (strValue);
         } else {
-            value = 100;
+            value = 125;
         }
 
         var editor = Ext.getCmp ('editor.id');

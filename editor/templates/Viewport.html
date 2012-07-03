@@ -4,6 +4,7 @@
 {%  block ext-classes %}
 <link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="{% url editor:CodeMirror.css %}" />
+<link rel="stylesheet" href="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
 {%  endblock %}
 
@@ -24,6 +25,9 @@ dump (session);
 <script src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/lib/util/searchcursor.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/lib/util/match-highlighter.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/lib/util/overlay.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/lib/util/search.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
 <script type="text/javascript" src="{% url editor:CodeMirror.js %}"></script>
@@ -83,34 +87,50 @@ Ext.Ajax.on ('beforerequest', function (conn, options) {
 
 <script type="text/javascript">
 Ext.onReady (function () {
-Ext.QuickTips.init ();
+    Ext.QuickTips.init ();
 
-var viewport = new Ext.Viewport ({
-    layout : 'border',
-    id : 'viewportId',
+    var viewport = new Ext.Viewport ({
+        layout : 'border',
+        id : 'viewportId',
 
-    items : [{
-        region : 'center',
-        layout : 'fit',
-        items : [editor]
-    },{
-        region: 'south',
-        xtype: 'panel',
-        height: 26,
-        items : [statusBar]
-    },{
-        region : 'west',
-        split : true,
-        minWidth : 260,
-        width : 260,
-        collapsed : false,
-        collapseMode : 'mini',
-        hidden : false,
-        layout : 'fit',
-        items : [reportManager]
-    }]
-});
+        items : [{
+            region : 'center',
+            layout : 'fit',
+            items : [editor]
+        },{
+            region: 'south',
+            xtype: 'panel',
+            height: 26,
+            items : [statusBar]
+        },{
+            region : 'west',
+            split : true,
+            minWidth : 260,
+            width : 260,
+            collapsed : false,
+            collapseMode : 'mini',
+            hidden : false,
+            layout : 'fit',
+            items : [reportManager]
+        }]
+    });
 
-viewport.show ();
+    var map = new Ext.KeyMap(Ext.get(document), [{
+        key: "o",
+        ctrl: true,
+        stopEvent: true,
+        fn: function () {
+            Ext.getCmp ('reportManager.id').fireEvent ('openFile');
+        }
+    }, {
+        key: "s",
+        ctrl: true,
+        stopEvent: true,
+        fn: function () {
+            Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
+        },
+    }]);
+
+    viewport.show ();
 });</script>
 {% endblock %}
