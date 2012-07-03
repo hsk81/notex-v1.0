@@ -431,6 +431,17 @@ var editor = function () {
             createImageTab : _createImageTab,
             deleteTab : _deleteTab,
             zoom : _zoom
+        },
+
+        getCurrentMode : function () {
+            var tab = this.getActiveTab ();
+            if (tab != undefined) {
+                return _mapExtensionToMode (
+                    _getFilenameWithExtension (tab.title).extension
+                );
+            } else {
+                return undefined;
+            }
         }
     })
 }();

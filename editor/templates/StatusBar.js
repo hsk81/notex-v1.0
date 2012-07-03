@@ -43,7 +43,7 @@ var statusBar = function () {
         }
     });
 
-    var progressBar = new Ext.ProgressBar({
+    var progressBar = new Ext.ProgressBar ({
         id : 'progressBarId',
         width : 256,
         value : 0.0,

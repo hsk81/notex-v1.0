@@ -50,10 +50,26 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                         Ext.getCmp ('reportManager.id').fireEvent ('openFile');
                     },
                     'Ctrl-B' : function (cm) {
-                        console.info (cm);
+                        var mode = Ext.getCmp ('editor.id').getCurrentMode ();
+                        if (mode == 'rst') {
+                            var sel = cm.getSelection ();
+                            if (sel && sel.length > 0 && !sel.match ('\\*\\*')) {
+                                cm.replaceSelection (
+                                    String.format ('**{0}**', sel)
+                                );
+                            }
+                        }
                     },
                     'Ctrl-I' : function (cm) {
-                        console.info (cm);
+                        var mode = Ext.getCmp ('editor.id').getCurrentMode ();
+                        if (mode == 'rst') {
+                            var sel = cm.getSelection ();
+                            if (sel && sel.length > 0 && !sel.match ('\\*')) {
+                                cm.replaceSelection (
+                                    String.format ('*{0}*', sel)
+                                );
+                            }
+                        }
                     }
                 }
 
