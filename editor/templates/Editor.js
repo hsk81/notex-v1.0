@@ -212,7 +212,7 @@ var editor = function () {
         if (extension == 'cfg') {
             return 'yaml-plus';
         } else {
-            return 'rst';
+            return 'rst-plus';
         }
     }
 

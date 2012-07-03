@@ -13,6 +13,46 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
 
             afterrender : function () {
 
+                CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
+                    var overlay = {
+                        startState: function () {
+                            return {
+                                directive: false
+                            }
+                        },
+
+                        token: function (stream, state) {
+                            var ch;
+
+                            if (stream.match (/^\[(.+?)\]_\s|^\[(.+?)\]_$/)) {
+                                return "rst-footnote";
+                            }
+
+                            if (stream.match (/^\.\.(\s+)\[(.+?)\]/)) {
+                                return "rst-footnote";
+                            }
+
+                            while (stream.next () != null) {
+                                if (stream.match (/^\[(.+?)\]_/, false)) {
+                                    return null;
+                                }
+
+                                if (stream.match (/^\.\.(\s+)\[(.+?)\]/, false)) {
+                                    return null;
+                                }
+                            }
+
+                            return null;
+                        }
+                    };
+
+                    var mode = CodeMirror.getMode (
+                        config, parserConfig.backdrop || "text/x-rst"
+                    );
+
+                    return CodeMirror.overlayMode (mode, overlay);
+                });
+
                 CodeMirror.defineMode ("yaml-plus", function (config, parserConfig) {
                     var overlay = {
                         token: function (stream, state) {
@@ -21,10 +61,10 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                             if (stream.match ("${"))
                             {
                                 while ((ch = stream.next ()) != null) {
-                                    if (ch == "}") { break; }
+                                    if (ch == "}") { return "yaml-tag"; }
                                 }
 
-                                return "yaml-plus";
+                                return null;
                             }
 
                             while (stream.next () != null) {
@@ -51,9 +91,9 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                         Ext.getCmp ('reportManager.id').fireEvent ('openFile');
                     },
 
-                    'Ctrl-B' : function (cm) { CM=cm;
+                    'Ctrl-B' : function (cm) {
                         var mode = cm.getOption ('mode')
-                        if (mode == 'rst') {
+                        if (mode == 'rst' || mode == 'rst-plus') {
                             var cur = cm.getCursor ()
                             var tok = cm.getTokenAt (cur)
 
@@ -77,14 +117,15 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                                 } else {
                                     rep = String.format ('**{0}**', sel);
                                 }
+
                                 cm.replaceSelection (rep);
                             }
                         }
                     },
 
-                    'Ctrl-I' : function (cm) { CM=cm;
+                    'Ctrl-I' : function (cm) {
                         var mode = cm.getOption ('mode')
-                        if (mode == 'rst') {
+                        if (mode == 'rst' || mode == 'rst-plus') {
                             var cur = cm.getCursor ()
                             var tok = cm.getTokenAt (cur)
 
@@ -108,6 +149,7 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                                 } else {
                                     rep = String.format ('*{0}*', sel);
                                 }
+
                                 cm.replaceSelection (rep);
                             }
                         }

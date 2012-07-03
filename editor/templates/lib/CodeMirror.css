@@ -13,6 +13,10 @@
     background: #ffff80; !important;
 }
 
-.CodeMirror .cm-yaml-plus {
+.CodeMirror .cm-yaml-tag {
     color: #ff0000;
+}
+
+.CodeMirror .cm-rst-footnote {
+    color: #008800;
 }
