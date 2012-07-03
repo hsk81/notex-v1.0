@@ -46,28 +46,69 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                     'Ctrl-S' : function (cm) {
                         Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
                     },
+
                     'Ctrl-O' : function (cm) {
                         Ext.getCmp ('reportManager.id').fireEvent ('openFile');
                     },
-                    'Ctrl-B' : function (cm) {
-                        var mode = Ext.getCmp ('editor.id').getCurrentMode ();
+
+                    'Ctrl-B' : function (cm) { CM=cm;
+                        var mode = cm.getOption ('mode')
                         if (mode == 'rst') {
+                            var cur = cm.getCursor ()
+                            var tok = cm.getTokenAt (cur)
+
+                            if (tok.className == 'strong' && tok.string != '**') {
+                                return; // no bold toggle if not all selected
+                            }
+                            if (tok.className == 'em') {
+                                return; // no bold toggle if not bold
+                            }
+
                             var sel = cm.getSelection ();
-                            if (sel && sel.length > 0 && !sel.match ('\\*\\*')) {
-                                cm.replaceSelection (
-                                    String.format ('**{0}**', sel)
-                                );
+                            if (sel && sel.length > 0) {
+                                if (sel.match ('^\\*[^\\*](.*)[^\\*]\\*$')) {
+                                    return;
+                                }
+
+                                var rep = undefined;
+                                if (sel.match ('^\\*\\*(.*)\\*\\*$')) {
+                                    rep = sel.replace (/^\*\*/g,'');
+                                    rep = rep.replace (/\*\*$/g,'');
+                                } else {
+                                    rep = String.format ('**{0}**', sel);
+                                }
+                                cm.replaceSelection (rep);
                             }
                         }
                     },
-                    'Ctrl-I' : function (cm) {
-                        var mode = Ext.getCmp ('editor.id').getCurrentMode ();
+
+                    'Ctrl-I' : function (cm) { CM=cm;
+                        var mode = cm.getOption ('mode')
                         if (mode == 'rst') {
+                            var cur = cm.getCursor ()
+                            var tok = cm.getTokenAt (cur)
+
+                            if (tok.className == 'em' && tok.string != '*') {
+                                return; // no em toggle if not all selected
+                            }
+                            if (tok.className == 'strong') {
+                                return; // no em toggle if not em
+                            }
+
                             var sel = cm.getSelection ();
-                            if (sel && sel.length > 0 && !sel.match ('\\*')) {
-                                cm.replaceSelection (
-                                    String.format ('*{0}*', sel)
-                                );
+                            if (sel && sel.length > 0) {
+                                if (sel.match ('^\\*\\*(.*)\\*\\*$')) {
+                                    return;
+                                }
+
+                                var rep = undefined;
+                                if (sel.match ('^\\*(.*)\\*$')) {
+                                    rep = sel.replace (/^\*/g,'');
+                                    rep = rep.replace (/\*$/g,'');
+                                } else {
+                                    rep = String.format ('*{0}*', sel);
+                                }
+                                cm.replaceSelection (rep);
                             }
                         }
                     }
