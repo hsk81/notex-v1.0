@@ -30,11 +30,16 @@ urlpatterns = patterns ('',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='ReportManager.util.js'),
+    url (r'^ReportManager.tbar.js$', direct_to_template, {
+        'template' : 'ReportManager.tbar.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='ReportManager.tbar.js'),
     url (r'^ReportManager.tree.js$', direct_to_template, {
-            'template' : 'ReportManager.tree.js',
-            'mimetype' : 'text/javascript',
-            'extra_context' : {}
-        }, name='ReportManager.tree.js'),
+        'template' : 'ReportManager.tree.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='ReportManager.tree.js'),
     url (r'^ReportManager.crud.js$', direct_to_template, {
             'template' : 'ReportManager.crud.js',
             'mimetype' : 'text/javascript',
@@ -51,6 +56,11 @@ urlpatterns = patterns ('',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='Editor.js'),
+    url (r'^Editor.tbar.js$', direct_to_template, {
+        'template' : 'Editor.tbar.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='Editor.tbar.js'),
 
     url (r'^StatusBar.js$', direct_to_template, {
         'template' : 'StatusBar.js',
