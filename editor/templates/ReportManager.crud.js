@@ -1,9 +1,12 @@
-var reportManagerCrud = {
+var reportManagerCrud = function () {
+
+    var error_msg = reportManagerUtil.error_message
+    var resource = reportManagerUtil.resource
 
     // #########################################################################
     // #########################################################################
 
-    crudCreate : function () {
+    function _create () {
 
         function _onSuccess (xhr, opts) {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -49,12 +52,12 @@ var reportManagerCrud = {
                 }
             })
         }
-    }(),
+    }
 
     // #########################################################################
     // #########################################################################
 
-    crudRead : function () {
+    function _read () {
 
         function _onSuccess (xhr, opts) {
             //@DONE!
@@ -82,12 +85,12 @@ var reportManagerCrud = {
                 }
             })
         }
-    }(),
+    }
 
     // #########################################################################
     // #########################################################################
 
-    crudUpdate : function () {
+    function _update () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)[0]
@@ -126,14 +129,10 @@ var reportManagerCrud = {
             var tab = Ext.getCmp ('editor.id').findById (id)
 
             if (tab) {
-                tab.el.unmask (); Ext.MessageBox.show ({
-                    title : 'Saving failed',
-                    msg : String.format ("Saving failed for tab '{0}'!",
-                        tab.title),
-                    closable : false,
-                    width : 256,
-                    buttons : Ext.MessageBox.OK
-                })
+                tab.el.unmask ();
+                error_msg (String.format (resource.UPDATE_ERROR, tab.title));
+            } else {
+                error_msg (String.format (resource.UPDATE_ERROR, undefined));
             }
         }
 
@@ -155,12 +154,12 @@ var reportManagerCrud = {
                 }
             })
         }
-    }(),
+    }
 
     // #########################################################################
     // #########################################################################
 
-    crudRename : function () {
+    function _rename () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)
@@ -176,10 +175,9 @@ var reportManagerCrud = {
             var node = tree.getNodeById (res.id)
             if (node) {
                 node.setText (res.name)
-                tree.el.unmask ()
-            } else {
-                tree.el.unmask ()
             }
+
+            tree.el.unmask ()
         }
 
         function _onFailure (xhr, opts) {
@@ -187,14 +185,15 @@ var reportManagerCrud = {
             var tree = Ext.getCmp ('reportManager.tree.id')
             var node = tree.getNodeById (res.id)
 
-            Ext.MessageBox.show ({
-                title : 'Renaming failed',
-                msg : String.format ("Renaming failed for node '{0}'!",
-                    (node != undefined) ? node.getText () : 'unknown'),
-                closable : false,
-                width : 256,
-                buttons : Ext.MessageBox.OK
-            })
+            if (node) {
+                error_msg (String.format (
+                    resource.UPDATE_ERROR, node.getText ()
+                ));
+            } else {
+                error_msg (String.format (
+                    resource.UPDATE_ERROR, undefined
+                ));
+            }
         }
 
         return function (crudInfo) {
@@ -215,12 +214,12 @@ var reportManagerCrud = {
                 }
             })
         }
-    }(),
+    }
 
     // #########################################################################
     // #########################################################################
 
-    crudDelete : function () {
+    function _delete () {
 
         function _onSuccess (xhr, opts) {
             //@DONE!
@@ -228,13 +227,18 @@ var reportManagerCrud = {
 
         function _onFailure (xhr, opts) {
             var res = Ext.decode (xhr.responseText)
-            Ext.MessageBox.show ({
-                title : 'Deleting failed',
-                msg : String.format ("Deleting for '{0}' failed!", res.id),
-                closable : false,
-                width : 256,
-                buttons : Ext.MessageBox.OK
-            })
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            var node = tree.getNodeById (res.id)
+
+            if (node) {
+                error_msg (String.format (
+                    resource.DELETE_ERROR, node.getText ()
+                ));
+            } else {
+                error_msg (String.format (
+                    resource.DELETE_ERROR, undefined
+                ));
+            }
         }
 
         return function (crudInfo) {
@@ -255,8 +259,19 @@ var reportManagerCrud = {
                 }
             })
         }
-    }()
+    }
 
     // #########################################################################
     // #########################################################################
-}
+
+    return {
+        create: _create (),
+        read: _read (),
+        update: _update (),
+        rename: _rename (),
+        del: _delete ()
+    };
+
+    // #########################################################################
+    // #########################################################################
+}();

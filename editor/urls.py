@@ -25,6 +25,11 @@ urlpatterns = patterns ('',
             'mimetype' : 'text/javascript',
             'extra_context' : {}
         }, name='ReportManager.js'),
+    url (r'^ReportManager.util.js$', direct_to_template, {
+        'template' : 'ReportManager.util.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='ReportManager.util.js'),
     url (r'^ReportManager.tree.js$', direct_to_template, {
             'template' : 'ReportManager.tree.js',
             'mimetype' : 'text/javascript',

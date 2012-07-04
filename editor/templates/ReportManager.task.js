@@ -10,12 +10,7 @@ var reportManagerTask = {
                 var tabs = editor.items.items
                 for (var i=0; i<tabs.length; i++) {
                     if (tabs[i] != undefined) {
-                        var tree = Ext.getCmp ('reportManager.tree.id')
-                        var node = tree.getNodeById (tabs[i].id)
-
-                        if (tree.isText (node)) {
-                            reportManager.fireEvent ('saveTextTab', tabs[i], true)
-                        }
+                        reportManager.fireEvent ('saveTab', tabs[i], true);
                     }
                 }
                 

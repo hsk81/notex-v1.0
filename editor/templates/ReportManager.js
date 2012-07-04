@@ -1,3 +1,10 @@
+var reportManager = {
+    util: reportManagerUtil,
+    crud: reportManagerCrud,
+    tree: reportManagerTree,
+    task: reportManagerTask
+}
+
 var reportManager = function () {
 
     // #########################################################################
@@ -126,25 +133,9 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function error_msg (message) {
-        Ext.Msg.show ({
-            title : "Error",
-            msg : message,
-            buttons: Ext.Msg.OK,
-            iconCls : 'icon-error'
-        });
-    }
-
-    var MSG = {
-        INVALID_FILE: 'no file or invalid file type',
-        LARGE_FILE: 'file size exceeds 512 KB',
-        NO_REPORT: 'no report selected',
-        NO_NEW_NODE: 'no new node created',
-        NO_NODE: 'no node selected',
-        MOVE_FAILED: 'moving <i>{0}</i> failed',
-        READ_ERROR: 'cannot read file',
-        UNKNOWN_ERROR: 'unknown error'
-    }
+    var prompt_message = reportManager.util.prompt_message;
+    var error_msg = reportManager.util.error_message;
+    var resource = reportManager.util.resource;
 
     // #########################################################################
     // #########################################################################
@@ -176,7 +167,7 @@ var reportManager = function () {
                         var response = Ext.util.JSON.decode (this.response)
                         import_failure (file.name, response.message);
                     } else {
-                        import_failure (file.name, MSG.LARGE_FILE);
+                        import_failure (file.name, resource.LARGE_FILE);
                     }
                 }
 
@@ -191,7 +182,7 @@ var reportManager = function () {
                             import_failure (file.name, response.message);
                         }
                     } else {
-                        import_failure (file.name, MSG.UNKNOWN_ERROR);
+                        import_failure (file.name, resource.UNKNOWN_ERROR);
                     }
                 }
 
@@ -203,7 +194,7 @@ var reportManager = function () {
             },
 
             failure: function (file) {
-                import_failure (file.name, MSG.INVALID_FILE);
+                import_failure (file.name, resource.INVALID_FILE);
             }
         });
     }
@@ -274,7 +265,7 @@ var reportManager = function () {
         var _onFailure = function (xhr, opts, res) {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
-            export_failure (res.name, MSG.UNKNOWN_ERROR);
+            export_failure (res.name, resource.UNKNOWN_ERROR);
             _enableExport ();
         }
 
@@ -400,19 +391,19 @@ var reportManager = function () {
     }
 
     function _openFileOnFailure () {
-        open_failure (undefined, MSG.INVALID_FILE);
+        open_failure (undefined, resource.INVALID_FILE);
     }
 
     function _openImageFile (file, fileInfo, node, tree, selectedNode) {
 
         var imageReader = new FileReader();
         imageReader.onerror = function (e) {
-            open_failure (file.name, MSG.READ_ERROR);
+            open_failure (file.name, resource.READ_ERROR);
         }
 
         imageReader.onload = function (e) {
             if (e.loaded >= 524288) {
-                open_failure (file.name, MSG.LARGE_FILE);
+                open_failure (file.name, resource.LARGE_FILE);
                 return;
             }
 
@@ -431,7 +422,7 @@ var reportManager = function () {
                 },
 
                 failure: function (args) {
-                    open_failure (file.name, MSG.NO_NEW_NODE);
+                    open_failure (file.name, resource.NO_NEW_NODE);
                 }
             });
         }
@@ -443,12 +434,12 @@ var reportManager = function () {
 
         var textReader = new FileReader ();
         textReader.onerror = function (e) {
-            open_failure (file.name, MSG.READ_ERROR);
+            open_failure (file.name, resource.READ_ERROR);
         }
 
         textReader.onload = function (e) {
             if (e.loaded >= 524288) {
-                open_failure (file.name, MSG.LARGE_FILE);
+                open_failure (file.name, resource.LARGE_FILE);
                 return;
             }
 
@@ -467,7 +458,7 @@ var reportManager = function () {
                 },
 
                 failure: function (args) {
-                    open_failure (file.name, MSG.NO_NEW_NODE);
+                    open_failure (file.name, resource.NO_NEW_NODE);
                 }
             });
         }
@@ -525,7 +516,7 @@ var reportManager = function () {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (tab.id)
 
-        reportManager.crud.crudUpdate ({
+        reportManager.crud.update ({
             leafId : node.id,
             nodeId : node.parentNode.id,
             name : node.text.replace('<i>','').replace('</i>',''),
@@ -649,7 +640,7 @@ var reportManager = function () {
                 handler : function () {
                     tree.el.mask ('Please wait', 'x-mask-loading')
                     var source = propertyGrid.getSource ()
-                    reportManager.crud.crudCreate (urls.createProject, {
+                    reportManager.crud.create (urls.createProject, {
                         nodeId : tree.root.id,
                         data : Ext.encode (source),
                         rank : rank + 1
@@ -680,24 +671,20 @@ var reportManager = function () {
             node = node.parentNode
         }
 
-        /**
-         * TODO: Is replacing thing message box reasonable?
-         */
+        function _callback (btn, text) {
+            if (btn == 'ok') {
+                tree.el.mask ('Please wait', 'x-mask-loading');
+                var rank = node.childNodes.indexOf (node.lastChild);
 
-        Ext.Msg.prompt ('Create Folder', 'Enter a name:',
-            function (btn, text) {
-                if (btn == 'ok') {
-                    tree.el.mask ('Please wait', 'x-mask-loading');
-                    var rank = node.childNodes.indexOf (node.lastChild);
-
-                    reportManager.crud.crudCreate (urls.createFolder, {
-                        nodeId : node.id,
-                        name : text,
-                        rank : rank + 1
-                    });
-                }
+                reportManager.crud.create (urls.createFolder, {
+                    nodeId : node.id,
+                    name : text,
+                    rank : rank + 1
+                });
             }
-        );
+        }
+
+        prompt_message ('Create Folder', 'Enter a name:', _callback);
     }
 
     // #########################################################################
@@ -717,25 +704,21 @@ var reportManager = function () {
             node = node.parentNode
         }
 
-        /**
-         * TODO: Is replacing thing message box reasonable?
-         */
+        function _callback (btn, text) {
+            if (btn == 'ok') {
+                tree.el.mask ('Please wait', 'x-mask-loading')
+                var rank = node.childNodes.indexOf (node.lastChild)
 
-        Ext.Msg.prompt ('Create Text File', 'Enter a name:',
-            function (btn, text) {
-                if (btn == 'ok') {
-                    tree.el.mask ('Please wait', 'x-mask-loading')
-                    var rank = node.childNodes.indexOf (node.lastChild)
-
-                    reportManager.crud.crudCreate (urls.createText, {
-                        nodeId : node.id,
-                        name : text,
-                        rank : rank + 1,
-                        data : '..'
-                    });
-                }
+                reportManager.crud.create (urls.createText, {
+                    nodeId : node.id,
+                    name : text,
+                    rank : rank + 1,
+                    data : '..'
+                });
             }
-        );
+        }
+
+        prompt_message ('Create Text', 'Enter a name:', _callback);
     }
 
     // #########################################################################
@@ -755,36 +738,36 @@ var reportManager = function () {
             .replace('<i>','')
             .replace('</i>','');
 
-        Ext.Msg.prompt ('Rename Node', 'Enter a name:',
-            function (btn, text) {
-                if (btn == 'ok') {
-                    tree.el.mask ('Please wait', 'x-mask-loading');
+        function _callback (btn, text) {
+            if (btn == 'ok') {
+                tree.el.mask ('Please wait', 'x-mask-loading');
 
-                    var tabs = Ext.getCmp ('editor.id');
-                    var tab = tabs.findById (node.id);
-                    if (tab != undefined) {
-                        tab.el.mask ('Please wait', 'x-mask-loading');
-                    }
-
-                    if (Math.uuidMatch (node.id)) {
-                        node.setText (String.format ("<i>{0}</i>", text));
-                        if (tree != undefined) {
-                            tree.el.unmask ();
-                        }
-
-                        if (tab != undefined) {
-                            tab.setTitle (text);
-                            tab.el.unmask ();
-                        }
-                    } else {
-                        reportManager.crud.crudRename ({
-                            nodeId : node.id,
-                            name : text
-                        });
-                    }
+                var tabs = Ext.getCmp ('editor.id');
+                var tab = tabs.findById (node.id);
+                if (tab != undefined) {
+                    tab.el.mask ('Please wait', 'x-mask-loading');
                 }
-            },  this, false, text,''
-        );
+
+                if (Math.uuidMatch (node.id)) {
+                    node.setText (String.format ("<i>{0}</i>", text));
+                    if (tree != undefined) {
+                        tree.el.unmask ();
+                    }
+
+                    if (tab != undefined) {
+                        tab.setTitle (text);
+                        tab.el.unmask ();
+                    }
+                } else {
+                    reportManager.crud.rename ({
+                        nodeId : node.id,
+                        name : text
+                    });
+                }
+            }
+        }
+
+        prompt_message ('Rename', 'Enter a name:', _callback, text);
     }
 
     // #########################################################################
@@ -812,25 +795,22 @@ var reportManager = function () {
                             'deleteTab', { 'id' : args.node.id }
                         );
 
-                        reportManager.crud.crudDelete ({
+                        reportManager.crud.del ({
                             id : args.node.id
                         });
                     },
 
                     failure : function (args) {
-                        error_msg (MSG.NO_NODE);
+                        error_msg (resource.NO_NODE);
                     }
                 }
             );
         }
 
-        /**
-         * TODO: Is refactoring below message reasonable?
-         */
-
         Ext.Msg.show ({
             title : 'Delete',
-            msg : 'Are you sure you want to delete selection?',
+            iconCls : 'icon-delete',
+            msg : 'Are you sure you want to delete the selection?',
             buttons : Ext.Msg.YESNO,
             fn : _onConfirm,
             scope : this
@@ -882,9 +862,7 @@ var reportManager = function () {
             failure : function (xhr, opts) {
                 tree.el.unmask ();
                 move.enable ();
-                error_msg (String.format (
-                    MSG.MOVE_FAILED, node.text
-                ));
+                error_msg (resource.MOVE_FAILED);
             }
         });
     }
@@ -950,9 +928,7 @@ var reportManager = function () {
             failure : function (xhr, opts) {
                 tree.el.unmask ()
                 move.enable ()
-                error_msg (String.format (
-                    MSG.MOVE_FAILED, node.text
-                ));
+                error_msg (resource.MOVE_FAILED);
             }
         });
     }
@@ -977,7 +953,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    return new Ext.Panel ({
+    var result = new Ext.Panel ({
         title : 'NoTex - Report Manager',
         id : 'reportManager.id',
         layout : 'fit',
@@ -1002,7 +978,7 @@ var reportManager = function () {
         }],
 
         tbar : tbar,
-        items : [reportManagerTree],
+        items : [reportManager.tree],
 
         listeners : {
             importReport : _importReport,
@@ -1021,17 +997,14 @@ var reportManager = function () {
             moveSelectedNodeUp : _moveSelectedNodeUp,
             moveSelectedNodeDown : _moveSelectedNodeDown
         }
-    })
+    });
+
+    for (var key in reportManager) {
+        result[key] = reportManager[key];
+    }
+
+    return result;
 }();
-
-// #############################################################################
-// #############################################################################
-
-(function() {
-    reportManager.crud = reportManagerCrud;
-    reportManager.tree = reportManagerTree;
-    reportManager.task = reportManagerTask;
-})();
 
 // #############################################################################
 // #############################################################################
