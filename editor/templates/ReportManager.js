@@ -126,10 +126,36 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
+    function error_msg (message) {
+        Ext.Msg.show ({
+            title : "Error",
+            msg : message,
+            buttons: Ext.Msg.OK,
+            iconCls : 'icon-error'
+        });
+    }
+
+    var MSG = {
+        INVALID_FILE: 'no file or invalid file type',
+        LARGE_FILE: 'file size exceeds 512 KB',
+        NO_REPORT: 'no report selected',
+        NO_NEW_NODE: 'no new node created',
+        NO_NODE: 'no node selected',
+        MOVE_FAILED: 'moving <i>{0}</i> failed',
+        READ_ERROR: 'cannot read file',
+        UNKNOWN_ERROR: 'unknown error'
+    }
+
+    // #########################################################################
+    // #########################################################################
+
     function _importReport () {
-        dialog.openFile.setTitle ('Open ZIP Archive')
+
+        dialog.openFile.setTitle ('Open ZIP Archive');
+        dialog.openFile.setIconClass ('icon-report_add');
         dialog.openFile.execute ({
             success: function (file) {
+
                 var progressBar = Ext.getCmp ('progressBarId')
                 progressBar.show ()
                 progressBar.setMode ('import')
@@ -142,21 +168,15 @@ var reportManager = function () {
 
                 xhr.open (
                     "POST", urls.importReport.replace ('=', file.name), true
-                )
+                );
 
                 xhr.onerror = function (event) {
                     progressBar.reset (true)
                     if (this.response) {
                         var response = Ext.util.JSON.decode (this.response)
-                        Ext.Msg.alert ("Error", "Importing <i>" +
-                            file.name + "</i> failed: " +
-                            response.message + "!"
-                        )
+                        import_failure (file.name, response.message);
                     } else {
-                        Ext.Msg.alert ("Error", "Importing <i>" +
-                            file.name + "</i> failed: " +
-                            "Ensure that file is less than 512 KB" + "!"
-                        )
+                        import_failure (file.name, MSG.LARGE_FILE);
                     }
                 }
 
@@ -165,21 +185,13 @@ var reportManager = function () {
                     if (this.status == 200) {
                         var response = Ext.util.JSON.decode (this.response)
                         if (response.success) {
-                            Ext.Msg.alert ("Info", "Importing <i>" +
-                                file.name + "</i> was sucessful."
-                            )
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
                         } else {
-                            Ext.Msg.alert ("Error", "Importing <i>" +
-                                file.name + "</i> file failed: " +
-                                response.message + "!"
-                            )
+                            import_failure (file.name, response.message);
                         }
                     } else {
-                        Ext.Msg.alert ("Error", "Importing <i>" +
-                            file.name + "</i> file failed: Unknown error!"
-                        )
+                        import_failure (file.name, MSG.UNKNOWN_ERROR);
                     }
                 }
 
@@ -190,100 +202,99 @@ var reportManager = function () {
                 xhr.send (file);
             },
 
-            failure: function () {
-                Ext.Msg.alert (
-                    "Error", "No file or invalid file type selected!"
-                )
+            failure: function (file) {
+                import_failure (file.name, MSG.INVALID_FILE);
             }
-        })
+        });
+    }
+
+    function import_failure (filename, message) {
+        error_msg (String.format (
+            'importing <i>{0}</i> failed: {1}', filename, message
+        ));
     }
 
     // #########################################################################
     // #########################################################################
 
     function _exportReport (url) {
+
         var statusBar = Ext.getCmp ('statusBarId');
         var progressBar = Ext.getCmp ('progressBarId');
 
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
 
-        if (node != undefined) {
-            _disableExport ()
-            statusBar.showBusy ({text: 'Please wait ..'})
-            progressBar.show ()
-            progressBar.setMode ('export')
-            progressBar.wait ({
-                increment : progressBar.increment,
-                interval : progressBar.interval
-            })
-
-            var _onSuccess = function (xhr, opts) {
-                var body = Ext.getBody()
-
-                var frame_old = Ext.get ('iframe')
-                if (frame_old != null) {
-                    Ext.destroy (frame_old)
-                }
-
-                var frame = body.createChild ({
-                    tag : 'iframe',
-                    cls : 'x-hidden',
-                    id : 'iframe',
-                    name : 'iframe'
-                })
-
-                var form = body.createChild ({
-                    tag : 'form',
-                    cls : 'x-hidden',
-                    id : 'form',
-                    method : 'POST',
-                    action : url.replace ('=', node.id),
-                    target : 'iframe'
-                })
-
-                form.insertHtml ('beforeend', "{% csrf_token %}")
-                progressBar.reset (true)
-                statusBar.clearStatus ({useDefaults:true})
-                form.dom.submit ()
-                _enableExport ()
-            }
-
-            var _onFailure = function (xhr, opts, res) {
-
-                if (res) {
-                    msg = "Exporting <i>" + res.name + "</i> report failed!"
-                } else {
-                    msg = "Exporting report failed!"
-                }
-
-                progressBar.reset (true)
-                statusBar.clearStatus ({useDefaults:true})
-                Ext.Msg.alert ("Error", msg)
-                _enableExport ()
-            }
-
-            Ext.Ajax.request ({
-                url : url.replace ('=', node.id) + "?refresh",
-                callback : function (opts, status, xhr) {
-                    if (status) {
-                        var res = Ext.decode (xhr.responseText)[0]
-                        if (res.success) {
-                            _onSuccess (xhr, opts)
-                        } else {
-                            _onFailure (xhr, opts, res)
-                        }
-                    } else {
-                        _onFailure (xhr, opts)
-                    }
-                }
-            });
-        } else {
-            Ext.Msg.alert ("Error", "No report selected; select a report!")
+        if (node == undefined) {
+            return;
         }
+
+        _disableExport ();
+
+        statusBar.showBusy ({text: 'Please wait ..'});
+        progressBar.show ();
+        progressBar.setMode ('export');
+        progressBar.wait ({
+            increment : progressBar.increment,
+            interval : progressBar.interval
+        });
+
+        var _onSuccess = function (xhr, opts) {
+            var body = Ext.getBody()
+
+            var frame_old = Ext.get ('iframe');
+            if (frame_old != null) {
+                Ext.destroy (frame_old);
+            }
+
+            var frame = body.createChild ({
+                tag : 'iframe',
+                cls : 'x-hidden',
+                id : 'iframe',
+                name : 'iframe'
+            });
+
+            var form = body.createChild ({
+                tag : 'form',
+                cls : 'x-hidden',
+                id : 'form',
+                method : 'POST',
+                action : url.replace ('=', node.id),
+                target : 'iframe'
+            });
+
+            form.insertHtml ('beforeend', "{% csrf_token %}");
+            progressBar.reset (true);
+            statusBar.clearStatus ({useDefaults:true});
+            form.dom.submit ();
+            _enableExport ();
+        }
+
+        var _onFailure = function (xhr, opts, res) {
+            progressBar.reset (true);
+            statusBar.clearStatus ({useDefaults:true});
+            export_failure (res.name, MSG.UNKNOWN_ERROR);
+            _enableExport ();
+        }
+
+        Ext.Ajax.request ({
+            url : url.replace ('=', node.id) + "?refresh",
+            callback : function (opts, status, xhr) {
+                if (status) {
+                    var res = Ext.decode (xhr.responseText)[0];
+                    if (res.success) {
+                        _onSuccess (xhr, opts);
+                    } else {
+                        _onFailure (xhr, opts, res)
+                    }
+                } else {
+                    _onFailure (xhr, opts, {name: undefined});
+                }
+            }
+        });
     }
-    
+
     function _exportText () {
         this.fireEvent ('exportReport', urls.exportText)
     }
@@ -318,7 +329,7 @@ var reportManager = function () {
     function _enableExport () {
         var buttons = _getExportButtons ();
         for (var idx in buttons) {
-            var button = buttons[idx]
+            var button = buttons[idx];
             if (button.enable) {
                 button.enable ();
             }
@@ -328,106 +339,42 @@ var reportManager = function () {
     function _disableExport () {
         var buttons = _getExportButtons ();
         for (var idx in buttons) {
-            var button = buttons[idx]
+            var button = buttons[idx];
             if (button.disable) {
                 button.disable ();
             }
         }
     }
 
+    function export_failure (filename, message) {
+        error_msg (String.format (
+            'exporting <i>{0}</i> failed: {1}', filename, message
+        ));
+    }
+
     // #########################################################################
+    // #########################################################################
+
     function _openFile () {
-    // #########################################################################
+
         var tree = Ext.getCmp ('reportManager.tree.id')
-        var selectionModel = tree.getSelectionModel ()
-        var selectedNode = selectionModel.getSelectedNode ()
+        var model = tree.getSelectionModel ()
+        var node = model.getSelectedNode ()
 
-        if (selectedNode != null) {
-            dialog.openFile.setTitle ('Open Text/Image File')
-            dialog.openFile.execute ({
-                success: _openFileOnSucess,
-                failure: _openFileOnFailure
-            })
-        } else {
-            Ext.Msg.alert ("Error", "No report selected; select a report!")
+        if (node == undefined) {
+            return;
         }
+
+        dialog.openFile.setTitle ('Open Text/Image File')
+        dialog.openFile.setIconClass ('icon-page_white_add');
+        dialog.openFile.execute ({
+            success: _openFileOnSuccess,
+            failure: _openFileOnFailure
+        });
     }
 
-    function _openImageFile (file, fileInfo, node, tree, selectedNode) {
-        var imageReader = new FileReader();
+    function _openFileOnSuccess (file) {
 
-        imageReader.onerror = function (e) {
-            Ext.Msg.alert(
-                "Error", "Reading <i>" + file.name + "</i> failed!"
-            )
-        }
-
-        imageReader.onload = function (e) {
-            if (e.loaded >= 524288) {
-                Ext.Msg.alert("Error", "File larger than 512 KB!")
-                return
-            }
-
-            fileInfo.iconCls = 'icon-image'
-            fileInfo.text = e.target.result
-            fileInfo.save = true
-            node.attributes['iconCls'] = fileInfo.iconCls
-            node.attributes['data'] = fileInfo.text
-
-            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
-                success: function (args) {
-                    Ext.getCmp ('editor.id').fireEvent (
-                        'createImageTab', fileInfo
-                    )
-                },
-
-                failure: function (args) {
-                    Ext.Msg.alert("Error", "No node inserted!")
-                }
-            })
-        }
-
-        imageReader.readAsDataURL (file);
-    }
-
-    function _openTextFile (file, fileInfo, node, tree, selectedNode) {
-        var textReader = new FileReader();
-
-        textReader.onerror = function (e) {
-            Ext.Msg.alert(
-                "Error", "Reading <i>" + file.name + "</i> failed!"
-            )
-        }
-
-        textReader.onload = function (e) {
-            if (e.loaded >= 524288) {
-                Ext.Msg.alert("Error", "File larger than 512 KB!")
-                return
-            }
-
-            fileInfo.iconCls = 'icon-page'
-            fileInfo.text = e.target.result
-            fileInfo.save = true
-            node.attributes['iconCls'] = fileInfo.iconCls
-            node.attributes['data'] = fileInfo.text
-
-            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
-                success: function (args) {
-                    Ext.getCmp ('editor.id').fireEvent (
-                        'createTextTab', fileInfo
-                    )
-                },
-
-                failure: function (args) {
-                    Ext.Msg.alert("Error", "No node inserted!")
-                }
-            })
-        }
-
-        textReader.readAsText (file);
-    }
-
-    function _openFileOnSucess (file) {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var selectionModel = tree.getSelectionModel ()
         var selectedNode = selectionModel.getSelectedNode ()
@@ -445,7 +392,7 @@ var reportManager = function () {
             'expanded' : false
         })
 
-        if (String (file.type).match("^image") == "image") {
+        if (String (file.type).match (/^image(.*)/) == "image") {
             _openImageFile (file, fileInfo, node, tree, selectedNode);
         } else { // assume text
             _openTextFile (file, fileInfo, node, tree, selectedNode);
@@ -453,72 +400,157 @@ var reportManager = function () {
     }
 
     function _openFileOnFailure () {
-        Ext.Msg.alert ("Error", "No file or invalid file type selected!")
+        open_failure (undefined, MSG.INVALID_FILE);
+    }
+
+    function _openImageFile (file, fileInfo, node, tree, selectedNode) {
+
+        var imageReader = new FileReader();
+        imageReader.onerror = function (e) {
+            open_failure (file.name, MSG.READ_ERROR);
+        }
+
+        imageReader.onload = function (e) {
+            if (e.loaded >= 524288) {
+                open_failure (file.name, MSG.LARGE_FILE);
+                return;
+            }
+
+            fileInfo.iconCls = 'icon-image'
+            fileInfo.text = e.target.result
+            fileInfo.save = true
+
+            node.attributes['iconCls'] = fileInfo.iconCls
+            node.attributes['data'] = fileInfo.text
+
+            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
+                success: function (args) {
+                    Ext.getCmp ('editor.id').fireEvent (
+                        'createImageTab', fileInfo
+                    );
+                },
+
+                failure: function (args) {
+                    open_failure (file.name, MSG.NO_NEW_NODE);
+                }
+            });
+        }
+
+        imageReader.readAsDataURL (file);
+    }
+
+    function _openTextFile (file, fileInfo, node, tree, selectedNode) {
+
+        var textReader = new FileReader ();
+        textReader.onerror = function (e) {
+            open_failure (file.name, MSG.READ_ERROR);
+        }
+
+        textReader.onload = function (e) {
+            if (e.loaded >= 524288) {
+                open_failure (file.name, MSG.LARGE_FILE);
+                return;
+            }
+
+            fileInfo.iconCls = 'icon-page'
+            fileInfo.text = e.target.result
+            fileInfo.save = true
+
+            node.attributes['iconCls'] = fileInfo.iconCls
+            node.attributes['data'] = fileInfo.text
+
+            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
+                success: function (args) {
+                    Ext.getCmp ('editor.id').fireEvent (
+                        'createTextTab', fileInfo
+                    );
+                },
+
+                failure: function (args) {
+                    open_failure (file.name, MSG.NO_NEW_NODE);
+                }
+            });
+        }
+
+        textReader.readAsText (file);
+    }
+
+    function open_failure (filename, message) {
+        error_msg (String.format (
+            'Opening <i>{0}</i> failed: {1}!', filename, message
+        ));
     }
 
     // #########################################################################
+    // #########################################################################
+
     function _saveTab (tab, skipMask) {
-    // #########################################################################
+
         if (tab == undefined) {
             tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
-        if (tab != undefined) {
-            var tree = Ext.getCmp ('reportManager.tree.id')
-            var node = tree.getNodeById (tab.id)
+        if (tab == undefined) {
+            return;
+        }
 
-            if (tree.isText (node)) {
-                _saveTextTab (tab, skipMask); return
-            }
+        var tree = Ext.getCmp ('reportManager.tree.id')
+        var node = tree.getNodeById (tab.id)
 
-            if (tree.isImage (node)) {
-                _saveImageTab (tab, skipMask); return
-            }
+        if (tree.isText (node)) {
+            _saveTextTab (tab, skipMask);
+            return;
+        }
+
+        if (tree.isImage (node)) {
+            _saveImageTab (tab, skipMask);
+            return;
         }
     }
 
-    // #########################################################################
     function _saveTextTab (tab, skipMask) {
-    // #########################################################################
+
         if (tab == undefined) {
             tab = Ext.getCmp ('editor.id').getActiveTab ()
         }
 
-        if (tab != undefined) {
-            if (skipMask == undefined || skipMask != true) {
-                tab.el.mask ('Please wait', 'x-mask-loading')
-            }
-
-            var tree = Ext.getCmp ('reportManager.tree.id')
-            var node = tree.getNodeById (tab.id)
-
-            reportManager.util.crudUpdate ({
-                leafId : node.id,
-                nodeId : node.parentNode.id,
-                name : node.text.replace('<i>','').replace('</i>',''),
-                data : tab.getData (),
-                rank : node.parentNode.indexOf (node)
-            }, urls.updateText)
+        if (tab == undefined) {
+            return;
         }
+
+        if (skipMask == undefined || skipMask != true) {
+            tab.el.mask ('Please wait', 'x-mask-loading')
+        }
+
+        var tree = Ext.getCmp ('reportManager.tree.id')
+        var node = tree.getNodeById (tab.id)
+
+        reportManager.util.crudUpdate ({
+            leafId : node.id,
+            nodeId : node.parentNode.id,
+            name : node.text.replace('<i>','').replace('</i>',''),
+            data : tab.getData (),
+            rank : node.parentNode.indexOf (node)
+        }, urls.updateText)
     }
 
-    // #########################################################################
     function _saveImageTab (tab, skipMask) {
-    // #########################################################################
-        return;
+        return; // read-only image viewer
     }
     
     // #########################################################################
-    function _addReport () {
     // #########################################################################
+
+    function _addReport () {
+
         var tree = Ext.getCmp ('reportManager.tree.id')
         var rank = tree.root.childNodes.indexOf (tree.root.lastChild)
 
         var cmbDocumentType = new Ext.form.ComboBox ({
             fieldLabel : 'Document',
             name : 'document',
-                allowBlank : false,
-                store : ['article', 'report'],
+            allowBlank : false,
+            store : ['article', 'report'],
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
@@ -528,8 +560,8 @@ var reportManager = function () {
         var cmbFontSize = new Ext.form.ComboBox ({
             fieldLabel : 'Font Size',
             name : 'fontSize',
-                allowBlank : false,
-                store : ['10pt', '11pt', '12pt'],
+            allowBlank : false,
+            store : ['10pt', '11pt', '12pt'],
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
@@ -539,8 +571,8 @@ var reportManager = function () {
         var cmbColumns = new Ext.form.ComboBox ({
             fieldLabel : 'Columns',
             name : 'columns',
-                allowBlank : false,
-                store : [1, 2],
+            allowBlank : false,
+            store : [1, 2],
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
@@ -550,8 +582,8 @@ var reportManager = function () {
         var cmbContent = new Ext.form.ComboBox ({
             fieldLabel : 'Content',
             name : 'content',
-                allowBlank : false,
-                store : ['empty', 'tutorial'],
+            allowBlank : false,
+            store : ['empty', 'tutorial'],
             mode : 'local',
             triggerAction : 'all',
             selectOnFocus : true,
@@ -601,6 +633,7 @@ var reportManager = function () {
         var win = new Ext.Window ({
 
             title : 'Create Report',
+            iconCls : 'icon-report',
             plain : true,
             resizable : false,
             modal : true,
@@ -608,9 +641,11 @@ var reportManager = function () {
 
             buttons: [{
                 text : 'Cancel',
+                iconCls : 'icon-cross',
                 handler : function () { win.close () }
             },{
                 text : 'Create',
+                iconCls : 'icon-report_add',
                 handler : function () {
                     tree.el.mask ('Please wait', 'x-mask-loading')
                     var source = propertyGrid.getSource ()
@@ -623,301 +658,319 @@ var reportManager = function () {
             }],
 
             items : [propertyGrid]
-        })
+        });
 
         win.show (this);
     }
 
     // #########################################################################
+    // #########################################################################
+
     function _addFolder () {
-    // #########################################################################
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
 
-        if (node != undefined) {
-            if (node.isLeaf ()) {
-                node = node.parentNode
-            }
-
-            Ext.Msg.prompt ('Create Folder', 'Enter a name:',
-                function (btn, text) {
-                    if (btn == 'ok') {
-                        tree.el.mask ('Please wait', 'x-mask-loading')
-                        var rank = node.childNodes.indexOf (node.lastChild)
-
-                        reportManager.util.crudCreate (urls.createFolder, {
-                            nodeId : node.id,
-                            name : text,
-                            rank : rank + 1
-                        })
-                    }
-                }
-            )
-        } else {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
-        }
-    }
-
-    // #########################################################################
-    function _addTextFile () {
-    // #########################################################################
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
-
-        if (node != undefined) {
-            if (node.isLeaf()) {
-                node = node.parentNode
-            }
-
-            Ext.Msg.prompt ('Create Text File', 'Enter a name:',
-                function (btn, text) {
-                    if (btn == 'ok') {
-                        tree.el.mask ('Please wait', 'x-mask-loading')
-                        var rank = node.childNodes.indexOf (node.lastChild)
-
-                        reportManager.util.crudCreate (urls.createText, {
-                            nodeId : node.id,
-                            name : text,
-                            rank : rank + 1,
-                            data : '..'
-                        })
-                    }
-                }
-            )
-        } else {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
-        }
-    }
-
-    // #########################################################################
-    function _renameSelectedNode () {
-    // #########################################################################
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
-
-        if (node != undefined) {
-            Ext.Msg.prompt ('Rename Node', 'Enter a name:',
-                function (btn, text) {
-                    if (btn == 'ok') {
-                        tree.el.mask ('Please wait', 'x-mask-loading')
-
-                        var tabs = Ext.getCmp ('editor.id')
-                        var tab = tabs.findById (node.id)
-                        if (tab != undefined) {
-                            tab.el.mask ('Please wait', 'x-mask-loading')
-                        }
-
-                        if (Math.uuidMatch (node.id)) {
-                            node.setText (String.format ("<i>{0}</i>", text))
-                            if (tree != undefined) { tree.el.unmask () }
-
-                            if (tab != undefined) {
-                                tab.setTitle (text)
-                                tab.el.unmask ()
-                            }
-                        } else {
-                            reportManager.util.crudRename ({
-                                nodeId : node.id,
-                                name : text
-                            })
-                        }
-                    }
-                }, this, false, node.text.replace('<i>','').replace('</i>','')
-            )
-        } else {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
-        }
-    }
-
-    // #########################################################################
-    function _deleteSelectedNode () {
-    // #########################################################################
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
-
-        if (node) {
-            function _onConfirm (id) {
-                if (id != 'yes') {
-                    return
-                }
-
-                tree.fireEvent (
-                    'deleteNode', node, {destroy: true}, {
-                        success : function (args) {
-                            Ext.getCmp ('editor.id').fireEvent (
-                                'deleteTab', { 'id' : args.node.id }
-                            )
-                            reportManager.util.crudDelete ({id : args.node.id})
-                        },
-
-                        failure : function (args) {
-                            Ext.Msg.alert (
-                                "Error", "No node selected; select a node!"
-                            )
-                        }
-                    }
-                )
-            }
-
-            Ext.Msg.show ({
-               title : 'Delete',
-               msg : 'Are you sure you want to delete selection?',
-               buttons : Ext.Msg.YESNO,
-               fn : _onConfirm,
-               scope : this
-            });
-
-        } else {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
-        }
-    }
-
-    // #########################################################################
-    function _moveSelectedNodeUp () {
-    // #########################################################################
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
         var node = model.getSelectedNode ()
 
         if (node == undefined) {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
-            return
+            return;
         }
 
-        if (tree.isReport (node.previousSibling))
-        {
-            return
+        if (node.isLeaf ()) {
+            node = node.parentNode
+        }
+
+        /**
+         * TODO: Is replacing thing message box reasonable?
+         */
+
+        Ext.Msg.prompt ('Create Folder', 'Enter a name:',
+            function (btn, text) {
+                if (btn == 'ok') {
+                    tree.el.mask ('Please wait', 'x-mask-loading');
+                    var rank = node.childNodes.indexOf (node.lastChild);
+
+                    reportManager.util.crudCreate (urls.createFolder, {
+                        nodeId : node.id,
+                        name : text,
+                        rank : rank + 1
+                    });
+                }
+            }
+        );
+    }
+
+    // #########################################################################
+    // #########################################################################
+
+    function _addTextFile () {
+
+        var tree = Ext.getCmp ('reportManager.tree.id')
+        var model = tree.getSelectionModel ()
+        var node = model.getSelectedNode ()
+
+        if (node == undefined) {
+            return;
+        }
+
+        if (node.isLeaf()) {
+            node = node.parentNode
+        }
+
+        /**
+         * TODO: Is replacing thing message box reasonable?
+         */
+
+        Ext.Msg.prompt ('Create Text File', 'Enter a name:',
+            function (btn, text) {
+                if (btn == 'ok') {
+                    tree.el.mask ('Please wait', 'x-mask-loading')
+                    var rank = node.childNodes.indexOf (node.lastChild)
+
+                    reportManager.util.crudCreate (urls.createText, {
+                        nodeId : node.id,
+                        name : text,
+                        rank : rank + 1,
+                        data : '..'
+                    });
+                }
+            }
+        );
+    }
+
+    // #########################################################################
+    // #########################################################################
+
+    function _renameSelectedNode () {
+
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
+
+        if (node == undefined) {
+            return;
+        }
+
+        var text = node.text
+            .replace('<i>','')
+            .replace('</i>','');
+
+        Ext.Msg.prompt ('Rename Node', 'Enter a name:',
+            function (btn, text) {
+                if (btn == 'ok') {
+                    tree.el.mask ('Please wait', 'x-mask-loading');
+
+                    var tabs = Ext.getCmp ('editor.id');
+                    var tab = tabs.findById (node.id);
+                    if (tab != undefined) {
+                        tab.el.mask ('Please wait', 'x-mask-loading');
+                    }
+
+                    if (Math.uuidMatch (node.id)) {
+                        node.setText (String.format ("<i>{0}</i>", text));
+                        if (tree != undefined) {
+                            tree.el.unmask ();
+                        }
+
+                        if (tab != undefined) {
+                            tab.setTitle (text);
+                            tab.el.unmask ();
+                        }
+                    } else {
+                        reportManager.util.crudRename ({
+                            nodeId : node.id,
+                            name : text
+                        });
+                    }
+                }
+            },  this, false, text,''
+        );
+    }
+
+    // #########################################################################
+    // #########################################################################
+
+    function _deleteSelectedNode () {
+
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
+
+        if (node == undefined) {
+            return;
+        }
+
+        function _onConfirm (id) {
+            if (id != 'yes') {
+                return;
+            }
+
+            tree.fireEvent (
+                'deleteNode', node, {destroy: true}, {
+                    success : function (args) {
+                        Ext.getCmp ('editor.id').fireEvent (
+                            'deleteTab', { 'id' : args.node.id }
+                        );
+
+                        reportManager.util.crudDelete ({
+                            id : args.node.id
+                        });
+                    },
+
+                    failure : function (args) {
+                        error_msg (MSG.NO_NODE);
+                    }
+                }
+            );
+        }
+
+        /**
+         * TODO: Is refactoring below message reasonable?
+         */
+
+        Ext.Msg.show ({
+            title : 'Delete',
+            msg : 'Are you sure you want to delete selection?',
+            buttons : Ext.Msg.YESNO,
+            fn : _onConfirm,
+            scope : this
+        });
+    }
+
+    // #########################################################################
+    // #########################################################################
+
+    function _moveSelectedNodeUp () {
+
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
+
+        if (node == undefined) {
+            return;
+        }
+
+        if (tree.isReport (node.previousSibling)) {
+            return;
         }
 
         var prev = _prev (node)
-        if (tree.isReport (prev))
-        {
-            return
+        if (tree.isReport (prev)) {
+            return;
         }
 
-        var move = Ext.getCmp ('btnMoveUp').disable ()
-        tree.el.mask ('Please wait', 'x-mask-loading')
+        var move = Ext.getCmp ('btnMoveUp').disable ();
+        tree.el.mask ('Please wait', 'x-mask-loading');
 
         Ext.Ajax.request ({
             params : {id: node.id, jd: prev.id},
             url : urls.decreaseRank,
 
             success : function (xhr, opts) {
-
                 if (node.parentNode == prev.parentNode.parentNode) {
-                    prev.parentNode.insertBefore (node, prev)
-                    prev.parentNode.insertBefore (prev, node)
+                    prev.parentNode.insertBefore (node, prev);
+                    prev.parentNode.insertBefore (prev, node);
                 } else {
-                    prev.parentNode.insertBefore (node, prev)
+                    prev.parentNode.insertBefore (node, prev);
                 }
 
-                tree.selectPath (node.getPath ())
-                tree.el.unmask ()
-                move.enable ()
+                tree.selectPath (node.getPath ());
+                tree.el.unmask ();
+                move.enable ();
             },
 
             failure : function (xhr, opts) {
-                tree.el.unmask ()
-                move.enable ()
-                Ext.Msg.alert (
-                    "Error", "Moving up '" + node.text + "' failed!"
-                )
+                tree.el.unmask ();
+                move.enable ();
+                error_msg (String.format (
+                    MSG.MOVE_FAILED, node.text
+                ));
             }
         });
     }
 
     function _prev (node) {
-
         var prev = node.previousSibling
         if (prev) {
-            return _last (prev)
+            return _last (prev);
         } else {
-            return node.parentNode
+            return node.parentNode;
         }
     }
 
     function _last (node) {
-
         if (node.lastChild) {
-            return _last (node.lastChild)
+            return _last (node.lastChild);
         } else {
-            return node
+            return node;
         }
     }
 
     // #########################################################################
-    function _moveSelectedNodeDown () {
     // #########################################################################
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
+
+    function _moveSelectedNodeDown () {
+
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
 
         if (node == undefined) {
-            Ext.Msg.alert ("Error", "No node selected; select a node!")
             return;
         }
 
-        if (tree.isReport (node.nextSibling))
-        {
-            return
+        if (tree.isReport (node.nextSibling)) {
+            return;
         }
 
         var next = _next (node)
-        if (tree.isReport (next))
-        {
-            return
+        if (tree.isReport (next)) {
+            return;
         }
 
-        var move = Ext.getCmp ('btnMoveDown').disable ()
-        tree.el.mask ('Please wait', 'x-mask-loading')
+        var move = Ext.getCmp ('btnMoveDown').disable ();
+        tree.el.mask ('Please wait', 'x-mask-loading');
 
         Ext.Ajax.request ({
             params : {id: node.id, jd: next.id },
             url : urls.increaseRank,
 
             success : function (xhr, opts) {
-
                 if (next.parentNode == node.parentNode) {
-                    next.parentNode.insertBefore (next, node)
+                    next.parentNode.insertBefore (next, node);
                 } else {
-                    next.parentNode.insertBefore (node, next)
+                    next.parentNode.insertBefore (node, next);
                 }
 
-                tree.selectPath (node.getPath ())
-                tree.el.unmask ()
-                move.enable ()
+                tree.selectPath (node.getPath ());
+                tree.el.unmask ();
+                move.enable ();
             },
 
             failure : function (xhr, opts) {
                 tree.el.unmask ()
                 move.enable ()
-                Ext.Msg.alert (
-                    "Error", "Moving down '" + node.text + "' failed!"
-                )
+                error_msg (String.format (
+                    MSG.MOVE_FAILED, node.text
+                ));
             }
         });
     }
 
     function _next (node) {
-
-        var next = node.nextSibling
+        var next = node.nextSibling;
         if (next) {
-            return _first (next)
+            return _first (next);
         } else {
-            return node.parentNode.nextSibling
+            return node.parentNode.nextSibling;
         }
     }
 
     function _first (node) {
-
         if (node.firstChild) {
-            return node.firstChild
+            return node.firstChild;
         } else {
-            return node
+            return node;
         }
     }
 
@@ -932,17 +985,18 @@ var reportManager = function () {
         tools : [{
             id : 'refresh',
             qtip : '<b>Refresh</b><br/>Refresh report manager\'s view',
+
             handler : function (event, toolEl, panel) {
-                var tree = Ext.getCmp ('reportManager.tree.id')
-                var model = tree.getSelectionModel ()
-                var node = model.getSelectedNode ()
+                var tree = Ext.getCmp ('reportManager.tree.id');
+                var model = tree.getSelectionModel ();
+                var node = model.getSelectedNode ();
+                var loader = tree.getLoader ();
 
                 if (node) {
-                    tree.getLoader ().load (node.parentNode, function (root) {
-                        root.expand ()
-                    }, this)
+                    function _expandRoot (root) { root.expand (); }
+                    loader.load (node.parentNode, _expandRoot, this);
                 } else {
-                    tree.getLoader ().load (tree.root, null, this)
+                    loader.load (tree.root, null, this);
                 }
             }
         }],

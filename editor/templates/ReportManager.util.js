@@ -1,7 +1,9 @@
 var reportManagerUtil = {
+
     // #########################################################################
+    // #########################################################################
+
     crudCreate : function () {
-    // #########################################################################
 
         function _onSuccess (xhr, opts) {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -50,8 +52,9 @@ var reportManagerUtil = {
     }(),
 
     // #########################################################################
-    crudRead : function () {
     // #########################################################################
+
+    crudRead : function () {
 
         function _onSuccess (xhr, opts) {
             //@DONE!
@@ -82,8 +85,9 @@ var reportManagerUtil = {
     }(),
 
     // #########################################################################
-    crudUpdate : function () {
     // #########################################################################
+
+    crudUpdate : function () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)[0]
@@ -124,7 +128,7 @@ var reportManagerUtil = {
             if (tab) {
                 tab.el.unmask (); Ext.MessageBox.show ({
                     title : 'Saving failed',
-                    msg : String.Format ("Saving failed for tab '{0}'!", 
+                    msg : String.format ("Saving failed for tab '{0}'!",
                         tab.title),
                     closable : false,
                     width : 256,
@@ -154,8 +158,9 @@ var reportManagerUtil = {
     }(),
 
     // #########################################################################
-    crudRename : function () {
     // #########################################################################
+
+    crudRename : function () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)
@@ -184,7 +189,7 @@ var reportManagerUtil = {
 
             Ext.MessageBox.show ({
                 title : 'Renaming failed',
-                msg : String.Format ("Renaming failed for node '{0}'!",
+                msg : String.format ("Renaming failed for node '{0}'!",
                     (node != undefined) ? node.getText () : 'unknown'),
                 closable : false,
                 width : 256,
@@ -213,8 +218,9 @@ var reportManagerUtil = {
     }(),
 
     // #########################################################################
-    crudDelete : function () {
     // #########################################################################
+
+    crudDelete : function () {
 
         function _onSuccess (xhr, opts) {
             //@DONE!
@@ -224,7 +230,7 @@ var reportManagerUtil = {
             var res = Ext.decode (xhr.responseText)
             Ext.MessageBox.show ({
                 title : 'Deleting failed',
-                msg : String.Format ("Deleting for '{0}' failed!", res.id),
+                msg : String.format ("Deleting for '{0}' failed!", res.id),
                 closable : false,
                 width : 256,
                 buttons : Ext.MessageBox.OK
@@ -249,7 +255,7 @@ var reportManagerUtil = {
                 }
             })
         }
-    }(),
+    }()
 
     // #########################################################################
     // #########################################################################
