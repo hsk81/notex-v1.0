@@ -525,7 +525,7 @@ var reportManager = function () {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (tab.id)
 
-        reportManager.util.crudUpdate ({
+        reportManager.crud.crudUpdate ({
             leafId : node.id,
             nodeId : node.parentNode.id,
             name : node.text.replace('<i>','').replace('</i>',''),
@@ -649,7 +649,7 @@ var reportManager = function () {
                 handler : function () {
                     tree.el.mask ('Please wait', 'x-mask-loading')
                     var source = propertyGrid.getSource ()
-                    reportManager.util.crudCreate (urls.createProject, {
+                    reportManager.crud.crudCreate (urls.createProject, {
                         nodeId : tree.root.id,
                         data : Ext.encode (source),
                         rank : rank + 1
@@ -690,7 +690,7 @@ var reportManager = function () {
                     tree.el.mask ('Please wait', 'x-mask-loading');
                     var rank = node.childNodes.indexOf (node.lastChild);
 
-                    reportManager.util.crudCreate (urls.createFolder, {
+                    reportManager.crud.crudCreate (urls.createFolder, {
                         nodeId : node.id,
                         name : text,
                         rank : rank + 1
@@ -727,7 +727,7 @@ var reportManager = function () {
                     tree.el.mask ('Please wait', 'x-mask-loading')
                     var rank = node.childNodes.indexOf (node.lastChild)
 
-                    reportManager.util.crudCreate (urls.createText, {
+                    reportManager.crud.crudCreate (urls.createText, {
                         nodeId : node.id,
                         name : text,
                         rank : rank + 1,
@@ -777,7 +777,7 @@ var reportManager = function () {
                             tab.el.unmask ();
                         }
                     } else {
-                        reportManager.util.crudRename ({
+                        reportManager.crud.crudRename ({
                             nodeId : node.id,
                             name : text
                         });
@@ -812,7 +812,7 @@ var reportManager = function () {
                             'deleteTab', { 'id' : args.node.id }
                         );
 
-                        reportManager.util.crudDelete ({
+                        reportManager.crud.crudDelete ({
                             id : args.node.id
                         });
                     },
@@ -1028,7 +1028,7 @@ var reportManager = function () {
 // #############################################################################
 
 (function() {
-    reportManager.util = reportManagerUtil;
+    reportManager.crud = reportManagerCrud;
     reportManager.tree = reportManagerTree;
     reportManager.task = reportManagerTask;
 })();
