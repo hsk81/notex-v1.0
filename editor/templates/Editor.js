@@ -26,30 +26,8 @@ var editor = function () {
         editor.fireEvent ('blur', editor);
     }
 
-    function _getFilenameWithExtension (filename_ext, delimiter) {
-
-        if (!filename_ext) return {}
-        if (!delimiter) { delimiter = '.' }
-
-        var array = filename_ext.split (delimiter)
-        if (array.length == 0) {
-            return {};
-        }
-        else if (array.length == 1) {
-            return { filename: array[0] };
-        }
-        else {
-            return { filename: array[0], extension: array[1] };
-        }
-    }
-
-    function _mapExtensionToMode (extension) {
-        if (extension == 'cfg') {
-            return 'yaml-plus';
-        } else {
-            return 'rst-plus';
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function _createTextTab (tabInfo) {
 
@@ -104,10 +82,6 @@ var editor = function () {
 
             this.activate (tab);
         }
-
-        if (tabInfo.save) {
-            Ext.getCmp ('reportManager.id').fireEvent ('saveTab', tab)
-        }
     }
 
     function _beforeTabChange (tabPanel, newTab, curTab) {
@@ -124,6 +98,31 @@ var editor = function () {
                     }
                 }
             }
+        }
+    }
+
+    function _getFilenameWithExtension (filename_ext, delimiter) {
+
+        if (!filename_ext) return {}
+        if (!delimiter) { delimiter = '.' }
+
+        var array = filename_ext.split (delimiter)
+        if (array.length == 0) {
+            return {};
+        }
+        else if (array.length == 1) {
+            return { filename: array[0] };
+        }
+        else {
+            return { filename: array[0], extension: array[1] };
+        }
+    }
+
+    function _mapExtensionToMode (extension) {
+        if (extension == 'cfg') {
+            return 'yaml-plus';
+        } else {
+            return 'rst-plus';
         }
     }
 
@@ -182,10 +181,6 @@ var editor = function () {
 
             this.activate (tab)
         }
-
-        if (tabInfo.save) {
-            Ext.getCmp ('reportManager.id').fireEvent ('saveTab', tab)
-        }
     }
 
     /**
@@ -215,8 +210,8 @@ var editor = function () {
 
     function _selectTreeNode (pnlTab) {
         var tree = Ext.getCmp ('reportManager.tree.id');
-        var node = tree.getNodeById (pnlTab.id)
-        tree.fireEvent ('selectNode', node)
+        var node = tree.getNodeById (pnlTab.id);
+        tree.fireEvent ('selectNode', node);
     }
 
     ////////////////////////////////////////////////////////////////////////////

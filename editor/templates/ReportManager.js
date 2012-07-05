@@ -253,94 +253,60 @@ var reportManager = function () {
         }
 
         var newNode = new Ext.tree.TreeNode ({
-            'text' : String.format ("<i>{0}</i>", fileInfo.title),
+            'text' : fileInfo.title,
             'id' : fileInfo.id,
             'cls' : "file",
             'leaf' : true,
             'expanded' : false
         })
 
+        function _getReader (url) {
+
+            var reader = new FileReader ();
+            reader.onerror = function (e) {
+                open_failure (file.name, resource.READ_ERROR);
+            }
+
+            reader.onload = function (e) {
+                if (e.loaded >= 524288) {
+                    open_failure (file.name, resource.LARGE_FILE);
+                    return;
+                }
+
+                fileInfo.iconCls = 'icon-page'
+                fileInfo.text = e.target.result
+
+                newNode.attributes['iconCls'] = fileInfo.iconCls
+                newNode.attributes['data'] = fileInfo.text
+
+                tree.fireEvent('createNode', newNode, {refNode:node}, {
+                    success:function (args) {
+                        reportManager.crud.update ({
+                            leafId: newNode.id,
+                            nodeId: newNode.parentNode.id,
+                            name: newNode.text,
+                            data: newNode.attributes['data'],
+                            rank: newNode.parentNode.indexOf(newNode)
+                        }, url);
+                    },
+                    failure:function (args) {
+                        open_failure (file.name, resource.NO_NEW_NODE);
+                    }
+                });
+            }
+
+            return reader;
+        }
+
         if (String (file.type).match (/^image(.*)/)) {
-            _openImageFile (file, fileInfo, newNode, tree, node);
-        } else { // assume text
-            _openTextFile (file, fileInfo, newNode, tree, node);
+            _getReader (urls.updateImage).readAsDataURL (file);
+        } else {
+            _getReader (urls.updateText).readAsText (file);
         }
     }
 
     function _openFileOnFailure () {
         open_failure (undefined, resource.INVALID_FILE);
-    }
-
-    function _openImageFile (file, fileInfo, node, tree, selectedNode) {
-
-        var imageReader = new FileReader();
-        imageReader.onerror = function (e) {
-            open_failure (file.name, resource.READ_ERROR);
-        }
-
-        imageReader.onload = function (e) {
-            if (e.loaded >= 524288) {
-                open_failure (file.name, resource.LARGE_FILE);
-                return;
-            }
-
-            fileInfo.iconCls = 'icon-image'
-            fileInfo.text = e.target.result
-            fileInfo.save = true
-
-            node.attributes['iconCls'] = fileInfo.iconCls
-            node.attributes['data'] = fileInfo.text
-
-            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
-                success: function (args) {
-                    Ext.getCmp ('editor.id').fireEvent (
-                        'createImageTab', fileInfo
-                    );
-                },
-
-                failure: function (args) {
-                    open_failure (file.name, resource.NO_NEW_NODE);
-                }
-            });
-        }
-
-        imageReader.readAsDataURL (file);
-    }
-
-    function _openTextFile (file, fileInfo, node, tree, selectedNode) {
-
-        var textReader = new FileReader ();
-        textReader.onerror = function (e) {
-            open_failure (file.name, resource.READ_ERROR);
-        }
-
-        textReader.onload = function (e) {
-            if (e.loaded >= 524288) {
-                open_failure (file.name, resource.LARGE_FILE);
-                return;
-            }
-
-            fileInfo.iconCls = 'icon-page'
-            fileInfo.text = e.target.result
-            fileInfo.save = true
-
-            node.attributes['iconCls'] = fileInfo.iconCls
-            node.attributes['data'] = fileInfo.text
-
-            tree.fireEvent ('createNode', node, {refNode: selectedNode}, {
-                success: function (args) {
-                    Ext.getCmp ('editor.id').fireEvent (
-                        'createTextTab', fileInfo
-                    );
-                },
-
-                failure: function (args) {
-                    open_failure (file.name, resource.NO_NEW_NODE);
-                }
-            });
-        }
-
-        textReader.readAsText (file);
     }
 
     function open_failure (filename, message) {
@@ -362,66 +328,29 @@ var reportManager = function () {
             return;
         }
 
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var node = tree.getNodeById (tab.id)
-
-        if (tree.isImage (node)) {
-            _saveImageTab (tab, skipMask);
-        } else {
-            _saveTextTab (tab, skipMask);
-        }
-    }
-
-    function _saveTextTab (tab, skipMask) {
-
-        if (tab == undefined) {
-            tab = Ext.getCmp ('editor.id').getActiveTab ()
-        }
-
-        if (tab == undefined) {
-            return;
-        }
-
         if (skipMask == undefined || skipMask != true) {
-            tab.el.mask ('Please wait', 'x-mask-loading')
+            if (tab.el && tab.el.mask) {
+                tab.el.mask ('Please wait', 'x-mask-loading')
+            }
         }
 
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (tab.id)
+
+        var url = (tree.isImage (node))
+            ? urls.updateImage
+            : urls.updateText
+        var data = (tab.getData)
+            ? tab.getData ()
+            : node.attributes['data']
 
         reportManager.crud.update ({
             leafId : node.id,
             nodeId : node.parentNode.id,
-            name : node.text.replace('<i>','').replace('</i>',''),
-            data : tab.getData (),
+            name : node.text,
+            data : data ,
             rank : node.parentNode.indexOf (node)
-        }, urls.updateText);
-    }
-
-    function _saveImageTab (tab, skipMask) {
-
-        if (tab == undefined) {
-            tab = Ext.getCmp ('editor.id').getActiveTab ()
-        }
-
-        if (tab == undefined) {
-            return;
-        }
-
-        if (skipMask == undefined || skipMask != true) {
-            tab.el.mask ('Please wait', 'x-mask-loading')
-        }
-
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var node = tree.getNodeById (tab.id)
-
-        reportManager.crud.update ({
-            leafId : node.id,
-            nodeId : node.parentNode.id,
-            name : node.text.replace('<i>','').replace('</i>',''),
-            data : tab.getData (),
-            rank : node.parentNode.indexOf (node)
-        }, urls.updateImage);
+        }, url);
     }
 
     // #########################################################################

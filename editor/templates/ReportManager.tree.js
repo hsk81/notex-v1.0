@@ -97,8 +97,7 @@ var reportManagerTree = function () {
         if (this.isLeaf (node)) {
             var tabInfo = {
                 id : node.id,
-                title : node.attributes['text']
-                    .replace ('<i>','').replace ('</i>',''),
+                title : node.attributes['text'],
                 text : node.attributes['data'],
                 iconCls : node.attributes['iconCls']
             }

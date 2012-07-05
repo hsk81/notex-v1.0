@@ -1,7 +1,7 @@
 var reportManagerCrud = function () {
 
-    var error_msg = reportManagerUtil.error_message
-    var resource = reportManagerUtil.resource
+    var error_msg = reportManagerUtil.error_message;
+    var resource = reportManagerUtil.resource;
 
     // #########################################################################
     // #########################################################################
@@ -19,10 +19,7 @@ var reportManagerCrud = function () {
                 var createdNode = tree.getNodeById (nodeId);
                 var path = createdNode.getPath ();
                 tree.expandPath (path, undefined, function (success, node) {
-                    if (success) {
-                        var model = tree.getSelectionModel ();
-                        model.select (node);
-                    }
+                    if (success) { node.select (); }
                 });
             });
 
@@ -93,34 +90,40 @@ var reportManagerCrud = function () {
     function _update () {
 
         function _onSuccess (xhr, opts) {
-            var res = Ext.decode (xhr.responseText)[0]
-            var id = (res.uuid != undefined) ? res.uuid : res.id
-            var tab = Ext.getCmp ('editor.id').findById (id)
+            var res = Ext.decode (xhr.responseText)[0];
+            var id = (res.uuid != undefined) ? res.uuid : res.id;
 
-            if (tab) {
-                var tree = Ext.getCmp ('reportManager.tree.id')
-                var node = tree.getNodeById (id)
+            var tree = Ext.getCmp ('reportManager.tree.id')
+            var node = tree.getNodeById (id)
 
-                tree.fireEvent (
-                    'updateNode', node, {uuid:res.uuid, id:res.id}, {
-                        success : function (args) {
-                            if (Math.uuidMatch (node.id)) {
-                                var refNode = args.node.parentNode
-                                tree.getLoader().load(
-                                    refNode, function () { refNode.expand () }
-                                )
-                            } else {
-                                args.node.attributes['data'] = tab.getData ()
+            tree.fireEvent (
+                'updateNode', node, {uuid:res.uuid, id:res.id}, {
+                    success : function (args) {
+
+                        var tab = Ext.getCmp ('editor.id').findById (id);
+                        if (tab) { // sync tab with node
+                            args.node.attributes['data'] = tab.getData ();
+                            tab.el.unmask ();
+                        } else { // tab not open yet
+                            function _select (refNode) {
+                                tree.fireEvent ('click',
+                                    tree.getNodeById (res.id)
+                                );
                             }
-                        },
-                        failure : function (args) {
-                            //@TODO!?
-                        }
-                    }
-                )
 
-                tab.el.unmask ()
-            }
+                            function _expand (refNode) {
+                                refNode.expand (false, true, _select);
+                            }
+
+                            tree.getLoader().load(
+                                args.node.parentNode, _expand
+                            );
+                        }
+
+                    }
+                }
+            );
+
         }
 
         function _onFailure (xhr, opts) {
@@ -222,7 +225,6 @@ var reportManagerCrud = function () {
     function _delete () {
 
         function _onSuccess (xhr, opts) {
-            //@DONE!
         }
 
         function _onFailure (xhr, opts) {
