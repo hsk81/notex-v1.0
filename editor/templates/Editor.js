@@ -4,32 +4,29 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
 
     function _restoreScrollPosition (pnlTab) {
-
         if (pnlTab.scroll) {
-            pnlTab.getEditor ().getEl ().scroll ('down', pnlTab.scroll.top);
-            pnlTab.getEditor ().getEl ().scroll ('right', pnlTab.scroll.left);
+            var editorEl = pnlTab.getEditor ().getEl ();
+            editorEl.scroll ('down', pnlTab.scroll.top);
+            editorEl.scroll ('right', pnlTab.scroll.left);
         }
     }
 
-    function _refreshEditor (pnlTab) {
-        var editor = pnlTab.getEditor ()
-        editor.fireEvent ('refresh', editor);
+    function refreshEditor (pnlTab) {
+        pnlTab.getEditor ().fireEvent ('refresh', editor);
     }
 
-    function _focusEditor (pnlTab) {
-        var editor = pnlTab.getEditor ();
-        editor.fireEvent ('focus', editor);
+    function focusEditor (pnlTab) {
+        pnlTab.getEditor ().fireEvent ('focus', editor);
     }
 
-    function _blurEditor (pnlTab) {
-        var editor = pnlTab.getEditor ();
-        editor.fireEvent ('blur', editor);
+    function blurEditor (pnlTab) {
+        pnlTab.getEditor ().fireEvent ('blur', editor);
     }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _createTextTab (tabInfo) {
+    function createTextTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id);
         if (tab) {
@@ -60,8 +57,8 @@ var editor = function () {
                         id : 'editorId' + tabInfo.id,
                         value : tabInfo.text,
                         fontSize : this.fontSize,
-                        mode : _mapExtensionToMode(
-                            _getFilenameWithExtension (tabInfo.title).extension
+                        mode : mapExtToMode(
+                            getFilenameWithExt (tabInfo.title).extension
                         )
                     }
                 }],
@@ -69,13 +66,13 @@ var editor = function () {
                 listeners : {
                     activate : function (pnlTab) {
                         _restoreScrollPosition (pnlTab);
-                        _selectTreeNode (pnlTab);
-                        _refreshEditor (pnlTab);
-                        _focusEditor (pnlTab);
+                        selectTreeNode (pnlTab);
+                        refreshEditor (pnlTab);
+                        focusEditor (pnlTab);
                     },
 
                     deactivate : function (pnlTab) {
-                        _blurEditor (pnlTab);
+                        blurEditor (pnlTab);
                     }
                 }
             });
@@ -84,7 +81,7 @@ var editor = function () {
         }
     }
 
-    function _beforeTabChange (tabPanel, newTab, curTab) {
+    function beforeTabChange (tabPanel, newTab, curTab) {
         if (curTab) {
             if (curTab.getEditor) {
                 var editor = curTab.getEditor ();
@@ -101,7 +98,7 @@ var editor = function () {
         }
     }
 
-    function _getFilenameWithExtension (filename_ext, delimiter) {
+    function getFilenameWithExt (filename_ext, delimiter) {
 
         if (!filename_ext) return {}
         if (!delimiter) { delimiter = '.' }
@@ -118,7 +115,7 @@ var editor = function () {
         }
     }
 
-    function _mapExtensionToMode (extension) {
+    function mapExtToMode (extension) {
         if (extension == 'cfg') {
             return 'yaml-plus';
         } else {
@@ -129,7 +126,7 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _createImageTab (tabInfo) {
+    function createImageTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id);
         if (tab) {
@@ -173,8 +170,8 @@ var editor = function () {
 
                 listeners : {
                     activate : function (pnlTab) {
-                        _centerImage (pnlTab);
-                        _selectTreeNode (pnlTab);
+                        centerImage (pnlTab);
+                        selectTreeNode (pnlTab);
                     }
                 }
             });
@@ -187,7 +184,7 @@ var editor = function () {
      * @see http://stackoverflow.com/questions/4776670/
      *      should-setting-an-image-src-to-data-url-be-available-immediately
      */
-    function _centerImage (pnlTab) {
+    function centerImage (pnlTab) {
 
         var imageEl = pnlTab.getImage ()
         imageEl.dom.onload = function (event) {
@@ -208,7 +205,7 @@ var editor = function () {
         }
     }
 
-    function _selectTreeNode (pnlTab) {
+    function selectTreeNode (pnlTab) {
         var tree = Ext.getCmp ('reportManager.tree.id');
         var node = tree.getNodeById (pnlTab.id);
         tree.fireEvent ('selectNode', node);
@@ -217,7 +214,7 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _deleteTab (tabInfo) {
+    function deleteTab (tabInfo) {
         var tab = this.findById (tabInfo.id);
         if (tab) { this.remove (tab, true); }
     }
@@ -225,7 +222,7 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _zoom (value) {
+    function zoom (value) {
 
         var def_font_size_px = this.defaults.fontSize;
         var def_font_size = def_font_size_px.replace ('px','');
@@ -256,11 +253,11 @@ var editor = function () {
         tbar : editorTBar,
 
         listeners : {
-            beforetabchange : _beforeTabChange,
-            createTextTab : _createTextTab,
-            createImageTab : _createImageTab,
-            deleteTab : _deleteTab,
-            zoom : _zoom
+            beforetabchange : beforeTabChange,
+            createTextTab : createTextTab,
+            createImageTab : createImageTab,
+            deleteTab : deleteTab,
+            zoom : zoom
         }
     })
 }();

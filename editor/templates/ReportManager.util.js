@@ -1,6 +1,6 @@
 var reportManagerUtil = function () {
 
-    function _prompt_message (title, message, callback, text, iconCls) {
+    function prompt_message (title, message, callback, text, iconCls) {
         if (iconCls == undefined) {
             iconCls = 'icon-document';
         }
@@ -17,7 +17,7 @@ var reportManagerUtil = function () {
         });
     }
 
-    function _error_message (message) {
+    function error_message (message) {
         Ext.MessageBox.show ({
             title : "Error",
             msg : message,
@@ -26,7 +26,7 @@ var reportManagerUtil = function () {
         });
     }
 
-    var _resource = {
+    var resource = {
         INVALID_FILE: 'no file or invalid file type',
         LARGE_FILE: 'file size exceeds 512 KB',
         NO_REPORT: 'no report selected',
@@ -43,9 +43,9 @@ var reportManagerUtil = function () {
     }
 
     return {
-        prompt_message: _prompt_message,
-        error_message: _error_message,
-        resource: _resource
+        prompt_message: prompt_message,
+        error_message: error_message,
+        resource: resource
     };
 
 }();

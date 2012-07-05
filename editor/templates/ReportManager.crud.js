@@ -6,7 +6,7 @@ var reportManagerCrud = function () {
     // #########################################################################
     // #########################################################################
 
-    function _create () {
+    function create () {
 
         function _onSuccess (xhr, opts) {
             var tree = Ext.getCmp ('reportManager.tree.id')
@@ -54,7 +54,7 @@ var reportManagerCrud = function () {
     // #########################################################################
     // #########################################################################
 
-    function _read () {
+    function read () {
 
         function _onSuccess (xhr, opts) {
             //@DONE!
@@ -87,7 +87,7 @@ var reportManagerCrud = function () {
     // #########################################################################
     // #########################################################################
 
-    function _update () {
+    function update () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)[0];
@@ -162,7 +162,7 @@ var reportManagerCrud = function () {
     // #########################################################################
     // #########################################################################
 
-    function _rename () {
+    function rename () {
 
         function _onSuccess (xhr, opts) {
             var res = Ext.decode (xhr.responseText)
@@ -222,7 +222,7 @@ var reportManagerCrud = function () {
     // #########################################################################
     // #########################################################################
 
-    function _delete () {
+    function del () {
 
         function _onSuccess (xhr, opts) {
         }
@@ -267,11 +267,11 @@ var reportManagerCrud = function () {
     // #########################################################################
 
     return {
-        create: _create (),
-        read: _read (),
-        update: _update (),
-        rename: _rename (),
-        del: _delete ()
+        create: create (),
+        read: read (),
+        update: update (),
+        rename: rename (),
+        del: del ()
     };
 
     // #########################################################################

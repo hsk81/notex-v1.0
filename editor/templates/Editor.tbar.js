@@ -1,6 +1,6 @@
 var editorTBar = function () {
 
-    function _changeIconClassFrom32To16 (toolbar, lastOverflow) {
+    function changeIconClassFrom32To16 (toolbar, lastOverflow) {
         if (lastOverflow) {
             for (var idx in toolbar.items.items) {
                 var group = toolbar.items.items[idx]
@@ -160,5 +160,5 @@ var editorTBar = function () {
             }
         }]
 
-    }], listeners: { overflowchange : _changeIconClassFrom32To16}};
+    }], listeners: { overflowchange : changeIconClassFrom32To16}};
 }();

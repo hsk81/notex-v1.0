@@ -3,7 +3,7 @@ var reportManagerTree = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _createNode (node, args, fn) {
+    function createNode (node, args, fn) {
         if (node != null && args != null && args.refNode != null) {
             var gn = function (refNode) {
                 refNode.insertBefore (node, null)
@@ -34,7 +34,7 @@ var reportManagerTree = function () {
         }
     }
 
-    function _updateNode (node, args, fn) {
+    function updateNode (node, args, fn) {
         if (node != undefined && args != undefined) {
             node.setText (node.text.replace('<i>','').replace('</i>',''))
             if (fn != undefined && fn.success != undefined) {
@@ -51,7 +51,7 @@ var reportManagerTree = function () {
         }
     }
 
-    function _readNode (node, args, fn) {
+    function readNode (node, args, fn) {
         if (node != undefined && args != undefined) {
             if (fn != undefined && fn.success != undefined) {
                 return fn.success ({'node': node})
@@ -67,7 +67,7 @@ var reportManagerTree = function () {
         }
     }
 
-    function _deleteNode (node, args, fn) {
+    function deleteNode (node, args, fn) {
         if (node != undefined && args != undefined && 
             args.destroy != undefined) {
             var nodeId = node.id
@@ -86,14 +86,14 @@ var reportManagerTree = function () {
         }
     }
 
-    function _selectNode (node) {
+    function selectNode (node) {
         if (node && !node.isSelected()) { node.select (); }
     }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _click (node, event) {
+    function click (node, event) {
         if (this.isLeaf (node)) {
             var tabInfo = {
                 id : node.id,
@@ -115,7 +115,7 @@ var reportManagerTree = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _isOfClass (node, cls) {
+    function isOfClass (node, cls) {
         if (node && node.attributes) {
             var attribute = node.attributes['cls']
             if (attribute) {
@@ -128,7 +128,7 @@ var reportManagerTree = function () {
         }
     }
 
-    function _isOfIconClass (node, cls) {
+    function isOfIconClass (node, cls) {
         if (node && node.attributes) {
             var attribute = node.attributes['iconCls']
             if (attribute) {
@@ -162,12 +162,12 @@ var reportManagerTree = function () {
         },
 
         listeners : {
-            createNode : _createNode,
-            updateNode : _updateNode,
-            readNode : _readNode,
-            deleteNode : _deleteNode,
-            selectNode : _selectNode,
-            click : _click
+            createNode : createNode,
+            updateNode : updateNode,
+            readNode : readNode,
+            deleteNode : deleteNode,
+            selectNode : selectNode,
+            click : click
         },
 
         ////////////////////////////////////////////////////////////////////////
@@ -181,27 +181,27 @@ var reportManagerTree = function () {
         },
 
         isReport : function (node) {
-            return _isOfIconClass (node, 'icon-report');
+            return isOfIconClass (node, 'icon-report');
         },
 
         isFolder : function (node) {
-            return _isOfIconClass (node, 'icon-folder');
+            return isOfIconClass (node, 'icon-folder');
         },
 
         isText : function (node) {
-            return _isOfIconClass (node, 'icon-page');
+            return isOfIconClass (node, 'icon-page');
         },
 
         isImage : function (node) {
-            return _isOfIconClass (node, 'icon-image');
+            return isOfIconClass (node, 'icon-image');
         },
 
         isLeaf : function (node) {
-            return _isOfClass (node, 'file');
+            return isOfClass (node, 'file');
         },
 
         isNotLeaf : function (node) {
-            return _isOfClass (node, 'folder'); // includes root!
+            return isOfClass (node, 'folder'); // includes root!
         }
     });
 

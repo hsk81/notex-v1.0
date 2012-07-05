@@ -1,6 +1,6 @@
 var statusBar = function () {
 
-    function _change (slider, newValue, thumb) {
+    function change (slider, newValue, thumb) {
         Ext.util.Cookies.set ('zoom', newValue);
         Ext.getCmp ('editor.id').fireEvent ('zoom', newValue);
     }
@@ -11,7 +11,7 @@ var statusBar = function () {
         }
     });
 
-    function _getInitialValue () {
+    function getInitialValue () {
         var strValue = Ext.util.Cookies.get ('zoom')
         var value = null;
 
@@ -33,13 +33,13 @@ var statusBar = function () {
         id : 'sliderId',
         width : 128,
         increment : 25,
-        value : _getInitialValue (),
+        value : getInitialValue (),
         minValue : 50,
         maxValue : 150,
         plugins : tip,
 
         listeners : {
-            change : _change
+            change : change
         }
     });
 

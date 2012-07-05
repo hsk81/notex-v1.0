@@ -17,7 +17,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _importReport () {
+    function importReport () {
 
         dialog.openFile.setTitle ('Open ZIP Archive');
         dialog.openFile.setIconClass ('icon-report_add');
@@ -42,9 +42,9 @@ var reportManager = function () {
                     progressBar.reset (true)
                     if (this.response) {
                         var response = Ext.util.JSON.decode (this.response)
-                        _import_failure (file.name, response.message);
+                        import_failure (file.name, response.message);
                     } else {
-                        _import_failure (file.name, resource.LARGE_FILE);
+                        import_failure (file.name, resource.LARGE_FILE);
                     }
                 }
 
@@ -56,10 +56,10 @@ var reportManager = function () {
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
                         } else {
-                            _import_failure (file.name, response.message);
+                            import_failure (file.name, response.message);
                         }
                     } else {
-                        _import_failure (file.name, resource.UNKNOWN_ERROR);
+                        import_failure (file.name, resource.UNKNOWN_ERROR);
                     }
                 }
 
@@ -71,12 +71,12 @@ var reportManager = function () {
             },
 
             failure: function (file) {
-                _import_failure (file.name, resource.INVALID_FILE);
+                import_failure (file.name, resource.INVALID_FILE);
             }
         });
     }
 
-    function _import_failure (filename, message) {
+    function import_failure (filename, message) {
         error_msg (String.format (
             'importing <i>{0}</i> failed: {1}', filename, message
         ));
@@ -85,7 +85,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _exportReport (url) {
+    function exportReport (url) {
 
         var statusBar = Ext.getCmp ('statusBarId');
         var progressBar = Ext.getCmp ('progressBarId');
@@ -98,7 +98,7 @@ var reportManager = function () {
             return;
         }
 
-        _disableExport ();
+        disableExport ();
 
         statusBar.showBusy ({text: 'Please wait ..'});
         progressBar.show ();
@@ -136,14 +136,14 @@ var reportManager = function () {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
             form.dom.submit ();
-            _enableExport ();
+            enableExport ();
         }
 
         var _onFailure = function (xhr, opts, res) {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
-            _export_failure (res.name, resource.UNKNOWN_ERROR);
-            _enableExport ();
+            export_failure (res.name, resource.UNKNOWN_ERROR);
+            enableExport ();
         }
 
         Ext.Ajax.request ({
@@ -163,23 +163,23 @@ var reportManager = function () {
         });
     }
 
-    function _exportText () {
+    function exportText () {
         this.fireEvent ('exportReport', urls.exportText)
     }
 
-    function _exportLatex () {
+    function exportLatex () {
         this.fireEvent ('exportReport', urls.exportLatex)
     }
 
-    function _exportPdf () {
+    function exportPdf () {
         this.fireEvent ('exportReport', urls.exportPdf)
     }
     
-    function _exportHtml () {
+    function exportHtml () {
         this.fireEvent ('exportReport', urls.exportHtml)
     }
 
-    function _getExportButtons () {
+    function getExportButtons () {
         return [
             Ext.getCmp ('btn.export.report-manager.id'),
             Ext.getCmp ('btn.export-text.report-manager.id'),
@@ -194,21 +194,21 @@ var reportManager = function () {
         ];
     }
 
-    function _enableExport () {
-        var buttons = _getExportButtons ();
+    function enableExport () {
+        var buttons = getExportButtons ();
         for (var idx in buttons) {
             if (buttons[idx].enable) { buttons[idx].enable (); }
         }
     }
 
-    function _disableExport () {
-        var buttons = _getExportButtons ();
+    function disableExport () {
+        var buttons = getExportButtons ();
         for (var idx in buttons) {
             if (buttons[idx].disable) { buttons[idx].disable (); }
         }
     }
 
-    function _export_failure (filename, message) {
+    function export_failure (filename, message) {
         error_msg (String.format (
             'exporting <i>{0}</i> failed: {1}', filename, message
         ));
@@ -217,7 +217,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _openFile () {
+    function openFile () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -230,12 +230,12 @@ var reportManager = function () {
         dialog.openFile.setTitle ('Open Text/Image File');
         dialog.openFile.setIconClass ('icon-page_white_add');
         dialog.openFile.execute ({
-            success: _openFileOnSuccess,
-            failure: _openFileOnFailure
+            success: openFileOnSuccess,
+            failure: openFileOnFailure
         });
     }
 
-    function _openFileOnSuccess (file) {
+    function openFileOnSuccess (file) {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -249,16 +249,16 @@ var reportManager = function () {
             'expanded' : false
         })
 
-        function _getReader (url) {
+        function getReader (url) {
 
             var reader = new FileReader ();
             reader.onerror = function (e) {
-                _open_failure (file.name, resource.READ_ERROR);
+                open_failure (file.name, resource.READ_ERROR);
             }
 
             reader.onload = function (e) {
                 if (e.loaded >= 524288) {
-                    _open_failure (file.name, resource.LARGE_FILE);
+                    open_failure (file.name, resource.LARGE_FILE);
                     return;
                 }
 
@@ -276,7 +276,7 @@ var reportManager = function () {
                         }, url);
                     },
                     failure:function (args) {
-                        _open_failure (file.name, resource.NO_NEW_NODE);
+                        open_failure (file.name, resource.NO_NEW_NODE);
                     }
                 });
             }
@@ -285,17 +285,17 @@ var reportManager = function () {
         }
 
         if (String (file.type).match (/^image(.*)/)) {
-            _getReader (urls.updateImage).readAsDataURL (file);
+            getReader (urls.updateImage).readAsDataURL (file);
         } else {
-            _getReader (urls.updateText).readAsText (file);
+            getReader (urls.updateText).readAsText (file);
         }
     }
 
-    function _openFileOnFailure () {
-        _open_failure (undefined, resource.INVALID_FILE);
+    function openFileOnFailure () {
+        open_failure (undefined, resource.INVALID_FILE);
     }
 
-    function _open_failure (filename, message) {
+    function open_failure (filename, message) {
         error_msg (String.format (
             'Opening <i>{0}</i> failed: {1}!', filename, message
         ));
@@ -304,7 +304,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _saveTab (tab, skipMask) {
+    function saveTab (tab, skipMask) {
 
         if (tab == undefined) {
             tab = Ext.getCmp ('editor.id').getActiveTab ()
@@ -342,7 +342,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _addReport () {
+    function addReport () {
 
         var tree = Ext.getCmp ('reportManager.tree.id')
         var rank = tree.root.childNodes.indexOf (tree.root.lastChild)
@@ -467,7 +467,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _addFolder () {
+    function addFolder () {
 
         var tree = Ext.getCmp ('reportManager.tree.id')
         var model = tree.getSelectionModel ()
@@ -502,7 +502,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _addTextFile () {
+    function addTextFile () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -538,7 +538,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _renameSelectedNode () {
+    function renameSelectedNode () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -589,7 +589,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _deleteSelectedNode () {
+    function deleteSelectedNode () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -636,7 +636,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _moveSelectedNodeUp () {
+    function moveSelectedNodeUp () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -650,7 +650,7 @@ var reportManager = function () {
             return;
         }
 
-        var prev = _prev (node)
+        var prev = prev (node)
         if (tree.isReport (prev)) {
             return;
         }
@@ -683,18 +683,18 @@ var reportManager = function () {
         });
     }
 
-    function _prev (node) {
+    function prev (node) {
         var prev = node.previousSibling
         if (prev) {
-            return _last (prev);
+            return last (prev);
         } else {
             return node.parentNode;
         }
     }
 
-    function _last (node) {
+    function last (node) {
         if (node.lastChild) {
-            return _last (node.lastChild);
+            return last (node.lastChild);
         } else {
             return node;
         }
@@ -703,7 +703,7 @@ var reportManager = function () {
     // #########################################################################
     // #########################################################################
 
-    function _moveSelectedNodeDown () {
+    function moveSelectedNodeDown () {
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();
@@ -717,7 +717,7 @@ var reportManager = function () {
             return;
         }
 
-        var next = _next (node)
+        var next = next (node)
         if (tree.isReport (next)) {
             return;
         }
@@ -749,16 +749,16 @@ var reportManager = function () {
         });
     }
 
-    function _next (node) {
+    function next (node) {
         var next = node.nextSibling;
         if (next) {
-            return _first (next);
+            return first (next);
         } else {
             return node.parentNode.nextSibling;
         }
     }
 
-    function _first (node) {
+    function first (node) {
         if (node.firstChild) {
             return node.firstChild;
         } else {
@@ -785,8 +785,8 @@ var reportManager = function () {
                 var loader = tree.getLoader ();
 
                 if (node) {
-                    function _expandRoot (root) { root.expand (); }
-                    loader.load (node.parentNode, _expandRoot, this);
+                    function expand (root) { root.expand (); }
+                    loader.load (node.parentNode, expand, this);
                 } else {
                     loader.load (tree.root, null, this);
                 }
@@ -797,21 +797,21 @@ var reportManager = function () {
         items : [reportManager.tree],
 
         listeners : {
-            importReport : _importReport,
-            exportReport : _exportReport,
-            exportText : _exportText,
-            exportLatex : _exportLatex,
-            exportPdf : _exportPdf,
-            exportHtml : _exportHtml,
-            openFile : _openFile,
-            saveTab : _saveTab,
-            addReport : _addReport,
-            addFolder : _addFolder,
-            addTextFile : _addTextFile,
-            renameSelectedNode : _renameSelectedNode,
-            deleteSelectedNode : _deleteSelectedNode,
-            moveSelectedNodeUp : _moveSelectedNodeUp,
-            moveSelectedNodeDown : _moveSelectedNodeDown
+            importReport : importReport,
+            exportReport : exportReport,
+            exportText : exportText,
+            exportLatex : exportLatex,
+            exportPdf : exportPdf,
+            exportHtml : exportHtml,
+            openFile : openFile,
+            saveTab : saveTab,
+            addReport : addReport,
+            addFolder : addFolder,
+            addTextFile : addTextFile,
+            renameSelectedNode : renameSelectedNode,
+            deleteSelectedNode : deleteSelectedNode,
+            moveSelectedNodeUp : moveSelectedNodeUp,
+            moveSelectedNodeDown : moveSelectedNodeDown
         }
     });
 
