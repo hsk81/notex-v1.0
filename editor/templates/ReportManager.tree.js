@@ -102,12 +102,10 @@ var reportManagerTree = function () {
                 iconCls : node.attributes['iconCls']
             }
 
-            if (this.isText (node)) {
-                Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
-            }
-
             if (this.isImage (node)) {
                 Ext.getCmp ('editor.id').fireEvent ('createImageTab', tabInfo)
+            } else {
+                Ext.getCmp ('editor.id').fireEvent ('createTextTab', tabInfo)
             }
         }
     }

@@ -3,7 +3,7 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function _restoreScrollPosition (pnlTab) {
+    function restoreScrollPosition (pnlTab) {
         if (pnlTab.scroll) {
             var editorEl = pnlTab.getEditor ().getEl ();
             editorEl.scroll ('down', pnlTab.scroll.top);
@@ -65,7 +65,7 @@ var editor = function () {
 
                 listeners : {
                     activate : function (pnlTab) {
-                        _restoreScrollPosition (pnlTab);
+                        restoreScrollPosition (pnlTab);
                         selectTreeNode (pnlTab);
                         refreshEditor (pnlTab);
                         focusEditor (pnlTab);
