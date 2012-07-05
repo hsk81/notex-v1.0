@@ -42,9 +42,9 @@ var reportManager = function () {
                     progressBar.reset (true)
                     if (this.response) {
                         var response = Ext.util.JSON.decode (this.response)
-                        import_failure (file.name, response.message);
+                        _import_failure (file.name, response.message);
                     } else {
-                        import_failure (file.name, resource.LARGE_FILE);
+                        _import_failure (file.name, resource.LARGE_FILE);
                     }
                 }
 
@@ -56,10 +56,10 @@ var reportManager = function () {
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
                         } else {
-                            import_failure (file.name, response.message);
+                            _import_failure (file.name, response.message);
                         }
                     } else {
-                        import_failure (file.name, resource.UNKNOWN_ERROR);
+                        _import_failure (file.name, resource.UNKNOWN_ERROR);
                     }
                 }
 
@@ -71,12 +71,12 @@ var reportManager = function () {
             },
 
             failure: function (file) {
-                import_failure (file.name, resource.INVALID_FILE);
+                _import_failure (file.name, resource.INVALID_FILE);
             }
         });
     }
 
-    function import_failure (filename, message) {
+    function _import_failure (filename, message) {
         error_msg (String.format (
             'importing <i>{0}</i> failed: {1}', filename, message
         ));
@@ -142,7 +142,7 @@ var reportManager = function () {
         var _onFailure = function (xhr, opts, res) {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
-            export_failure (res.name, resource.UNKNOWN_ERROR);
+            _export_failure (res.name, resource.UNKNOWN_ERROR);
             _enableExport ();
         }
 
@@ -197,24 +197,18 @@ var reportManager = function () {
     function _enableExport () {
         var buttons = _getExportButtons ();
         for (var idx in buttons) {
-            var button = buttons[idx];
-            if (button.enable) {
-                button.enable ();
-            }
+            if (buttons[idx].enable) { buttons[idx].enable (); }
         }
     }
 
     function _disableExport () {
         var buttons = _getExportButtons ();
         for (var idx in buttons) {
-            var button = buttons[idx];
-            if (button.disable) {
-                button.disable ();
-            }
+            if (buttons[idx].disable) { buttons[idx].disable (); }
         }
     }
 
-    function export_failure (filename, message) {
+    function _export_failure (filename, message) {
         error_msg (String.format (
             'exporting <i>{0}</i> failed: {1}', filename, message
         ));
@@ -247,14 +241,9 @@ var reportManager = function () {
         var model = tree.getSelectionModel ();
         var node = model.getSelectedNode ();
 
-        var fileInfo = {
-            id : Math.uuid (),
-            title : file.name
-        }
-
         var newNode = new Ext.tree.TreeNode ({
-            'text' : fileInfo.title,
-            'id' : fileInfo.id,
+            'text' : file.name,
+            'id' : Math.uuid (),
             'cls' : "file",
             'leaf' : true,
             'expanded' : false
@@ -264,20 +253,17 @@ var reportManager = function () {
 
             var reader = new FileReader ();
             reader.onerror = function (e) {
-                open_failure (file.name, resource.READ_ERROR);
+                _open_failure (file.name, resource.READ_ERROR);
             }
 
             reader.onload = function (e) {
                 if (e.loaded >= 524288) {
-                    open_failure (file.name, resource.LARGE_FILE);
+                    _open_failure (file.name, resource.LARGE_FILE);
                     return;
                 }
 
-                fileInfo.iconCls = 'icon-page'
-                fileInfo.text = e.target.result
-
-                newNode.attributes['iconCls'] = fileInfo.iconCls
-                newNode.attributes['data'] = fileInfo.text
+                newNode.attributes['iconCls'] = 'icon-page'
+                newNode.attributes['data'] = e.target.result
 
                 tree.fireEvent('createNode', newNode, {refNode:node}, {
                     success:function (args) {
@@ -286,11 +272,11 @@ var reportManager = function () {
                             nodeId: newNode.parentNode.id,
                             name: newNode.text,
                             data: newNode.attributes['data'],
-                            rank: newNode.parentNode.indexOf(newNode)
+                            rank: newNode.parentNode.indexOf (newNode)
                         }, url);
                     },
                     failure:function (args) {
-                        open_failure (file.name, resource.NO_NEW_NODE);
+                        _open_failure (file.name, resource.NO_NEW_NODE);
                     }
                 });
             }
@@ -306,10 +292,10 @@ var reportManager = function () {
     }
 
     function _openFileOnFailure () {
-        open_failure (undefined, resource.INVALID_FILE);
+        _open_failure (undefined, resource.INVALID_FILE);
     }
 
-    function open_failure (filename, message) {
+    function _open_failure (filename, message) {
         error_msg (String.format (
             'Opening <i>{0}</i> failed: {1}!', filename, message
         ));
