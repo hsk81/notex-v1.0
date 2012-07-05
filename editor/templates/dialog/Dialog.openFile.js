@@ -1,23 +1,22 @@
 var dialogOpenFile = new Ext.Window ({
+
     layout : 'fit',
     id : 'dialog.openFile.id',
-    title : 'Open file',
-    frame : true,
-    modal : true,
-    draggable : true,
-    plain : false,
+
     border : false,
-    closable : false,
+    iconCls : 'icon-add',
+    modal : true,
     resizable : false,
+    title : 'Open file',
     width : 320,
 
     items : [{
-        width  : 320,
+        width : 320,
         height : 36,
         layout : 'hbox',
-        frame  : true,
+        frame : true,
         layoutConfig : {
-            pack  : 'left',
+            pack : 'left',
             align : 'middle'
         },
         items : [{
@@ -30,35 +29,33 @@ var dialogOpenFile = new Ext.Window ({
         }]
     }],
 
-    bbar : ['->', {
-        text : 'Cancel',
-        style : 'padding: 5 0 5 0;',
-        iconCls : 'icon-cross',
-        handler : function (btn) {
-            dialogOpenFile.hide ()
-            dialogOpenFile.fireEvent ('cancelSuccess')
-        }
-    },{
+    buttons : [{
         text : 'Open',
-        style : 'padding: 5 0 5 0;',
-        iconCls : 'icon-folder',
+        iconCls : 'icon-tick',
         handler : function (btn) {
 
-            var cmp = Ext.getCmp("inputOpenFileId")
+            var cmp = Ext.getCmp("inputOpenFileId");
             if (cmp.el.dom.files.length > 0) {
 
-                dialogOpenFile.el.mask ('Please wait', 'x-mask-loading')
+                dialogOpenFile.el.mask ('Please wait', 'x-mask-loading');
 
-                var file = cmp.el.dom.files[0]
+                var file = cmp.el.dom.files[0];
                 if (file != null) {
-                    dialogOpenFile.fireEvent ('openSuccess', file)
+                    dialogOpenFile.fireEvent ('openSuccess', file);
                 } else {
-                    dialogOpenFile.fireEvent ('openFailure')
+                    dialogOpenFile.fireEvent ('openFailure');
                 }
 
-                dialogOpenFile.el.unmask ()
-                dialogOpenFile.hide ()
+                dialogOpenFile.el.unmask ();
+                dialogOpenFile.hide ();
             }
+        }
+    },{
+        text : 'Cancel',
+        iconCls : 'icon-cross',
+        handler : function (btn) {
+            dialogOpenFile.hide ();
+            dialogOpenFile.fireEvent ('cancelSuccess');
         }
     }],
 
@@ -66,24 +63,28 @@ var dialogOpenFile = new Ext.Window ({
 
         if (fnOpen != undefined) {
             if (fnOpen.success != undefined) {
-                this.on ('openSuccess', fnOpen.success, this, {single:true})
+                this.on ('openSuccess', fnOpen.success, this, {single:true});
             }
             if (fnOpen.failure != undefined) {
-                this.on ('openFailure', fnOpen.failure, this, {single:true})
+                this.on ('openFailure', fnOpen.failure, this, {single:true});
             }
         }
 
         if (fnCancel != undefined) {
             if (fnCancel.success != undefined) {
-                this.on ('cancelSuccess', fnCancel.success, this, {single:true})
+                this.on (
+                    'cancelSuccess', fnCancel.success, this, {single:true}
+                );
             }
             if (fnOpen.failure != undefined) {
-                this.on ('cancelFailure', fnCancel.failure, this, {single:true})
+                this.on (
+                    'cancelFailure', fnCancel.failure, this, {single:true}
+                );
             }
         }
 
-        var inputOpenFile = Ext.getCmp ('inputOpenFileId')
-        inputOpenFile.setValue ('')
-        this.show ()
+        var inputOpenFile = Ext.getCmp ('inputOpenFileId');
+        inputOpenFile.setValue ('');
+        this.show ();
     }
 });

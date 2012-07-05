@@ -225,15 +225,15 @@ var reportManager = function () {
 
     function _openFile () {
 
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
 
         if (node == undefined) {
             return;
         }
 
-        dialog.openFile.setTitle ('Open Text/Image File')
+        dialog.openFile.setTitle ('Open Text/Image File');
         dialog.openFile.setIconClass ('icon-page_white_add');
         dialog.openFile.execute ({
             success: _openFileOnSuccess,
@@ -243,16 +243,16 @@ var reportManager = function () {
 
     function _openFileOnSuccess (file) {
 
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var selectionModel = tree.getSelectionModel ()
-        var selectedNode = selectionModel.getSelectedNode ()
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
 
         var fileInfo = {
             id : Math.uuid (),
             title : file.name
         }
 
-        var node = new Ext.tree.TreeNode ({
+        var newNode = new Ext.tree.TreeNode ({
             'text' : String.format ("<i>{0}</i>", fileInfo.title),
             'id' : fileInfo.id,
             'cls' : "file",
@@ -260,10 +260,10 @@ var reportManager = function () {
             'expanded' : false
         })
 
-        if (String (file.type).match (/^image(.*)/) == "image") {
-            _openImageFile (file, fileInfo, node, tree, selectedNode);
+        if (String (file.type).match (/^image(.*)/)) {
+            _openImageFile (file, fileInfo, newNode, tree, node);
         } else { // assume text
-            _openTextFile (file, fileInfo, node, tree, selectedNode);
+            _openTextFile (file, fileInfo, newNode, tree, node);
         }
     }
 
@@ -365,14 +365,10 @@ var reportManager = function () {
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (tab.id)
 
-        if (tree.isText (node)) {
-            _saveTextTab (tab, skipMask);
-            return;
-        }
-
         if (tree.isImage (node)) {
             _saveImageTab (tab, skipMask);
-            return;
+        } else {
+            _saveTextTab (tab, skipMask);
         }
     }
 
@@ -399,13 +395,35 @@ var reportManager = function () {
             name : node.text.replace('<i>','').replace('</i>',''),
             data : tab.getData (),
             rank : node.parentNode.indexOf (node)
-        }, urls.updateText)
+        }, urls.updateText);
     }
 
     function _saveImageTab (tab, skipMask) {
-        return; // read-only image viewer
+
+        if (tab == undefined) {
+            tab = Ext.getCmp ('editor.id').getActiveTab ()
+        }
+
+        if (tab == undefined) {
+            return;
+        }
+
+        if (skipMask == undefined || skipMask != true) {
+            tab.el.mask ('Please wait', 'x-mask-loading')
+        }
+
+        var tree = Ext.getCmp ('reportManager.tree.id')
+        var node = tree.getNodeById (tab.id)
+
+        reportManager.crud.update ({
+            leafId : node.id,
+            nodeId : node.parentNode.id,
+            name : node.text.replace('<i>','').replace('</i>',''),
+            data : tab.getData (),
+            rank : node.parentNode.indexOf (node)
+        }, urls.updateImage);
     }
-    
+
     // #########################################################################
     // #########################################################################
 
@@ -500,20 +518,18 @@ var reportManager = function () {
 
         var win = new Ext.Window ({
 
-            title : 'Create Report',
-            iconCls : 'icon-report',
-            plain : true,
-            resizable : false,
+            border : false,
+            iconCls : 'icon-report_add',
             modal : true,
+            resizable : false,
+            title : 'Create Report',
             width: 512,
 
+            items : [propertyGrid],
+
             buttons: [{
-                text : 'Cancel',
-                iconCls : 'icon-cross',
-                handler : function () { win.close () }
-            },{
                 text : 'Create',
-                iconCls : 'icon-report_add',
+                iconCls : 'icon-tick',
                 handler : function () {
                     tree.el.mask ('Please wait', 'x-mask-loading')
                     var source = propertyGrid.getSource ()
@@ -523,9 +539,11 @@ var reportManager = function () {
                         rank : rank + 1
                     }); win.close ()
                 }
-            }],
-
-            items : [propertyGrid]
+            },{
+                text : 'Cancel',
+                iconCls : 'icon-cross',
+                handler : function () { win.close () }
+            }]
         });
 
         win.show (this);
@@ -561,7 +579,9 @@ var reportManager = function () {
             }
         }
 
-        prompt_message ('Create Folder', 'Enter a name:', _callback);
+        prompt_message (
+            'Create Folder', 'Enter a name:', _callback, null, 'icon-folder_add'
+        );
     }
 
     // #########################################################################
@@ -569,22 +589,22 @@ var reportManager = function () {
 
     function _addTextFile () {
 
-        var tree = Ext.getCmp ('reportManager.tree.id')
-        var model = tree.getSelectionModel ()
-        var node = model.getSelectedNode ()
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var model = tree.getSelectionModel ();
+        var node = model.getSelectedNode ();
 
         if (node == undefined) {
             return;
         }
 
         if (node.isLeaf()) {
-            node = node.parentNode
+            node = node.parentNode;
         }
 
         function _callback (btn, text) {
             if (btn == 'ok') {
-                tree.el.mask ('Please wait', 'x-mask-loading')
-                var rank = node.childNodes.indexOf (node.lastChild)
+                tree.el.mask ('Please wait', 'x-mask-loading');
+                var rank = node.childNodes.indexOf (node.lastChild);
 
                 reportManager.crud.create (urls.createText, {
                     nodeId : node.id,
@@ -595,7 +615,9 @@ var reportManager = function () {
             }
         }
 
-        prompt_message ('Create Text', 'Enter a name:', _callback);
+        prompt_message (
+            'Create Text', 'Enter a name:', _callback, null, 'icon-page_add'
+        );
     }
 
     // #########################################################################
@@ -644,7 +666,9 @@ var reportManager = function () {
             }
         }
 
-        prompt_message ('Rename', 'Enter a name:', _callback, text);
+        prompt_message (
+            'Rename', 'Enter a name:', _callback, text, 'icon-document_rename'
+        );
     }
 
     // #########################################################################

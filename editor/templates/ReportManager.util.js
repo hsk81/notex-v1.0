@@ -1,9 +1,8 @@
 var reportManagerUtil = function () {
 
     function _prompt_message (title, message, callback, text, iconCls) {
-
         if (iconCls == undefined) {
-            iconCls = 'icon-document_rename';
+            iconCls = 'icon-document';
         }
 
         Ext.MessageBox.show({
@@ -19,7 +18,7 @@ var reportManagerUtil = function () {
     }
 
     function _error_message (message) {
-        Ext.Msg.show ({
+        Ext.MessageBox.show ({
             title : "Error",
             msg : message,
             buttons: Ext.Msg.OK,

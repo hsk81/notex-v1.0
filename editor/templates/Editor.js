@@ -106,7 +106,7 @@ var editor = function () {
         }
 
         if (tabInfo.save) {
-            Ext.getCmp ('reportManager.id').fireEvent ('saveTextTab', tab)
+            Ext.getCmp ('reportManager.id').fireEvent ('saveTab', tab)
         }
     }
 
@@ -184,7 +184,7 @@ var editor = function () {
         }
 
         if (tabInfo.save) {
-            Ext.getCmp ('reportManager.id').fireEvent ('saveImageTab', tab)
+            Ext.getCmp ('reportManager.id').fireEvent ('saveTab', tab)
         }
     }
 
