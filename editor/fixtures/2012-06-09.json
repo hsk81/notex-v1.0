@@ -40,7 +40,7 @@
         "model": "editor.base_type",
         "fields": {
             "_code": "image",
-            "_icon": "icon-image",
+            "_icon": "icon-picture",
             "_desc": "image"
         }
     },

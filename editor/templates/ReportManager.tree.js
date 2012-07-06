@@ -191,7 +191,7 @@ var reportManagerTree = function () {
         },
 
         isImage : function (node) {
-            return isOfIconClass (node, 'icon-image');
+            return isOfIconClass (node, 'icon-picture');
         },
 
         isLeaf : function (node) {
