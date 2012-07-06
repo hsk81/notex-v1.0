@@ -6,9 +6,9 @@
 
 Once you've entered some significant amount of text, you can transform your input into a nice looking PDF or HTML. Since you have separated content from presentation, multiple target formats become feasible and it is easy for |NoTex| to produce the desired PDF or HTML documents.
 
-While you write though, you may want to *emphasize* certain words or thoughts: Just put them between two asterisks `*`. Emphasizing does not mean to write words in an italic script, since the italic script is just *one* way of expressing emphasis: You could underline them, use another color or just capital letters; it does not matter, since in all cases your one and only intent is *emphasis*. Therefore |NoTex| has one form of a simple emphasis, which is putting the words between asterisks. In the PDF/HTML the emphasized words are indeed put into italics, but that is a presentation issue not a matter of content.
+While you write though, you may want to *emphasize* certain words or thoughts: Just put them between two asterisks ``*``. Emphasizing does not mean to write words in an italic script, since the italic script is just *one* way of expressing emphasis: You could underline them, use another color or just capital letters; it does not matter, since in all cases your one and only intent is *emphasis*. Therefore |NoTex| has one form of a simple emphasis, which is putting the words between asterisks. In the PDF/HTML the emphasized words are indeed put into italics, but that is a presentation issue not a matter of content.
 
-Similarly if you feel that some of your thoughts are **very** important, just use double asterisks `**`. They will be rendered bold since |NoTex| *defines* that very important elements of a text should be presented boldfaced, but that's again presentation and not content.
+Similarly if you feel that some of your thoughts are **very** important, just use double asterisks ``**``. They will be rendered bold since |NoTex| *defines* that very important elements of a text should be presented boldfaced, but that's again presentation and not content.
 
 This separation of content from presentation w.r.t. simple and strong emphasis may seem minuscule, but if you think about the many elements a standard text is build of then things start to make sense: |NoTex| allows you to express structures like
 

@@ -32,6 +32,10 @@ var editor = function () {
         if (tab) {
             this.activate (tab)
         } else {
+            var mode = mapExtToMode(
+                getFilenameWithExt (tabInfo.title).extension
+            );
+
             tab = this.add ({
                 title : tabInfo.title,
                 id : tabInfo.id,
@@ -48,6 +52,8 @@ var editor = function () {
                     return this.getEditor ().getValue ()
                 },
 
+                tbar : getEditorTBar (mode),
+
                 items : [{
                     xtype : 'ux-codemirror',
                     anchor : '100% 100%',
@@ -57,9 +63,7 @@ var editor = function () {
                         id : 'editorId' + tabInfo.id,
                         value : tabInfo.text,
                         fontSize : this.fontSize,
-                        mode : mapExtToMode(
-                            getFilenameWithExt (tabInfo.title).extension
-                        )
+                        mode : mode
                     }
                 }],
 
@@ -250,7 +254,7 @@ var editor = function () {
         enableTabScroll : true,
         tabPosition : 'bottom',
 
-        tbar : editorTBar,
+        tbar : editorRibbon,
 
         listeners : {
             beforetabchange : beforeTabChange,
@@ -259,5 +263,5 @@ var editor = function () {
             deleteTab : deleteTab,
             zoom : zoom
         }
-    })
+    });
 }();

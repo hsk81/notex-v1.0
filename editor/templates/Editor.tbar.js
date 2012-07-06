@@ -1,164 +1,208 @@
-var editorTBar = function () {
+function getEditorTBar (mode) {
 
-    function changeIconClassFrom32To16 (toolbar, lastOverflow) {
+    if (mode != 'rst-plus') {
+        return;
+    }
+
+    function toggleButtonText (toolbar, lastOverflow) {
         if (lastOverflow) {
-            for (var idx in toolbar.items.items) {
-                var group = toolbar.items.items[idx]
-                if (group.hidden) {
-                    var buttons = group.findByType ('button')
-                    for (var jdx in buttons) {
-                        var button = buttons[jdx]
-                        if (button && button.iconCls) {
-                            button.iconCls = button.iconCls.replace('-32', '')
-                        }
-                    }
+            var buttons = toolbar.items.items;
+            for (var idx in buttons) {
+                var button = buttons[idx];
+                if (button && button.defaults) {
+                    button.text = button.defaults.text;
                 }
             }
         }
     }
 
-    return new Ext.Toolbar ({ enableOverflow : true, items : [{
+    return new Ext.Toolbar ({
 
-        xtype: 'buttongroup',
-        title: 'Document',
-        columns: 2,
-        defaults: { scale: 'large'},
+        enableOverflow : true,
+
+        listeners : {
+            overflowchange : toggleButtonText
+        },
 
         items: [{
-            text : 'Save',
-            iconCls : 'icon-disk-32',
-            iconAlign: 'left',
-            tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
-            }
+            iconCls : 'icon-arrow_undo',
+            defaults : { text : 'Undo'},
+            tooltip : 'Undo',
+            handler : function (button, event) {}
         },{
-            text : 'Open',
-            iconCls : 'icon-folder_page-32',
-            iconAlign: 'left',
-            tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('openFile');
-            }
+            iconCls : 'icon-arrow_redo',
+            defaults : { text : 'Redo'},
+            tooltip : 'Redo',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-cut',
+            defaults : { text : 'Cut'},
+            tooltip : 'Cut Text',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-page_white_copy',
+            defaults : { text : 'Copy'},
+            tooltip : 'Copy',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-paste_plain',
+            defaults : { text : 'Paste'},
+            tooltip : 'Paste',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-text_prose',
+            text : 'Paragraph',
+            tooltip : 'Document Headers',
+            split : true,
+            menu: { items: [{
+                iconCls : 'icon-text_prose',
+                text: 'Paragraph',
+                handler : function (button, event) {}
+            },'-',{
+                iconCls : 'icon-text_heading_1',
+                text : 'Parts',
+                handler : function (button, event) {}
+            },{
+                iconCls : 'icon-text_heading_2',
+                text : 'Chapters',
+                handler : function (button, event) {}
+            },{
+                iconCls : 'icon-text_heading_3',
+                text : 'Sections',
+                handler : function (button, event) {}
+            },{
+                iconCls : 'icon-text_heading_4',
+                text : 'Subsections',
+                handler : function (button, event) {}
+            },{
+                iconCls : 'icon-text_heading_5',
+                text : 'Sub-Subsections',
+                handler : function (button, event) {}
+            },'-',{
+                iconCls : 'icon-text_heading_6',
+                text : 'Rubric Heading',
+                handler : function (button, event) {}
+            }]}
+        },'-',{
+            iconCls : 'icon-text_bold',
+            defaults : { text : 'Strong Emphasis'},
+            tooltip : 'Strong Emphasis',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_italic',
+            defaults : { text : 'Emphasis'},
+            tooltip : 'Emphasis',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_allcaps',
+            defaults : { text : 'Literal'},
+            tooltip : 'Literal',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_underline',
+            defaults : { text : 'Underline'},
+            tooltip : 'Underline',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_strikethroungh',
+            defaults : { text : 'Strikethrough'},
+            tooltip : 'Strikethrough',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-text_subscript',
+            defaults : { text : 'Subscript'},
+            tooltip : 'Subscript',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_superscript',
+            defaults : { text : 'Superscript'},
+            tooltip : 'Superscript',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-text_lowercase',
+            defaults : { text : 'Lower Case'},
+            tooltip : 'Lower Case',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_uppercase',
+            defaults : { text : 'Upper Case'},
+            tooltip : 'Upper Case',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-text_list_bullets',
+            defaults : { text : 'Bullet List'},
+            tooltip : 'Bullet List',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_list_numbers',
+            defaults : { text : 'Number List'},
+            tooltip : 'Number List',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_indent_remove',
+            defaults : { text : 'Decrease Indent'},
+            tooltip : 'Decrease Indent',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_indent',
+            defaults : { text : 'Increase Indent'},
+            tooltip : 'Increase Indent',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-text_align_left',
+            defaults : { text : 'Align Left'},
+            tooltip : 'Align Left',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_align_center',
+            defaults : { text : 'Center'},
+            tooltip : 'Center',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_align_right',
+            defaults : { text : 'Align Right'},
+            tooltip : ' Align Right',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_align_justity',
+            defaults : { text : 'Justify'},
+            tooltip : 'Justify',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-picture',
+            defaults : { text : 'Picture'},
+            tooltip : 'Picture',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-link',
+            defaults : { text : 'Hyperlink'},
+            tooltip : 'Hyperlink',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-hrule',
+            defaults : { text : 'Horizontal Rule'},
+            tooltip : 'Horizontal Rule',
+            handler : function (button, event) {}
+        },'-',{
+            iconCls : 'icon-find',
+            defaults : { text : 'Search'},
+            tooltip : 'Search',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-text_replace',
+            defaults : { text : 'Replace'},
+            tooltip : 'Replace',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-document_page_next',
+            defaults : { text : 'Next'},
+            tooltip : 'Next',
+            handler : function (button, event) {}
+        },{
+            iconCls : 'icon-document_page_previous',
+            defaults : { text : 'Previous'},
+            tooltip : 'Previous',
+            handler : function (button, event) {}
         }]
-
-    },{
-
-        xtype: 'buttongroup',
-        title: 'Manage',
-        columns: 3,
-        defaults: { scale: 'large'},
-        items: [{
-            text : 'Add',
-            iconCls : 'icon-add-32',
-            xtype :'splitbutton',
-            tooltip : '<b>Add</b><br/>Add a new report, folder or file',
-            menu : {
-                xtype : 'menu',
-                plain : true,
-
-                items : [{
-                    iconCls : 'icon-report',
-                    text : 'Report',
-                    handler : function (button, event) {
-                        Ext.getCmp ('reportManager.id').fireEvent ('addReport')
-                    }
-                },{
-                    iconCls : 'icon-folder',
-                    text : 'Folder',
-                    handler : function (button, event) {
-                        Ext.getCmp ('reportManager.id').fireEvent ('addFolder')
-                    }
-                },{
-                    iconCls : 'icon-page',
-                    text : 'Plain Text',
-                    handler : function (button, event) {
-                        Ext.getCmp ('reportManager.id').fireEvent ('addTextFile')
-                    }
-                }]
-            }
-        },{
-            text : 'Rename',
-            iconCls : 'icon-pencil-32',
-            iconAlign: 'left',
-            tooltip : '<b>Rename</b><br/>Rename selected report, folder or file',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('renameSelectedNode')
-            }
-        },{
-            text : 'Delete',
-            iconCls : 'icon-delete-32',
-            iconAlign: 'left',
-            tooltip : '<b>Delete</b><br/>Delete selected report, folder or file',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('deleteSelectedNode')
-            }
-        }]
-
-    },{
-
-        xtype: 'buttongroup',
-        title: 'Reports',
-        columns: 2,
-        defaults: { scale: 'large'},
-        items: [{
-            text: 'Import',
-            iconCls: 'icon-page_white_zip-32',
-            iconAlign: 'left',
-            tooltip : '<b>Import</b><br/>Open a report from a <b>ZIP</b> archive (at <i>local</i> storage)',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('importReport')
-            }
-        },{
-            id : 'btn.export.editor.id',
-            text: 'Export',
-            iconCls: 'icon-report_go-32',
-            iconAlign: 'left',
-            tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportReport', urls.exportReport)
-            }
-        }]
-
-    },{
-
-        xtype: 'buttongroup',
-        title: 'Export as ..',
-        columns: 4,
-        defaults: { scale: 'large'},
-        items: [{
-            id : 'btn.export-text.editor.id',
-            text : 'Text',
-            iconCls : 'icon-page_white_text-32',
-            iconAlign: 'left',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportText')
-            }
-        },{
-            id : 'btn.export-latex.editor.id',
-            text : 'LaTex',
-            iconCls : 'icon-page_white_code-32',
-            iconAlign: 'left',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
-            }
-        },{
-            id : 'btn.export-pdf.editor.id',
-            text : 'PDF',
-            iconCls : 'icon-page_white_acrobat-32',
-            iconAlign: 'left',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
-            }
-        },{
-            id : 'btn.export-html.editor.id',
-            text : 'HTML',
-            iconCls : 'icon-page_white_world-32',
-            iconAlign: 'left',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
-            }
-        }]
-
-    }], listeners: { overflowchange : changeIconClassFrom32To16}});
-}();
+    });
+}

@@ -61,6 +61,11 @@ urlpatterns = patterns ('',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='Editor.tbar.js'),
+    url (r'^Editor.ribbon.js$', direct_to_template, {
+        'template' : 'Editor.ribbon.js',
+        'mimetype' : 'text/javascript',
+        'extra_context' : {}
+    }, name='Editor.ribbon.js'),
 
     url (r'^StatusBar.js$', direct_to_template, {
         'template' : 'StatusBar.js',
