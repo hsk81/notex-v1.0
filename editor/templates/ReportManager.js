@@ -650,8 +650,8 @@ var reportManager = function () {
             return;
         }
 
-        var prev = prev (node)
-        if (tree.isReport (prev)) {
+        var pnod = prev (node)
+        if (tree.isReport (pnod)) {
             return;
         }
 
@@ -659,15 +659,15 @@ var reportManager = function () {
         tree.el.mask ('Please wait', 'x-mask-loading');
 
         Ext.Ajax.request ({
-            params : {id: node.id, jd: prev.id},
+            params : {id: node.id, jd: pnod.id},
             url : urls.decreaseRank,
 
             success : function (xhr, opts) {
-                if (node.parentNode == prev.parentNode.parentNode) {
-                    prev.parentNode.insertBefore (node, prev);
-                    prev.parentNode.insertBefore (prev, node);
+                if (node.parentNode == pnod.parentNode.parentNode) {
+                    pnod.parentNode.insertBefore (node, pnod);
+                    pnod.parentNode.insertBefore (pnod, node);
                 } else {
-                    prev.parentNode.insertBefore (node, prev);
+                    pnod.parentNode.insertBefore (node, pnod);
                 }
 
                 tree.selectPath (node.getPath ());
@@ -684,9 +684,9 @@ var reportManager = function () {
     }
 
     function prev (node) {
-        var prev = node.previousSibling
-        if (prev) {
-            return last (prev);
+        var prevSibling = node.previousSibling
+        if (prevSibling) {
+            return last (prevSibling);
         } else {
             return node.parentNode;
         }
@@ -717,8 +717,8 @@ var reportManager = function () {
             return;
         }
 
-        var next = next (node)
-        if (tree.isReport (next)) {
+        var nnod = next (node)
+        if (tree.isReport (nnod)) {
             return;
         }
 
@@ -726,14 +726,14 @@ var reportManager = function () {
         tree.el.mask ('Please wait', 'x-mask-loading');
 
         Ext.Ajax.request ({
-            params : {id: node.id, jd: next.id },
+            params : {id: node.id, jd: nnod.id },
             url : urls.increaseRank,
 
             success : function (xhr, opts) {
-                if (next.parentNode == node.parentNode) {
-                    next.parentNode.insertBefore (next, node);
+                if (nnod.parentNode == node.parentNode) {
+                    nnod.parentNode.insertBefore (nnod, node);
                 } else {
-                    next.parentNode.insertBefore (node, next);
+                    nnod.parentNode.insertBefore (node, nnod);
                 }
 
                 tree.selectPath (node.getPath ());
@@ -750,9 +750,9 @@ var reportManager = function () {
     }
 
     function next (node) {
-        var next = node.nextSibling;
-        if (next) {
-            return first (next);
+        var nextSibling = node.nextSibling;
+        if (nextSibling) {
+            return first (nextSibling);
         } else {
             return node.parentNode.nextSibling;
         }
