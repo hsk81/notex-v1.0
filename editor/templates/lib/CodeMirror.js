@@ -91,69 +91,8 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
                         Ext.getCmp ('reportManager.id').fireEvent ('openFile');
                     },
 
-                    'Ctrl-B' : function (cm) {
-                        var mode = cm.getOption ('mode')
-                        if (mode == 'rst' || mode == 'rst-plus') {
-                            var cur = cm.getCursor ()
-                            var tok = cm.getTokenAt (cur)
-
-                            if (tok.className == 'strong' && tok.string != '**') {
-                                return; // no bold toggle if not all selected
-                            }
-                            if (tok.className == 'em') {
-                                return; // no bold toggle if not bold
-                            }
-
-                            var sel = cm.getSelection ();
-                            if (sel && sel.length > 0) {
-                                if (sel.match ('^\\*[^\\*](.*)[^\\*]\\*$')) {
-                                    return;
-                                }
-
-                                var rep = undefined;
-                                if (sel.match ('^\\*\\*(.*)\\*\\*$')) {
-                                    rep = sel.replace (/^\*\*/g,'');
-                                    rep = rep.replace (/\*\*$/g,'');
-                                } else {
-                                    rep = String.format ('**{0}**', sel);
-                                }
-
-                                cm.replaceSelection (rep);
-                            }
-                        }
-                    },
-
-                    'Ctrl-I' : function (cm) {
-                        var mode = cm.getOption ('mode')
-                        if (mode == 'rst' || mode == 'rst-plus') {
-                            var cur = cm.getCursor ()
-                            var tok = cm.getTokenAt (cur)
-
-                            if (tok.className == 'em' && tok.string != '*') {
-                                return; // no em toggle if not all selected
-                            }
-                            if (tok.className == 'strong') {
-                                return; // no em toggle if not em
-                            }
-
-                            var sel = cm.getSelection ();
-                            if (sel && sel.length > 0) {
-                                if (sel.match ('^\\*\\*(.*)\\*\\*$')) {
-                                    return;
-                                }
-
-                                var rep = undefined;
-                                if (sel.match ('^\\*(.*)\\*$')) {
-                                    rep = sel.replace (/^\*/g,'');
-                                    rep = rep.replace (/\*$/g,'');
-                                } else {
-                                    rep = String.format ('*{0}*', sel);
-                                }
-
-                                cm.replaceSelection (rep);
-                            }
-                        }
-                    }
+                    'Ctrl-B' : this.toggleStrongEmphasis,
+                    'Ctrl-I' : this.toggleEmphasis
                 }
 
                 this.codeEditor = new CodeMirror.fromTextArea (this.el.dom, {
@@ -205,6 +144,148 @@ Ext.ux.form.CodeMirror = Ext.extend (Ext.form.TextArea, {
             if (codeEditorEl) {
                 codeEditorEl.setStyle ('font-size', value);
                 this.codeEditor.refresh ();
+            }
+        }
+    },
+
+    toggleStrongEmphasis: function (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var mode = cm.getOption ('mode')
+        if (mode == 'rst' || mode == 'rst-plus') {
+            var cur = cm.getCursor ()
+            var tok = cm.getTokenAt (cur)
+
+            if (tok.className == 'strong' && tok.string != '**') {
+                return; // no bold toggle if not all selected
+            }
+            if (tok.className != 'strong' && tok.className) {
+                return; // no bold toggle if not bold
+            }
+
+            var sel = cm.getSelection ();
+            if (sel && sel.length > 0) {
+
+                var rep = undefined;
+                if (sel.match ('^\\*\\*(.*)\\*\\*$')) {
+                    rep = sel.replace (/^\*\*/g,'');
+                    rep = rep.replace (/\*\*$/g,'');
+                } else {
+                    if (sel.match (/^:(.*?):`(.*)`$/)) {
+                        return; //another role already present!
+                    }
+                    rep = String.format ('**{0}**', sel);
+                }
+
+                cm.replaceSelection (rep);
+            }
+        }
+    },
+
+    toggleEmphasis: function (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var mode = cm.getOption ('mode')
+        if (mode == 'rst' || mode == 'rst-plus') {
+            var cur = cm.getCursor ()
+            var tok = cm.getTokenAt (cur)
+
+            if (tok.className == 'em' && tok.string != '*') {
+                return; // no em toggle if not all selected
+            }
+            if (tok.className != 'em' && tok.className) {
+                return; // no em toggle if not em
+            }
+
+            var sel = cm.getSelection ();
+            if (sel && sel.length > 0) {
+
+                var rep = undefined;
+                if (sel.match ('^\\*(.*)\\*$')) {
+                    rep = sel.replace (/^\*/g,'');
+                    rep = rep.replace (/\*$/g,'');
+                } else {
+                    if (sel.match (/^:(.*?):`(.*)`$/)) {
+                        return; //another role already present!
+                    }
+                    rep = String.format ('*{0}*', sel);
+                }
+
+                cm.replaceSelection (rep);
+            }
+        }
+    },
+
+    toggleLiteral: function (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var mode = cm.getOption ('mode')
+        if (mode == 'rst' || mode == 'rst-plus') {
+            var cur = cm.getCursor ()
+            var tok = cm.getTokenAt (cur)
+
+            if (tok.className == 'string' && tok.string != '``') {
+                return; // no literal toggle if not all selected
+            }
+            if (tok.className != 'string' && tok.className) {
+                return; // no literal toggle if not literal
+            }
+
+            var sel = cm.getSelection ();
+            if (sel && sel.length > 0) {
+
+                var rep = undefined;
+                if (sel.match ('^``(.*)``$')) {
+                    rep = sel.replace (/^``/,'');
+                    rep = rep.replace (/``$/,'');
+                } else {
+                    if (sel.match (/^:(.*?):`(.*)`$/)) {
+                        return; //another role already present!
+                    }
+                    rep = String.format ('``{0}``', sel);
+                }
+
+                cm.replaceSelection (rep);
+            }
+        }
+    },
+
+    toggleSubscript: function (cm) {
+        this.toggleScript (cm, 'sub');
+    },
+    toggleSupscript: function (cm) {
+        this.toggleScript (cm, 'sup');
+    },
+    toggleScript: function (cm, role) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var mode = cm.getOption ('mode')
+        if (mode == 'rst' || mode == 'rst-plus') {
+            var cur = cm.getCursor ()
+            var tok = cm.getTokenAt (cur)
+
+            if (tok.className == 'string-2' && tok.string != '`') {
+                return; // no super toggle if not all selected
+            }
+            if (tok.className != 'string-2' && tok.className) {
+                return; // no super toggle if not super
+            }
+
+            var sel = cm.getSelection ();
+            if (sel && sel.length > 0) {
+
+                var rep = undefined;
+                if (sel.match (new RegExp ('^:' + role + ':`(.*)`$'))) {
+                    rep = sel.replace (new RegExp ('^:' + role + ':`'),'');
+                    rep = rep.replace (/`$/,'');
+                } else {
+                    if (sel.match (/^:(.*?):`(.*)`$/)) {
+                        return; //another role already present!
+                    }
+                    rep = String.format (':' + role + ':`{0}`', sel);
+                }
+
+                cm.replaceSelection (rep);
             }
         }
     },

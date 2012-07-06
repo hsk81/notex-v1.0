@@ -1,4 +1,4 @@
-function getEditorTBar (mode) {
+function getEditorTBar (mode, editorId) {
 
     if (mode != 'rst-plus') {
         return;
@@ -16,8 +16,72 @@ function getEditorTBar (mode) {
         }
     }
 
+    function undo (button, event) {
+        var cm = Ext.getCmp (editorId).codeEditor;
+        var historySize = cm.historySize ();
+        if (historySize.undo > 1) cm.undo ();
+        cm.focus ();
+    }
+    function redo (button, event) {
+        var cm = Ext.getCmp (editorId).codeEditor;
+        var historySize = cm.historySize ();
+        if (historySize.redo > 0) cm.redo ();
+        cm.focus ();
+    }
+
+    function cut (button, event) {
+        var cm = Ext.getCmp (editorId).codeEditor;
+        var doc = Ext.getDoc ();
+        doc.clipboard = cm.getSelection ();
+        cm.replaceSelection ('');
+        cm.focus ();
+    }
+    function copy (button, event) {
+        var cm = Ext.getCmp (editorId).codeEditor;
+        var doc = Ext.getDoc ();
+        doc.clipboard = cm.getSelection ();
+        cm.focus ();
+    }
+    function paste (button, event) {
+        var cm = Ext.getCmp (editorId).codeEditor;
+        var doc = Ext.getDoc ();
+        if (doc.clipboard) {
+            cm.replaceSelection (doc.clipboard);
+            cm.setCursor (cm.getCursor ());
+            cm.focus ();
+        }
+    }
+
+    function strongEmphasis (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toggleStrongEmphasis ();
+        ed.codeEditor.focus ();
+    }
+    function emphasis (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toggleEmphasis ();
+        ed.codeEditor.focus ();
+    }
+    function literal (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toggleLiteral ();
+        ed.codeEditor.focus ();
+    }
+
+    function subscript (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toggleSubscript ();
+        ed.codeEditor.focus ();
+    }
+    function supscript (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toggleSupscript ();
+        ed.codeEditor.focus ();
+    }
+
     return new Ext.Toolbar ({
 
+        editorId : editorId,
         enableOverflow : true,
 
         listeners : {
@@ -28,27 +92,27 @@ function getEditorTBar (mode) {
             iconCls : 'icon-arrow_undo',
             defaults : { text : 'Undo'},
             tooltip : 'Undo',
-            handler : function (button, event) {}
+            handler : undo
         },{
             iconCls : 'icon-arrow_redo',
             defaults : { text : 'Redo'},
             tooltip : 'Redo',
-            handler : function (button, event) {}
+            handler : redo
         },'-',{
             iconCls : 'icon-cut',
             defaults : { text : 'Cut'},
             tooltip : 'Cut Text',
-            handler : function (button, event) {}
+            handler : cut
         },{
             iconCls : 'icon-page_white_copy',
             defaults : { text : 'Copy'},
             tooltip : 'Copy',
-            handler : function (button, event) {}
+            handler : copy
         },{
             iconCls : 'icon-paste_plain',
             defaults : { text : 'Paste'},
             tooltip : 'Paste',
-            handler : function (button, event) {}
+            handler : paste
         },'-',{
             iconCls : 'icon-text_prose',
             text : 'Paragraph',
@@ -87,37 +151,27 @@ function getEditorTBar (mode) {
             iconCls : 'icon-text_bold',
             defaults : { text : 'Strong Emphasis'},
             tooltip : 'Strong Emphasis',
-            handler : function (button, event) {}
+            handler : strongEmphasis
         },{
             iconCls : 'icon-text_italic',
             defaults : { text : 'Emphasis'},
             tooltip : 'Emphasis',
-            handler : function (button, event) {}
+            handler : emphasis
         },{
             iconCls : 'icon-text_allcaps',
             defaults : { text : 'Literal'},
             tooltip : 'Literal',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_underline',
-            defaults : { text : 'Underline'},
-            tooltip : 'Underline',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_strikethroungh',
-            defaults : { text : 'Strikethrough'},
-            tooltip : 'Strikethrough',
-            handler : function (button, event) {}
+            handler : literal
         },'-',{
             iconCls : 'icon-text_subscript',
             defaults : { text : 'Subscript'},
             tooltip : 'Subscript',
-            handler : function (button, event) {}
+            handler : subscript
         },{
             iconCls : 'icon-text_superscript',
             defaults : { text : 'Superscript'},
             tooltip : 'Superscript',
-            handler : function (button, event) {}
+            handler : supscript
         },'-',{
             iconCls : 'icon-text_lowercase',
             defaults : { text : 'Lower Case'},
@@ -202,7 +256,10 @@ function getEditorTBar (mode) {
             iconCls : 'icon-document_page_previous',
             defaults : { text : 'Previous'},
             tooltip : 'Previous',
-            handler : function (button, event) {}
+            handler : function (button, event) {
+                var cm = Ext.getCmp (editorId).codeEditor;
+                CM = cm; console.info (CM);
+            }
         }]
     });
 }
