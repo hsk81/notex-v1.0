@@ -34,10 +34,13 @@ htmlhelp_basename: sourcedoc
 # LaTex: http://sphinx.pocoo.org/config.html#options-for-latex-output
 # -----------------------------------------------------------------------------
 
+latex_backend: pdflatex ## or xelatex
+
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
-    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O}
+    fontpkg: \\usepackage{libertine} ## for pdflatex
+ ## fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O} ## for xelatex
 
     preamble: ${MKAMBLE}${COLUMNS}
 
