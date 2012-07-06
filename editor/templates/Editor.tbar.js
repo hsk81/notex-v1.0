@@ -17,7 +17,7 @@ var editorTBar = function () {
         }
     }
 
-    return { enableOverflow : true, items : [{
+    return new Ext.Toolbar ({ enableOverflow : true, items : [{
 
         xtype: 'buttongroup',
         title: 'Document',
@@ -160,5 +160,5 @@ var editorTBar = function () {
             }
         }]
 
-    }], listeners: { overflowchange : changeIconClassFrom32To16}};
+    }], listeners: { overflowchange : changeIconClassFrom32To16}});
 }();
