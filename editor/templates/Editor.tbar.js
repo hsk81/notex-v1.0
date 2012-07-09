@@ -136,6 +136,21 @@ function getEditorTBar (mode, editorId) {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function dec_lineindent (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.decreaseLineIndent ()
+        ed.codeEditor.focus ();
+    }
+
+    function inc_lineindent (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.increaseLineIndent ()
+        ed.codeEditor.focus ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return new Ext.Toolbar ({
 
         editorId : editorId,
@@ -253,12 +268,12 @@ function getEditorTBar (mode, editorId) {
             iconCls : 'icon-text_indent_remove',
             defaults : { text : 'Decrease Indent'},
             tooltip : 'Decrease Indent',
-            handler : function (button, event) {}
+            handler : dec_lineindent
         },{
             iconCls : 'icon-text_indent',
             defaults : { text : 'Increase Indent'},
             tooltip : 'Increase Indent',
-            handler : function (button, event) {}
+            handler : inc_lineindent
         },'-',{
             iconCls : 'icon-text_align_left',
             defaults : { text : 'Align Left'},

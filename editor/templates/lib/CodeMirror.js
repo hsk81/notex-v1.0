@@ -353,6 +353,30 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function decreaseLineIndent (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+        var begCursor = cm.getCursor (true);
+        var endCursor = cm.getCursor (false);
+
+        if (begCursor.line == endCursor.line) {
+            cm.indentLine (begCursor.line, false);
+        } else {
+            for (var line=begCursor.line; line<endCursor.line; line++) {
+                cm.indentLine (line, false);
+            }
+        }
+    }
+
+    function increaseLineIndent (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+        //var cursor = cm.getCursor (true);
+        //cm.indentLine (cursor.line, true);
+        cm.indentSelection ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return Ext.extend (Ext.form.TextArea, {
         initComponent: initComponent,
 
@@ -372,6 +396,9 @@ Ext.ux.form.CodeMirror = function () {
 
         insertBulletList: insertBulletList,
         insertNumberList: insertNumberList,
+
+        decreaseLineIndent: decreaseLineIndent,
+        increaseLineIndent: increaseLineIndent,
 
         listeners: {
             refresh: refresh,
