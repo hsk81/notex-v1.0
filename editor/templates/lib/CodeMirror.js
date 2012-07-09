@@ -284,6 +284,75 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function insertBulletList (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var sel = cm.getSelection ();
+        var rep = ''
+
+        if (sel) {
+            sel.split ('\n')
+                .filter (function (el) { return el; })
+                .forEach (function (el) {
+
+                var group = el.match (/^(\s*)(\*)(\s+)/)
+                if (group) {
+                    rep += group[1] + el.replace (group[0], '') + '\n';
+                } else {
+                    var group = el.match (/^(\s*)(.*)/)
+                    if (group) {
+                        rep += String.format (
+                            '{0}{1}{2}\n', group[1], '* ', group[2]
+                        );
+                    }
+                }
+
+            });
+        } else {
+            rep = '* '
+        }
+
+        cm.replaceSelection (rep);
+        var cur = cm.getCursor ();
+        cm.setSelection (cur, cur);
+    }
+
+    function insertNumberList (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var sel = cm.getSelection ();
+        var rep = ''
+
+        if (sel) {
+            sel.split ('\n')
+                .filter (function (el) { return el; })
+                .forEach (function (el, idx) {
+
+                var group = el.match (/^(\s*)([0-9]+\.)(\s+)/)
+                if (group) {
+                    rep += group[1] + el.replace (group[0], '') + '\n';
+                } else {
+                    var group = el.match (/^(\s*)(.*)/)
+                    if (group) {
+                        rep += String.format (
+                            '{0}{1}{2}\n', group[1], (1+idx) + '. ', group[2]
+                        );
+                    }
+                }
+
+            });
+        } else {
+            rep = '1. '
+        }
+
+        cm.replaceSelection (rep);
+        var cur = cm.getCursor ();
+        cm.setSelection (cur, cur);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return Ext.extend (Ext.form.TextArea, {
         initComponent: initComponent,
 
@@ -300,6 +369,9 @@ Ext.ux.form.CodeMirror = function () {
 
         toLowerCase: toLowerCase,
         toUpperCase: toUpperCase,
+
+        insertBulletList: insertBulletList,
+        insertNumberList: insertNumberList,
 
         listeners: {
             refresh: refresh,

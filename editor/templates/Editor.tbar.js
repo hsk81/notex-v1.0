@@ -121,6 +121,21 @@ function getEditorTBar (mode, editorId) {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function bulletlist (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertBulletList ();
+        ed.codeEditor.focus ();
+    }
+
+    function numberlist (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertNumberList ();
+        ed.codeEditor.focus ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return new Ext.Toolbar ({
 
         editorId : editorId,
@@ -228,12 +243,12 @@ function getEditorTBar (mode, editorId) {
             iconCls : 'icon-text_list_bullets',
             defaults : { text : 'Bullet List'},
             tooltip : 'Bullet List',
-            handler : function (button, event) {}
+            handler : bulletlist
         },{
             iconCls : 'icon-text_list_numbers',
             defaults : { text : 'Number List'},
             tooltip : 'Number List',
-            handler : function (button, event) {}
+            handler : numberlist
         },{
             iconCls : 'icon-text_indent_remove',
             defaults : { text : 'Decrease Indent'},

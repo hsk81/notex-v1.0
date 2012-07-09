@@ -14,6 +14,38 @@
     <!-- characters, just make ALL strings, on the page, json and db utf-8.  -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+    {%  block js-fix %}<script type="text/javascript">
+    if (!Array.prototype.forEach) {
+        Array.prototype.forEach = function (fn) {
+            var len = this.length;
+            if (typeof fn != "function")
+                throw new TypeError();
+            var self = arguments[1];
+            for (var i = 0; i < len; i++) {
+                if (i in this)
+                    fn.call(self, this[i], i, this);
+            }
+        };
+    }
+    if (!Array.prototype.filter) {
+        Array.prototype.filter = function(fn) {
+            var len = this.length;
+            if (typeof fn != "function")
+                throw new TypeError();
+            var res = new Array();
+            var self = arguments[1];
+            for (var i = 0; i < len; i++) {
+                if (i in this) {
+                    var val = this[i]; // in case fun mutates this
+                    if (fn.call(self, val, i, this))
+                        res.push(val);
+                }
+            }
+            return res;
+        };
+    }
+    </script>{% endblock %}
+
     <!-- Ext relies on its default css so include it here. -->
     <!-- This must come BEFORE javascript includes! -->
     <link rel="stylesheet" type="text/css"
