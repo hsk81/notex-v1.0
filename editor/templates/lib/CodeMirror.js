@@ -291,7 +291,7 @@ Ext.ux.form.CodeMirror = function () {
         var rep = ''
 
         if (sel) {
-            sel.split ('\n')
+            CodeMirror.splitLines (sel)
                 .filter (function (el) { return el; })
                 .forEach (function (el) {
 
@@ -324,7 +324,7 @@ Ext.ux.form.CodeMirror = function () {
         var rep = ''
 
         if (sel) {
-            sel.split ('\n')
+            CodeMirror.splitLines (sel)
                 .filter (function (el) { return el; })
                 .forEach (function (el, idx) {
 

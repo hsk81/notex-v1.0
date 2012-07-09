@@ -308,29 +308,41 @@ function getEditorTBar (mode, editorId) {
             iconCls : 'icon-hrule',
             defaults : { text : 'Horizontal Rule'},
             tooltip : 'Horizontal Rule',
-            handler : function (button, event) {}
+            handler : function (button, event) {
+                var ed = Ext.getCmp (editorId);
+                CM = ed.codeEditor; console.info (CM);
+            }
         },'-',{
             iconCls : 'icon-find',
             defaults : { text : 'Search'},
             tooltip : 'Search',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_replace',
-            defaults : { text : 'Replace'},
-            tooltip : 'Replace',
-            handler : function (button, event) {}
+            handler : function (button, event) {
+                var ed = Ext.getCmp (editorId);
+                CodeMirror.commands['find'] (ed.codeEditor);
+            }
         },{
             iconCls : 'icon-document_page_next',
             defaults : { text : 'Next'},
             tooltip : 'Next',
-            handler : function (button, event) {}
+            handler : function (button, event) {
+                var ed = Ext.getCmp (editorId);
+                CodeMirror.commands['findNext'] (ed.codeEditor);
+            }
         },{
             iconCls : 'icon-document_page_previous',
             defaults : { text : 'Previous'},
             tooltip : 'Previous',
             handler : function (button, event) {
-                var cm = Ext.getCmp (editorId).codeEditor;
-                CM = cm; console.info (CM);
+                var ed = Ext.getCmp (editorId);
+                CodeMirror.commands['findPrev'] (ed.codeEditor);
+            }
+        },{
+            iconCls : 'icon-text_replace',
+            defaults : { text : 'Replace All'},
+            tooltip : 'Replace All',
+            handler : function (button, event) {
+                var ed = Ext.getCmp (editorId);
+                CodeMirror.commands['replaceAll'] (ed.codeEditor);
             }
         }]
     });
