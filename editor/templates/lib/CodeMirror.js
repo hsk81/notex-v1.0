@@ -84,14 +84,6 @@ Ext.ux.form.CodeMirror = function () {
             CodeMirror.defineMode ("yaml-plus", overlays.yamlPlus);
 
             var keymap = {
-                'Ctrl-S' : function (cm) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
-                },
-
-                'Ctrl-O' : function (cm) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('openFile');
-                },
-
                 'Ctrl-B' : function (cm) { ta.toggleStrong (cm); },
                 'Ctrl-I' : function (cm) { ta.toggleItalic (cm); }
             }
