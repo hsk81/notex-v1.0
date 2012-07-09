@@ -3,9 +3,7 @@ function getEditorTBar (mode, editorId) {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    if (mode != 'rst-plus') {
-        return;
-    }
+    if (mode != 'rst-plus') { return; }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -138,13 +136,34 @@ function getEditorTBar (mode, editorId) {
 
     function decLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
-        ed.decreaseLineIndent ()
+        ed.decreaseLineIndent ();
         ed.codeEditor.focus ();
     }
 
     function incLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
-        ed.increaseLineIndent ()
+        ed.increaseLineIndent ();
+        ed.codeEditor.focus ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function insertFigure (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertFigure ();
+        ed.codeEditor.focus ();
+    }
+
+    function insertHyperlink (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertHyperlink ();
+        ed.codeEditor.focus ();
+    }
+
+    function insertHorizontalLine (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertHorizontalLine ();
         ed.codeEditor.focus ();
     }
 
@@ -213,6 +232,11 @@ function getEditorTBar (mode, editorId) {
             text : 'Paragraph',
             tooltip : 'Document Headers',
             split : true,
+            handler : function (button, event) {
+                var ed = Ext.getCmp (editorId);
+                CM = ed.codeEditor; console.info ('[CM]', CM);
+            },
+
             menu: { items: [{
                 iconCls : 'icon-text_prose',
                 text: 'Paragraph',
@@ -319,22 +343,19 @@ function getEditorTBar (mode, editorId) {
             handler : function (button, event) {}
         },'-',{
             iconCls : 'icon-picture',
-            defaults : { text : 'Picture'},
-            tooltip : 'Picture',
-            handler : function (button, event) {}
+            defaults : { text : 'Figure'},
+            tooltip : 'Figure',
+            handler : insertFigure
         },{
             iconCls : 'icon-link',
             defaults : { text : 'Hyperlink'},
             tooltip : 'Hyperlink',
-            handler : function (button, event) {}
+            handler : insertHyperlink
         },{
             iconCls : 'icon-hrule',
-            defaults : { text : 'Horizontal Rule'},
-            tooltip : 'Horizontal Rule',
-            handler : function (button, event) {
-                var ed = Ext.getCmp (editorId);
-                CM = ed.codeEditor; console.info (CM);
-            }
+            defaults : { text : 'Horizontal Line'},
+            tooltip : 'Horizontal Line',
+            handler : insertHorizontalLine
         },'-',{
             iconCls : 'icon-find',
             defaults : { text : 'Search'},

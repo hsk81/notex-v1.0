@@ -366,6 +366,31 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function insertFigure (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+    }
+
+    function insertHyperlink (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+    }
+
+    function insertHorizontalLine (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+
+        var cur = cm.getCursor ();
+        if (cur.ch > 0) {
+            cm.replaceSelection ('\n\n----\n\n');
+        } else {
+            cm.replaceSelection ('\n----\n\n');
+        }
+
+        var cur = cm.getCursor ();
+        cm.setSelection (cur, cur);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return Ext.extend (Ext.form.TextArea, {
         initComponent: initComponent,
 
@@ -388,6 +413,10 @@ Ext.ux.form.CodeMirror = function () {
 
         decreaseLineIndent: decreaseLineIndent,
         increaseLineIndent: increaseLineIndent,
+
+        insertFigure: insertFigure,
+        insertHyperlink: insertHyperlink,
+        insertHorizontalLine: insertHorizontalLine,
 
         listeners: {
             refresh: refresh,
