@@ -160,23 +160,6 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    RegExp.quote = function(str) {
-        return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-    };
-
-    function getToggleCfg (cls, beg, end) {
-        return {
-            cls: cls,
-            markerBeg: beg,
-            markerEnd: end,
-            markerBegRx: new RegExp ('^' + RegExp.quote (beg)),
-            markerEndRx: new RegExp (RegExp.quote (end) + '$'),
-            inline: new RegExp (
-                '^' + RegExp.quote (beg) + '(.*)' + RegExp.quote (end) + '$'
-            )
-        }
-    }
-
     function toggleStrong (cm) {
         if (!this.cfgStrong)
             this.cfgStrong = getToggleCfg ('strong', '**', '**');
@@ -243,6 +226,23 @@ Ext.ux.form.CodeMirror = function () {
             }
         }
     }
+
+    function getToggleCfg (cls, beg, end) {
+        return {
+            cls: cls,
+            markerBeg: beg,
+            markerEnd: end,
+            markerBegRx: new RegExp ('^' + RegExp.quote (beg)),
+            markerEndRx: new RegExp (RegExp.quote (end) + '$'),
+            inline: new RegExp (
+                '^' + RegExp.quote (beg) + '(.*)' + RegExp.quote (end) + '$'
+            )
+        }
+    }
+
+    RegExp.quote = function(str) {
+        return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+    };
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
