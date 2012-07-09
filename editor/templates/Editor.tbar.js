@@ -1,8 +1,14 @@
 function getEditorTBar (mode, editorId) {
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     if (mode != 'rst-plus') {
         return;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     function toggleButtonText (toolbar, lastOverflow) {
         if (lastOverflow) {
@@ -16,18 +22,25 @@ function getEditorTBar (mode, editorId) {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     function undo (button, event) {
         var cm = Ext.getCmp (editorId).codeEditor;
         var historySize = cm.historySize ();
         if (historySize.undo > 1) cm.undo ();
         cm.focus ();
     }
+
     function redo (button, event) {
         var cm = Ext.getCmp (editorId).codeEditor;
         var historySize = cm.historySize ();
         if (historySize.redo > 0) cm.redo ();
         cm.focus ();
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     function cut (button, event) {
         var cm = Ext.getCmp (editorId).codeEditor;
@@ -36,12 +49,14 @@ function getEditorTBar (mode, editorId) {
         cm.replaceSelection ('');
         cm.focus ();
     }
+
     function copy (button, event) {
         var cm = Ext.getCmp (editorId).codeEditor;
         var doc = Ext.getDoc ();
         doc.clipboard = cm.getSelection ();
         cm.focus ();
     }
+
     function paste (button, event) {
         var cm = Ext.getCmp (editorId).codeEditor;
         var doc = Ext.getDoc ();
@@ -52,32 +67,59 @@ function getEditorTBar (mode, editorId) {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     function strong (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleStrong ();
         ed.codeEditor.focus ();
     }
+
     function italic (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleItalic ();
         ed.codeEditor.focus ();
     }
+
     function literal (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleLiteral ();
         ed.codeEditor.focus ();
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     function subscript (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleSubscript ();
         ed.codeEditor.focus ();
     }
+
     function supscript (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleSupscript ();
         ed.codeEditor.focus ();
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function lowercase (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toLowerCase ();
+        ed.codeEditor.focus ();
+    }
+
+    function uppercase (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.toUpperCase ();
+        ed.codeEditor.focus ();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     return new Ext.Toolbar ({
 
@@ -176,12 +218,12 @@ function getEditorTBar (mode, editorId) {
             iconCls : 'icon-text_lowercase',
             defaults : { text : 'Lower Case'},
             tooltip : 'Lower Case',
-            handler : function (button, event) {}
+            handler : lowercase
         },{
             iconCls : 'icon-text_uppercase',
             defaults : { text : 'Upper Case'},
             tooltip : 'Upper Case',
-            handler : function (button, event) {}
+            handler : uppercase
         },'-',{
             iconCls : 'icon-text_list_bullets',
             defaults : { text : 'Bullet List'},

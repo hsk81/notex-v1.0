@@ -269,6 +269,21 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function toLowerCase (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+        var sel = cm.getSelection ();
+        cm.replaceSelection (sel.toLowerCase ());
+    }
+
+    function toUpperCase (cm) {
+        if (cm == undefined) cm = this.codeEditor;
+        var sel = cm.getSelection ();
+        cm.replaceSelection (sel.toUpperCase ());
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     return Ext.extend (Ext.form.TextArea, {
         initComponent: initComponent,
 
@@ -282,6 +297,9 @@ Ext.ux.form.CodeMirror = function () {
         toggleSubscript: toggleSubscript,
         toggleSupscript: toggleSupscript,
         toggleInline: toggleInline,
+
+        toLowerCase: toLowerCase,
+        toUpperCase: toUpperCase,
 
         listeners: {
             refresh: refresh,
