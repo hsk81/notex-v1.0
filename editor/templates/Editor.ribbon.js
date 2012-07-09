@@ -116,7 +116,7 @@ var editorRibbon = function () {
             iconAlign: 'left',
             tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
             handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportReport', urls.exportReport)
+                Ext.getCmp ('reportManager.id').fireEvent ('exportText')
             }
         }]
 
@@ -124,17 +124,9 @@ var editorRibbon = function () {
 
         xtype: 'buttongroup',
         title: 'Export as ..',
-        columns: 4,
+        columns: 3,
         defaults: { scale: 'large'},
         items: [{
-            id : 'btn.export-text.editor.id',
-            text : 'Text',
-            iconCls : 'icon-page_white_text-32',
-            iconAlign: 'left',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportText')
-            }
-        },{
             id : 'btn.export-latex.editor.id',
             text : 'LaTex',
             iconCls : 'icon-page_white_code-32',

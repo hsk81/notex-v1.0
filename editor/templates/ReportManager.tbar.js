@@ -65,9 +65,7 @@ var reportManagerTBar = function () {
         split : true,
 
         handler : function (button, event) {
-            Ext.getCmp ('reportManager.id').fireEvent (
-                'exportReport', urls.exportReport
-            )
+            Ext.getCmp ('reportManager.id').fireEvent ('exportText')
         },
 
         menu : {
@@ -75,13 +73,6 @@ var reportManagerTBar = function () {
             plain : true,
 
             items : [{
-                id : 'btn.export-text.report-manager.id',
-                iconCls : 'icon-page_white_text',
-                text : 'Text Files',
-                handler : function (button, event) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('exportText')
-                }
-            },{
                 id : 'btn.export-latex.report-manager.id',
                 iconCls : 'icon-page_white_code',
                 text : 'Latex Files',

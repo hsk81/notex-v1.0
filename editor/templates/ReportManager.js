@@ -182,12 +182,10 @@ var reportManager = function () {
     function getExportButtons () {
         return [
             Ext.getCmp ('btn.export.report-manager.id'),
-            Ext.getCmp ('btn.export-text.report-manager.id'),
             Ext.getCmp ('btn.export-latex.report-manager.id'),
             Ext.getCmp ('btn.export-pdf.report-manager.id'),
             Ext.getCmp ('btn.export-html.report-manager.id'),
             Ext.getCmp ('btn.export.editor.id'),
-            Ext.getCmp ('btn.export-text.editor.id'),
             Ext.getCmp ('btn.export-latex.editor.id'),
             Ext.getCmp ('btn.export-pdf.editor.id'),
             Ext.getCmp ('btn.export-html.editor.id')
