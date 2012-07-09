@@ -158,7 +158,6 @@ function getEditorTBar (mode, editorId) {
     function insertHyperlink (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.insertHyperlink ();
-        ed.codeEditor.focus ();
     }
 
     function insertHorizontalLine (button, event) {

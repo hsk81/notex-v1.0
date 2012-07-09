@@ -372,6 +372,70 @@ Ext.ux.form.CodeMirror = function () {
 
     function insertHyperlink (cm) {
         if (cm == undefined) cm = this.codeEditor;
+
+        var txtLabel = new Ext.form.TextField ({
+            fieldLabel: 'Label',
+            name: 'label',
+            width: '100%',
+            value: cm.getSelection ()
+        });
+
+        var txtUrl = new Ext.form.TextField ({
+            fieldLabel: 'URL',
+            name: 'url',
+            vtype: 'url',
+            width: '100%'
+        });
+
+        var pnlHyperlink = new Ext.FormPanel ({
+            labelWidth: 64,
+            frame: true,
+            items: [txtLabel, txtUrl]
+        });
+
+        var win = new Ext.Window ({
+
+            border: false,
+            iconCls: 'icon-link_add',
+            modal: true,
+            resizable: false,
+            title: 'Insert Hyperlink',
+            width: 384,
+
+            items: [pnlHyperlink],
+
+            buttons: [{
+                text: 'Insert',
+                iconCls: 'icon-tick',
+                handler: function () {
+                    var label = txtLabel.getValue ();
+                    var url = txtUrl.getValue ();
+
+                    if (!txtUrl.validate ()) return;
+                    if (!url) return;
+
+                    if (label) {
+                        cm.replaceSelection (
+                            String.format ('`{0} <{1}>`_', label, url)
+                        );
+                    } else {
+                        cm.replaceSelection (url);
+                    }
+
+                    win.close ();
+                    var cur = cm.getCursor ();
+                    cm.setSelection (cur, cur);
+                    cm.focus ();
+                }
+            },{
+                text: 'Cancel',
+                iconCls: 'icon-cross',
+                handler: function () { win.close (); }
+            }]
+        });
+
+        win.show (this);
+        txtLabel.focus (true, 25)
     }
 
     function insertHorizontalLine (cm) {
