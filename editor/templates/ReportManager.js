@@ -427,7 +427,8 @@ var reportManager = function () {
         });
 
         delete propertyGrid.getStore().sortInfo;
-        propertyGrid.getColumnModel().getColumnById('name').sortable = false
+        var model = propertyGrid.getColumnModel();
+        model.getColumnById('name').sortable = false;
 
         var win = new Ext.Window ({
 
@@ -444,18 +445,18 @@ var reportManager = function () {
                 text : 'Create',
                 iconCls : 'icon-tick',
                 handler : function () {
-                    tree.el.mask ('Please wait', 'x-mask-loading')
-                    var source = propertyGrid.getSource ()
+                    tree.el.mask ('Please wait', 'x-mask-loading');
+                    var source = propertyGrid.getSource ();
                     reportManager.crud.create (urls.createProject, {
                         nodeId : tree.root.id,
                         data : Ext.encode (source),
                         rank : rank + 1
-                    }); win.close ()
+                    }); win.close ();
                 }
             },{
                 text : 'Cancel',
                 iconCls : 'icon-cross',
-                handler : function () { win.close () }
+                handler : function () { win.close (); }
             }]
         });
 
