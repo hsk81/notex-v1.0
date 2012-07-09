@@ -284,7 +284,7 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function insertBulletList (cm) {
+    function toggleBulletList (cm) {
         if (cm == undefined) cm = this.codeEditor;
 
         var sel = cm.getSelection ();
@@ -317,7 +317,7 @@ Ext.ux.form.CodeMirror = function () {
         cm.setSelection (cur, cur);
     }
 
-    function insertNumberList (cm) {
+    function toggleNumberList (cm) {
         if (cm == undefined) cm = this.codeEditor;
 
         var sel = cm.getSelection ();
@@ -383,8 +383,8 @@ Ext.ux.form.CodeMirror = function () {
         toLowerCase: toLowerCase,
         toUpperCase: toUpperCase,
 
-        insertBulletList: insertBulletList,
-        insertNumberList: insertNumberList,
+        toggleBulletList: toggleBulletList,
+        toggleNumberList: toggleNumberList,
 
         decreaseLineIndent: decreaseLineIndent,
         increaseLineIndent: increaseLineIndent,
