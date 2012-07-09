@@ -52,14 +52,14 @@ function getEditorTBar (mode, editorId) {
         }
     }
 
-    function strongEmphasis (button, event) {
+    function strong (button, event) {
         var ed = Ext.getCmp (editorId)
-        ed.toggleStrongEmphasis ();
+        ed.toggleStrong ();
         ed.codeEditor.focus ();
     }
-    function emphasis (button, event) {
+    function italic (button, event) {
         var ed = Ext.getCmp (editorId)
-        ed.toggleEmphasis ();
+        ed.toggleItalic ();
         ed.codeEditor.focus ();
     }
     function literal (button, event) {
@@ -151,12 +151,12 @@ function getEditorTBar (mode, editorId) {
             iconCls : 'icon-text_bold',
             defaults : { text : 'Strong Emphasis'},
             tooltip : 'Strong Emphasis',
-            handler : strongEmphasis
+            handler : strong
         },{
             iconCls : 'icon-text_italic',
             defaults : { text : 'Emphasis'},
             tooltip : 'Emphasis',
-            handler : emphasis
+            handler : italic
         },{
             iconCls : 'icon-text_allcaps',
             defaults : { text : 'Literal'},
