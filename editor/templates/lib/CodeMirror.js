@@ -366,8 +366,136 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function insertFigure (cm) {
+    function insertFigure (cm, node) {
         if (cm == undefined) cm = this.codeEditor;
+
+        var cmbFilename = new Ext.form.ComboBox ({
+            id : "cmbFilenameId",
+            fieldLabel : 'File',
+            name : 'filename',
+            allowBlank : false,
+            mode : 'local',
+            store : [],
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : true,
+            typeAhead: true,
+            emptyText:'select or enter a file name',
+
+            listeners : {
+                afterrender : function (component) {
+                    var tree = Ext.getCmp ('reportManager.tree.id');
+                    if (node) {
+                        while (node.parentNode != tree.root) {
+                            node = node.parentNode;
+                        }
+                    } else {
+                        node = tree.root;
+                    }
+
+                    tree.getAllLeafs (node, function (node, leaf) {
+                        if (tree.isImage (leaf)) {
+                            var pathNode = node.getPath ('text');
+                            var pathLeaf = leaf.getPath ('text').replace (
+                                pathNode + '/', ''
+                            );
+
+                            component.store.loadData ([[pathLeaf]], true);
+                        }
+                    });
+                }
+            }
+        });
+
+        Ext.apply(Ext.form.VTypes, {
+            natural: function(val, field) { return /^[\d]+$/.test(val); },
+            naturalText: 'Not a positive number.',
+            naturalMask: /[\d]/i
+        });
+
+        var txtScale = new Ext.form.TextField ({
+            allowBlank : false,
+            fieldLabel : 'Scale [%]',
+            id : "txtScaleId",
+            name : 'caption',
+            value : '100',
+            width : '100%',
+            vtype : 'natural'
+        });
+
+        var cmbAlignment = new Ext.form.ComboBox ({
+            id : "cmbAlignmentId",
+            fieldLabel : 'Alignment',
+            name : 'alignment',
+            allowBlank : false,
+            store : ['left', 'center', 'right'],
+            mode : 'local',
+            triggerAction : 'all',
+            selectOnFocus : true,
+            editable : false,
+            value : 'center'
+        });
+
+        var txtCaption = new Ext.form.TextArea ({
+            id : "txtCaptionId",
+            fieldLabel: 'Caption',
+            name: 'caption',
+            width: '100%',
+            emptyText:'optional'
+        });
+
+        function onAfterLayout (panel) {
+
+            panel.un ('afterlayout', onAfterLayout);
+
+            var txtScaleWidth = txtScale.getWidth ();
+            var cmbFilenameWidth = cmbFilename.getWidth ();
+            var cmbAlignmentWidth = cmbAlignment.getWidth ();
+
+            if (cmbFilenameWidth < txtScaleWidth) {
+                cmbFilename.setWidth (txtScaleWidth);
+            }
+
+            if (cmbAlignmentWidth < txtScaleWidth) {
+                cmbAlignment.setWidth (txtScaleWidth);
+            }
+        }
+
+        var formPanel = new Ext.FormPanel ({
+            frame: true,
+            items: [cmbFilename, txtScale, cmbAlignment, txtCaption],
+            listeners: { afterlayout: onAfterLayout }
+        });
+
+        var win = new Ext.Window ({
+
+            border: false,
+            iconCls: 'icon-picture_add',
+            modal: true,
+            resizable: false,
+            title: 'Insert Figure',
+            width: 384,
+
+            items: [formPanel],
+
+            buttons: [{
+                text: 'Insert',
+                iconCls: 'icon-tick',
+                handler: function () {
+
+                    //
+                    // TODO!
+                    //
+
+                }
+            },{
+                text: 'Cancel',
+                iconCls: 'icon-cross',
+                handler: function () { win.close (); }
+            }]
+        });
+
+        win.show (this);
     }
 
     function insertHyperlink (cm) {

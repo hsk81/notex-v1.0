@@ -200,6 +200,23 @@ var reportManagerTree = function () {
 
         isNotLeaf : function (node) {
             return isOfClass (node, 'folder'); // includes root!
+        },
+
+        ////////////////////////////////////////////////////////////////////////
+
+        getAllLeafs : function (node, fn) {
+
+            function gn (child) {
+                if (child.isLeaf ()) {
+                    fn (node, child);
+                } else {
+                    child.expand (false, true, function (expandedChild) {
+                        expandedChild.eachChild (gn);
+                    });
+                }
+            }
+
+            return node.eachChild (gn);
         }
     });
 

@@ -1,4 +1,4 @@
-function getEditorTBar (mode, editorId) {
+function getEditorTBar (mode, tabId, editorId) {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -150,8 +150,11 @@ function getEditorTBar (mode, editorId) {
     ///////////////////////////////////////////////////////////////////////////
 
     function insertFigure (button, event) {
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var node = tree.getNodeById (tabId);
+
         var ed = Ext.getCmp (editorId)
-        ed.insertFigure ();
+        ed.insertFigure (ed.codeEditor, node);
         ed.codeEditor.focus ();
     }
 
