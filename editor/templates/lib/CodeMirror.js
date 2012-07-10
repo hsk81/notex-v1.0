@@ -483,10 +483,31 @@ Ext.ux.form.CodeMirror = function () {
                 iconCls: 'icon-tick',
                 handler: function () {
 
-                    //
-                    // TODO!
-                    //
+                    if (!cmbFilename.validate ()) return;
+                    var filename = cmbFilename.getValue ();
+                    if (!txtScale.validate ()) return;
+                    var scale = txtScale.getValue ();
+                    if (!cmbAlignment.validate ()) return;
+                    var alignment = cmbAlignment.getValue ();
+                    if (!txtCaption.validate ()) return;
+                    var caption = txtCaption.getValue ();
 
+                    var figure = String.format ('.. figure:: {0}\n',  filename);
+                    if (scale)
+                        figure += String.format ('   :scale: {0} %\n', scale);
+                    if (alignment)
+                        figure += String.format ('   :align: {0}\n', alignment);
+                    if (caption) {
+                        figure += '\n';
+                        figure += String.format ('   {0} %\n', caption);
+                    }
+
+                    cm.replaceSelection (figure);
+
+                    win.close ();
+                    var cur = cm.getCursor ();
+                    cm.setSelection (cur, cur);
+                    cm.focus ();
                 }
             },{
                 text: 'Cancel',
@@ -501,13 +522,6 @@ Ext.ux.form.CodeMirror = function () {
     function insertHyperlink (cm) {
         if (cm == undefined) cm = this.codeEditor;
 
-        var txtLabel = new Ext.form.TextField ({
-            fieldLabel: 'Label',
-            name: 'label',
-            width: '100%',
-            value: cm.getSelection ()
-        });
-
         var txtUrl = new Ext.form.TextField ({
             fieldLabel: 'URL',
             name: 'url',
@@ -515,10 +529,18 @@ Ext.ux.form.CodeMirror = function () {
             width: '100%'
         });
 
+        var txtLabel = new Ext.form.TextField ({
+            fieldLabel: 'Label',
+            name: 'label',
+            width: '100%',
+            value: cm.getSelection (),
+            emptyText: 'optional'
+        });
+
         var pnlHyperlink = new Ext.FormPanel ({
             labelWidth: 64,
             frame: true,
-            items: [txtLabel, txtUrl]
+            items: [txtUrl, txtLabel]
         });
 
         var win = new Ext.Window ({
@@ -536,18 +558,18 @@ Ext.ux.form.CodeMirror = function () {
                 text: 'Insert',
                 iconCls: 'icon-tick',
                 handler: function () {
-                    var label = txtLabel.getValue ();
-                    var url = txtUrl.getValue ();
 
                     if (!txtUrl.validate ()) return;
-                    if (!url) return;
+                    var url = txtUrl.getValue ();
+                    if (!txtLabel.validate ()) return;
+                    var label = txtLabel.getValue ();
 
                     if (label) {
                         cm.replaceSelection (
                             String.format ('`{0} <{1}>`_', label, url)
                         );
                     } else {
-                        cm.replaceSelection (url);
+                        if (url) cm.replaceSelection (url);
                     }
 
                     win.close ();
@@ -563,7 +585,7 @@ Ext.ux.form.CodeMirror = function () {
         });
 
         win.show (this);
-        txtLabel.focus (true, 25)
+        txtUrl.focus (true, 25)
     }
 
     function insertHorizontalLine (cm) {
