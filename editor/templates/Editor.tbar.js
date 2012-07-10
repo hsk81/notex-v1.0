@@ -158,6 +158,15 @@ function getEditorTBar (mode, tabId, editorId) {
         ed.codeEditor.focus ();
     }
 
+    function insertImage (button, event) {
+        var tree = Ext.getCmp ('reportManager.tree.id');
+        var node = tree.getNodeById (tabId);
+
+        var ed = Ext.getCmp (editorId)
+        ed.insertImage (ed.codeEditor, node);
+        ed.codeEditor.focus ();
+    }
+
     function insertHyperlink (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.insertHyperlink ();
@@ -348,6 +357,11 @@ function getEditorTBar (mode, tabId, editorId) {
             defaults : { text : 'Figure'},
             tooltip : 'Figure',
             handler : insertFigure
+        },{
+            iconCls : 'icon-image',
+            defaults : { text : 'Image'},
+            tooltip : 'Image',
+            handler : insertImage
         },{
             iconCls : 'icon-link',
             defaults : { text : 'Hyperlink'},

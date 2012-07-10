@@ -366,7 +366,18 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    var FIGURE_TYPE = 'figure';
+    var IMAGE_TYPE = 'image';
+
     function insertFigure (cm, node) {
+        return insertPicture (cm, node, FIGURE_TYPE);
+    }
+
+    function insertImage (cm, node) {
+        return insertPicture (cm, node, IMAGE_TYPE);
+    }
+
+    function insertPicture (cm, node, type) {
         if (cm == undefined) cm = this.codeEditor;
 
         var cmbFilename = new Ext.form.ComboBox ({
@@ -463,7 +474,9 @@ Ext.ux.form.CodeMirror = function () {
 
         var formPanel = new Ext.FormPanel ({
             frame: true,
-            items: [cmbFilename, txtScale, cmbAlignment, txtCaption],
+            items: (type == FIGURE_TYPE)
+                ? [cmbFilename, txtScale, cmbAlignment, txtCaption]
+                : [cmbFilename, txtScale, cmbAlignment],
             listeners: { afterlayout: onAfterLayout }
         });
 
@@ -473,7 +486,7 @@ Ext.ux.form.CodeMirror = function () {
             iconCls: 'icon-picture_add',
             modal: true,
             resizable: false,
-            title: 'Insert Figure',
+            title: 'Insert ' + (type == FIGURE_TYPE) ? 'Figure' : 'Image',
             width: 384,
 
             items: [formPanel],
@@ -492,17 +505,26 @@ Ext.ux.form.CodeMirror = function () {
                     if (!txtCaption.validate ()) return;
                     var caption = txtCaption.getValue ();
 
-                    var figure = String.format ('.. figure:: {0}\n',  filename);
+                    var rest = (type == FIGURE_TYPE)
+                        ? String.format ('\n.. figure:: {0}\n',  filename)
+                        : String.format ('\n.. image:: {0}\n',  filename);
+
                     if (scale)
-                        figure += String.format ('   :scale: {0} %\n', scale);
+                        rest += String.format ('   :scale: {0} %\n', scale);
+
                     if (alignment)
-                        figure += String.format ('   :align: {0}\n', alignment);
-                    if (caption) {
-                        figure += '\n';
-                        figure += String.format ('   {0} %\n', caption);
+                        rest += String.format ('   :align: {0}\n', alignment);
+
+                    if (caption && (type == FIGURE_TYPE)) {
+
+                        caption = caption.replace (/\n/g, '\n   ');
+                        caption = caption.replace (/\s+$/, '');
+
+                        rest += '\n';
+                        rest += String.format ('   {0}\n', caption);
                     }
 
-                    cm.replaceSelection (figure);
+                    cm.replaceSelection ('\n' + rest + '\n');
 
                     win.close ();
                     var cur = cm.getCursor ();
@@ -518,6 +540,8 @@ Ext.ux.form.CodeMirror = function () {
 
         win.show (this);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     function insertHyperlink (cm) {
         if (cm == undefined) cm = this.codeEditor;
@@ -588,6 +612,8 @@ Ext.ux.form.CodeMirror = function () {
         txtUrl.focus (true, 25)
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
     function insertHorizontalLine (cm) {
         if (cm == undefined) cm = this.codeEditor;
 
@@ -629,6 +655,7 @@ Ext.ux.form.CodeMirror = function () {
         increaseLineIndent: increaseLineIndent,
 
         insertFigure: insertFigure,
+        insertImage: insertImage,
         insertHyperlink: insertHyperlink,
         insertHorizontalLine: insertHorizontalLine,
 
