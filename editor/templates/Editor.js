@@ -131,7 +131,7 @@ var editor = function () {
             case 'text':
             case 'rst':
             case 'rest':
-                return 'yaml-plus'; // use overlay
+                return 'rst-plus'; // use overlay
             default:
                 return Ext.ux.form.CodeMirror.mime.ext2mode (
                     extension, mime
