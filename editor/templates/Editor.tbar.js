@@ -62,12 +62,6 @@ function editorTBar (mode, tabId, editorId) {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function applyHeading0 (button, event) {
-        var ed = Ext.getCmp (editorId);
-        ed.applyHeading (0);
-        ed.fireEvent ('focus');
-    }
-
     function applyHeading1 (button, event) {
         var ed = Ext.getCmp (editorId);
         ed.applyHeading (1);
@@ -289,7 +283,7 @@ function editorTBar (mode, tabId, editorId) {
                 handler : applyHeading5
             },'-',{
                 iconCls : 'icon-text_heading_6',
-                text : 'Rubric Heading',
+                text : 'Rubric',
                 handler : applyHeading6
             }]}
         },'-',{

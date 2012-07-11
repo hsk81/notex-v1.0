@@ -69,11 +69,11 @@ Ext.ux.form.CodeMirror.rest = function () {
 
                 if (level == 1) {
                     this.codeEditor.replaceSelection (String.format (
-                        '{1}\n{0}\n\n', head, rep
+                        '{0}\n{1}\n{0}\n\n', head, rep
                     ));
                 } else {
                     this.codeEditor.replaceSelection (String.format (
-                        '{0}\n{1}\n{0}\n\n', head, rep
+                        '{1}\n{0}\n\n', head, rep
                     ));
                 }
 
