@@ -388,6 +388,7 @@ def get_image_data (path, filename):
     with open (os.path.join (path, filename)) as file:
 
         path, name = os.path.split (filename)
+        if not mimetypes.inited: mimetypes.init ()
         mimetype, encoding = mimetypes.guess_type (name)
 
         return 'data:%s;base64,%s' % \

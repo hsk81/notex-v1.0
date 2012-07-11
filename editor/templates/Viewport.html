@@ -36,10 +36,47 @@ dump (session);
 <script src="{{ STATIC_URL }}lib/codemirror/lib/util/overlay.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/lib/util/search.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
+
+<script src="{{ STATIC_URL }}lib/codemirror/mode/clike/clike.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/css/css.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/diff/diff.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/gfm/gfm.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/go/go.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/haskell/haskell.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/htmlembedded/htmlembedded.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/javascript/javascript.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/jinja2/jinja2.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/less/less.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/lua/lua.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/markdown/markdown.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/mysql/mysql.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/ocaml/ocaml.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/pascal/pascal.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/perl/perl.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/php/php.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/pig/pig.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/plsql/plsql.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/properties/properties.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/python/python.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/r/r.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/rpm/changes/changes.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/rpm/spec/spec.js"></script>
 <script src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/ruby/ruby.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/scheme/scheme.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/shell/shell.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/smalltalk/smalltalk.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/stex/stex.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/tiddlywiki/tiddlywiki.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/vbscript/vbscript.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/verilog/verilog.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/xml/xml.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/xquery/xquery.js"></script>
+<script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
 
 <script type="text/javascript" src="{% url editor:CodeMirror.js %}"></script>
+<script type="text/javascript" src="{% url editor:CodeMirror.mime.js %}"></script>
 <script type="text/javascript" src="{% url editor:CodeMirror.yaml.js %}"></script>
 <script type="text/javascript" src="{% url editor:CodeMirror.rest.js %}"></script>
 

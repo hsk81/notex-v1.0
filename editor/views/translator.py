@@ -23,6 +23,7 @@ import os
 
 def is_text (path, bin_path = os.path.join (os.path.sep, 'usr', 'bin')):
 
+    if not mimetypes.inited: mimetypes.init ()
     mimetype, encoding = mimetypes.guess_type (path)
     if mimetype and mimetype.startswith ('text'):
         return True

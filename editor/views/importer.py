@@ -138,7 +138,7 @@ def process_zip_info (zip_info, rankdict, parent, file):
         zi = fake_zip_info (zip_info, rankdict, filename = path)
         create_folder (zi, rankdict, parent)
 
-    if not mimetypes.inited: mimetypes.init
+    if not mimetypes.inited: mimetypes.init ()
     mimetype, encoding = mimetypes.guess_type (name)
 
     txt_exts = ['.txt','.rst','.cfg','.yml','.text','.rest','.conf','.yaml']

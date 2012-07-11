@@ -10,6 +10,7 @@ from editor.models import ROOT
 from editor.models import NODE
 from editor.models import LEAF
 
+import mimetypes
 import base64
 import json
 
@@ -37,9 +38,13 @@ def leaf (leaf):
 
     with open (leaf.file, 'r') as uuid_file:
 
+        if not mimetypes.inited: mimetypes.init ()
+        mimetype, encoding = mimetypes.guess_type (leaf.name)
+
         return {
             'text' : leaf.name,
             'data' : uuid_file.read (),
+            'mime' : mimetype,
             'id' : base64.b32encode (json.dumps \
                 (('leaf', [leaf.node.pk, leaf.pk]))),
             'cls' : "file",

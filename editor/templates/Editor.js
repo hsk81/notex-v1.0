@@ -33,7 +33,7 @@ var editor = function () {
             this.activate (tab)
         } else {
             var mode = ext2mode (
-                filenameWithExt (tabInfo.title).extension
+                filenameWithExt (tabInfo.title).extension, tabInfo.mime
             );
 
             tab = this.add ({
@@ -119,20 +119,23 @@ var editor = function () {
         }
     }
 
-    function ext2mode (extension) {
+    function ext2mode (extension, mime) {
+
         switch (extension) {
             case 'cfg':
             case 'conf':
             case 'yml':
             case 'yaml':
-                return 'yaml-plus';
+                return 'yaml-plus'; // use overlay
             case 'txt':
             case 'text':
             case 'rst':
             case 'rest':
-                return 'rst-plus';
+                return 'yaml-plus'; // use overlay
             default:
-                return undefined;
+                return Ext.ux.form.CodeMirror.mime.ext2mode (
+                    extension, mime
+                );
         }
     }
 

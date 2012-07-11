@@ -84,36 +84,42 @@ urlpatterns = patterns ('',
             'extra_context' : {}
         }, name='Dialog.openFile.js'),
 
-    url (r'^CodeMirror.css$', direct_to_template, {
-        'template' : 'lib/CodeMirror.css',
-        'mimetype' : 'text/css',
-        'extra_context' : {}
-    }, name='CodeMirror.css'),
     url (r'^CodeMirror.js$', direct_to_template, {
         'template' : 'lib/CodeMirror.js',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='CodeMirror.js'),
-    url (r'^CodeMirror.yaml.css$', direct_to_template, {
-        'template' : 'lib/CodeMirror.yaml.css',
-        'mimetype' : 'text/css',
+    url (r'^CodeMirror.mime.js$', direct_to_template, {
+        'template' : 'lib/CodeMirror.mime.js',
+        'mimetype' : 'text/javascript',
         'extra_context' : {}
-    }, name='CodeMirror.yaml.css'),
+    }, name='CodeMirror.mime.js'),
     url (r'^CodeMirror.yaml.js$', direct_to_template, {
         'template' : 'lib/CodeMirror.yaml.js',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='CodeMirror.yaml.js'),
-    url (r'^CodeMirror.rest.css$', direct_to_template, {
-        'template' : 'lib/CodeMirror.rest.css',
-        'mimetype' : 'text/css',
-        'extra_context' : {}
-    }, name='CodeMirror.rest.css'),
     url (r'^CodeMirror.rest.js$', direct_to_template, {
         'template' : 'lib/CodeMirror.rest.js',
         'mimetype' : 'text/javascript',
         'extra_context' : {}
     }, name='CodeMirror.rest.js'),
+
+    url (r'^CodeMirror.css$', direct_to_template, {
+        'template' : 'lib/CodeMirror.css',
+        'mimetype' : 'text/css',
+        'extra_context' : {}
+    }, name='CodeMirror.css'),
+    url (r'^CodeMirror.yaml.css$', direct_to_template, {
+        'template' : 'lib/CodeMirror.yaml.css',
+        'mimetype' : 'text/css',
+        'extra_context' : {}
+    }, name='CodeMirror.yaml.css'),
+    url (r'^CodeMirror.rest.css$', direct_to_template, {
+        'template' : 'lib/CodeMirror.rest.css',
+        'mimetype' : 'text/css',
+        'extra_context' : {}
+    }, name='CodeMirror.rest.css'),
 
     url (r'^Math.uuid.js$', direct_to_template, {
         'template' : 'lib/Math.uuid.js',

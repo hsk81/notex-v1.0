@@ -99,6 +99,7 @@ var reportManagerTree = function () {
                 id : node.id,
                 title : node.attributes['text'],
                 text : node.attributes['data'],
+                mime : node.attributes['mime'],
                 iconCls : node.attributes['iconCls']
             }
 
