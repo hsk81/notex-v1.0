@@ -52,7 +52,7 @@ var editor = function () {
                     return this.getEditor ().getValue ()
                 },
 
-                tbar : getEditorTBar (mode, tabInfo.id, 'editorId' + tabInfo.id),
+                tbar : editorTBar (mode, tabInfo.id, 'editorId' + tabInfo.id),
 
                 items : [{
                     xtype : 'ux-codemirror',

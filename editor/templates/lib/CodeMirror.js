@@ -78,21 +78,21 @@ Ext.ux.form.CodeMirror = function () {
         ///////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////
 
-        function afterrender (ta) {
+        function afterrender (textarea) {
 
             CodeMirror.defineMode ("rst-plus", overlays.rstPlus);
             CodeMirror.defineMode ("yaml-plus", overlays.yamlPlus);
 
             var keymap = {
-                'Ctrl-B' : function (cm) { ta.toggleStrong (cm); },
-                'Ctrl-I' : function (cm) { ta.toggleItalic (cm); }
+                'Ctrl-B' : function (codeEditor) { textarea.toggleStrong (); },
+                'Ctrl-I' : function (codeEditor) { textarea.toggleItalic (); }
             }
 
-            function onCursorActivity (self) {
-                self.matchHighlight ("CodeMirror-matchhighlight");
-                self.setLineClass (self.hlLine, null, null);
-                var cursor = self.getCursor ();
-                self.hlLine = self.setLineClass (
+            function onCursorActivity (codeEditor) {
+                codeEditor.matchHighlight ("CodeMirror-matchhighlight");
+                codeEditor.setLineClass (codeEditor.hlLine, null, null);
+                var cursor = codeEditor.getCursor ();
+                codeEditor.hlLine = codeEditor.setLineClass (
                     cursor.line, null, "activeline"
                 );
             }
@@ -147,57 +147,161 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function setFontSize (value) {
+    function focus (delay) {
         if (this.codeEditor) {
-            var codeEditorEl = this.el.next ();
-            if (codeEditorEl) {
-                codeEditorEl.setStyle ('font-size', value);
-                this.codeEditor.refresh ();
+
+            if (this.codeEditor.lastCursor) {
+                this.codeEditor.setCursor (this.codeEditor.lastCursor);
+            } else {
+                this.codeEditor.setCursor (this.codeEditor.getCursor ());
             }
+
+            this.codeEditor.focus (delay);
+        }
+    }
+
+    function blur () {
+        if (this.codeEditor) {
+            this.codeEditor.lastCursor = this.codeEditor.getCursor ();
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function toggleStrong (cm) {
-        if (!this.cfgStrong)
+    function undo () {
+        if (this.codeEditor) {
+            this.codeEditor.undo ();
+        }
+    }
+
+    function redo () {
+        if (this.codeEditor) {
+            this.codeEditor.redo ();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function cmdFind () {
+        CodeMirror.commands['find'] (this.codeEditor);
+    }
+
+    function cmdFindNext () {
+        CodeMirror.commands['findNext'] (this.codeEditor);
+    }
+
+    function cmdFindPrev () {
+        CodeMirror.commands['findPrev'] (this.codeEditor);
+    }
+
+    function cmdReplace () {
+        CodeMirror.commands['replace'] (this.codeEditor);
+    }
+
+    function cmdReplaceAll () {
+        CodeMirror.commands['replaceAll'] (this.codeEditor);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function cutToBuffer (buffer, name) {
+
+        var selection = this.codeEditor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            this.codeEditor.replaceSelection ('');
+            return true;
+        }
+
+        return false;
+    }
+
+    function copyToBuffer (buffer, name) {
+
+        var selection = this.codeEditor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            return true;
+        }
+
+        return false;
+    }
+
+    function pasteFromBuffer (buffer, name) {
+
+        if (buffer[name]) {
+            this.codeEditor.replaceSelection (buffer[name]);
+            return true;
+        }
+
+        return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function applyHeading () {
+        // TODO!
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function toggleStrong () {
+
+        if (!this.cfgStrong) {
             this.cfgStrong = getToggleCfg ('strong', '**', '**');
-        this.toggleInline (cm, this.cfgStrong);
+        }
+
+        toggleInline (this, this.cfgStrong);
     }
 
-    function toggleItalic (cm) {
-        if (!this.cfgItalic)
+    function toggleItalic () {
+
+        if (!this.cfgItalic) {
             this.cfgItalic = getToggleCfg ('em', '*', '*');
-        this.toggleInline (cm, this.cfgItalic);
+        }
+
+        toggleInline (this, this.cfgItalic);
     }
 
-    function toggleLiteral (cm) {
-        if (!this.cfgLiteral)
+    function toggleLiteral () {
+
+        if (!this.cfgLiteral) {
             this.cfgLiteral = getToggleCfg ('string', '``', '``');
-        this.toggleInline (cm, this.cfgLiteral);
+        }
+
+        toggleInline (this, this.cfgLiteral);
     }
 
-    function toggleSubscript (cm) {
-        if (!this.cfgSubscript)
+    function toggleSubscript () {
+
+        if (!this.cfgSubscript) {
             this.cfgSubscript = getToggleCfg ('string-2', ':sub:`', '`');
-        this.toggleInline (cm, this.cfgSubscript);
+        }
+
+        toggleInline (this, this.cfgSubscript);
     }
 
-    function toggleSupscript (cm) {
-        if (!this.cfgSupscript)
+    function toggleSupscript () {
+
+        if (!this.cfgSupscript) {
             this.cfgSupscript = getToggleCfg ('string-2', ':sup:`', '`');
-        this.toggleInline (cm, this.cfgSupscript);
+        }
+
+        toggleInline (this, this.cfgSupscript);
     }
 
-    function toggleInline (cm, cfg) {
-        if (cm == undefined) cm = this.codeEditor;
+    function toggleInline (textarea, cfg) {
 
-        var mode = cm.getOption ('mode');
+        var mode = textarea.codeEditor.getOption ('mode');
         if (mode == 'rst' || mode == 'rst-plus') {
 
-            var cur = cm.getCursor ();
-            var tok = cm.getTokenAt (cur);
+            var cur = textarea.codeEditor.getCursor ();
+            var tok = textarea.codeEditor.getTokenAt (cur);
             if (tok.className == cfg.cls && tok.string != cfg.markerEnd) {
                 return; // no toggle if not all selected
             }
@@ -205,7 +309,7 @@ Ext.ux.form.CodeMirror = function () {
                 return; // no toggle if something else
             }
 
-            var sel = cm.getSelection ();
+            var sel = textarea.codeEditor.getSelection ();
             if (sel && sel.length > 0) {
 
                 var rep = undefined;
@@ -222,7 +326,7 @@ Ext.ux.form.CodeMirror = function () {
                     }
                 }
 
-                cm.replaceSelection (rep);
+                textarea.codeEditor.replaceSelection (rep);
             }
         }
     }
@@ -247,47 +351,22 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function refresh (self) {
-        if (self.codeEditor) {
-            self.codeEditor.refresh ();
-        }
+    function toLowerCase () {
+        var selection = this.codeEditor.getSelection ();
+        this.codeEditor.replaceSelection (selection.toLowerCase ());
     }
 
-    function focus (self) {
-        if (self.codeEditor && self.codeEditor.lastCursor) {
-            self.codeEditor.setCursor (self.codeEditor.lastCursor);
-            Ext.defer (function () { self.codeEditor.focus (); }, 25);
-        }
-    }
-
-    function blur (self) {
-        if (self.codeEditor) {
-            self.codeEditor.lastCursor = self.codeEditor.getCursor ();
-        }
+    function toUpperCase () {
+        var selection = this.codeEditor.getSelection ();
+        this.codeEditor.replaceSelection (selection.toUpperCase ());
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function toLowerCase (cm) {
-        if (cm == undefined) cm = this.codeEditor;
-        var sel = cm.getSelection ();
-        cm.replaceSelection (sel.toLowerCase ());
-    }
+    function toggleBulletList () {
 
-    function toUpperCase (cm) {
-        if (cm == undefined) cm = this.codeEditor;
-        var sel = cm.getSelection ();
-        cm.replaceSelection (sel.toUpperCase ());
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    function toggleBulletList (cm) {
-        if (cm == undefined) cm = this.codeEditor;
-
-        var sel = cm.getSelection ();
+        var sel = this.codeEditor.getSelection ();
         var rep = ''
 
         if (sel) {
@@ -312,15 +391,12 @@ Ext.ux.form.CodeMirror = function () {
             rep = '* '
         }
 
-        cm.replaceSelection (rep);
-        var cur = cm.getCursor ();
-        cm.setSelection (cur, cur);
+        this.codeEditor.replaceSelection (rep);
     }
 
-    function toggleNumberList (cm) {
-        if (cm == undefined) cm = this.codeEditor;
+    function toggleNumberList () {
 
-        var sel = cm.getSelection ();
+        var sel = this.codeEditor.getSelection ();
         var rep = ''
 
         if (sel) {
@@ -345,22 +421,18 @@ Ext.ux.form.CodeMirror = function () {
             rep = '1. '
         }
 
-        cm.replaceSelection (rep);
-        var cur = cm.getCursor ();
-        cm.setSelection (cur, cur);
+        this.codeEditor.replaceSelection (rep);
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function decreaseLineIndent (cm) {
-        if (cm == undefined) cm = this.codeEditor;
-        CodeMirror.commands ['indentLess'](cm);
+    function decreaseLineIndent () {
+        CodeMirror.commands ['indentLess'](this.codeEditor);
     }
 
-    function increaseLineIndent (cm) {
-        if (cm == undefined) cm = this.codeEditor;
-        CodeMirror.commands ['indentMore'](cm);
+    function increaseLineIndent () {
+        CodeMirror.commands ['indentMore'](this.codeEditor);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -369,16 +441,15 @@ Ext.ux.form.CodeMirror = function () {
     var FIGURE_TYPE = 'figure';
     var IMAGE_TYPE = 'image';
 
-    function insertFigure (cm, node) {
-        return insertPicture (cm, node, FIGURE_TYPE);
+    function insertFigure (node) {
+        return insertPicture (this, node, FIGURE_TYPE);
     }
 
-    function insertImage (cm, node) {
-        return insertPicture (cm, node, IMAGE_TYPE);
+    function insertImage (node) {
+        return insertPicture (this, node, IMAGE_TYPE);
     }
 
-    function insertPicture (cm, node, type) {
-        if (cm == undefined) cm = this.codeEditor;
+    function insertPicture (textarea, node, type) {
 
         var cmbFilename = new Ext.form.ComboBox ({
             id : "cmbFilenameId",
@@ -524,12 +595,13 @@ Ext.ux.form.CodeMirror = function () {
                         rest += String.format ('   {0}\n', caption);
                     }
 
-                    cm.replaceSelection ('\n' + rest + '\n');
+                    textarea.codeEditor.replaceSelection ('\n' + rest + '\n');
 
                     win.close ();
-                    var cur = cm.getCursor ();
-                    cm.setSelection (cur, cur);
-                    cm.focus ();
+
+                    var cur = textarea.codeEditor.getCursor ();
+                    textarea.codeEditor.setSelection (cur, cur);
+                    textarea.codeEditor.focus ();
                 }
             },{
                 text: 'Cancel',
@@ -538,13 +610,13 @@ Ext.ux.form.CodeMirror = function () {
             }]
         });
 
-        win.show (this);
+        win.show (textarea);
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    function insertHyperlink (cm) {
-        if (cm == undefined) cm = this.codeEditor;
+    function insertHyperlink () {
+        var textarea = this;
 
         var txtUrl = new Ext.form.TextField ({
             fieldLabel: 'URL',
@@ -557,7 +629,7 @@ Ext.ux.form.CodeMirror = function () {
             fieldLabel: 'Label',
             name: 'label',
             width: '100%',
-            value: cm.getSelection (),
+            value: this.codeEditor.getSelection (),
             emptyText: 'optional'
         });
 
@@ -589,17 +661,18 @@ Ext.ux.form.CodeMirror = function () {
                     var label = txtLabel.getValue ();
 
                     if (label) {
-                        cm.replaceSelection (
+                        textarea.codeEditor.replaceSelection (
                             String.format ('`{0} <{1}>`_', label, url)
                         );
                     } else {
-                        if (url) cm.replaceSelection (url);
+                        if (url) textarea.codeEditor.replaceSelection (url);
                     }
 
                     win.close ();
-                    var cur = cm.getCursor ();
-                    cm.setSelection (cur, cur);
-                    cm.focus ();
+
+                    var cur = textarea.codeEditor.getCursor ();
+                    textarea.codeEditor.setSelection (cur, cur);
+                    textarea.codeEditor.focus ();
                 }
             },{
                 text: 'Cancel',
@@ -614,36 +687,75 @@ Ext.ux.form.CodeMirror = function () {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    function insertHorizontalLine (cm) {
-        if (cm == undefined) cm = this.codeEditor;
+    function insertHorizontalLine () {
 
-        var cur = cm.getCursor ();
+        var cur = this.codeEditor.getCursor ();
         if (cur.ch > 0) {
-            cm.replaceSelection ('\n\n----\n\n');
+            this.codeEditor.replaceSelection ('\n\n----\n\n');
         } else {
-            cm.replaceSelection ('\n----\n\n');
+            this.codeEditor.replaceSelection ('\n----\n\n');
         }
 
-        var cur = cm.getCursor ();
-        cm.setSelection (cur, cur);
+        var cur = this.codeEditor.getCursor ();
+        this.codeEditor.setSelection (cur, cur);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function setFontSize (value) {
+        if (this.codeEditor) {
+            var codeEditorEl = this.el.next ();
+            if (codeEditorEl) {
+                codeEditorEl.setStyle ('font-size', value);
+                this.codeEditor.refresh ();
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     return Ext.extend (Ext.form.TextArea, {
+
+        ///////////////////////////////////////////////////////////////////////
+        // Generic Interface
+        ///////////////////////////////////////////////////////////////////////
+
         initComponent: initComponent,
 
         getValue: getValue,
         setValue: setValue,
-        setFontSize: setFontSize,
+
+        listeners: {
+            focus: focus,
+            blur: blur
+        },
+
+        undo: undo,
+        redo: redo,
+
+        cmdFind: cmdFind,
+        cmdFindNext: cmdFindNext,
+        cmdFindPrev: cmdFindPrev,
+        cmdReplace: cmdReplace,
+        cmdReplaceAll: cmdReplaceAll,
+
+        ///////////////////////////////////////////////////////////////////////
+        // NoTex YAML-Plus & RST-Plus specific extensions
+        ///////////////////////////////////////////////////////////////////////
+
+        cutToBuffer: cutToBuffer,
+        copyToBuffer: copyToBuffer,
+        pasteFromBuffer: pasteFromBuffer,
+
+        applyHeading: applyHeading,
 
         toggleStrong: toggleStrong,
         toggleItalic: toggleItalic,
         toggleLiteral: toggleLiteral,
         toggleSubscript: toggleSubscript,
         toggleSupscript: toggleSupscript,
-        toggleInline: toggleInline,
 
         toLowerCase: toLowerCase,
         toUpperCase: toUpperCase,
@@ -659,11 +771,11 @@ Ext.ux.form.CodeMirror = function () {
         insertHyperlink: insertHyperlink,
         insertHorizontalLine: insertHorizontalLine,
 
-        listeners: {
-            refresh: refresh,
-            focus: focus,
-            blur: blur
-        }
+        ///////////////////////////////////////////////////////////////////////
+        // NoTex general extensions
+        ///////////////////////////////////////////////////////////////////////
+
+        setFontSize: setFontSize
     });
 }();
 

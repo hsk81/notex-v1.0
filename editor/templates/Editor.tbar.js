@@ -1,4 +1,4 @@
-function getEditorTBar (mode, tabId, editorId) {
+function editorTBar (mode, tabId, editorId) {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
@@ -24,96 +24,116 @@ function getEditorTBar (mode, tabId, editorId) {
     ///////////////////////////////////////////////////////////////////////////
 
     function undo (button, event) {
-        var cm = Ext.getCmp (editorId).codeEditor;
-        var historySize = cm.historySize ();
-        if (historySize.undo > 1) cm.undo ();
-        cm.focus ();
+        var ed = Ext.getCmp (editorId);
+        ed.undo (); ed.fireEvent ('focus');
     }
 
     function redo (button, event) {
-        var cm = Ext.getCmp (editorId).codeEditor;
-        var historySize = cm.historySize ();
-        if (historySize.redo > 0) cm.redo ();
-        cm.focus ();
+        var ed = Ext.getCmp (editorId);
+        ed.redo (); ed.fireEvent ('focus');
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     function cut (button, event) {
-        var cm = Ext.getCmp (editorId).codeEditor;
-        var doc = Ext.getDoc ();
-        doc.clipboard = cm.getSelection ();
-        cm.replaceSelection ('');
-        cm.focus ();
+        var ed = Ext.getCmp (editorId);
+        if (ed.cutToBuffer (document, 'clipboard')) {
+            ed.fireEvent ('focus');
+        }
     }
 
     function copy (button, event) {
-        var cm = Ext.getCmp (editorId).codeEditor;
-        var doc = Ext.getDoc ();
-        doc.clipboard = cm.getSelection ();
-        cm.focus ();
+        var ed = Ext.getCmp (editorId);
+        if (ed.copyToBuffer (document, 'clipboard')) {
+            ed.fireEvent ('focus');
+        }
     }
 
     function paste (button, event) {
-        var cm = Ext.getCmp (editorId).codeEditor;
-        var doc = Ext.getDoc ();
-        if (doc.clipboard) {
-            cm.replaceSelection (doc.clipboard);
-            cm.setCursor (cm.getCursor ());
-            cm.focus ();
+        var ed = Ext.getCmp (editorId);
+        if (ed.pasteFromBuffer (document, 'clipboard')) {
+            ed.fireEvent ('focus');
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function toggleStrong (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toggleStrong ();
+    function applyHeading0 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (0);
+        ed.fireEvent ('focus');
+    }
+
+    function applyHeading1 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (1);
+        ed.fireEvent ('focus');
+    }
+
+    function applyHeading2 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (2);
+        ed.fireEvent ('focus');
+    }
+
+    function applyHeading3 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (3);
+        ed.fireEvent ('focus');
+    }
+
+    function applyHeading4 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (4);
+        ed.fireEvent ('focus');
+    }
+
+    function applyHeading5 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (5);
         ed.codeEditor.focus ();
+    }
+
+    function applyHeading6 (button, event) {
+        var ed = Ext.getCmp (editorId);
+        ed.applyHeading (6);
+        ed.fireEvent ('focus');
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function toggleStrong (button, event) {
+        Ext.getCmp (editorId).toggleStrong ();
     }
 
     function toggleItalic (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toggleItalic ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toggleItalic ();
     }
 
     function toggleLiteral (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toggleLiteral ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toggleLiteral ();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     function toggleSubscript (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toggleSubscript ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toggleSubscript ();
     }
 
     function toggleSupscript (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toggleSupscript ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toggleSupscript ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     function toLowerCase (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toLowerCase ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toLowerCase ();
     }
 
     function toUpperCase (button, event) {
-        var ed = Ext.getCmp (editorId)
-        ed.toUpperCase ();
-        ed.codeEditor.focus ();
+        Ext.getCmp (editorId).toUpperCase ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -122,13 +142,11 @@ function getEditorTBar (mode, tabId, editorId) {
     function toggleBulletList (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleBulletList ();
-        ed.codeEditor.focus ();
     }
 
     function toggleNumberList (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleNumberList ();
-        ed.codeEditor.focus ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -137,13 +155,11 @@ function getEditorTBar (mode, tabId, editorId) {
     function decLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.decreaseLineIndent ();
-        ed.codeEditor.focus ();
     }
 
     function incLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.increaseLineIndent ();
-        ed.codeEditor.focus ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -154,8 +170,8 @@ function getEditorTBar (mode, tabId, editorId) {
         var node = tree.getNodeById (tabId);
 
         var ed = Ext.getCmp (editorId)
-        ed.insertFigure (ed.codeEditor, node);
-        ed.codeEditor.focus ();
+        ed.insertFigure (node);
+        ed.fireEvent ('focus');
     }
 
     function insertImage (button, event) {
@@ -163,8 +179,8 @@ function getEditorTBar (mode, tabId, editorId) {
         var node = tree.getNodeById (tabId);
 
         var ed = Ext.getCmp (editorId)
-        ed.insertImage (ed.codeEditor, node);
-        ed.codeEditor.focus ();
+        ed.insertImage (node);
+        ed.fireEvent ('focus');
     }
 
     function insertHyperlink (button, event) {
@@ -175,30 +191,30 @@ function getEditorTBar (mode, tabId, editorId) {
     function insertHorizontalLine (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.insertHorizontalLine ();
-        ed.codeEditor.focus ();
+        ed.fireEvent ('focus');
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function search (button, event) {
-        var ed = Ext.getCmp (editorId);
-        CodeMirror.commands['find'] (ed.codeEditor);
+    function find (button, event) {
+        Ext.getCmp (editorId).cmdFind ();
     }
 
-    function searchNext (button, event) {
-        var ed = Ext.getCmp (editorId);
-        CodeMirror.commands['findNext'] (ed.codeEditor);
+    function findNext (button, event) {
+        Ext.getCmp (editorId).cmdFindNext ();
     }
 
-    function searchPrev (button, event) {
-        var ed = Ext.getCmp (editorId);
-        CodeMirror.commands['findPrev'] (ed.codeEditor);
+    function findPrev (button, event) {
+        Ext.getCmp (editorId).cmdFindPrev ();
+    }
+
+    function replace (button, event) {
+        Ext.getCmp (editorId).cmdReplace ();
     }
 
     function replaceAll (button, event) {
-        var ed = Ext.getCmp (editorId);
-        CodeMirror.commands['replaceAll'] (ed.codeEditor);
+        Ext.getCmp (editorId).cmdReplaceAll ();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -251,31 +267,31 @@ function getEditorTBar (mode, tabId, editorId) {
             menu: { items: [{
                 iconCls : 'icon-text_prose',
                 text: 'Paragraph',
-                handler : function (button, event) {}
+                handler : applyHeading0
             },'-',{
                 iconCls : 'icon-text_heading_1',
                 text : 'Parts',
-                handler : function (button, event) {}
+                handler : applyHeading1
             },{
                 iconCls : 'icon-text_heading_2',
                 text : 'Chapters',
-                handler : function (button, event) {}
+                handler : applyHeading2
             },{
                 iconCls : 'icon-text_heading_3',
                 text : 'Sections',
-                handler : function (button, event) {}
+                handler : applyHeading3
             },{
                 iconCls : 'icon-text_heading_4',
                 text : 'Subsections',
-                handler : function (button, event) {}
+                handler : applyHeading4
             },{
                 iconCls : 'icon-text_heading_5',
                 text : 'Sub-Subsections',
-                handler : function (button, event) {}
+                handler : applyHeading5
             },'-',{
                 iconCls : 'icon-text_heading_6',
                 text : 'Rubric Heading',
-                handler : function (button, event) {}
+                handler : applyHeading6
             }]}
         },'-',{
             iconCls : 'icon-text_bold',
@@ -333,26 +349,6 @@ function getEditorTBar (mode, tabId, editorId) {
             tooltip : 'Increase Indent',
             handler : incLineIndent
         },'-',{
-            iconCls : 'icon-text_align_left',
-            defaults : { text : 'Align Left'},
-            tooltip : 'Align Left',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_align_center',
-            defaults : { text : 'Center'},
-            tooltip : 'Center',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_align_right',
-            defaults : { text : 'Align Right'},
-            tooltip : ' Align Right',
-            handler : function (button, event) {}
-        },{
-            iconCls : 'icon-text_align_justity',
-            defaults : { text : 'Justify'},
-            tooltip : 'Justify',
-            handler : function (button, event) {}
-        },'-',{
             iconCls : 'icon-picture',
             defaults : { text : 'Figure'},
             tooltip : 'Figure',
@@ -374,19 +370,19 @@ function getEditorTBar (mode, tabId, editorId) {
             handler : insertHorizontalLine
         },'-',{
             iconCls : 'icon-find',
-            defaults : { text : 'Search'},
-            tooltip : 'Search',
-            handler : search
+            defaults : { text : 'Find'},
+            tooltip : 'Find',
+            handler : find
         },{
             iconCls : 'icon-document_page_next',
-            defaults : { text : 'Next'},
-            tooltip : 'Next',
-            handler : searchNext
+            defaults : { text : 'Find Next'},
+            tooltip : 'Find Next',
+            handler : findNext
         },{
             iconCls : 'icon-document_page_previous',
-            defaults : { text : 'Previous'},
-            tooltip : 'Previous',
-            handler : searchPrev
+            defaults : { text : 'Find Previous'},
+            tooltip : 'Find Previous',
+            handler : findPrev
         },{
             iconCls : 'icon-text_replace',
             defaults : { text : 'Replace All'},
