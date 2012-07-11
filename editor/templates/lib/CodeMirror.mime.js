@@ -23,6 +23,10 @@ Ext.ux.form.CodeMirror.mime = function () {
         ext2mode: function (extension, mime, result) {
 
             switch (extension) {
+            /**
+             * Add further file extension to CodeMirror mode mapping, if
+             * required:
+             */
                 case 'md':
                     result = 'markdown';
                     break;
