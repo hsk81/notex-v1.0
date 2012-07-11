@@ -30,7 +30,7 @@ Ext.ux.form.CodeMirror = function () {
 
         function afterrender (textarea) {
 
-            var configuration = textarea.onAfterRenderBeg (textarea);
+            var configuration = this.onAfterRenderBeg (textarea);
 
             function onCursorActivity (codeEditor) {
                 codeEditor.matchHighlight ("CodeMirror-matchhighlight");
@@ -68,7 +68,7 @@ Ext.ux.form.CodeMirror = function () {
             this.codeEditor.setValue (this.initialConfig.value);
             this.setFontSize (this.initialConfig.fontSize);
 
-            textarea.onAfterRenderEnd (textarea);
+            this.onAfterRenderEnd (textarea);
         }
 
         this.on ({ afterrender: afterrender });
