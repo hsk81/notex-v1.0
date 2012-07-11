@@ -257,20 +257,17 @@ function editorTBar (mode, tabId, editorId) {
             tooltip : 'Paste',
             handler : paste
         },'-',{
-            iconCls : 'icon-text_prose',
-            text : 'Paragraph',
+            iconCls : 'icon-text_heading_1',
+            text : 'Heading',
             tooltip : 'Document Headers',
             split : true,
+
             handler : function (button, event) {
                 var ed = Ext.getCmp (editorId);
                 CM = ed.codeEditor; console.info ('[CM]', CM);
             },
 
             menu: { items: [{
-                iconCls : 'icon-text_prose',
-                text: 'Paragraph',
-                handler : applyHeading0
-            },'-',{
                 iconCls : 'icon-text_heading_1',
                 text : 'Parts',
                 handler : applyHeading1

@@ -49,8 +49,51 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function applyHeading () {
-        // TODO!
+    function applyHeading (level) {
+
+        var level2marker = {
+            1:'#', 2:'*', 3:'=', 4:'-', 5:'^'
+        }
+
+        var marker = level2marker[level];
+        if (marker) {
+
+            var sel = this.codeEditor.getSelection ();
+            var rep = sel.replace (/\s+$/, '');
+
+            if (rep) {
+
+                var head = ''; for (var idx=0; idx < rep.length; idx++) {
+                    head += marker;
+                }
+
+                if (level == 1) {
+                    this.codeEditor.replaceSelection (String.format (
+                        '{1}\n{0}\n\n', head, rep
+                    ));
+                } else {
+                    this.codeEditor.replaceSelection (String.format (
+                        '{0}\n{1}\n{0}\n\n', head, rep
+                    ));
+                }
+
+            }
+        } else {
+            if (level == 6) {
+                var sel = this.codeEditor.getSelection ();
+                var rep = sel.replace (/\s+$/, '');
+
+                if (rep) {
+                    this.codeEditor.replaceSelection (String.format (
+                        '.. rubric:: {0}\n\n', rep
+                    ));
+                } else {
+                    this.codeEditor.replaceSelection (String.format (
+                        '.. rubric:: {0}', ''
+                    ));
+                }
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

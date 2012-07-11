@@ -42,7 +42,6 @@ Ext.ux.form.CodeMirror = function () {
             }
 
             var options = {
-                autofocus: true,
                 matchBrackets: true,
                 autoClearEmptyLines: true,
                 lineWrapping: true,
@@ -97,7 +96,7 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function focus (delay) {
+    function focus (panel, ms) {
         if (this.codeEditor) {
 
             if (this.codeEditor.lastCursor) {
@@ -106,7 +105,16 @@ Ext.ux.form.CodeMirror = function () {
                 this.codeEditor.setCursor (this.codeEditor.getCursor ());
             }
 
-            this.codeEditor.focus (delay);
+            if (ms) {
+                console.info (ms)
+                Ext.defer (
+                    function () { this.codeEditor.focus (); }, ms, this
+                );
+            } else {
+                Ext.defer (
+                    function () { this.codeEditor.focus (); }, 25, this
+                );
+            }
         }
     }
 
