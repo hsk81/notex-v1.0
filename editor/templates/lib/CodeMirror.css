@@ -1,22 +1,15 @@
-.CodeMirror .CodeMirror-scroll
-{
+.CodeMirror .CodeMirror-scroll {
     height: 100%;
 }
 
-.CodeMirror .activeline
-{
+.CodeMirror .activeline {
     background: #f4f4f4 !important;
 }
 
-.CodeMirror .CodeMirror-focused span.CodeMirror-matchhighlight
-{
-    background: #ffff80; !important;
+.CodeMirror .CodeMirror-selected {
+    background: #bbffff !important;
 }
 
-.CodeMirror .cm-yaml-tag {
-    color: #ff0000;
-}
-
-.CodeMirror .cm-rst-footnote {
-    color: #008800;
+.CodeMirror .CodeMirror-focused span.CodeMirror-matchhighlight {
+    background: #ffffbb; !important;
 }

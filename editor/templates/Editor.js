@@ -32,8 +32,8 @@ var editor = function () {
         if (tab) {
             this.activate (tab)
         } else {
-            var mode = mapExtToMode(
-                getFilenameWithExt (tabInfo.title).extension
+            var mode = ext2mode (
+                filenameWithExt (tabInfo.title).extension
             );
 
             tab = this.add ({
@@ -55,7 +55,7 @@ var editor = function () {
                 tbar : editorTBar (mode, tabInfo.id, 'editorId' + tabInfo.id),
 
                 items : [{
-                    xtype : 'ux-codemirror',
+                    xtype : mode2xtype (mode),
                     anchor : '100% 100%',
                     value : tabInfo.text,
 
@@ -102,7 +102,7 @@ var editor = function () {
         }
     }
 
-    function getFilenameWithExt (filename_ext, delimiter) {
+    function filenameWithExt (filename_ext, delimiter) {
 
         if (!filename_ext) return {}
         if (!delimiter) { delimiter = '.' }
@@ -119,11 +119,33 @@ var editor = function () {
         }
     }
 
-    function mapExtToMode (extension) {
-        if (extension == 'cfg') {
-            return 'yaml-plus';
-        } else {
-            return 'rst-plus';
+    function ext2mode (extension) {
+        switch (extension) {
+            case 'cfg':
+            case 'conf':
+            case 'yml':
+            case 'yaml':
+                return 'yaml-plus';
+            case 'txt':
+            case 'text':
+            case 'rst':
+            case 'rest':
+                return 'rst-plus';
+            default:
+                return undefined;
+        }
+    }
+
+    function mode2xtype (mode) {
+        switch (mode) {
+            case 'yaml':
+            case 'yaml-plus':
+                return 'ux-codemirror-yaml';
+            case 'rst':
+            case 'rst-plus':
+                return 'ux-codemirror-rest';
+            default:
+                return 'ux-codemirror';
         }
     }
 
