@@ -51,6 +51,42 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    function cutToBuffer (buffer, name) {
+
+        var selection = this.codeEditor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            this.codeEditor.replaceSelection ('');
+            return true;
+        }
+
+        return false;
+    }
+
+    function copyToBuffer (buffer, name) {
+
+        var selection = this.codeEditor.getSelection ();
+        if (selection) {
+            buffer[name] = selection;
+            return true;
+        }
+
+        return false;
+    }
+
+    function pasteFromBuffer (buffer, name) {
+
+        if (buffer[name]) {
+            this.codeEditor.replaceSelection (buffer[name]);
+            return true;
+        }
+
+        return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     function applyHeading (level) {
 
         var level2marker = {
@@ -557,6 +593,10 @@ Ext.ux.form.CodeMirror.rest = function () {
 
         onAfterRenderBeg: onAfterRenderBeg,
         onAfterRenderEnd: onAfterRenderEnd,
+
+        cutToBuffer: cutToBuffer,
+        copyToBuffer: copyToBuffer,
+        pasteFromBuffer: pasteFromBuffer,
 
         applyHeading: applyHeading,
 

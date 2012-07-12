@@ -169,42 +169,6 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function cutToBuffer (buffer, name) {
-
-        var selection = this.codeEditor.getSelection ();
-        if (selection) {
-            buffer[name] = selection;
-            this.codeEditor.replaceSelection ('');
-            return true;
-        }
-
-        return false;
-    }
-
-    function copyToBuffer (buffer, name) {
-
-        var selection = this.codeEditor.getSelection ();
-        if (selection) {
-            buffer[name] = selection;
-            return true;
-        }
-
-        return false;
-    }
-
-    function pasteFromBuffer (buffer, name) {
-
-        if (buffer[name]) {
-            this.codeEditor.replaceSelection (buffer[name]);
-            return true;
-        }
-
-        return false;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
     function setFontSize (value, index) {
         if (this.codeEditor) {
             var codeEditorEl = this.el.next ();
