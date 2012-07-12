@@ -184,6 +184,12 @@ function editorTBar (mode, tabId, editorId) {
         ed.insertHyperlink ();
     }
 
+    function insertFootnote (button, event) {
+        var ed = Ext.getCmp (editorId)
+        ed.insertFootnote ();
+        ed.fireEvent ('focus');
+    }
+
     function insertHorizontalLine (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.insertHorizontalLine ();
@@ -356,6 +362,11 @@ function editorTBar (mode, tabId, editorId) {
             defaults : { text : 'Hyperlink'},
             tooltip : 'Hyperlink',
             handler : insertHyperlink
+        },{
+            iconCls : 'icon-text_horizontalrule',
+            defaults : { text : 'Footnote'},
+            tooltip : 'Footnote',
+            handler : insertFootnote
         },{
             iconCls : 'icon-hrule',
             defaults : { text : 'Horizontal Line'},

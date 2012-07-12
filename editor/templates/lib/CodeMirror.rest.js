@@ -573,6 +573,42 @@ Ext.ux.form.CodeMirror.rest = function () {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    function insertFootnote () {
+        var cur = this.codeEditor.getCursor ();
+
+        var rng = this.codeEditor.getRange (
+            {line:cur.line, ch: cur.ch-1},
+            {line:cur.line, ch: cur.ch+1}
+        )
+
+        var prefix = rng.match (/^\s/) ? '' : ' ';
+        var suffix = rng.match (/\s$/) ? '' : ' ';
+        var anchor = String.format (
+            '{0}{1}{2}', prefix, '[#]_', suffix
+        )
+
+        if (this.codeEditor.lineCount () <= cur.line+1) {
+            this.codeEditor.replaceSelection (anchor + '\n');
+            this.codeEditor.setCursor ({line:cur.line+1,ch:0})
+            this.codeEditor.replaceSelection ('\n.. [#] \n');
+        } else {
+            this.codeEditor.replaceSelection (anchor);
+            this.codeEditor.setCursor ({line:cur.line+1,ch:0})
+            this.codeEditor.replaceSelection ('\n.. [#] \n');
+
+            var nxt = this.codeEditor.getCursor ();
+            this.codeEditor.setCursor (nxt);
+
+            if (this.codeEditor.getLine (nxt.line)) {
+                this.codeEditor.replaceSelection ('\n');
+            }
+        }
+
+        this.codeEditor.setCursor ({line:cur.line+2,ch:7});
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
     function insertHorizontalLine () {
 
         var cur = this.codeEditor.getCursor ();
@@ -618,6 +654,7 @@ Ext.ux.form.CodeMirror.rest = function () {
         insertFigure: insertFigure,
         insertImage: insertImage,
         insertHyperlink: insertHyperlink,
+        insertFootnote: insertFootnote,
         insertHorizontalLine: insertHorizontalLine
     });
 }();
