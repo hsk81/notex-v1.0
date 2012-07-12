@@ -89,7 +89,7 @@ function editorTBar (mode, tabId, editorId) {
     function applyHeading5 (button, event) {
         var ed = Ext.getCmp (editorId);
         ed.applyHeading (5);
-        ed.codeEditor.focus ();
+        ed.fireEvent ('focus');
     }
 
     function applyHeading6 (button, event) {

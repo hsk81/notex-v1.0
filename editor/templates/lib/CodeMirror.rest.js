@@ -60,39 +60,38 @@ Ext.ux.form.CodeMirror.rest = function () {
 
             var sel = this.codeEditor.getSelection ();
             var rep = sel.replace (/\s+$/, '');
-
             if (rep) {
 
-                var head = ''; for (var idx=0; idx < rep.length; idx++) {
-                    head += marker;
-                }
+                var head = '';
+                var size = (rep.length < 64) ? rep.length : 4;
+                for (var idx=0; idx < size; idx++) head += marker;
 
-                if (level == 1) {
-                    this.codeEditor.replaceSelection (String.format (
-                        '{0}\n{1}\n{0}\n\n', head, rep
-                    ));
-                } else {
-                    this.codeEditor.replaceSelection (String.format (
-                        '{1}\n{0}\n\n', head, rep
-                    ));
-                }
+                var tpl = '{1}\n{0}\n\n';
+                if (level == 1) tpl = '{0}\n' + tpl;
 
+                var cur = this.codeEditor.getCursor (true);
+                if (cur.ch > 0) tpl = '\n\n' + tpl;
+                else if (cur.line > 0) tpl = '\n' + tpl;
+
+                this.codeEditor.replaceSelection (String.format (
+                    tpl, head, rep
+                ));
             }
-        } else {
-            if (level == 6) {
-                var sel = this.codeEditor.getSelection ();
-                var rep = sel.replace (/\s+$/, '');
+        } else if (level == 6) {
 
-                if (rep) {
-                    this.codeEditor.replaceSelection (String.format (
-                        '.. rubric:: {0}\n\n', rep
-                    ));
-                } else {
-                    this.codeEditor.replaceSelection (String.format (
-                        '.. rubric:: {0}', ''
-                    ));
-                }
-            }
+            var sel = this.codeEditor.getSelection ();
+            var rep = sel.replace (/\s+$/, '');
+
+            var tpl = '.. rubric:: {0}';
+            if (rep) tpl += '\n\n';
+
+            var cur = this.codeEditor.getCursor (true);
+            if (cur.ch > 0) tpl = '\n\n' + tpl;
+            else if (cur.line > 0) tpl = '\n' + tpl;
+
+            this.codeEditor.replaceSelection (String.format (
+                tpl, rep
+            ));
         }
     }
 
