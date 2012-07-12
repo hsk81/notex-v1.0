@@ -8,67 +8,47 @@ Ext.namespace ('Ext.ux.form');
 
 Ext.ux.form.CodeMirror = function () {
 
-    function initComponent () {
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-        Ext.ux.form.CodeMirror.superclass.initComponent.apply (
-            this, arguments
+    function afterrender (textarea) {
+
+        var configuration = this.onAfterRenderBeg (textarea);
+
+        function onCursorActivity (codeEditor) {
+            codeEditor.matchHighlight ("CodeMirror-matchhighlight");
+            codeEditor.setLineClass (codeEditor.hlLine, null, null);
+            var cursor = codeEditor.getCursor ();
+            codeEditor.hlLine = codeEditor.setLineClass (
+                cursor.line, null, "activeline"
+            );
+        }
+
+        var options = {
+            autoClearEmptyLines: true,
+            lineWrapping: true,
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: this.initialConfig.mode,
+            onCursorActivity: onCursorActivity
+        }
+
+        if (configuration)
+            for (var key in configuration)
+                options[key] = configuration[key];
+
+        this.codeEditor = new CodeMirror.fromTextArea (
+            this.el.dom, options
         );
 
-        ///////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////
+        this.codeEditor.hlLine = this.codeEditor.setLineClass (
+            0, "activeline"
+        );
 
-        function resize (ta, width, height) {
-            if (this.codeEditor) {
-                this.codeEditor.refresh ();
-            }
-        }
+        this.codeEditor.setValue (this.initialConfig.value);
+        this.setFontSize (this.initialConfig.fontSize);
 
-        this.on ({ resize: resize });
-
-        ///////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////
-
-        function afterrender (textarea) {
-
-            var configuration = this.onAfterRenderBeg (textarea);
-
-            function onCursorActivity (codeEditor) {
-                codeEditor.matchHighlight ("CodeMirror-matchhighlight");
-                codeEditor.setLineClass (codeEditor.hlLine, null, null);
-                var cursor = codeEditor.getCursor ();
-                codeEditor.hlLine = codeEditor.setLineClass (
-                    cursor.line, null, "activeline"
-                );
-            }
-
-            var options = {
-                autoClearEmptyLines: true,
-                lineWrapping: true,
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: this.initialConfig.mode,
-                onCursorActivity: onCursorActivity
-            }
-
-            if (configuration)
-                for (var key in configuration)
-                    options[key] = configuration[key];
-
-            this.codeEditor = new CodeMirror.fromTextArea (
-                this.el.dom, options
-            );
-
-            this.codeEditor.hlLine = this.codeEditor.setLineClass (
-                0, "activeline"
-            );
-
-            this.codeEditor.setValue (this.initialConfig.value);
-            this.setFontSize (this.initialConfig.fontSize);
-
-            this.onAfterRenderEnd (textarea);
-        }
-
-        this.on ({ afterrender: afterrender });
+        this.onAfterRenderEnd (textarea);
     }
 
     function onAfterRenderBeg (textarea) {}
@@ -76,29 +56,6 @@ Ext.ux.form.CodeMirror = function () {
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-
-    function getValue () {
-        if (this.codeEditor) {
-            return this.codeEditor.getValue ();
-        } else {
-            return this.initialConfig.value;
-        }
-    }
-
-    function setValue (value) {
-        if (this.codeEditor) {
-            this.codeEditor.setValue (value);
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-
-    function refresh () {
-        if (this.codeEditor) {
-            this.codeEditor.refresh ();
-        }
-    }
 
     function focus (ms) {
         if (this.codeEditor) {
@@ -125,6 +82,32 @@ Ext.ux.form.CodeMirror = function () {
     function blur () {
         if (this.codeEditor) {
             this.codeEditor.lastCursor = this.codeEditor.getCursor ();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function refresh () {
+        if (this.codeEditor) {
+            this.codeEditor.refresh ();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function getValue () {
+        if (this.codeEditor) {
+            return this.codeEditor.getValue ();
+        } else {
+            return this.initialConfig.value;
+        }
+    }
+
+    function setValue (value) {
+        if (this.codeEditor) {
+            this.codeEditor.setValue (value);
         }
     }
 
@@ -184,19 +167,19 @@ Ext.ux.form.CodeMirror = function () {
 
     return Ext.extend (Ext.form.TextArea, {
 
-        initComponent: initComponent,
-
         onAfterRenderBeg: onAfterRenderBeg,
         onAfterRenderEnd: onAfterRenderEnd,
 
+        listeners: {
+            afterrender: afterrender,
+            blur: blur,
+            focus: focus,
+            refresh: refresh,
+            resize: refresh
+        },
+
         getValue: getValue,
         setValue: setValue,
-
-        listeners: {
-            refresh: refresh,
-            focus: focus,
-            blur: blur
-        },
 
         undo: undo,
         redo: redo,
