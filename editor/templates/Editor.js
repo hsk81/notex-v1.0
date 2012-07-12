@@ -12,15 +12,15 @@ var editor = function () {
     }
 
     function refreshEditor (pnlTab) {
-        pnlTab.getEditor ().fireEvent ('refresh', editor);
+        pnlTab.getEditor ().fireEvent ('refresh');
     }
 
     function focusEditor (pnlTab) {
-        pnlTab.getEditor ().fireEvent ('focus', editor);
+        pnlTab.getEditor ().fireEvent ('focus');
     }
 
     function blurEditor (pnlTab) {
-        pnlTab.getEditor ().fireEvent ('blur', editor);
+        pnlTab.getEditor ().fireEvent ('blur');
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ var editor = function () {
 
         var textareas = this.findByType ('ux-codemirror');
         Ext.each (textareas, function (textarea, index) {
-            textarea.setFontSize (new_font_size_px)
+            textarea.setFontSize (new_font_size_px);
         });
 
         this.fontSize = new_font_size_px

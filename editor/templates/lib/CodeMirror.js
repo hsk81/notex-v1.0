@@ -94,7 +94,13 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function focus (panel, ms) {
+    function refresh () {
+        if (this.codeEditor) {
+            this.codeEditor.refresh ();
+        }
+    }
+
+    function focus (ms) {
         if (this.codeEditor) {
 
             if (this.codeEditor.lastCursor) {
@@ -199,7 +205,7 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    function setFontSize (value) {
+    function setFontSize (value, index) {
         if (this.codeEditor) {
             var codeEditorEl = this.el.next ();
             if (codeEditorEl) {
@@ -223,6 +229,7 @@ Ext.ux.form.CodeMirror = function () {
         setValue: setValue,
 
         listeners: {
+            refresh: refresh,
             focus: focus,
             blur: blur
         },
