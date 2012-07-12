@@ -579,13 +579,15 @@ Ext.ux.form.CodeMirror.rest = function () {
         var rng = this.codeEditor.getRange (
             {line:cur.line, ch: cur.ch-1},
             {line:cur.line, ch: cur.ch+1}
-        )
+        );
 
-        var prefix = rng.match (/^\s/) ? '' : ' ';
-        var suffix = rng.match (/\s$/) ? '' : ' ';
+        var prefix = (rng.match (/^\s/) || (cur.ch -1 < 0))
+            ? '' : ' ';
+        var suffix = (rng.match (/\s$/))
+            ? '' : ' ';
         var anchor = String.format (
             '{0}{1}{2}', prefix, '[#]_', suffix
-        )
+        );
 
         if (this.codeEditor.lineCount () <= cur.line+1) {
             this.codeEditor.replaceSelection (anchor + '\n');
