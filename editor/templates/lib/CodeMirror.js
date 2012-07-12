@@ -42,19 +42,17 @@ Ext.ux.form.CodeMirror = function () {
             }
 
             var options = {
-                matchBrackets: true,
                 autoClearEmptyLines: true,
                 lineWrapping: true,
                 lineNumbers: true,
+                matchBrackets: true,
                 mode: this.initialConfig.mode,
                 onCursorActivity: onCursorActivity
             }
 
-            if (configuration) {
-                for (var key in configuration) {
+            if (configuration)
+                for (var key in configuration)
                     options[key] = configuration[key];
-                }
-            }
 
             this.codeEditor = new CodeMirror.fromTextArea (
                 this.el.dom, options

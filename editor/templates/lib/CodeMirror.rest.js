@@ -37,6 +37,8 @@ Ext.ux.form.CodeMirror.rest = function () {
         });
 
         return {
+            indentUnit: 3,
+            tabSize: 3,
             extraKeys: {
                 'Ctrl-B' : function (codeEditor) { textarea.toggleStrong (); },
                 'Ctrl-I' : function (codeEditor) { textarea.toggleItalic (); }

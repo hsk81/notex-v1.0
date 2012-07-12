@@ -33,6 +33,10 @@ Ext.ux.form.CodeMirror.yaml = function () {
             return CodeMirror.overlayMode (mode, overlay);
         });
 
+        return {
+            indentUnit: 4,
+            tabSize: 4
+        }
     }
 
     function onAfterRenderEnd (textarea) {}
