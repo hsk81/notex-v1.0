@@ -10,15 +10,15 @@ master_doc: content
 source_suffix: .txt
 
 rst_prolog: |
-   .. role:: latex(raw)
-      :format: latex
-   .. role:: html(raw)
-      :format: html
+    .. role:: latex(raw)
+       :format: latex
+    .. role:: html(raw)
+       :format: html
 
 rst_epilog: |
-   .. |NoTex| replace::
-      :latex:`\\textsc{NoTex}`
-      :html:`<span style="font-variant: small-caps;">NoTex</span>`
+    .. |NoTex| replace::
+       :latex:`\\textsc{NoTex}`
+       :html:`<span style="font-variant: small-caps;">NoTex</span>`
 
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
@@ -71,6 +71,12 @@ latex_documents:
 latex_additional_files: [quill.jpg]
 
 # -----------------------------------------------------------------------------
+# LaTex: http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex
+# -----------------------------------------------------------------------------
+
+latex_backend: xelatex
+
+# -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html
 # -----------------------------------------------------------------------------
 # ========= ===================================================================
@@ -83,7 +89,7 @@ latex_additional_files: [quill.jpg]
 # %c        Locale’s appropriate date and time representation.
 # %d        Day of the month as a decimal number [01,31].
 # %f        Microsecond as decimal number [0,999999], zero-padded on the left.
-# %H	    Hour (24-hour clock) as a decimal number [00,23].
+# %H        Hour (24-hour clock) as a decimal number [00,23].
 # %I        Hour (12-hour clock) as a decimal number [01,12].
 # %j        Day of the year as a decimal number [001,366].
 # %m        Month as a decimal number [01,12].

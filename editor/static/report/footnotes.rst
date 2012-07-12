@@ -84,7 +84,7 @@
 
 .. [#f43] Helge Kragh, "Fin-de-Siècle Physics: A World Picture in Flux" in Quantum Generations: A History of Physics in the Twentieth Century (Princeton, NJ: Princeton University Press, 1999.
 
-.. [#f44] Умов Н. А. Избранные сочинения. М. — Л., 1950. (Russian)
+.. [#f44] ..., 1950. (Russian)
 
 .. [#f45] Preston, S. T., Physics of the Ether, E. & F. N. Spon, London, (1875).
 
@@ -102,7 +102,7 @@
 
 .. [#f52] Le Bon: `The Evolution of Forces <http://www.rexresearch.com/lebonfor/evforp1.htm#p1b3ch2>`_.
 
-.. [#f53] Bizouard: `Poincaré E = mc² l'équation de Poincaré, Einstein et Planck <http://www.annales.org/archives/x/poincaBizouard.pdf>`_.
+.. [#f53] Bizouard: `Poincaré l'équation de Poincaré, Einstein et Planck <http://www.annales.org/archives/x/poincaBizouard.pdf>`_.
 
 .. [#f54] Rutherford, Ernest (1904), `"Radioactivity" <http://www.archive.org/details/radioactivity00ruthrich>`_, Cambridge: University Press, pp. 336–338
 

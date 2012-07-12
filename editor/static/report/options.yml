@@ -29,7 +29,7 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 12pt ## or 11pt or 10pt
-    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O}
+    fontpkg: \\usepackage{libertine}
 
     preamble: ''
     maketitle: |
@@ -63,6 +63,12 @@ latex_documents:
 latex_additional_files: [wiki.jpg]
 
 # -----------------------------------------------------------------------------
+# LaTex: http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex
+# -----------------------------------------------------------------------------
+
+latex_backend: pdflatex
+
+# -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html
 # -----------------------------------------------------------------------------
 # ========= ===================================================================
@@ -75,7 +81,7 @@ latex_additional_files: [wiki.jpg]
 # %c        Locale’s appropriate date and time representation.
 # %d        Day of the month as a decimal number [01,31].
 # %f        Microsecond as decimal number [0,999999], zero-padded on the left.
-# %H	    Hour (24-hour clock) as a decimal number [00,23].
+# %H        Hour (24-hour clock) as a decimal number [00,23].
 # %I        Hour (12-hour clock) as a decimal number [01,12].
 # %j        Day of the year as a decimal number [001,366].
 # %m        Month as a decimal number [01,12].
