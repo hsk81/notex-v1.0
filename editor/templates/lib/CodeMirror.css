@@ -13,3 +13,15 @@
 .CodeMirror .CodeMirror-focused span.CodeMirror-matchhighlight {
     background: #ffffbb; !important;
 }
+
+.CodeMirror .cm-tab:after {
+    content: "\21e5";
+    display: -moz-inline-block;
+    display: -webkit-inline-block;
+    display: inline-block;
+    width: 0px;
+    position: relative;
+    overflow: visible;
+    left: -1.4em;
+    color: #ff0000;
+}
