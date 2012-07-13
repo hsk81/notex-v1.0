@@ -607,36 +607,42 @@ Ext.ux.form.CodeMirror.rest = function () {
             buttons: [{
                 text: 'Insert',
                 iconCls: 'icon-tick',
-                handler: function () {
-
-                    if (!txtUrl.validate ()) return;
-                    var url = txtUrl.getValue ();
-                    if (!txtLabel.validate ()) return;
-                    var label = txtLabel.getValue ();
-
-                    if (label) {
-                        textarea.codeEditor.replaceSelection (
-                            String.format ('`{0} <{1}>`_', label, url)
-                        );
-                    } else {
-                        if (url) textarea.codeEditor.replaceSelection (url);
-                    }
-
-                    win.close ();
-
-                    var cur = textarea.codeEditor.getCursor ();
-                    textarea.codeEditor.setSelection (cur, cur);
-                    textarea.codeEditor.focus ();
-                }
+                handler: insert,
+                scope: this
             },{
                 text: 'Cancel',
                 iconCls: 'icon-cross',
-                handler: function () { win.close (); }
+                handler: cancel,
+                scope: this
             }]
         });
 
+        function insert () {
+
+            if (!txtUrl.validate ()) return;
+            var url = txtUrl.getValue ();
+            if (!txtLabel.validate ()) return;
+            var label = txtLabel.getValue ();
+
+            if (label)
+                this.codeEditor.replaceSelection (
+                    String.format ('`{0} <{1}>`_', label, url));
+            else if (url)
+                this.codeEditor.replaceSelection (url);
+
+            win.close ();
+
+            var cur = this.codeEditor.getCursor ();
+            this.codeEditor.setSelection (cur, cur);
+            this.codeEditor.focus ();
+        }
+
+        function cancel () {
+            win.close ();
+        }
+
         win.show (this);
-        txtUrl.focus (true, 25)
+        txtUrl.focus (true, 25);
     }
 
     ///////////////////////////////////////////////////////////////////////////
