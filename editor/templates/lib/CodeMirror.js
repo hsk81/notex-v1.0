@@ -16,7 +16,6 @@ Ext.ux.form.CodeMirror = function () {
         var configuration = this.onAfterRenderBeg (textarea);
 
         function onCursorActivity (codeEditor) {
-            codeEditor.matchHighlight ("CodeMirror-matchhighlight");
             codeEditor.setLineClass (codeEditor.hlLine, null, null);
             var cursor = codeEditor.getCursor ();
             codeEditor.hlLine = codeEditor.setLineClass (
@@ -130,7 +129,7 @@ Ext.ux.form.CodeMirror = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function cmdFind () {
-        CodeMirror.commands['find'] (this.codeEditor);
+        CodeMirror.commands['find'] (this.codeEditor, 'alpha');
     }
 
     function cmdFindNext () {

@@ -10,10 +10,6 @@
     background: #bbffff !important;
 }
 
-.CodeMirror .CodeMirror-focused span.CodeMirror-matchhighlight {
-    background: #ffffbb; !important;
-}
-
 .CodeMirror .cm-tab:after {
     content: "\21e5";
     display: -moz-inline-block;
