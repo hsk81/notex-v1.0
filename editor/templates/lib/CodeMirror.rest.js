@@ -405,6 +405,27 @@ Ext.ux.form.CodeMirror.rest = function () {
 
     function insertPicture (textarea, node, type) {
 
+        function onAfterRender (combobox) {
+            var tree = Ext.getCmp ('reportManager.tree.id');
+
+            if (node)
+                while (node.parentNode != tree.root) {
+                    node = node.parentNode;
+                }
+            else
+                node = tree.root;
+
+            tree.getAllLeafs (node, function (node, leaf) {
+                if (tree.isImage (leaf)) {
+                    var pathNode = node.getPath ('text');
+                    var pathLeaf = leaf.getPath ('text')
+                        .replace (pathNode + '/', '');
+
+                    combobox.store.loadData ([[pathLeaf]], true);
+                }
+            });
+        }
+
         var cmbFilename = new Ext.form.ComboBox ({
             id : "cmbFilenameId",
             fieldLabel : 'File',
@@ -419,32 +440,12 @@ Ext.ux.form.CodeMirror.rest = function () {
             emptyText:'select or enter a file name',
 
             listeners : {
-                afterrender : function (component) {
-                    var tree = Ext.getCmp ('reportManager.tree.id');
-                    if (node) {
-                        while (node.parentNode != tree.root) {
-                            node = node.parentNode;
-                        }
-                    } else {
-                        node = tree.root;
-                    }
-
-                    tree.getAllLeafs (node, function (node, leaf) {
-                        if (tree.isImage (leaf)) {
-                            var pathNode = node.getPath ('text');
-                            var pathLeaf = leaf.getPath ('text').replace (
-                                pathNode + '/', ''
-                            );
-
-                            component.store.loadData ([[pathLeaf]], true);
-                        }
-                    });
-                }
+                afterrender : onAfterRender
             }
         });
 
-        Ext.apply(Ext.form.VTypes, {
-            natural: function(val, field) { return /^[\d]+$/.test(val); },
+        Ext.apply (Ext.form.VTypes, {
+            natural: function (val, field) { return /^[\d]+$/.test(val); },
             naturalText: 'Not a positive number.',
             naturalMask: /[\d]/i
         });
@@ -488,13 +489,10 @@ Ext.ux.form.CodeMirror.rest = function () {
             var cmbFilenameWidth = cmbFilename.getWidth ();
             var cmbAlignmentWidth = cmbAlignment.getWidth ();
 
-            if (cmbFilenameWidth < txtScaleWidth) {
+            if (cmbFilenameWidth < txtScaleWidth)
                 cmbFilename.setWidth (txtScaleWidth);
-            }
-
-            if (cmbAlignmentWidth < txtScaleWidth) {
+            if (cmbAlignmentWidth < txtScaleWidth)
                 cmbAlignment.setWidth (txtScaleWidth);
-            }
         }
 
         var formPanel = new Ext.FormPanel ({
@@ -506,7 +504,6 @@ Ext.ux.form.CodeMirror.rest = function () {
         });
 
         var win = new Ext.Window ({
-
             border: false,
             iconCls: 'icon-picture_add',
             modal: true,
@@ -519,50 +516,88 @@ Ext.ux.form.CodeMirror.rest = function () {
             buttons: [{
                 text: 'Insert',
                 iconCls: 'icon-tick',
-                handler: function () {
-
-                    if (!cmbFilename.validate ()) return;
-                    var filename = cmbFilename.getValue ();
-                    if (!txtScale.validate ()) return;
-                    var scale = txtScale.getValue ();
-                    if (!cmbAlignment.validate ()) return;
-                    var alignment = cmbAlignment.getValue ();
-                    if (!txtCaption.validate ()) return;
-                    var caption = txtCaption.getValue ();
-
-                    var rest = (type == FIGURE_TYPE)
-                        ? String.format ('\n.. figure:: {0}\n',  filename)
-                        : String.format ('\n.. image:: {0}\n',  filename);
-
-                    if (scale)
-                        rest += String.format ('   :scale: {0} %\n', scale);
-
-                    if (alignment)
-                        rest += String.format ('   :align: {0}\n', alignment);
-
-                    if (caption && (type == FIGURE_TYPE)) {
-
-                        caption = caption.replace (/\n/g, '\n   ');
-                        caption = caption.replace (/\s+$/, '');
-
-                        rest += '\n';
-                        rest += String.format ('   {0}\n', caption);
-                    }
-
-                    textarea.codeEditor.replaceSelection ('\n' + rest + '\n');
-
-                    win.close ();
-
-                    var cur = textarea.codeEditor.getCursor ();
-                    textarea.codeEditor.setSelection (cur, cur);
-                    textarea.codeEditor.focus ();
-                }
+                handler: insert
             },{
                 text: 'Cancel',
                 iconCls: 'icon-cross',
-                handler: function () { win.close (); }
+                handler: cancel
             }]
         });
+
+        function insert () {
+            var cm = textarea.codeEditor;
+
+            if (!cmbFilename.validate ()) return;
+            var filename = cmbFilename.getValue ();
+            if (!txtScale.validate ()) return;
+            var scale = txtScale.getValue ();
+            if (!cmbAlignment.validate ()) return;
+            var alignment = cmbAlignment.getValue ();
+            if (!txtCaption.validate ()) return;
+            var caption = txtCaption.getValue ();
+
+            var rest = (type == FIGURE_TYPE)
+                ? String.format ('\n.. figure:: {0}\n', filename)
+                : String.format ('\n.. image:: {0}\n', filename);
+
+            if (scale)
+                rest += String.format ('   :scale: {0} %\n', scale);
+            if (alignment)
+                rest += String.format ('   :align: {0}\n', alignment);
+
+            if (caption && type == FIGURE_TYPE) {
+                caption = caption.replace (/\n/g, '\n   '); // multi-line
+                caption = caption.replace (/\s+$/, '');
+                rest += '\n' + String.format ('   {0}\n', caption);
+            }
+
+            win.close ();
+
+            var cur = cm.getCursor ();
+            var txt = cm.getLine (cur.line);
+            rest = fix_preceeding_whitespace (rest, txt, cur);
+            rest = fix_succeeding_whitespace (rest, txt, cur);
+
+            cm.replaceSelection (rest);
+            cm.setCursor (cm.getCursor ());
+            cm.focus ();
+
+            function fix_preceeding_whitespace (rest, txt, cur) {
+                if (cur.ch > 0 && !txt.match (/^\s+$/)) {
+                    rest = '\n' + rest;
+                } else {
+                    var prev_txt = cm.getLine (cur.line - 1);
+                    if (prev_txt == '' || (
+                        prev_txt && prev_txt.match (/^\s+$/)))
+                    {
+                        rest = rest.replace (/^\n/, '');
+                    }
+
+                    if (txt.match (/^\s+$/)) cm.setLine (cur.line, '');
+                }
+
+                return rest;
+            }
+
+            function fix_succeeding_whitespace (rest, txt, cur) {
+                if (cur.ch < txt.length) {
+                    rest += '\n'
+                } else {
+                    var next_txt = cm.getLine (cur.line + 1);
+                    if (next_txt == '' || (
+                        next_txt && next_txt.match (/^\s+$/)))
+                    {
+                        rest = rest.replace (/\n$/, '');
+                    }
+                }
+
+                return rest;
+            }
+        }
+
+        function cancel () {
+            win.close ();
+        }
 
         win.show (textarea);
     }
@@ -570,7 +605,6 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function insertHyperlink () {
-        var textarea = this;
 
         var txtUrl = new Ext.form.TextField ({
             fieldLabel: 'URL',
