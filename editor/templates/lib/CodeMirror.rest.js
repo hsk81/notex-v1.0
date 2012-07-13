@@ -175,54 +175,58 @@ Ext.ux.form.CodeMirror.rest = function () {
         if (next2 && next2.className == 'header')
             if (upper) { lower = next2; } else { upper = next2; }
 
+
         var selection = this.codeEditor.getSelection ();
         if (selection) {
 
-            var text = this.codeEditor.getLine (beg.line);
-            if (text.match (/.. rubric::/)) {
-                this.codeEditor.replaceSelection (
-                    text.replace (/.. rubric::(\s*)/, ''));
-            }
+            removeHeading6.call (this, selection);
 
-            else if (selection.match (/.. rubric::/)) {
-                this.codeEditor.replaceSelection (
-                    selection.replace (/.. rubric::(\s*)/, ''));
-            }
+            if (prev3 && prev3.className == 'header' && !lower) return;
+            if (prev2 && prev2.className == 'header' && !lower) return;
 
-            else {
-                if (prev3 && prev3.className == 'header' && !lower) return;
-                if (prev2 && prev2.className == 'header' && !lower) return;
+            if (lower) this.codeEditor.removeLine (lower.line);
+            if (upper) this.codeEditor.removeLine (upper.line);
 
-                if (lower) this.codeEditor.removeLine (lower.line);
-                if (upper) this.codeEditor.removeLine (upper.line);
-
-                if (upper && lower) {
-                    this.codeEditor.setCursor ({line:upper.line, ch:0});
+            if (upper && lower) {
+                this.codeEditor.setCursor ({line:upper.line, ch:0});
+            } else {
+                if (upper || lower) {
+                    if (upper)
+                        this.codeEditor.setCursor ({line:upper.line-1, ch:0});
+                    if (lower)
+                        this.codeEditor.setCursor ({line:lower.line-1, ch:0});
                 } else {
-                    if (upper || lower) {
-                        if (upper)
-                            this.codeEditor.setCursor ({line:upper.line-1, ch:0});
-                        if (lower)
-                            this.codeEditor.setCursor ({line:lower.line-1, ch:0});
-                    } else {
-                        if (beg.line == end.line)
-                            this.codeEditor.setCursor ({line:beg.line-0, ch:0});
-                        else
-                            this.codeEditor.setCursor ({line:end.line-1, ch:0});
-                    }
+                    if (beg.line == end.line)
+                        this.codeEditor.setCursor ({line:beg.line-0, ch:0});
+                    else
+                        this.codeEditor.setCursor ({line:end.line-1, ch:0});
                 }
             }
 
             Ext.defer (function () {
-                var curr = this.codeEditor.getCursor ();
-                var text = this.codeEditor.getLine (curr.line);
+                var cur = this.codeEditor.getCursor ();
+                var txt = this.codeEditor.getLine (cur.line);
 
                 this.codeEditor.setSelection (
-                    {line:curr.line, ch:0}, {line:curr.line, ch:text.length}
+                    {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
                 );
 
                 callback.call (this);
-            }, 25, this)
+            }, 5, this)
+        }
+    }
+
+    function removeHeading6 (selection) {
+
+        var markup = /.. rubric::(\s*)/
+        if (selection.match (markup)) {
+            this.codeEditor.replaceSelection (selection.replace (markup, ''));
+        } else {
+            var cur = this.codeEditor.getCursor ();
+            var txt = this.codeEditor.getLine (cur.line);
+            if (txt && txt.match (markup)) {
+                this.codeEditor.setLine (cur.line, txt.replace (markup, ''));
+            }
         }
     }
 
