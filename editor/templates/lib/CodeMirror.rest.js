@@ -122,15 +122,17 @@ Ext.ux.form.CodeMirror.rest = function () {
         function applyHeading6 () {
             removeHeading.call (this, function () {
                 var sel = cm.getSelection();
-                var rep = sel.replace(/\s+$/, '');
-                var tpl = marker + ' {0}';
+                if (sel) {
+                    var rep = sel.replace(/\s+$/, '');
+                    var tpl = marker + ' {0}';
 
-                var cur = cm.getCursor (true);
-                if (cur.ch > 0) tpl = '\n\n' + tpl;
-                else if (cur.line > 0) tpl = '\n' + tpl;
+                    var cur = cm.getCursor (true);
+                    if (cur.ch > 0) tpl = '\n\n' + tpl;
+                    else if (cur.line > 0) tpl = '\n' + tpl;
 
-                cm.replaceSelection (String.format(tpl, rep));
-                cm.setSelection (cur, cur);
+                    cm.replaceSelection (String.format(tpl, rep));
+                    cm.setSelection (cur, cur);
+                }
             });
         }
     }
@@ -141,15 +143,14 @@ Ext.ux.form.CodeMirror.rest = function () {
         var beg = cm.getCursor (true);
         var end = cm.getCursor ();
 
-        var tok = []; for (var n = -3; n < 3; n++) {
+        var tok = [], upp, low;
+        for (var n = -3; n < 3; n++) {
             tok[n] = cm.getTokenAt ({line:end.line + n,ch:1});
-            tok[n].line = end.line + n
-        }
+            tok[n].line = end.line + n;
 
-        var upp, low;
-        for (var n = -3; n < 3; n++)
-            if (tok[n] && tok[n].className == 'header')
+            if (tok[n].className == 'header')
                 if (upp) { low = tok[n]; } else { upp = tok[n]; }
+        }
 
         var sel = cm.getSelection ();
         if (sel) {
