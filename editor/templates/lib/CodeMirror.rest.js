@@ -87,63 +87,62 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
+    var headingMarker = {
+        1:'#', 2:'*', 3:'=', 4:'-', 5:'^', 6:'.. rubric::'
+    }
+
     function applyHeading (level) {
+        var cm = this.codeEditor;
 
-        var level2marker = {
-            1:'#', 2:'*', 3:'=', 4:'-', 5:'^', 6:'.. rubric::'
-        }
-
-        var marker = level2marker[level];
+        var marker = headingMarker[level];
         if (marker) {
             if (level != 6)
-                applyHeading1to5.call (this, marker, level);
+                applyHeading1to5.call (this, level);
             else
-                applyHeading6.call (this, marker);
+                applyHeading6.call (this);
+        }
+
+        function applyHeading1to5 (level) {
+            removeHeading.call (this, function () {
+                var sel = cm.getSelection ();
+                if (sel) {
+                    var head = '';
+                    var size = (sel.length < 64) ? sel.length : 4;
+                    for (var idx = 0; idx < size; idx++) head += marker;
+
+                    var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
+                    var cur = cm.getCursor (true);
+
+                    cm.replaceSelection (String.format(tpl, head, sel));
+                    cm.setSelection (cur, cur);
+                }
+            });
+        }
+
+        function applyHeading6 () {
+            removeHeading.call (this, function () {
+                var sel = cm.getSelection();
+                var rep = sel.replace(/\s+$/, '');
+                var tpl = marker + ' {0}';
+
+                var cur = cm.getCursor (true);
+                if (cur.ch > 0) tpl = '\n\n' + tpl;
+                else if (cur.line > 0) tpl = '\n' + tpl;
+
+                cm.replaceSelection (String.format(tpl, rep));
+                cm.setSelection (cur, cur);
+            });
         }
     }
 
-    function applyHeading1to5 (marker, level) {
-        removeHeading.call (this, marker, function () {
-            var sel = this.codeEditor.getSelection();
-            if (sel) {
-                var head = '';
-                var size = (sel.length < 64) ? sel.length : 4;
-                for (var idx = 0; idx < size; idx++) head += marker;
+    function removeHeading (callback) {
+        var cm = this.codeEditor;
 
-                var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
-                var cur = this.codeEditor.getCursor (true);
-
-                this.codeEditor.replaceSelection(String.format(
-                    tpl, head, sel
-                ));
-
-                this.codeEditor.setSelection (cur, cur);
-            }
-        });
-    }
-
-    function applyHeading6 (marker) {
-        removeHeading.call (this, marker, function () {
-            var sel = this.codeEditor.getSelection();
-            var rep = sel.replace(/\s+$/, '');
-            var tpl = marker + ' {0}';
-
-            var cur = this.codeEditor.getCursor (true);
-            if (cur.ch > 0) tpl = '\n\n' + tpl;
-            else if (cur.line > 0) tpl = '\n' + tpl;
-
-            this.codeEditor.replaceSelection (String.format(tpl, rep));
-            this.codeEditor.setSelection (cur, cur);
-        });
-    }
-
-    function removeHeading (marker, callback) {
-
-        var beg = this.codeEditor.getCursor (true);
-        var end = this.codeEditor.getCursor ();
+        var beg = cm.getCursor (true);
+        var end = cm.getCursor ();
 
         var tok = []; for (var n = -3; n < 3; n++) {
-            tok[n] = this.codeEditor.getTokenAt ({line:end.line + n,ch:1});
+            tok[n] = cm.getTokenAt ({line:end.line + n,ch:1});
             tok[n].line = end.line + n
         }
 
@@ -152,7 +151,7 @@ Ext.ux.form.CodeMirror.rest = function () {
             if (tok[n] && tok[n].className == 'header')
                 if (upp) { low = tok[n]; } else { upp = tok[n]; }
 
-        var sel = this.codeEditor.getSelection ();
+        var sel = cm.getSelection ();
         if (sel) {
 
             removeHeading6.call (this);
@@ -160,44 +159,45 @@ Ext.ux.form.CodeMirror.rest = function () {
             if (tok[-3] && tok[-3].className == 'header' && !low) return;
             if (tok[-2] && tok[-2].className == 'header' && !low) return;
 
-            if (low) this.codeEditor.removeLine (low.line);
-            if (upp) this.codeEditor.removeLine (upp.line);
+            if (low) cm.removeLine (low.line);
+            if (upp) cm.removeLine (upp.line);
 
             resetCursor.call (this);
 
             Ext.defer (function () {
-                var cur = this.codeEditor.getCursor ();
-                var txt = this.codeEditor.getLine (cur.line);
+                var cur = cm.getCursor ();
+                var txt = cm.getLine (cur.line);
 
-                this.codeEditor.setSelection (
+                cm.setSelection (
                     {line:cur.line, ch:0}, {line:cur.line, ch:txt.length}
                 );
 
-                callback.call (this);
+                if (callback) callback.call (this);
             }, 5, this)
         }
 
         function removeHeading6 () {
-            var rx = /.. rubric::(\s*)/;
+            var rx = new RegExp (headingMarker[6] + '(\\s*)');
             if (sel.match (rx)) {
-                this.codeEditor.replaceSelection (sel.replace (rx, ''));
+                cm.replaceSelection (sel.replace (rx, ''));
             } else {
-                var cur = this.codeEditor.getCursor ();
-                var txt = this.codeEditor.getLine (cur.line);
-                if (txt && txt.match (rx))
-                    this.codeEditor.setLine (cur.line, txt.replace (rx, ''));
+                var cur = cm.getCursor ();
+                var txt = cm.getLine (cur.line);
+                if (txt && txt.match (rx)) {
+                    cm.setLine (cur.line, txt.replace (rx, ''));
+                }
             }
         }
 
         function resetCursor () {
             if (upp && low)
-                this.codeEditor.setCursor ({line:upp.line - 0, ch:0});
+                cm.setCursor ({line:upp.line - 0, ch:0});
             else if (upp || low)
-                this.codeEditor.setCursor ({line:upp.line - 1, ch:0});
+                cm.setCursor ({line:upp.line - 1, ch:0});
             else if (beg.line == end.line)
-                this.codeEditor.setCursor ({line:beg.line - 0, ch:0});
+                cm.setCursor ({line:beg.line - 0, ch:0});
             else
-                this.codeEditor.setCursor ({line:end.line - 1, ch:0});
+                cm.setCursor ({line:end.line - 1, ch:0});
         }
     }
 
