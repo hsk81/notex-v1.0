@@ -184,9 +184,8 @@ Ext.ux.form.CodeMirror.rest = function () {
             } else {
                 var cur = cm.getCursor ();
                 var txt = cm.getLine (cur.line);
-                if (txt && txt.match (rx)) {
+                if (txt && txt.match (rx))
                     cm.setLine (cur.line, txt.replace (rx, ''));
-                }
             }
         }
 
