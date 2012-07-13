@@ -555,44 +555,13 @@ Ext.ux.form.CodeMirror.rest = function () {
 
             var cur = cm.getCursor ();
             var txt = cm.getLine (cur.line);
-            rest = fix_preceeding_whitespace (rest, txt, cur);
-            rest = fix_succeeding_whitespace (rest, txt, cur);
+
+            rest = fix_preceeding_whitespace.call (this, rest, txt, cur);
+            rest = fix_succeeding_whitespace.call (this, rest, txt, cur);
 
             cm.replaceSelection (rest);
             cm.setCursor (cm.getCursor ());
             cm.focus ();
-
-            function fix_preceeding_whitespace (rest, txt, cur) {
-                if (cur.ch > 0 && !txt.match (/^\s+$/)) {
-                    rest = '\n' + rest;
-                } else {
-                    var prev_txt = cm.getLine (cur.line - 1);
-                    if (prev_txt == '' || (
-                        prev_txt && prev_txt.match (/^\s+$/)))
-                    {
-                        rest = rest.replace (/^\n/, '');
-                    }
-
-                    if (txt.match (/^\s+$/)) cm.setLine (cur.line, '');
-                }
-
-                return rest;
-            }
-
-            function fix_succeeding_whitespace (rest, txt, cur) {
-                if (cur.ch < txt.length) {
-                    rest += '\n'
-                } else {
-                    var next_txt = cm.getLine (cur.line + 1);
-                    if (next_txt == '' || (
-                        next_txt && next_txt.match (/^\s+$/)))
-                    {
-                        rest = rest.replace (/\n$/, '');
-                    }
-                }
-
-                return rest;
-            }
         }
 
         function cancel () {
@@ -720,16 +689,52 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function insertHorizontalLine () {
+        var cm = this.codeEditor;
 
-        var cur = this.codeEditor.getCursor ();
-        if (cur.ch > 0) {
-            this.codeEditor.replaceSelection ('\n\n----\n\n');
+        var rest = '\n----\n';
+        var cur = cm.getCursor ();
+        var txt = cm.getLine (cur.line);
+
+        rest = fix_preceeding_whitespace.call (this, rest, txt, cur);
+        rest = fix_succeeding_whitespace.call (this, rest, txt, cur);
+
+        cm.replaceSelection (rest);
+        cm.setCursor (cm.getCursor ());
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function fix_preceeding_whitespace (rest, text, cursor) {
+        var cm = this.codeEditor;
+
+        if (cursor.ch > 0 && !text.match (/^\s+$/)) {
+            rest = '\n' + rest;
         } else {
-            this.codeEditor.replaceSelection ('\n----\n\n');
+            var prev_txt = cm.getLine (cursor.line - 1);
+            if (prev_txt == '' || (prev_txt && prev_txt.match (/^\s+$/))) {
+                rest = rest.replace (/^\n/, '');
+            }
+
+            if (text.match (/^\s+$/)) cm.setLine (cursor.line, '');
         }
 
-        var cur = this.codeEditor.getCursor ();
-        this.codeEditor.setSelection (cur, cur);
+        return rest;
+    }
+
+    function fix_succeeding_whitespace (rest, text, cursor) {
+        var cm = this.codeEditor;
+
+        if (cursor.ch < text.length) {
+            rest += '\n'
+        } else {
+            var next_txt = cm.getLine (cursor.line + 1);
+            if (next_txt == '' || ( next_txt && next_txt.match (/^\s+$/))) {
+                rest = rest.replace (/\n$/, '');
+            }
+        }
+
+        return rest;
     }
 
     ///////////////////////////////////////////////////////////////////////////
