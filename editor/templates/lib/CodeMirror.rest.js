@@ -109,12 +109,10 @@ Ext.ux.form.CodeMirror.rest = function () {
                     var head = '';
                     var size = (sel.length < 64) ? sel.length : 4;
                     for (var idx = 0; idx < size; idx++) head += marker;
-
                     var tpl = (level == 1) ? '{0}\n{1}\n{0}' : '{1}\n{0}';
-                    var cur = cm.getCursor (true);
 
                     cm.replaceSelection (String.format(tpl, head, sel));
-                    cm.setSelection (cur, cur);
+                    cm.setCursor (cm.getCursor (true));
                 }
             });
         }
@@ -124,14 +122,10 @@ Ext.ux.form.CodeMirror.rest = function () {
                 var sel = cm.getSelection();
                 if (sel) {
                     var rep = sel.replace(/\s+$/, '');
-                    var tpl = marker + ' {0}';
-
-                    var cur = cm.getCursor (true);
-                    if (cur.ch > 0) tpl = '\n\n' + tpl;
-                    else if (cur.line > 0) tpl = '\n' + tpl;
+                    var tpl = marker + ' ' + '{0}';
 
                     cm.replaceSelection (String.format(tpl, rep));
-                    cm.setSelection (cur, cur);
+                    cm.setCursor (cm.getCursor (true));
                 }
             });
         }
