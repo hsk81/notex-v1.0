@@ -77,7 +77,8 @@ var statusBar = function () {
     });
 
     var infoButton = new Ext.Button ({
-        text: '', width: 64, handler: function () {
+        tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
+        text: '', disabled: true, width: 64, handler: function () {
             if (this.editor) {
                 var value = this.editor.getValue ();
                 if (value) {
@@ -117,6 +118,10 @@ var statusBar = function () {
             }
         },
 
-        setEditor: function (value) { infoButton.editor = value; }
+        setEditor: function (value) {
+            if (value) infoButton.enable ();
+            else infoButton.disable ();
+            infoButton.editor = value;
+        }
     });
 }();
