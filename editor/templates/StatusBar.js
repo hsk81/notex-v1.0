@@ -87,6 +87,8 @@ var statusBar = function () {
                         value.split (/\s+[^\s+$]/).length,
                         value.length
                     ));
+                } else {
+                    this.setText ('1:0:0');
                 }
             }
         }
