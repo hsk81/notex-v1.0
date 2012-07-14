@@ -30,7 +30,7 @@ var statusBar = function () {
     }
 
     var slider = new Ext.Slider ({
-        id : 'sliderId',
+        id : 'slider.id',
         width : 128,
         increment : 25,
         value : getInitialValue (),
@@ -44,7 +44,7 @@ var statusBar = function () {
     });
 
     var progressBar = new Ext.ProgressBar ({
-        id : 'progressBarId',
+        id : 'progress-bar.id',
         width : 256,
         value : 0.0,
         hidden : true,
@@ -54,17 +54,12 @@ var statusBar = function () {
         increment : 100, // #segments
 
         setMode : function (mode) {
-            if (mode == 'import') {
+            if (mode == 'import')
                 this.mode = 'Importing'
-            }
-
-            else if (mode == 'export') {
+            else if (mode == 'export')
                 this.mode = 'Exporting'
-            }
-
-            else {
+            else
                 this.mode = 'Waiting'
-            }
         },
 
         listeners : {
@@ -81,10 +76,47 @@ var statusBar = function () {
         }
     });
 
+    var infoButton = new Ext.Button ({
+        text: '', width: 64, handler: function () {
+            if (this.editor) {
+                var value = this.editor.getValue ();
+                if (value) {
+                    this.setText (String.format ('{0}:{1}:{2}',
+                        value.split (/\n/).length,
+                        value.split (/\s+[^\s+$]/).length,
+                        value.length
+                    ));
+                }
+            }
+        }
+    });
+
     return new Ext.ux.StatusBar ({
-        id: 'statusBarId',
+        id: 'status-bar.id',
         defaultText: 'NoTex',
         text: 'NoTex',
-        items: [progressBar, '-', slider]
+        items: [progressBar, '-', infoButton, '-', slider],
+
+        listeners: {
+            initComponent: function  () {
+                Ext.ux.form.StatusBar.superclass.initComponent.apply (
+                    this, arguments
+                );
+
+                this.addEvents ('cursor');
+            },
+
+            cursor: function (position) {
+                if (position) {
+                    infoButton.setText (String.format (
+                        '{0}:{1}', position.line+1, position.ch+1
+                    ));
+                } else {
+                    infoButton.setText (null);
+                }
+            }
+        },
+
+        setEditor: function (value) { infoButton.editor = value; }
     });
 }();

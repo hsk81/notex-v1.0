@@ -24,7 +24,7 @@ var reportManager = function () {
         dialog.openFile.execute ({
             success: function (file) {
 
-                var progressBar = Ext.getCmp ('progressBarId')
+                var progressBar = Ext.getCmp ('progress-bar.id')
                 progressBar.show ()
                 progressBar.setMode ('import')
                 progressBar.wait ({
@@ -87,8 +87,8 @@ var reportManager = function () {
 
     function exportReport (url) {
 
-        var statusBar = Ext.getCmp ('statusBarId');
-        var progressBar = Ext.getCmp ('progressBarId');
+        var statusBar = Ext.getCmp ('status-bar.id');
+        var progressBar = Ext.getCmp ('progress-bar.id');
 
         var tree = Ext.getCmp ('reportManager.tree.id');
         var model = tree.getSelectionModel ();

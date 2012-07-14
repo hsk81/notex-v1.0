@@ -26,6 +26,21 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+    function updateCursorInfo (pnlTab) {
+        var ed = pnlTab.getEditor ();
+        statusBar.setEditor (ed);
+        ed.fireEvent ('cursor', ed.getCursor ());
+    }
+
+    function clearCursorInfo (pnlTab) {
+        var ed = pnlTab.getEditor ();
+        statusBar.setEditor (null);
+        ed.fireEvent ('cursor', null);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     function createTextTab (tabInfo) {
 
         var tab = this.findById (tabInfo.id);
@@ -72,11 +87,21 @@ var editor = function () {
                         restoreScrollPosition (pnlTab);
                         selectTreeNode (pnlTab);
                         refreshEditor (pnlTab);
+                        updateCursorInfo (pnlTab);
                         focusEditor (pnlTab);
                     },
 
                     deactivate : function (pnlTab) {
+                        clearCursorInfo (pnlTab);
                         blurEditor (pnlTab);
+                    },
+
+                    add : function (pnlTab) {
+                        pnlTab.getEditor ().on ({
+                            cursor: function (pos) {
+                                statusBar.fireEvent ('cursor', pos);
+                            }
+                        });
                     }
                 }
             });

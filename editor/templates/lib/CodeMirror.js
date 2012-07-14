@@ -8,6 +8,15 @@ Ext.namespace ('Ext.ux.form');
 
 Ext.ux.form.CodeMirror = function () {
 
+    function initComponent () {
+
+        Ext.ux.form.CodeMirror.superclass.initComponent.apply (
+            this, arguments
+        );
+
+        this.addEvents ('cursor');
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
@@ -15,12 +24,11 @@ Ext.ux.form.CodeMirror = function () {
 
         var configuration = this.onAfterRenderBeg (textarea);
 
-        function onCursorActivity (codeEditor) {
-            codeEditor.setLineClass (codeEditor.hlLine, null, null);
-            var cursor = codeEditor.getCursor ();
-            codeEditor.hlLine = codeEditor.setLineClass (
-                cursor.line, null, "activeline"
-            );
+        function onCursorActivity (cm) {
+            cm.setLineClass (cm.hlLine, null, null);
+            var cursor = cm.getCursor ();
+            cm.hlLine = cm.setLineClass (cursor.line, null, "activeline");
+            textarea.fireEvent ('cursor', cm.getCursor ());
         }
 
         var options = {
@@ -66,14 +74,9 @@ Ext.ux.form.CodeMirror = function () {
             }
 
             if (ms) {
-                console.info (ms)
-                Ext.defer (
-                    function () { this.codeEditor.focus (); }, ms, this
-                );
+                Ext.defer (function () { this.codeEditor.focus (); }, ms, this);
             } else {
-                Ext.defer (
-                    function () { this.codeEditor.focus (); }, 25, this
-                );
+                Ext.defer (function () { this.codeEditor.focus (); }, 25, this);
             }
         }
     }
@@ -107,6 +110,21 @@ Ext.ux.form.CodeMirror = function () {
     function setValue (value) {
         if (this.codeEditor) {
             this.codeEditor.setValue (value);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    function getCursor (flag) {
+        if (this.codeEditor) {
+            return this.codeEditor.getCursor (flag);
+        }
+    }
+
+    function setCursor (value) {
+        if (this.codeEditor) {
+            return this.codeEditor.setCursor (value);
         }
     }
 
@@ -179,6 +197,9 @@ Ext.ux.form.CodeMirror = function () {
 
         getValue: getValue,
         setValue: setValue,
+
+        getCursor: getCursor,
+        setCursor: setCursor,
 
         undo: undo,
         redo: redo,
