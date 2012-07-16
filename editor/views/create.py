@@ -99,12 +99,12 @@ def createProject (request, path = None):
         rank = request.POST['rank'])
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path, rstfile)).read () \
+    text = open (os.path.join (path, rstfile)).read ().decode ("utf-8") \
         .replace ('${PROJECT}', project)
 
     uuid_path = os.path.join (settings.MEDIA_DATA, str (uuid ()))
     with open (get_path (request.session.session_key), 'w') as uuid_file:
-        uuid_file.write (text)
+        uuid_file.write (text.encode ("utf-8"))
 
         _ = LEAF.objects.create (
             type = type,
@@ -114,7 +114,7 @@ def createProject (request, path = None):
             rank = 0)
 
     type = LEAF_TYPE.objects.get (_code='text')
-    text = open (os.path.join (path, ymlfile)).read () \
+    text = open (os.path.join (path, ymlfile)).read ().decode ("utf-8") \
         .replace ('${MKAMBLE}', mkamble) \
         .replace ('${PROJECT}', project) \
         .replace ('${AUTHORS}', authors) \
@@ -126,7 +126,7 @@ def createProject (request, path = None):
         .replace ('${MKINDEX}', mkindex)
 
     with open (get_path (request.session.session_key), 'w') as uuid_file:
-        uuid_file.write (text)
+        uuid_file.write (text.encode ("utf-8"))
 
         _ = LEAF.objects.create (
             type = type,
