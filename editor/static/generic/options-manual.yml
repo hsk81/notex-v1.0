@@ -17,11 +17,6 @@ rst_prolog: |
     .. role:: html(raw)
        :format: html
 
-rst_epilog: |
-    .. |NoTex| replace::
-       :latex:`\\textsc{NoTex}`
-       :html:`<span style="font-variant: small-caps;">NoTex</span>`
-
 # -----------------------------------------------------------------------------
 # HTML: http://sphinx.pocoo.org/config.html#options-for-html-output
 # -----------------------------------------------------------------------------
