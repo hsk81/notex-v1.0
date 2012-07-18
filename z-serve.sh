@@ -12,11 +12,17 @@ case $ACTMETH in
     stop)
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop $3 $4 $5 $6
         ;;
+    stop-all)
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop-all $3 $4 $5 $6
+        ;;
     restart)
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart $3 $4 $5 $6
         ;;
     status)
         sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $3 $4 $5 $6
+        ;;
+    status-all)
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status-all $3 $4 $5 $6
         ;;
     as)
         sudo chown $EXECUSR:$EXECGRP . -R
