@@ -15,10 +15,10 @@ case $1 in
         sudo chown $EXECUSR:$EXECGRP . -R
         ;;
     as)
-        $0 co ${2} && sudo -u $EXECUSR -g $EXECGRP ./serve.sh $3 $4 $5 $6 $7
+        $0 co $2 && sudo -u $EXECUSR -g $EXECGRP ./serve.sh $3 $4 $5 $6 $7
         ;;
     *)
-        $0 as http:http
+        $0 as http:http $1 $2 $3 $4 $5
 esac
 
 ###############################################################################
