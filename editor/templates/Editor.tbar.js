@@ -138,11 +138,13 @@ function editorTBar (mode, tabId, editorId) {
     function toggleBulletList (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleBulletList ();
+        ed.fireEvent ('focus');
     }
 
     function toggleNumberList (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.toggleNumberList ();
+        ed.fireEvent ('focus');
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -151,11 +153,13 @@ function editorTBar (mode, tabId, editorId) {
     function decLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.decreaseLineIndent ();
+        ed.fireEvent ('focus');
     }
 
     function incLineIndent (button, event) {
         var ed = Ext.getCmp (editorId)
         ed.increaseLineIndent ();
+        ed.fireEvent ('focus');
     }
 
     ///////////////////////////////////////////////////////////////////////////

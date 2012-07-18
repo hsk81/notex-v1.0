@@ -313,63 +313,73 @@ Ext.ux.form.CodeMirror.rest = function () {
     ///////////////////////////////////////////////////////////////////////////
 
     function toggleBulletList () {
-
         var sel = this.codeEditor.getSelection ();
-        var rep = ''
-
         if (sel) {
-            CodeMirror.splitLines (sel)
-                .filter (function (el) { return el; })
-                .forEach (function (el) {
-
-                var group = el.match (/^(\s*)(\*)(\s+)/)
-                if (group) {
-                    rep += group[1] + el.replace (group[0], '') + '\n';
-                } else {
-                    var group = el.match (/^(\s*)(.*)/)
-                    if (group) {
-                        rep += String.format (
-                            '{0}{1}{2}\n', group[1], '* ', group[2]
-                        );
-                    }
-                }
-
-            });
+            allPoints.call (this,
+                '+ ', /^(\s*)(\+)(\s+)/, /^(\s*)(.*)/, sel
+            );
         } else {
-            rep = '* '
+            nextPoint.call (this, '\n{0}+ \n', /^(\s*)\+(\s+)$/);
         }
-
-        this.codeEditor.replaceSelection (rep);
     }
 
     function toggleNumberList () {
-
         var sel = this.codeEditor.getSelection ();
-        var rep = ''
-
         if (sel) {
-            CodeMirror.splitLines (sel)
-                .filter (function (el) { return el; })
-                .forEach (function (el, idx) {
+            allPoints.call (this,
+                '#. ', /^(\s*)([0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
+            );
+        } else {
+            nextPoint.call (this, '\n{0}#. \n', /^(\s*)[#0-9]\.(\s+)$/);
+        }
+    }
 
-                var group = el.match (/^(\s*)([0-9]+\.)(\s+)/)
+    function allPoints (tpl, rx1, rx2, sel) {
+        var rest = ''; CodeMirror.splitLines (sel)
+
+            .filter(function (el) { return el;})
+            .forEach(function (el, idx) {
+
+                var group = el.match (rx1)
                 if (group) {
-                    rep += group[1] + el.replace (group[0], '') + '\n';
+                    rest += group[1] + el.replace (group[0], '') + '\n';
                 } else {
-                    var group = el.match (/^(\s*)(.*)/)
+                    var group = el.match (rx2)
                     if (group) {
-                        rep += String.format (
-                            '{0}{1}{2}\n', group[1], (1+idx) + '. ', group[2]
+                        rest += String.format ('{0}{1}{2}\n',
+                            group[1], String.format (tpl, idx + 1), group[2]
                         );
                     }
                 }
-
             });
+
+        this.codeEditor.replaceSelection (rest);
+    }
+
+    function nextPoint (tpl, rx) {
+        var curr = this.codeEditor.getCursor ();
+        var text = this.codeEditor.getLine (curr.line);
+        var rest = tpl;
+
+        var group = text.match (/^(\s+)/);
+        if (group && group[0]) {
+            rest = String.format (rest, group[0]);
         } else {
-            rep = '1. '
+            rest = String.format (rest, '');
         }
 
-        this.codeEditor.replaceSelection (rep);
+        rest = fix_preceeding_whitespace.call (this, rest, text, curr);
+        rest = fix_succeeding_whitespace.call (this, rest, text, curr);
+
+        this.codeEditor.replaceSelection (rest);
+
+        var curr = this.codeEditor.getCursor ();
+        var text = this.codeEditor.getLine (curr.line);
+        if (!text.match (rx)) {
+            this.codeEditor.setCursor ({
+                line:curr.line - 2, ch:text.length - 1
+            });
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
