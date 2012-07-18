@@ -3,23 +3,22 @@
 ###############################################################################
 ###############################################################################
 
-USRNGRP="http:http"
+USRNGRP=${2}
+EXECUSR=${USRNGRP/:*/}
+EXECGRP=${USRNGRP/*:/}
 
 ###############################################################################
 ###############################################################################
 
 case $1 in
-    as)
-        USRNGRP="${2}"
-        EXECUSR="${USRNGRP/:*/}"
-        EXECGRP="${USRNGRP/*:/}"
+    co)
         sudo chown $EXECUSR:$EXECGRP . -R
         ;;
+    as)
+        $0 co ${2} && sudo -u $EXECUSR -g $EXECGRP ./serve.sh $3 $4 $5 $6 $7
+        ;;
     *)
-        EXECUSR="${USRNGRP/:*/}"
-        EXECGRP="${USRNGRP/*:/}"
-        sudo chown $EXECUSR:$EXECGRP . -R
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh $1 $2 $3 $4 $5
+        $0 as http:http
 esac
 
 ###############################################################################
