@@ -1,35 +1,31 @@
 #!/bin/bash
 
-ACTMETH="${1}"
-USRNGRP="${2-http:http}"
-EXECUSR="${USRNGRP/:*/}"
-EXECGRP="${USRNGRP/*:/}"
+###############################################################################
+###############################################################################
 
-case $ACTMETH in
-    start)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh start $3 $4 $5 $6
-        ;;
-    stop)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop $3 $4 $5 $6
-        ;;
-    stop-all)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh stop-all $3 $4 $5 $6
-        ;;
-    restart)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh restart $3 $4 $5 $6
-        ;;
-    status)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status $3 $4 $5 $6
-        ;;
-    status-all)
-        sudo -u $EXECUSR -g $EXECGRP ./serve.sh status-all $3 $4 $5 $6
-        ;;
+USRNGRP="http:http"
+
+###############################################################################
+###############################################################################
+
+case $1 in
     as)
+        USRNGRP="${2}"
+        EXECUSR="${USRNGRP/:*/}"
+        EXECGRP="${USRNGRP/*:/}"
         sudo chown $EXECUSR:$EXECGRP . -R
         ;;
     *)
+        EXECUSR="${USRNGRP/:*/}"
+        EXECGRP="${USRNGRP/*:/}"
         sudo chown $EXECUSR:$EXECGRP . -R
-        $0 restart $3 $4 $5 $6
+        sudo -u $EXECUSR -g $EXECGRP ./serve.sh $1 $2 $3 $4 $5
 esac
 
+###############################################################################
+###############################################################################
+
 exit 0
+
+###############################################################################
+###############################################################################
