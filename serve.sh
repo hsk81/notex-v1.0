@@ -102,16 +102,13 @@ case $ACTMETH in
     stop)
         stop $PIDFILE
         ;;
-    status)
-        status $PIDFILE
-        ;;
 
     stop-all)
         for PIF in $(ls $PROJDIR/.pid-* 2> /dev/null) ; do
             stop $PIF
         done
         ;;
-    status-all)
+    status)
         for PIF in $(ls $PROJDIR/.pid-* 2> /dev/null) ; do
             status $PIF
         done
