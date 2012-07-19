@@ -13,7 +13,7 @@ Ext.ux.form.CodeMirror.rest = function () {
         CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
             var overlay = {
                 token: function (stream, state) {
-                    if (stream.match (/^\[(.+?)\]_\s|^\[(.+?)\]_$/))
+                    if (stream.match (/^\[(.+?)\]_\s|^\[(.+?)\]_/))
                         return "rest-footnote";
                     if (stream.match (/^\.\.(\s+)\[(.+?)\]/))
                         return "rest-footnote";
