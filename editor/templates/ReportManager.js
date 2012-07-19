@@ -412,7 +412,7 @@ var reportManager = function () {
                 title : true,
                 toc : true,
                 index : false,
-                content : 'tutorial'
+                content : 'empty'
             },
             viewConfig : {
                 forceFit : true,
