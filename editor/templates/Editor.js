@@ -295,6 +295,90 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+    function htmlSplash () {
+
+        var result = [
+            //---------------------------------------------------------------//
+            '<div  id="editor.splash.id" style="padding: 5% 0;">',
+            '<div style="padding: 10% 0;">',
+            //---------------------------------------------------------------//
+            '<div style="',
+                    'text-shadow: #888888 -1.25px -0.75px 2px;',
+                    'text-align:center;',
+                    'font-weight:bold;',
+                    'font-variant:small-caps;',
+                    'font-size:10.0em;',
+                    'font-family:sans serif;',
+                    'color:#f0f0f0;', '">',
+            'NѻTeξ',
+            '</div>',
+            //---------------------------------------------------------------//
+            '<div style="margin:auto; width:66%; height:32px;">',
+            '<hr color="#888888">',
+            '<div style="',
+                'padding:0;',
+                'text-align:center;',
+                'font-weight:bold;',
+                'font-variant:normal;',
+                'font-size:1.0em;',
+                'color:#888888;', '">',
+            //---------------------------------------------------------------//
+            '<a class="icon-information"',
+                'style="',
+                'float:left; width:16px;',
+                'position:relative; top:-33px;',
+                'background-repeat:no-repeat;',
+                'background-position:center;',
+                'text-decoration:none; color:#ffffff"',
+                'target="_blank" href="{{ request.get_host }}/about">_</a>',
+            //---------------------------------------------------------------//
+            '<div style="float:left; position:relative; left:-16px;">',
+                'A re-structured text editor',
+            '</div>',
+            //---------------------------------------------------------------//
+            '<a class="icon-friendfeed"',
+                'style="',
+                'float:right; width:16px;',
+                'position:relative; top:-4px;',
+                'background-repeat:no-repeat;',
+                'background-position:center;',
+                'text-decoration:none; color:#ffffff"',
+                'target="_blank" href="http://facebook.com">_</a>',
+            '<a class="icon-twitter_1"',
+                'style="',
+                'float:right; width:16px;',
+                'position:relative; top:-4px;',
+                'background-repeat:no-repeat;',
+                'background-position:center;',
+                'text-decoration:none; color:#ffffff"',
+                'target="_blank" href="http://twitter.com">_</a>',
+            '<a class="icon-blogger"',
+                'style="',
+                'float:right; width:16px;',
+                'position:relative; top:-4px; left:-1px;',
+                'background-repeat:no-repeat;',
+                'background-position:center;',
+                'text-decoration:none; color:#ffffff"',
+                'target="_blank" href="http://blogger.com">_</a>',
+            '<a class="icon-youtube"',
+                'style="',
+                'float:right; width:16px;',
+                'position:relative; top:-4px; left:0px;',
+                'background-repeat:no-repeat;',
+                'background-position:center;',
+                'text-decoration:none; color:#ffffff"',
+                'target="_blank" href="http://youtube.com">_</a>',
+            //---------------------------------------------------------------//
+            '</div>', '</div>', '</div>'
+            //---------------------------------------------------------------//
+        ];
+
+        return result.join ('\n');
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     return new Ext.TabPanel ({
 
         defaults : { fontSize: '12px' },
@@ -306,12 +390,28 @@ var editor = function () {
 
         tbar : editorRibbon,
 
+        html: htmlSplash (),
+
         listeners : {
             beforetabchange : beforeTabChange,
             createTextTab : createTextTab,
             createImageTab : createImageTab,
             deleteTab : deleteTab,
-            zoom : zoom
+            zoom : zoom,
+
+            beforeadd: function (self, component, index) {
+                if (self.items.length == 0) {
+                    var splash = Ext.get ('editor.splash.id');
+                    if (splash) splash.setDisplayed (false);
+                }
+            },
+
+            remove: function (self, component) {
+                if (self.items.length == 0) {
+                    var splash = Ext.get ('editor.splash.id');
+                    if (splash) splash.setDisplayed (true);
+                }
+            }
         }
     });
 }();
