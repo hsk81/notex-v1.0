@@ -330,7 +330,7 @@ var editor = function () {
                 'background-repeat:no-repeat;',
                 'background-position:center;',
                 'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="{{ request.get_host }}/about">_</a>',
+                'target="_blank" href="{{ request.get_host }}/about/">_</a>',
             //---------------------------------------------------------------//
             '<div style="float:left; position:relative; left:-16px;">',
                 'A re-structured text editor',
