@@ -234,11 +234,11 @@ class Command (BaseCommand):
 
                 if delete_usid or delete_temp:
                     if os.path.exists (path_to_data) and not dry_run:
-                        subprocess.check_call (['rm', path_to_temp, '-r'])
+                        subprocess.check_call (['rm', path_to_temp, '-rf'])
 
                 if delete_usid or delete_data:
                     if os.path.exists (path_to_data) and not dry_run:
-                        subprocess.check_call (['rm', path_to_data, '-r'])
+                        subprocess.check_call (['rm', path_to_data, '-rf'])
 
                 if delete_usid:
                     if os.path.exists (path_to_usid) and not dry_run:

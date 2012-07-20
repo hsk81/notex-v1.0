@@ -1,8 +1,8 @@
 __author__ = "hsk81"
 __date__ = "$Mar 27, 2012 1:12:57 PM$"
 
-################################################################################
-################################################################################
+###############################################################################
+###############################################################################
 
 import os
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
@@ -20,9 +20,9 @@ ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default' : {
-        'ENGINE' : 'django.db.backends.sqlite3',
-        'NAME' : os.path.join (SITE_ROOT, 'sqlite.db'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
     }
 }
 
@@ -37,8 +37,8 @@ USE_TZ = True
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media')
 MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
 
-MEDIA_DATA = os.path.join (MEDIA_ROOT , 'dat')
-MEDIA_TEMP = os.path.join (MEDIA_ROOT , 'tmp')
+MEDIA_DATA = os.path.join (MEDIA_ROOT, 'dat')
+MEDIA_TEMP = os.path.join (MEDIA_ROOT, 'tmp')
 
 STATIC_ROOT = os.path.join (SITE_ROOT, 'static')
 STATIC_URL = 'http://static.%s/%s/' % (SITE_HOST, SITE_NAME)
@@ -67,9 +67,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-if DEBUG:
-    MIDDLEWARE_CLASSES += ('django_pdb.middleware.PdbMiddleware',)
-
 CACHES = {
     'default' : {
         'BACKEND' : 'django.core.cache.backends.memcached.PyLibMCCache',
@@ -91,8 +88,6 @@ TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
 
 INSTALLED_APPS = (
-    'django_pdb',
-
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -108,13 +103,26 @@ INSTALLED_APPS = (
 ################################################################################
 ################################################################################
 
+import logging
+class NoMessageFailuresFilter (logging.Filter):
+    """
+    See http://github.com/omab/django-social-auth/issues/283
+    """
+    def filter (self, record):
+        if record.exc_info:
+            from django.contrib.messages.api import MessageFailure
+            exception = record.exc_info[1]
+            if isinstance (exception, MessageFailure):
+                return False # IGNORE ANNOYING MESSAGEFAILUREs!
+        return True
+
+###############################################################################
+###############################################################################
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['console', 'file'],
-    },
+
     'formatters': {
         'simplis': {
             'format': '[%(asctime)s] %(levelname)s -- ' \
@@ -125,25 +133,28 @@ LOGGING = {
                 '%(message)s',
         },
     },
+
     'handlers': {
         'null': {
             'level':'DEBUG',
             'class':'django.utils.log.NullHandler',
         },
+
         'console-simplis': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simplis',
         },
-        'console': {
+        'console-verbose': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
+
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'log/notex.log',
+            'filename': 'log/%s.log' % SITE_NAME,
             'when': 'D',
             'interval': 1,
             'formatter': 'verbose',
@@ -173,26 +184,41 @@ LOGGING = {
             'formatter': 'simplis',
         },
     },
-    'loggers': {
-        'logger.ExceptionLoggerMiddleware': {
-            'level':'ERROR',
-            'handlers':['console', 'file'],
-            'propagate': False,
+
+    'filters': {
+        'no_message_failures': {
+            '()': NoMessageFailuresFilter,
         },
+    },
+
+    'root': {
+        'level': 'ERROR',
+        'handlers': ['console-verbose', 'file'],
+    },
+
+    'loggers': {
+        'django.request': {
+            'level': 'ERROR',
+            'handlers': ['console-verbose', 'file'],
+            'filters': ['no_message_failures'],
+            'propagate': False
+        },
+
         'editor.views.exporter': {
             'level':'ERROR',
-            'handlers':['console', 'file-exporter'],
-            'propagate': False,
+            'handlers': ['console-verbose', 'file-exporter'],
+            'propagate': False
         },
         'editor.views.importer': {
             'level':'ERROR',
-            'handlers':['console', 'file-importer'],
-            'propagate': False,
+            'handlers': ['console-verbose', 'file-importer'],
+            'propagate': False
         },
+
         'notex.management.commands.cleanup': {
             'level':'ERROR',
-            'handlers':['console-simplis', 'file-cleanup'],
-            'propagate': False,
+            'handlers': ['console-simplis', 'file-cleanup'],
+            'propagate': False
         },
     }
 }

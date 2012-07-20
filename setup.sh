@@ -6,7 +6,6 @@ source bin/activate
 
 pip install ipython
 pip install django
-pip install django_pdb
 pip install pylibmc
 pip install numpy
 pip install pyyaml
