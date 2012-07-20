@@ -35,8 +35,10 @@ def main (request):
 
         init (request)
 
-    print >> sys.stderr, "Session ID: %s" % request.session.session_key
-    print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
+    if not 'silent' in request.GET:
+
+        print >> sys.stderr, "Session ID: %s" % request.session.session_key
+        print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
 
     return direct_to_template (
         request, template ='Viewport.html', extra_context = {
