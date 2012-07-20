@@ -410,7 +410,7 @@ var reportManager = function () {
                 fontSize : '12pt',
                 columns : 2,
                 title : true,
-                toc : true,
+                toc : false,
                 index : false,
                 content : 'empty'
             },
