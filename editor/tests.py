@@ -301,5 +301,29 @@ class ViewTest (TestCase):
     ###########################################################################
     ###########################################################################
 
+    def test_increase_rank (self):
+        self.check_change_rank('/editor/increase-rank/')
+
+    def test_decrease_rank (self):
+        self.check_change_rank('/editor/decrease-rank/')
+
+    def check_change_rank (self, url):
+
+        resp, node_data = self.test_read_node ()
+        self.assertEquals (len (node_data), 2)
+
+        resp = self.client.post (url, {
+            'id': node_data[0]['id'],
+            'jd': node_data[1]['id']
+        })
+
+        self.assertEqual (resp.status_code, 200)
+        self.assertIsNotNone (resp.content)
+        data = json.loads (resp.content)[0]
+        self.assertEqual (data['id'], node_data[0]['id'])
+        self.assertEqual (data['jd'], node_data[1]['id'])
+
+        return resp, data
+
 ################################################################################
 ################################################################################
