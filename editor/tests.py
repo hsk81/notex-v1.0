@@ -240,6 +240,7 @@ class ViewTest (TestCase):
 
         resp, data = self.test_create_project ()
         resp = self.client.post ('/editor/read/', {'node': data['id']})
+        project_id =  data['id']
 
         self.assertEqual (resp.status_code, 200)
         self.assertIsNotNone (resp.content)
@@ -253,18 +254,17 @@ class ViewTest (TestCase):
             self.assertEquals (el['cls'], 'file')
             self.assertTrue (el['leaf'])
 
-        return resp, data
+        return resp, data, project_id
 
     def test_read_leaf (self):
 
-        resp, node_data = self.test_read_node ()
+        resp, node_data, _ = self.test_read_node ()
         for el in node_data:
             resp = self.client.post ('/editor/read/', {'node': el['id']})
             self.assertEqual (resp.status_code, 200)
             self.assertIsNotNone (resp.content)
             data = json.loads (resp.content)
             self.assertEqual (data, []) ## useless!
-            break
 
         return resp, data
 
@@ -279,7 +279,7 @@ class ViewTest (TestCase):
 
     def check_update (self, url):
 
-        resp, node_data = self.test_read_node ()
+        resp, node_data, _ = self.test_read_node ()
         for el in node_data:
 
             resp = self.client.post (url, {
@@ -294,8 +294,6 @@ class ViewTest (TestCase):
             self.assertTrue (data['success'])
             self.assertEquals (data['id'], el['id'])
 
-            return resp, data
-
         return resp, node_data
 
     ###########################################################################
@@ -309,7 +307,7 @@ class ViewTest (TestCase):
 
     def check_change_rank (self, url):
 
-        resp, node_data = self.test_read_node ()
+        resp, node_data, _ = self.test_read_node ()
         self.assertEquals (len (node_data), 2)
 
         resp = self.client.post (url, {
@@ -324,6 +322,46 @@ class ViewTest (TestCase):
         self.assertEqual (data['jd'], node_data[1]['id'])
 
         return resp, data
+
+    ###########################################################################
+    ###########################################################################
+
+    def test_rename_node (self):
+
+        resp, node_data, project_id = self.test_read_node ()
+        resp = self.client.post ('/editor/rename/', {
+            'nodeId': project_id,
+            'name': 'new-name'
+        })
+
+        self.assertEqual (resp.status_code, 200)
+        self.assertIsNotNone (resp.content)
+        data = json.loads (resp.content)
+        self.assertTrue (data['success'])
+        self.assertEqual (data['id'], project_id)
+        self.assertEqual (data['name'], 'new-name')
+
+        return resp, data
+
+    def test_rename_leaf (self):
+
+        resp, node_data, project_id = self.test_read_node ()
+
+        for el in node_data:
+
+            resp = self.client.post ('/editor/rename/', {
+                'nodeId': el['id'],
+                'name': 'new-name'
+            })
+
+            self.assertEqual (resp.status_code, 200)
+            self.assertIsNotNone (resp.content)
+            data = json.loads (resp.content)
+            self.assertTrue (data['success'])
+            self.assertEqual (data['id'], el['id'])
+            self.assertEqual (data['name'], 'new-name')
+
+        return resp, node_data
 
 ################################################################################
 ################################################################################
