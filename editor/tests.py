@@ -346,7 +346,6 @@ class ViewTest (TestCase):
     def test_rename_leaf (self):
 
         resp, node_data, project_id = self.test_read_node ()
-
         for el in node_data:
 
             resp = self.client.post ('/editor/rename/', {
@@ -360,6 +359,41 @@ class ViewTest (TestCase):
             self.assertTrue (data['success'])
             self.assertEqual (data['id'], el['id'])
             self.assertEqual (data['name'], 'new-name')
+
+        return resp, node_data
+
+    ###########################################################################
+    ###########################################################################
+
+    def test_delete_node (self):
+
+        resp, node_data, project_id = self.test_read_node ()
+        resp = self.client.post ('/editor/delete/', {
+            'id': project_id,
+            })
+
+        self.assertEqual (resp.status_code, 200)
+        self.assertIsNotNone (resp.content)
+        data = json.loads (resp.content)
+        self.assertTrue (data['success'])
+        self.assertEqual (data['id'], project_id)
+
+        return resp, data
+
+    def test_delete_leaf (self):
+
+        resp, node_data, project_id = self.test_read_node ()
+        for el in node_data:
+
+            resp = self.client.post ('/editor/delete/', {
+                'id': el['id']
+            })
+
+            self.assertEqual (resp.status_code, 200)
+            self.assertIsNotNone (resp.content)
+            data = json.loads (resp.content)
+            self.assertTrue (data['success'])
+            self.assertEqual (data['id'], el['id'])
 
         return resp, node_data
 
