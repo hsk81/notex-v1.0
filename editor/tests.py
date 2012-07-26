@@ -138,6 +138,9 @@ class ViewTest (TestCase):
         if os.path.exists (path_to_usid):
             subprocess.check_call (['rm', path_to_usid, '-f'])
 
+    ###########################################################################
+    ###########################################################################
+
     def test_main (self):
 
         resp = self.client.get ('/editor/?silent')
@@ -149,10 +152,13 @@ class ViewTest (TestCase):
 
         return resp
 
+    ###########################################################################
+    ###########################################################################
+
     def test_create_project (self):
 
         resp = self.client.post ('/editor/create-project', {
-            'nodeId': 'LMRHE33POQRCYIC3LVOQ====',
+            'nodeId': 'LMRHE33POQRCYIC3LVOQ====', ## root
             'data': json.dumps ({
                 'project':'PROJECT',
                 'authors':'AUTHORs',
@@ -208,6 +214,58 @@ class ViewTest (TestCase):
         self.assertTrue (data['success'])
 
         return json_response, data
+
+    ###########################################################################
+    ###########################################################################
+
+    def test_read_root (self):
+
+        resp = self.client.post ('/editor/read/', {
+            'node': 'LMRHE33POQRCYIC3LVOQ===='
+        })
+
+        self.assertEqual (resp.status_code, 200)
+        self.assertIsNotNone (resp.content)
+        data = json.loads (resp.content)
+
+        for el in data:
+            self.assertIsNotNone (el['id'])
+            self.assertIsNotNone (el['text'])
+            self.assertEquals (el['cls'], 'folder')
+            self.assertFalse (el['leaf'])
+
+        return  resp, data
+
+    def test_read_node (self):
+
+        resp, data = self.test_create_project ()
+        resp = self.client.post ('/editor/read/', {'node': data['id']})
+
+        self.assertEqual (resp.status_code, 200)
+        self.assertIsNotNone (resp.content)
+        data = json.loads (resp.content)
+
+        return resp, data
+
+    def test_read_leaf (self):
+
+        resp, node_data = self.test_read_node ()
+        for el in node_data:
+
+            self.assertIsNotNone (el['id'])
+            self.assertIsNotNone (el['text'])
+            self.assertIsNotNone (el['data'])
+            self.assertTrue (el['mime'] == 'text/plain' or el['mime'] is None)
+            self.assertEquals (el['cls'], 'file')
+            self.assertTrue (el['leaf'])
+
+            resp = self.client.post ('/editor/read/', {'node': el['id']})
+            self.assertEqual (resp.status_code, 200)
+            self.assertIsNotNone (resp.content)
+            data = json.loads (resp.content)
+            self.assertEqual (data, []) ## useless!
+
+        return resp, data
 
 ################################################################################
 ################################################################################

@@ -74,7 +74,7 @@ def texts (ts):
 def read (request):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['node']))
-    
+
     if type == 'root': # ids == []
         root = ROOT.objects.get (_usid = request.session.session_key)
         js_string = nodes (NODE.objects.filter (_root = root, _node = None))
