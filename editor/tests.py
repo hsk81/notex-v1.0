@@ -245,13 +245,7 @@ class ViewTest (TestCase):
         self.assertIsNotNone (resp.content)
         data = json.loads (resp.content)
 
-        return resp, data
-
-    def test_read_leaf (self):
-
-        resp, node_data = self.test_read_node ()
-        for el in node_data:
-
+        for el in data:
             self.assertIsNotNone (el['id'])
             self.assertIsNotNone (el['text'])
             self.assertIsNotNone (el['data'])
@@ -259,13 +253,53 @@ class ViewTest (TestCase):
             self.assertEquals (el['cls'], 'file')
             self.assertTrue (el['leaf'])
 
+        return resp, data
+
+    def test_read_leaf (self):
+
+        resp, node_data = self.test_read_node ()
+        for el in node_data:
             resp = self.client.post ('/editor/read/', {'node': el['id']})
             self.assertEqual (resp.status_code, 200)
             self.assertIsNotNone (resp.content)
             data = json.loads (resp.content)
             self.assertEqual (data, []) ## useless!
+            break
 
         return resp, data
+
+    ###########################################################################
+    ###########################################################################
+
+    def test_update_text (self):
+        return self.check_update ('/editor/update-text')
+
+    def test_update_image (self):
+        return self.check_update ('/editor/update-image')
+
+    def check_update (self, url):
+
+        resp, node_data = self.test_read_node ()
+        for el in node_data:
+
+            resp = self.client.post (url, {
+                'leafId': el['id'],
+                'name': el['text'],
+                'data': el['data']
+            })
+
+            self.assertEqual (resp.status_code, 200)
+            self.assertIsNotNone (resp.content)
+            data = json.loads (resp.content)[0]
+            self.assertTrue (data['success'])
+            self.assertEquals (data['id'], el['id'])
+
+            return resp, data
+
+        return resp, node_data
+
+    ###########################################################################
+    ###########################################################################
 
 ################################################################################
 ################################################################################
