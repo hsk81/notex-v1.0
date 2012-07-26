@@ -369,16 +369,16 @@ class ViewTest (TestCase):
     ###########################################################################
 
     def test_export_report (self):
-        self.check_export ('/editor/export-report/%s/', 'zip')
+        return self.check_export ('/editor/export-report/%s/', 'zip')
 
     def test_export_pdf (self):
-        self.check_export ('/editor/export-pdf/%s/', 'pdf')
+        return self.check_export ('/editor/export-pdf/%s/', 'pdf')
 
     def test_export_latex (self):
-        self.check_export ('/editor/export-latex/%s/', 'zip')
+        return self.check_export ('/editor/export-latex/%s/', 'zip')
 
     def test_export_html (self):
-        self.check_export ('/editor/export-html/%s/', 'zip')
+        return self.check_export ('/editor/export-html/%s/', 'zip')
 
     def check_export (self, url, ext):
         resp, data = self.test_create_project ()
@@ -397,6 +397,14 @@ class ViewTest (TestCase):
             r'^attachment;filename="(.*).%s"$' % ext,
             resp['Content-Disposition']
         ));
+
+        return resp, data
+
+    ###########################################################################
+    ###########################################################################
+
+    def test_import_file (self):
+        pass
 
 ################################################################################
 ################################################################################
