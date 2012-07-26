@@ -380,7 +380,7 @@ class ViewTest (TestCase):
     def test_export_html (self):
         return self.check_export ('/editor/export-html/%s/', 'zip')
 
-    def check_export (self, url, ext):
+    def check_export (self, url, ext, zip_file=None):
         resp, data = self.test_create_project ()
         project_id = data['id']
 
@@ -388,6 +388,8 @@ class ViewTest (TestCase):
         self.check (resp)
 
         resp = self.client.post (url % project_id)
+        if zip_file: print >> zip_file, resp
+
         self.assertEqual (resp.status_code, 200)
         self.assertIsNotNone (resp.content)
 
@@ -404,7 +406,24 @@ class ViewTest (TestCase):
     ###########################################################################
 
     def test_import_file (self):
-        pass
+        with os.tmpfile() as zip_file:
+            resp, data = self.check_export (
+                '/editor/export-report/%s/', 'zip', zip_file
+            )
+
+            zip_file.flush ()
+            zip_file.seek (0)
+
+            resp = self.client.post ('/editor/import-file/PROJECT.zip/', {
+                'name': 'PROJECT.zip', 'attachment': zip_file
+            })
+
+            self.assertEqual (resp.status_code, 200)
+            self.assertIsNotNone (resp.content)
+            data = json.loads (resp.content)
+            self.assertTrue (data['success'])
+            self.assertIsNotNone (data['file_id'])
+            self.assertIsNone (data['message'])
 
 ################################################################################
 ################################################################################
