@@ -26,7 +26,9 @@ import os
 @transaction.commit_on_success
 def createProject (request, path = None):
 
-    if not path: path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
+    if not path:
+        path = os.path.join (settings.STATIC_ROOT, 'app', 'editor', 'dat')
+
     (_, ids) = json.loads (base64.b32decode (request.POST['nodeId']))
     data = json.loads (request.POST['data'])
 

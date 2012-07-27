@@ -55,7 +55,7 @@ def init (request):
     usid = request.session.session_key
     root = ROOT.objects.create (type = type, usid = usid)
 
-    source_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor')
+    source_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor', 'dat')
 
     init_prj01 (root, source_path, prj_rank = 0)
     init_prj02 (root, source_path, prj_rank = 1)
