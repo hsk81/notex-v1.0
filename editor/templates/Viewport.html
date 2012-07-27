@@ -2,18 +2,12 @@
 {% load b64 %}
 
 {%  block ext-classes %}
-<link rel="stylesheet" type="text/css"
-      href="{{ STATIC_URL }}lib/codemirror/lib/codemirror.css">
-<link rel="stylesheet" type="text/css"
-      href="{% url editor:CodeMirror.css %}" />
-<link rel="stylesheet" type="text/css"
-      href="{% url editor:CodeMirror.yaml.css %}" />
-<link rel="stylesheet" type="text/css"
-      href="{% url editor:CodeMirror.rest.css %}" />
-<link rel="stylesheet" type="text/css"
-      href="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.css">
-<link rel="stylesheet" type="text/css"
-      href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.yaml.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.rest.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
 {%  endblock %}
 
 {% block app-js %}
@@ -23,63 +17,52 @@ dump (session);
 </script>
 
 <script type="text/javascript" src="{{ STATIC_URL }}lib/sprintf/sprintf.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/util/searchcursor.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/util/overlay.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/util/search.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/clike/clike.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/css/css.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/diff/diff.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/gfm/gfm.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/go/go.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/haskell/haskell.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/htmlembedded/htmlembedded.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/javascript/javascript.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/jinja2/jinja2.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/less/less.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/lua/lua.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/markdown/markdown.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/mysql/mysql.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/ocaml/ocaml.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/pascal/pascal.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/perl/perl.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/php/php.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/pig/pig.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/plsql/plsql.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/properties/properties.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/python/python.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/r/r.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/rpm/changes/changes.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/rpm/spec/spec.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/ruby/ruby.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/scheme/scheme.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/shell/shell.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/smalltalk/smalltalk.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/stex/stex.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/tiddlywiki/tiddlywiki.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/vbscript/vbscript.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/verilog/verilog.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/xml/xml.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/xquery/xquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/StatusBar.js"></script>
 
-<script type="text/javascript" src="{% url editor:Base64.js %}"></script>
-<script type="text/javascript" src="{% url editor:Math.uuid.js %}"></script>
-<script type="text/javascript" src="{% url editor:Dialog.openFile.js %}"></script>
-<script type="text/javascript" src="{% url editor:Dialog.js %}"></script>
-
-<script src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/lib/util/searchcursor.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/lib/util/overlay.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/lib/util/search.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.js"></script>
-
-<script src="{{ STATIC_URL }}lib/codemirror/mode/clike/clike.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/css/css.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/diff/diff.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/gfm/gfm.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/go/go.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/haskell/haskell.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/htmlembedded/htmlembedded.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/javascript/javascript.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/jinja2/jinja2.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/less/less.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/lua/lua.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/markdown/markdown.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/mysql/mysql.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/ocaml/ocaml.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/pascal/pascal.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/perl/perl.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/php/php.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/pig/pig.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/plsql/plsql.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/properties/properties.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/python/python.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/r/r.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/rpm/changes/changes.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/rpm/spec/spec.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/rst/rst.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/ruby/ruby.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/scheme/scheme.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/shell/shell.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/smalltalk/smalltalk.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/stex/stex.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/tiddlywiki/tiddlywiki.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/vbscript/vbscript.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/verilog/verilog.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/xml/xml.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/xquery/xquery.js"></script>
-<script src="{{ STATIC_URL }}lib/codemirror/mode/yaml/yaml.js"></script>
-
-<script type="text/javascript" src="{% url editor:CodeMirror.js %}"></script>
-<script type="text/javascript" src="{% url editor:CodeMirror.mime.js %}"></script>
-<script type="text/javascript" src="{% url editor:CodeMirror.yaml.js %}"></script>
-<script type="text/javascript" src="{% url editor:CodeMirror.rest.js %}"></script>
-
-<script type="text/javascript"
-        src="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/StatusBar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Base64.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Math.uuid.js"></script>
 
 <script type="text/javascript">
 var urls = {
@@ -87,36 +70,37 @@ var urls = {
     createFolder : Base64.decode ({% url editor:create-folder as uri %}'{{ uri|b64_encode }}'),
     createText : Base64.decode ({% url editor:create-text as uri %}'{{ uri|b64_encode }}'),
     createImage : Base64.decode ({% url editor:create-image as uri %}'{{ uri|b64_encode }}'),
-
     read : Base64.decode ({% url editor:read as uri %}'{{ uri|b64_encode }}'),
-
     updateText : Base64.decode ({% url editor:update-text as uri %}'{{ uri|b64_encode }}'),
     updateImage : Base64.decode ({% url editor:update-image as uri %}'{{ uri|b64_encode }}'),
     decreaseRank : Base64.decode ({% url editor:decrease-rank as uri %}'{{ uri|b64_encode }}'),
     increaseRank : Base64.decode ({% url editor:increase-rank as uri %}'{{ uri|b64_encode }}'),
     rename : Base64.decode ({% url editor:rename as uri %}'{{ uri|b64_encode }}'),
-
     del : Base64.decode ({% url editor:delete as uri %}'{{ uri|b64_encode }}'),
-
     exportReport : Base64.decode ({% url editor:export-report "=" as uri %}'{{ uri|b64_encode }}'),
     exportText : Base64.decode ({% url editor:export-text "=" as uri %}'{{ uri|b64_encode }}'),
     exportLatex : Base64.decode ({% url editor:export-latex "=" as uri %}'{{ uri|b64_encode }}'),
     exportPdf : Base64.decode ({% url editor:export-pdf "=" as uri %}'{{ uri|b64_encode }}'),
     exportHtml : Base64.decode ({% url editor:export-html "=" as uri %}'{{ uri|b64_encode }}'),
     importReport : Base64.decode ({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}')
-}
-</script>
+}</script>
 
-<script type="text/javascript" src="{% url editor:ReportManager.util.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.crud.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.tree.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.task.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.tbar.js %}"></script>
-<script type="text/javascript" src="{% url editor:ReportManager.js %}"></script>
-<script type="text/javascript" src="{% url editor:Editor.ribbon.js %}"></script>
-<script type="text/javascript" src="{% url editor:Editor.tbar.js %}"></script>
-<script type="text/javascript" src="{% url editor:Editor.js %}"></script>
-<script type="text/javascript" src="{% url editor:StatusBar.js %}"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Dialog.openFile.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Dialog.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.mime.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.yaml.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.rest.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.util.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.crud.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.tree.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.task.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.tbar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/ReportManager.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Editor.ribbon.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Editor.tbar.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Editor.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/StatusBar.js"></script>
 {% endblock %}
 
 {% block main %}
@@ -134,6 +118,8 @@ Ext.Ajax.on ('beforerequest', function (conn, options) {
         }
     }
 }, this);
+
+reportManager.csrftoken = "{% csrf_token %}";
 </script>
 
 <script type="text/javascript">

@@ -132,7 +132,7 @@ var reportManager = function () {
                 target : 'iframe'
             });
 
-            form.insertHtml ('beforeend', "{% csrf_token %}");
+            form.insertHtml ('beforeend', reportManager.csrftoken)
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
             form.dom.submit ();
