@@ -1,120 +1,14 @@
-<!-- Do NOT put any DOCTYPE here unless you want problems in IEs. -->
-{% block html %}<html>
- 
-{% block head %}<head>
-
-    {% block dump %}<script type="text/javascript">
-    var dump = function (data) {
-        if (typeof (console) != 'undefined') { console.info (data); }
-        return data
-    }</script>{% endblock %}
-
-    <!-- The following line defines content type and utf-8 as character set. -->
-    <!-- If you want your application to work flawlessly with various local  -->
-    <!-- characters, just make ALL strings, on the page, json and db utf-8.  -->
+<html>
+ <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/resources/css/ext-all.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/resources/css/xtheme-gray.css">
+    {% block application-css %}{% endblock %}
 
-    {%  block js-fix %}<script type="text/javascript">
-    if (!Array.prototype.forEach) {
-        Array.prototype.forEach = function (fn) {
-            var len = this.length;
-            if (typeof fn != "function")
-                throw new TypeError();
-            var self = arguments[1];
-            for (var i = 0; i < len; i++) {
-                if (i in this)
-                    fn.call(self, this[i], i, this);
-            }
-        };
-    }
-    if (!Array.prototype.filter) {
-        Array.prototype.filter = function(fn) {
-            var len = this.length;
-            if (typeof fn != "function")
-                throw new TypeError();
-            var res = new Array();
-            var self = arguments[1];
-            for (var i = 0; i < len; i++) {
-                if (i in this) {
-                    var val = this[i]; // in case fun mutates this
-                    if (fn.call(self, val, i, this))
-                        res.push(val);
-                }
-            }
-            return res;
-        };
-    }
-    </script>{% endblock %}
-
-    <!-- Ext relies on its default css so include it here. -->
-    <!-- This must come BEFORE javascript includes! -->
-    <link rel="stylesheet" type="text/css"
-        href="{{ STATIC_URL }}lib/extjs/resources/css/ext-all.css">
-    <link rel="stylesheet" type="text/css"
-        href="{{ STATIC_URL }}lib/extjs/resources/css/xtheme-gray.css">
-
-    <!-- Include here your own css files if you have them. -->
-    {% block icon-css %}
-    <link rel="stylesheet" type="text/css"
-          href="{{ STATIC_URL }}ico/fatcow/16x16/icons.css" />
-    <link rel="stylesheet" type="text/css"
-          href="{{ STATIC_URL }}ico/fatcow/32x32/icons-32.css" />
-    {% endblock %}
-
-    <!-- Include here your jquery related classes if you have some. -->
-    {% block jquery-classes %}{% endblock %}
-    <!-- Include here your jquery related javascript file if you have it. -->
-    {% block jquery-js %}
-    <script type="text/javascript"
-        src="{{ STATIC_URL }}lib/jquery/jquery.min.js"></script>
-    {% endblock %}
-
-    <!-- First of javascript includes must be an adapter .. -->
-    <script type="text/javascript"
-        src="{{ STATIC_URL }}lib/extjs/adapter/ext/ext-base.js"></script>
-    <!-- then you need the Ext itself, either debug or production version. -->
-    <script type="text/javascript"
-        src="{{ STATIC_URL }}lib/extjs/ext-all.js"></script>
-
-    <!-- Include here your extended classes if you have some. -->
-    {% block ext-classes %}{% endblock %}
-    <!-- Include here your application javascript files if you have it. -->
-    {% block app-js %}{% endblock %}
-
-    {% block title %}
     <title>NoTex</title>
-    {% endblock %}
-
-    {% block shortcut-icon %}
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
-    {% endblock %}
 
-    {% block blank-image %}<script type="text/javascript">
-    Ext.BLANK_IMAGE_URL = '{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif'
-    </script>{% endblock %}
-
-    {% block map2obj %}<script type="text/javascript">
-    var map2obj = function (objects) {
-        var res = objects[0]
-        res.mro = {}
-        for (var idx=objects.length-1; idx>=0; idx--) {
-            var obj = objects[idx]
-            for (var key in obj.fields) { res.fields[key] = obj.fields[key]; }
-            res.mro[idx] = obj.model
-        }
-        return res;
-    }</script>{% endblock %}
-
-    {% block map2objs %}<script type="text/javascript">
-    var map2objs = function (objects_set) {
-        var res_set = []
-        for (var idx=0; idx<objects_set.length; idx++) {
-            res_set.push (map2obj (objects_set[idx]))
-        }
-        return res_set;
-    }</script>{% endblock %}
-
-    {% block analytics %}<script type="text/javascript">
+    <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push (['_setAccount', 'UA-6838945-8']);
     _gaq.push (['_trackPageview']);
@@ -126,16 +20,23 @@
         ) + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName ('script')[0];
         s.parentNode.insertBefore (ga, s);
-    })();</script>{% endblock %}
-</head>{% endblock %}
+    })();</script>
+</head>
  
-{% block body %}
 <body>
-    {% block main %}<script type="text/javascript">
-    Ext.onReady(function() {
-      console.info ("base.html")
-    });</script>{% endblock %}
-</body>
-{% endblock %}
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/extjs/ext-all.js"></script>
 
-</html>{% endblock %}
+    <script type="text/javascript">
+        Ext.BLANK_IMAGE_URL = '{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif'
+    </script>
+
+    {% block application-js %}
+    {% endblock %}
+
+    {% block application-main %}<script type="text/javascript">
+    Ext.onReady(function() { console.info ("base.html")});
+    </script>{% endblock %}
+</body>
+</html>

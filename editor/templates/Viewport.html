@@ -1,20 +1,56 @@
 {% extends "base.html" %}
 {% load b64 %}
 
-{%  block ext-classes %}
+{% block application-css %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}ico/fatcow/16x16/icons.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}ico/fatcow/32x32/icons-32.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.yaml.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app/editor/css/CodeMirror.rest.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/codemirror/lib/util/dialog.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
-{%  endblock %}
+{% endblock %}
 
-{% block app-js %}
+{% block application-js %}
 <script type="text/javascript">
-var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
-dump (session);
+    var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
+    if (typeof (console) != 'undefined') console.info (session);
 </script>
+
+
+<script type="text/javascript">
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function (fn) {
+        var len = this.length;
+        if (typeof fn != "function")
+            throw new TypeError();
+        var self = arguments[1];
+        for (var i = 0; i < len; i++) {
+            if (i in this)
+                fn.call(self, this[i], i, this);
+        }
+    };
+}</script>
+
+    <script type="text/javascript">
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function(fn) {
+        var len = this.length;
+        if (typeof fn != "function")
+            throw new TypeError();
+        var res = new Array();
+        var self = arguments[1];
+        for (var i = 0; i < len; i++) {
+            if (i in this) {
+                var val = this[i]; // in case fun mutates this
+                if (fn.call(self, val, i, this))
+                    res.push(val);
+            }
+        }
+        return res;
+    };
+}</script>
 
 <script type="text/javascript" src="{{ STATIC_URL }}lib/sprintf/sprintf.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
@@ -103,7 +139,7 @@ var urls = {
 <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/StatusBar.js"></script>
 {% endblock %}
 
-{% block main %}
+{% block application-main %}
 <script type="text/javascript">
 Ext.Ajax.on ('beforerequest', function (conn, options) {
     if (!(/^http:.*/.test (options.url) || /^https:.*/.test (options.url))) {
