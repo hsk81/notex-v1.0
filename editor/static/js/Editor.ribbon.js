@@ -9,7 +9,7 @@ var editorRibbon = function () {
                     for (var jdx in buttons) {
                         var button = buttons[jdx]
                         if (button && button.iconCls) {
-                            button.iconCls = button.iconCls.replace('-32', '')
+                            button.iconCls = button.iconCls.replace('', '')
                         }
                     }
                 }
@@ -22,11 +22,11 @@ var editorRibbon = function () {
         xtype: 'buttongroup',
         title: 'Document',
         columns: 2,
-        defaults: { scale: 'large'},
+        defaults: { scale: 'small' },
 
         items: [{
             text : 'Save',
-            iconCls : 'icon-disk-32',
+            iconCls : 'icon-disk',
             iconAlign: 'left',
             tooltip : '<b>Save</b><br/>Save selected file (to <i>remote</i> storage)',
             handler : function (button, event) {
@@ -34,7 +34,7 @@ var editorRibbon = function () {
             }
         },{
             text : 'Open',
-            iconCls : 'icon-folder_page-32',
+            iconCls : 'icon-folder_page',
             iconAlign: 'left',
             tooltip : '<b>Open</b><br/>Open a text or image file (from <i>local</i> storage)',
             handler : function (button, event) {
@@ -47,10 +47,10 @@ var editorRibbon = function () {
         xtype: 'buttongroup',
         title: 'Manage',
         columns: 3,
-        defaults: { scale: 'large'},
+        defaults: { scale: 'small' },
         items: [{
             text : 'Add',
-            iconCls : 'icon-add-32',
+            iconCls : 'icon-add',
             xtype :'splitbutton',
             tooltip : '<b>Add</b><br/>Add a new report, folder or file',
             menu : {
@@ -79,7 +79,7 @@ var editorRibbon = function () {
             }
         },{
             text : 'Rename',
-            iconCls : 'icon-pencil-32',
+            iconCls : 'icon-pencil',
             iconAlign: 'left',
             tooltip : '<b>Rename</b><br/>Rename selected report, folder or file',
             handler : function (button, event) {
@@ -87,7 +87,7 @@ var editorRibbon = function () {
             }
         },{
             text : 'Delete',
-            iconCls : 'icon-delete-32',
+            iconCls : 'icon-delete',
             iconAlign: 'left',
             tooltip : '<b>Delete</b><br/>Delete selected report, folder or file',
             handler : function (button, event) {
@@ -100,10 +100,10 @@ var editorRibbon = function () {
         xtype: 'buttongroup',
         title: 'Reports',
         columns: 2,
-        defaults: { scale: 'large'},
+        defaults: { scale: 'small' },
         items: [{
             text: 'Import',
-            iconCls: 'icon-page_white_zip-32',
+            iconCls: 'icon-page_white_zip',
             iconAlign: 'left',
             tooltip : '<b>Import</b><br/>Open a report from a <b>ZIP</b> archive (at <i>local</i> storage)',
             handler : function (button, event) {
@@ -112,7 +112,7 @@ var editorRibbon = function () {
         },{
             id : 'btn.export.editor.id',
             text: 'Export',
-            iconCls: 'icon-report_go-32',
+            iconCls: 'icon-report_go',
             iconAlign: 'left',
             tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
             handler : function (button, event) {
@@ -125,11 +125,11 @@ var editorRibbon = function () {
         xtype: 'buttongroup',
         title: 'Export as ..',
         columns: 3,
-        defaults: { scale: 'large'},
+        defaults: { scale: 'small' },
         items: [{
             id : 'btn.export-latex.editor.id',
             text : 'LaTex',
-            iconCls : 'icon-page_white_code-32',
+            iconCls : 'icon-page_white_code',
             iconAlign: 'left',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
@@ -137,7 +137,7 @@ var editorRibbon = function () {
         },{
             id : 'btn.export-pdf.editor.id',
             text : 'PDF',
-            iconCls : 'icon-page_white_acrobat-32',
+            iconCls : 'icon-page_white_acrobat',
             iconAlign: 'left',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
@@ -145,7 +145,7 @@ var editorRibbon = function () {
         },{
             id : 'btn.export-html.editor.id',
             text : 'HTML',
-            iconCls : 'icon-page_white_world-32',
+            iconCls : 'icon-page_white_world',
             iconAlign: 'left',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
