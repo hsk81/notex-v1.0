@@ -3,32 +3,41 @@
 ###############################################################################
 ###############################################################################
 
-OPTS=${1-'--nomunge'}
+EXTS=${1-'*'}
 CURR=${2-'$(pwd)'}
+OPTS=${3}
+
+shopt -s nocasematch
 
 ###############################################################################
 ###############################################################################
 
-CSSs=$(tree -fi $CURR | grep '\.css$')
-if [ "$CSSs" ] ; then
+if [[ $EXTS =~ ^\*|css$ ]] ; then
+    CSSs=$(tree -fi $CURR | grep '\.css$') ;
+    if [ "$CSSs" ] ; then
 
-    yuicompressor $OPTS -o '.css$:-min.css' $CSSs
-    MIN_CSSs=$(tree -fi $CURR | grep 'min\.css$')
-    for FN in $MIN_CSSs ; do mv $FN ${FN/'-min'/} ; done
+      yuicompressor $OPTS -o '.css$:-min.css' $CSSs ;
+      MIN_CSSs=$(tree -fi $CURR | grep 'min\.css$') ;
+      for FN in $MIN_CSSs ; do mv $FN ${FN/'-min'/} ; done
 
+    fi
 fi
 
 ###############################################################################
 ###############################################################################
 
-JSs=$(tree -fi $CURR | grep '\.js$')
-if [ "$JSs" ] ; then
+if [[ $EXTS =~ ^\*|js$ ]] ; then
+    JSs=$(tree -fi $CURR | grep '\.js$')
+    if [ "$JSs" ] ; then
 
-    yuicompressor $OPTS -o '.js$:-min.js' $JSs
-    MIN_JSs=$(tree -fi $CURR | grep 'min\.js$')
-    for FN in $MIN_JSs ; do mv $FN ${FN/'-min'/} ; done
+        yuicompressor $OPTS -o '.js$:-min.js' $JSs ;
+        MIN_JSs=$(tree -fi $CURR | grep 'min\.js$') ;
+        for FN in $MIN_JSs ; do mv $FN ${FN/'-min'/} ; done
 
+    fi
 fi
 
 ###############################################################################
 ###############################################################################
+
+shopt -u nocasematch
