@@ -2,6 +2,7 @@ var statusBar = function () {
 
     function change (slider, newValue, thumb) {
         Ext.util.Cookies.set ('zoom', newValue);
+        Ext.getCmp ('slider.zoom.id').setText (newValue + '%');
         Ext.getCmp ('editor.id').fireEvent ('zoom', newValue);
     }
 
@@ -28,6 +29,15 @@ var statusBar = function () {
 
         return value;
     }
+
+    var zoom = new Ext.Button ({
+        id : 'slider.zoom.id',
+        width : 48,
+        text : getInitialValue () + '%',
+        handler : function () {
+            Ext.getCmp ('slider.id').setValue (100);
+        }
+    });
 
     var slider = new Ext.Slider ({
         id : 'slider.id',
@@ -98,7 +108,7 @@ var statusBar = function () {
         id: 'status-bar.id',
         defaultText: 'NoTex',
         text: 'NoTex',
-        items: [progressBar, '-', infoButton, '-', slider],
+        items: [progressBar, '-', infoButton, '-', zoom, slider],
 
         listeners: {
             initComponent: function  () {
