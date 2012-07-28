@@ -13,43 +13,15 @@
 
 {% block application-js %}
 <script type="text/javascript">
-    var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
-    if (typeof (console) != 'undefined') console.info (session);
-</script>
-
+if(!Array.prototype.forEach){Array.prototype.forEach=function(fn){var len=this.length;
+if(typeof fn!="function"){throw new TypeError()}var self=arguments[1];for(var i=0;
+i<len;i++){if(i in this){fn.call(self,this[i],i,this)}}}};</script>
 
 <script type="text/javascript">
-if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function (fn) {
-        var len = this.length;
-        if (typeof fn != "function")
-            throw new TypeError();
-        var self = arguments[1];
-        for (var i = 0; i < len; i++) {
-            if (i in this)
-                fn.call(self, this[i], i, this);
-        }
-    };
-}</script>
-
-    <script type="text/javascript">
-if (!Array.prototype.filter) {
-    Array.prototype.filter = function(fn) {
-        var len = this.length;
-        if (typeof fn != "function")
-            throw new TypeError();
-        var res = new Array();
-        var self = arguments[1];
-        for (var i = 0; i < len; i++) {
-            if (i in this) {
-                var val = this[i]; // in case fun mutates this
-                if (fn.call(self, val, i, this))
-                    res.push(val);
-            }
-        }
-        return res;
-    };
-}</script>
+if(!Array.prototype.filter){Array.prototype.filter=function(fn){var len=this.length;
+if(typeof fn!="function"){throw new TypeError()}var res=new Array();var self=arguments[1];
+for(var i=0;i<len;i++){if(i in this){var val=this[i];if(fn.call(self,val,i,this)){res.push(val)
+}}}return res}};</script>
 
 <script type="text/javascript" src="{{ STATIC_URL }}lib/sprintf/sprintf.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}lib/codemirror/lib/codemirror.js"></script>
@@ -140,69 +112,10 @@ var urls = {
 
 {% block application-main %}
 <script type="text/javascript">
-Ext.Ajax.on ('beforerequest', function (conn, options) {
-    if (!(/^http:.*/.test (options.url) || /^https:.*/.test (options.url))) {
-        if (typeof (options.headers) == "undefined") {
-            options.headers = {
-                'X-CSRFToken': Ext.util.Cookies.get ('csrftoken')
-            };
-        } else {
-            options.headers.extend ({
-                'X-CSRFToken': Ext.util.Cookies.get ('csrftoken')
-            });
-        }
-    }
-}, this);
-
-reportManager.csrftoken = "{% csrf_token %}";
+var session = { id : '{{ sid }}', timestamp : '{{ timestamp }}' }
+if (typeof (console) != 'undefined') console.info ('session', session);
 </script>
 
-<script type="text/javascript">
-Ext.onReady (function () {
-    Ext.QuickTips.init ();
-
-    var viewport = new Ext.Viewport ({
-        layout : 'border',
-        id : 'viewportId',
-
-        items : [{
-            region : 'center',
-            layout : 'fit',
-            items : [editor]
-        },{
-            region: 'south',
-            xtype: 'panel',
-            height: 26,
-            items : [statusBar]
-        },{
-            region : 'west',
-            split : true,
-            minWidth : 260,
-            width : 260,
-            collapsed : false,
-            collapseMode : 'mini',
-            hidden : false,
-            layout : 'fit',
-            items : [reportManager]
-        }]
-    });
-
-    var map = new Ext.KeyMap (Ext.get(document), [{
-        key: "o",
-        ctrl: true,
-        stopEvent: true,
-        fn: function () {
-            Ext.getCmp ('reportManager.id').fireEvent ('openFile');
-        }
-    },{
-        key: "s",
-        ctrl: true,
-        stopEvent: true,
-        fn: function () {
-            Ext.getCmp ('reportManager.id').fireEvent ('saveTab');
-        }
-    }]);
-
-    viewport.show ();
-});</script>
+<script type="text/javascript">reportManager.csrftoken = "{% csrf_token %}";</script>
+<script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Viewport.js"></script>
 {% endblock %}
