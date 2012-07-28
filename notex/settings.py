@@ -88,6 +88,8 @@ TEMPLATE_DIRS = (os.path.join (SITE_ROOT, 'templates/'),)
 FIXTURE_DIRS = (os.path.join (SITE_ROOT, 'fixtures/'),)
 
 INSTALLED_APPS = (
+    'djcssmin', 'djjsmin',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -222,6 +224,95 @@ LOGGING = {
         },
     }
 }
+
+################################################################################
+################################################################################
+
+CSSMIN_INPUT = [
+    'static/css/reset.css',
+    'static/app/editor/css/CodeMirror.css',
+    'static/app/editor/css/CodeMirror.yaml.css',
+    'static/app/editor/css/CodeMirror.rest.css',
+    'static/lib/codemirror/lib/codemirror.css',
+    'static/lib/codemirror/lib/util/dialog.css',
+]
+
+CSSMIN_OUTPUT = 'static/notex.min.css'
+
+################################################################################
+################################################################################
+
+JSMIN_INPUT = [
+    'static/lib/sprintf/sprintf.js',
+
+    'static/lib/codemirror/lib/codemirror.js',
+    'static/lib/codemirror/lib/util/searchcursor.js',
+    'static/lib/codemirror/lib/util/overlay.js',
+    'static/lib/codemirror/lib/util/search.js',
+    'static/lib/codemirror/lib/util/dialog.js',
+    'static/lib/codemirror/mode/clike/clike.js',
+    'static/lib/codemirror/mode/css/css.js',
+    'static/lib/codemirror/mode/diff/diff.js',
+    'static/lib/codemirror/mode/gfm/gfm.js',
+    'static/lib/codemirror/mode/go/go.js',
+    'static/lib/codemirror/mode/haskell/haskell.js',
+    'static/lib/codemirror/mode/htmlembedded/htmlembedded.js',
+    'static/lib/codemirror/mode/htmlmixed/htmlmixed.js',
+    'static/lib/codemirror/mode/javascript/javascript.js',
+    'static/lib/codemirror/mode/jinja2/jinja2.js',
+    'static/lib/codemirror/mode/less/less.js',
+    'static/lib/codemirror/mode/lua/lua.js',
+    'static/lib/codemirror/mode/markdown/markdown.js',
+    'static/lib/codemirror/mode/mysql/mysql.js',
+    'static/lib/codemirror/mode/ocaml/ocaml.js',
+    'static/lib/codemirror/mode/pascal/pascal.js',
+    'static/lib/codemirror/mode/perl/perl.js',
+    'static/lib/codemirror/mode/php/php.js',
+    'static/lib/codemirror/mode/pig/pig.js',
+    'static/lib/codemirror/mode/plsql/plsql.js',
+    'static/lib/codemirror/mode/properties/properties.js',
+    'static/lib/codemirror/mode/python/python.js',
+    'static/lib/codemirror/mode/r/r.js',
+    'static/lib/codemirror/mode/rpm/changes/changes.js',
+    'static/lib/codemirror/mode/rpm/spec/spec.js',
+    'static/lib/codemirror/mode/rst/rst.js',
+    'static/lib/codemirror/mode/ruby/ruby.js',
+    'static/lib/codemirror/mode/scheme/scheme.js',
+    'static/lib/codemirror/mode/shell/shell.js',
+    'static/lib/codemirror/mode/smalltalk/smalltalk.js',
+    'static/lib/codemirror/mode/stex/stex.js',
+    'static/lib/codemirror/mode/tiddlywiki/tiddlywiki.js',
+    'static/lib/codemirror/mode/vbscript/vbscript.js',
+    'static/lib/codemirror/mode/verilog/verilog.js',
+    'static/lib/codemirror/mode/xml/xml.js',
+    'static/lib/codemirror/mode/xquery/xquery.js',
+    'static/lib/codemirror/mode/yaml/yaml.js',
+
+    'static/lib/jquery/jquery.min.js',
+
+    'static/lib/extjs/adapter/ext/ext-base.js',
+    'static/lib/extjs/ext-all.js',
+    'static/lib/extjs/examples/ux/statusbar/StatusBar.js',
+
+    'static/app/editor/js/Dialog.openFile.js',
+    'static/app/editor/js/Dialog.js',
+    'static/app/editor/js/CodeMirror.js',
+    'static/app/editor/js/CodeMirror.mime.js',
+    'static/app/editor/js/CodeMirror.yaml.js',
+    'static/app/editor/js/CodeMirror.rest.js',
+    'static/app/editor/js/ReportManager.util.js',
+    'static/app/editor/js/ReportManager.crud.js',
+    'static/app/editor/js/ReportManager.tree.js',
+    'static/app/editor/js/ReportManager.task.js',
+    'static/app/editor/js/ReportManager.tbar.js',
+    'static/app/editor/js/ReportManager.js',
+    'static/app/editor/js/Editor.ribbon.js',
+    'static/app/editor/js/Editor.tbar.js',
+    'static/app/editor/js/Editor.js',
+    'static/app/editor/js/StatusBar.js',
+]
+
+JSMIN_OUTPUT = 'static/notex.min.js'
 
 ################################################################################
 ################################################################################

@@ -41,7 +41,7 @@ def main (request):
         print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
 
     return direct_to_template (
-        request, template ='Viewport.html', extra_context = {
+        request, template ='viewport.html', extra_context = {
             'sid': request.session.session_key,
             'timestamp': request.session['timestamp']
         }

@@ -6,6 +6,8 @@ source bin/activate
 
 pip install ipython
 pip install django
+pip install django-jsmin
+pip install django-cssmin
 pip install pylibmc
 pip install numpy
 pip install pyyaml

@@ -9,6 +9,9 @@
 /notex/*.db
 /notex/sessions/*
 
+/notex/static/notex.min.js
+/notex/static/notex.min.css
+
 /bin
 /include
 /lib
