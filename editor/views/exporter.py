@@ -43,7 +43,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
 
     object_key = hex (hash ((request.session.session_key, node.id)))
     object_uri = cache.get (object_key)
-    cache.delete (object_key) ## TODO: reddis.cache.delete (obj_key, 'in 60s')
+    cache.delete (object_key) ## TODO: reddis?
 
     if object_uri and not 'refresh' in request.GET:
 
@@ -62,7 +62,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
             'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
         http_response['Content-Length'] = size
 
-        temp.seek (0); os.remove (object_uri) ## TODO: os.unlink? expiry?
+        temp.seek (0); os.remove (object_uri) ## TODO: os.unlink?
 
     else:
 
