@@ -237,6 +237,7 @@ CSSMIN_INPUT = [
     'static/app/editor/css/CodeMirror.rest.css',
     'static/lib/codemirror/lib/codemirror.css',
     'static/lib/codemirror/lib/util/dialog.css',
+    'static/sprite.css',
 ]
 
 CSSMIN_OUTPUT = 'static/notex.min.css'
