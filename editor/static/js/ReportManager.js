@@ -20,7 +20,7 @@ var reportManager = function () {
     function importReport () {
 
         dialog.openFile.setTitle ('Open ZIP Archive');
-        dialog.openFile.setIconClass ('icon-report_add');
+        dialog.openFile.setIconClass ('icon-report_add-16');
         dialog.openFile.execute ({
             success: function (file) {
 
@@ -226,7 +226,7 @@ var reportManager = function () {
         }
 
         dialog.openFile.setTitle ('Open Text/Image File');
-        dialog.openFile.setIconClass ('icon-page_white_add');
+        dialog.openFile.setIconClass ('icon-page_white_add-16');
         dialog.openFile.execute ({
             success: openFileOnSuccess,
             failure: openFileOnFailure
@@ -260,7 +260,7 @@ var reportManager = function () {
                     return;
                 }
 
-                newNode.attributes['iconCls'] = 'icon-page'
+                newNode.attributes['iconCls'] = 'icon-page-16'
                 newNode.attributes['data'] = e.target.result
 
                 tree.fireEvent('createNode', newNode, {refNode:node}, {
@@ -433,7 +433,7 @@ var reportManager = function () {
         var win = new Ext.Window ({
 
             border : false,
-            iconCls : 'icon-report_add',
+            iconCls : 'icon-report_add-16',
             modal : true,
             resizable : false,
             title : 'Create Report',
@@ -443,7 +443,7 @@ var reportManager = function () {
 
             buttons: [{
                 text : 'Create',
-                iconCls : 'icon-tick',
+                iconCls : 'icon-tick-16',
                 handler : function () {
                     tree.el.mask ('Please wait', 'x-mask-loading');
                     var source = propertyGrid.getSource ();
@@ -455,7 +455,7 @@ var reportManager = function () {
                 }
             },{
                 text : 'Cancel',
-                iconCls : 'icon-cross',
+                iconCls : 'icon-cross-16',
                 handler : function () { win.close (); }
             }]
         });
@@ -494,7 +494,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Create Folder', 'Enter a name:', _callback, null, 'icon-folder_add'
+            'Create Folder', 'Enter a name:', _callback, null, 'icon-folder_add-16'
         );
     }
 
@@ -530,7 +530,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Create Text', 'Enter a name:', _callback, null, 'icon-page_add'
+            'Create Text', 'Enter a name:', _callback, null, 'icon-page_add-16'
         );
     }
 
@@ -581,7 +581,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Rename', 'Enter a name:', _callback, text, 'icon-document_rename'
+            'Rename', 'Enter a name:', _callback, text, 'icon-document_rename-16'
         );
     }
 
@@ -624,7 +624,7 @@ var reportManager = function () {
 
         Ext.Msg.show ({
             title : 'Delete',
-            iconCls : 'icon-delete',
+            iconCls : 'icon-delete-16',
             msg : 'Are you sure you want to delete the selection?',
             buttons : Ext.Msg.YESNO,
             fn : _onConfirm,

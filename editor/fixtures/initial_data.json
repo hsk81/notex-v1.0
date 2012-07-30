@@ -4,7 +4,7 @@
         "model": "editor.base_type", 
         "fields": {
             "_code": "text", 
-            "_icon": "icon-page", 
+            "_icon": "icon-page-16", 
             "_desc": "text"
         }
     }, 
@@ -13,7 +13,7 @@
         "model": "editor.base_type", 
         "fields": {
             "_code": "image", 
-            "_icon": "icon-picture", 
+            "_icon": "icon-picture-16", 
             "_desc": "image"
         }
     }, 
@@ -22,7 +22,7 @@
         "model": "editor.base_type", 
         "fields": {
             "_code": "project", 
-            "_icon": "icon-report", 
+            "_icon": "icon-report-16", 
             "_desc": "project"
         }
     }, 
@@ -31,7 +31,7 @@
         "model": "editor.base_type", 
         "fields": {
             "_code": "folder", 
-            "_icon": "icon-folder", 
+            "_icon": "icon-folder-16", 
             "_desc": "folder"
         }
     }, 

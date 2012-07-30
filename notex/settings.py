@@ -235,6 +235,7 @@ CSSMIN_INPUT = [
     'static/app/editor/css/CodeMirror.rest.css',
     'static/lib/codemirror/lib/codemirror.css',
     'static/lib/codemirror/lib/util/dialog.css',
+    'static/ico/fatcow/icons-16.css',
 ]
 
 CSSMIN_OUTPUT = 'static/notex.min.css'
@@ -289,7 +290,6 @@ JSMIN_INPUT = [
     'static/lib/codemirror/mode/yaml/yaml.js',
 
     'static/lib/jquery/jquery.min.js',
-
     'static/lib/extjs/adapter/ext/ext-base.js',
     'static/lib/extjs/ext-all.js',
     'static/lib/extjs/examples/ux/statusbar/StatusBar.js',

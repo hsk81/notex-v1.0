@@ -236,32 +236,32 @@ function editorTBar (mode, tabId, editorId) {
         },
 
         items: [{
-            iconCls : 'icon-arrow_undo',
+            iconCls : 'icon-arrow_undo-16',
             defaults : { text : 'Undo'},
             tooltip : 'Undo',
             handler : undo
         },{
-            iconCls : 'icon-arrow_redo',
+            iconCls : 'icon-arrow_redo-16',
             defaults : { text : 'Redo'},
             tooltip : 'Redo',
             handler : redo
         },'-',{
-            iconCls : 'icon-cut',
+            iconCls : 'icon-cut-16',
             defaults : { text : 'Cut'},
             tooltip : 'Cut Text',
             handler : cut
         },{
-            iconCls : 'icon-page_white_copy',
+            iconCls : 'icon-page_white_copy-16',
             defaults : { text : 'Copy'},
             tooltip : 'Copy',
             handler : copy
         },{
-            iconCls : 'icon-paste_plain',
+            iconCls : 'icon-paste_plain-16',
             defaults : { text : 'Paste'},
             tooltip : 'Paste',
             handler : paste
         },'-',{
-            iconCls : 'icon-text_heading_1',
+            iconCls : 'icon-text_heading_1-16',
             text : 'Heading',
             tooltip : 'Document Headers',
             split : true,
@@ -272,127 +272,127 @@ function editorTBar (mode, tabId, editorId) {
             },
 
             menu: { items: [{
-                iconCls : 'icon-text_heading_1',
+                iconCls : 'icon-text_heading_1-16',
                 text : 'Parts',
                 handler : applyHeading1
             },{
-                iconCls : 'icon-text_heading_2',
+                iconCls : 'icon-text_heading_2-16',
                 text : 'Chapters',
                 handler : applyHeading2
             },{
-                iconCls : 'icon-text_heading_3',
+                iconCls : 'icon-text_heading_3-16',
                 text : 'Sections',
                 handler : applyHeading3
             },{
-                iconCls : 'icon-text_heading_4',
+                iconCls : 'icon-text_heading_4-16',
                 text : 'Subsections',
                 handler : applyHeading4
             },{
-                iconCls : 'icon-text_heading_5',
+                iconCls : 'icon-text_heading_5-16',
                 text : 'Sub-Subsections',
                 handler : applyHeading5
             },'-',{
-                iconCls : 'icon-text_heading_6',
+                iconCls : 'icon-text_heading_6-16',
                 text : 'Rubric',
                 handler : applyHeading6
             }]}
         },'-',{
-            iconCls : 'icon-text_bold',
+            iconCls : 'icon-text_bold-16',
             defaults : { text : 'Strong Emphasis'},
             tooltip : 'Strong Emphasis',
             handler : toggleStrong
         },{
-            iconCls : 'icon-text_italic',
+            iconCls : 'icon-text_italic-16',
             defaults : { text : 'Emphasis'},
             tooltip : 'Emphasis',
             handler : toggleItalic
         },{
-            iconCls : 'icon-text_allcaps',
+            iconCls : 'icon-text_allcaps-16',
             defaults : { text : 'Literal'},
             tooltip : 'Literal',
             handler : toggleLiteral
         },'-',{
-            iconCls : 'icon-text_subscript',
+            iconCls : 'icon-text_subscript-16',
             defaults : { text : 'Subscript'},
             tooltip : 'Subscript',
             handler : toggleSubscript
         },{
-            iconCls : 'icon-text_superscript',
+            iconCls : 'icon-text_superscript-16',
             defaults : { text : 'Superscript'},
             tooltip : 'Superscript',
             handler : toggleSupscript
         },'-',{
-            iconCls : 'icon-text_lowercase',
+            iconCls : 'icon-text_lowercase-16',
             defaults : { text : 'Lower Case'},
             tooltip : 'Lower Case',
             handler : toLowerCase
         },{
-            iconCls : 'icon-text_uppercase',
+            iconCls : 'icon-text_uppercase-16',
             defaults : { text : 'Upper Case'},
             tooltip : 'Upper Case',
             handler : toUpperCase
         },'-',{
-            iconCls : 'icon-text_list_bullets',
+            iconCls : 'icon-text_list_bullets-16',
             defaults : { text : 'Bullet List'},
             tooltip : 'Bullet List',
             handler : toggleBulletList
         },{
-            iconCls : 'icon-text_list_numbers',
+            iconCls : 'icon-text_list_numbers-16',
             defaults : { text : 'Number List'},
             tooltip : 'Number List',
             handler : toggleNumberList
         },{
-            iconCls : 'icon-text_indent_remove',
+            iconCls : 'icon-text_indent_remove-16',
             defaults : { text : 'Decrease Indent'},
             tooltip : 'Decrease Indent',
             handler : decLineIndent
         },{
-            iconCls : 'icon-text_indent',
-            defaults : { text : 'Increase Indent'},
+            iconCls : 'icon-text_indent-16',
+            defaults : { text : 'Increase Indent-16'},
             tooltip : 'Increase Indent',
             handler : incLineIndent
         },'-',{
-            iconCls : 'icon-picture',
+            iconCls : 'icon-picture-16',
             defaults : { text : 'Figure'},
             tooltip : 'Figure',
             handler : insertFigure
         },{
-            iconCls : 'icon-image',
+            iconCls : 'icon-image-16',
             defaults : { text : 'Image'},
             tooltip : 'Image',
             handler : insertImage
         },{
-            iconCls : 'icon-link',
+            iconCls : 'icon-link-16',
             defaults : { text : 'Hyperlink'},
             tooltip : 'Hyperlink',
             handler : insertHyperlink
         },{
-            iconCls : 'icon-text_horizontalrule',
+            iconCls : 'icon-text_horizontalrule-16',
             defaults : { text : 'Footnote'},
             tooltip : 'Footnote',
             handler : insertFootnote
         },{
-            iconCls : 'icon-hrule',
+            iconCls : 'icon-hrule-16',
             defaults : { text : 'Horizontal Line'},
             tooltip : 'Horizontal Line',
             handler : insertHorizontalLine
         },'-',{
-            iconCls : 'icon-find',
+            iconCls : 'icon-find-16',
             defaults : { text : 'Find'},
             tooltip : 'Find',
             handler : find
         },{
-            iconCls : 'icon-document_page_next',
+            iconCls : 'icon-document_page_next-16',
             defaults : { text : 'Find Next'},
             tooltip : 'Find Next',
             handler : findNext
         },{
-            iconCls : 'icon-document_page_previous',
+            iconCls : 'icon-document_page_previous-16',
             defaults : { text : 'Find Previous'},
             tooltip : 'Find Previous',
             handler : findPrev
         },{
-            iconCls : 'icon-text_replace',
+            iconCls : 'icon-text_replace-16',
             defaults : { text : 'Replace All'},
             tooltip : 'Replace All',
             handler : replaceAll

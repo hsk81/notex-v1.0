@@ -2,7 +2,7 @@ var reportManagerUtil = function () {
 
     function prompt_message (title, message, callback, text, iconCls) {
         if (iconCls == undefined) {
-            iconCls = 'icon-document';
+            iconCls = 'icon-document-16';
         }
 
         Ext.MessageBox.show({
@@ -22,7 +22,7 @@ var reportManagerUtil = function () {
             title : "Error",
             msg : message,
             buttons: Ext.Msg.OK,
-            iconCls : 'icon-error'
+            iconCls : 'icon-error-16'
         });
     }
 

@@ -509,7 +509,7 @@ Ext.ux.form.CodeMirror.rest = function () {
 
         var win = new Ext.Window ({
             border: false,
-            iconCls: 'icon-picture_add',
+            iconCls: 'icon-picture_add-16',
             modal: true,
             resizable: false,
             title: 'Insert ' + (type == FIGURE_TYPE) ? 'Figure' : 'Image',
@@ -519,11 +519,11 @@ Ext.ux.form.CodeMirror.rest = function () {
 
             buttons: [{
                 text: 'Insert',
-                iconCls: 'icon-tick',
+                iconCls: 'icon-tick-16',
                 handler: insert
             },{
                 text: 'Cancel',
-                iconCls: 'icon-cross',
+                iconCls: 'icon-cross-16',
                 handler: cancel
             }]
         });
@@ -603,7 +603,7 @@ Ext.ux.form.CodeMirror.rest = function () {
         var win = new Ext.Window ({
 
             border: false,
-            iconCls: 'icon-link_add',
+            iconCls: 'icon-link_add-16',
             modal: true,
             resizable: false,
             title: 'Insert Hyperlink',
@@ -613,12 +613,12 @@ Ext.ux.form.CodeMirror.rest = function () {
 
             buttons: [{
                 text: 'Insert',
-                iconCls: 'icon-tick',
+                iconCls: 'icon-tick-16',
                 handler: insert,
                 scope: this
             },{
                 text: 'Cancel',
-                iconCls: 'icon-cross',
+                iconCls: 'icon-cross-16',
                 handler: cancel,
                 scope: this
             }]

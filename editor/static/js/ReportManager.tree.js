@@ -156,7 +156,7 @@ var reportManagerTree = function () {
             text : 'Root',
             id : 'LMRHE33POQRCYIC3LVOQ====', //[u'root', []]
             cls : 'folder',
-            iconCls : 'icon-folder',
+            iconCls : 'icon-folder-16',
             expanded : true
         },
 
@@ -180,19 +180,19 @@ var reportManagerTree = function () {
         },
 
         isReport : function (node) {
-            return isOfIconClass (node, 'icon-report');
+            return isOfIconClass (node, 'icon-report-16');
         },
 
         isFolder : function (node) {
-            return isOfIconClass (node, 'icon-folder');
+            return isOfIconClass (node, 'icon-folder-16');
         },
 
         isText : function (node) {
-            return isOfIconClass (node, 'icon-page');
+            return isOfIconClass (node, 'icon-page-16');
         },
 
         isImage : function (node) {
-            return isOfIconClass (node, 'icon-picture');
+            return isOfIconClass (node, 'icon-picture-16');
         },
 
         isLeaf : function (node) {

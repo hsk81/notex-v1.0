@@ -4,7 +4,7 @@ var dialogOpenFile = new Ext.Window ({
     id : 'dialog.openFile.id',
 
     border : false,
-    iconCls : 'icon-add',
+    iconCls : 'icon-add-16',
     modal : true,
     resizable : false,
     title : 'Open file',
@@ -31,7 +31,7 @@ var dialogOpenFile = new Ext.Window ({
 
     buttons : [{
         text : 'Open',
-        iconCls : 'icon-tick',
+        iconCls : 'icon-tick-16',
         handler : function (btn) {
 
             var cmp = Ext.getCmp("inputOpenFileId");
@@ -52,7 +52,7 @@ var dialogOpenFile = new Ext.Window ({
         }
     },{
         text : 'Cancel',
-        iconCls : 'icon-cross',
+        iconCls : 'icon-cross-16',
         handler : function (btn) {
             dialogOpenFile.hide ();
             dialogOpenFile.fireEvent ('cancelSuccess');
