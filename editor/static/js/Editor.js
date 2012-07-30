@@ -347,14 +347,14 @@ var editor = function () {
 
             beforeadd: function (self, component, index) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('editor.splash.id');
+                    var splash = Ext.get ('splash');
                     if (splash) splash.setDisplayed (false);
                 }
             },
 
             remove: function (self, component) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('editor.splash.id');
+                    var splash = Ext.get ('splash');
                     if (splash) splash.setDisplayed (true);
                 }
             }
