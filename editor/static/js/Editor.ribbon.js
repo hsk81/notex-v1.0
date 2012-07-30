@@ -58,13 +58,13 @@ var editorRibbon = function () {
                 plain : true,
 
                 items : [{
-                    iconCls : 'icon-report-16',
+                    iconCls : 'icon-report-16-sprite',
                     text : 'Report',
                     handler : function (button, event) {
                         Ext.getCmp ('reportManager.id').fireEvent ('addReport')
                     }
                 },{
-                    iconCls : 'icon-folder-16',
+                    iconCls : 'icon-folder-16-sprite',
                     text : 'Folder',
                     handler : function (button, event) {
                         Ext.getCmp ('reportManager.id').fireEvent ('addFolder')
