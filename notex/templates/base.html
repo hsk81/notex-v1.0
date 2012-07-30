@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% spaceless %}<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 {% block application-css %}{% endblock %}
 
@@ -10,6 +8,5 @@
 <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-6838945-8"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>
 </head>
 
-<body>{% block application-js %}
-{% endblock %}</body>
-</html>
+<body>{% block application-js %}{% endblock %}</body>
+</html>{% endspaceless %}
