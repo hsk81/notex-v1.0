@@ -1,3 +1,7 @@
+.CodeMirror {
+    height: 100%;
+}
+
 .CodeMirror .CodeMirror-scroll {
     height: 100%;
 }
