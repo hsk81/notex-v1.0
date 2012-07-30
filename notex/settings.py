@@ -229,13 +229,14 @@ LOGGING = {
 ################################################################################
 
 CSSMIN_INPUT = [
-    'static/css/reset.css',
+    'static/reset.css',
+    'static/notex.css',
+    'static/ico/fatcow/icons-16.css',
     'static/app/editor/css/CodeMirror.css',
     'static/app/editor/css/CodeMirror.yaml.css',
     'static/app/editor/css/CodeMirror.rest.css',
     'static/lib/codemirror/lib/codemirror.css',
     'static/lib/codemirror/lib/util/dialog.css',
-    'static/ico/fatcow/icons-16.css',
 ]
 
 CSSMIN_OUTPUT = 'static/notex.min.css'

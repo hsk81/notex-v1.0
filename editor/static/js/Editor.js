@@ -295,82 +295,28 @@ var editor = function () {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function htmlSplash () {
+    function splash (title, subtitle) {
 
         var result = [
-            //---------------------------------------------------------------//
-            '<div  id="editor.splash.id" style="padding: 5% 0;">',
-            '<div style="padding: 10% 0;">',
-            //---------------------------------------------------------------//
-            '<div style="',
-                    'text-shadow: #888888 -1.25px -0.75px 2px;',
-                    'text-align:center;',
-                    'font-weight:bold;',
-                    'font-variant:small-caps;',
-                    'font-size:10.0em;',
-                    'font-family:sans serif;',
-                    'color:#f0f0f0;', '">',
-            'NѻTeξ',
-            '</div>',
-            //---------------------------------------------------------------//
-            '<div style="margin:auto; width:66%; height:32px;">',
-            '<hr color="#888888">',
-            '<div style="',
-                'padding:0;',
-                'text-align:center;',
-                'font-weight:bold;',
-                'font-variant:normal;',
-                'font-size:1.0em;',
-                'color:#888888;', '">',
-            //---------------------------------------------------------------//
-            '<a class="icon-information-16"',
-                'style="',
-                'float:left; width:16px;',
-                'position:relative; top:-33px;',
-                'background-repeat:no-repeat;',
-                'background-position:center;',
-                'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="../about/">_</a>',
-            //---------------------------------------------------------------//
-            '<div style="float:left; position:relative; left:-16px;">',
-                'A re-structured text editor',
-            '</div>',
-            //---------------------------------------------------------------//
-            '<a class="icon-friendfeed-16"',
-                'style="',
-                'float:right; width:16px;',
-                'position:relative; top:-4px;',
-                'background-repeat:no-repeat;',
-                'background-position:center;',
-                'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="http://facebook.com">_</a>',
-            '<a class="icon-twitter_1-16"',
-                'style="',
-                'float:right; width:16px;',
-                'position:relative; top:-4px;',
-                'background-repeat:no-repeat;',
-                'background-position:center;',
-                'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="http://twitter.com">_</a>',
-            '<a class="icon-blogger-16"',
-                'style="',
-                'float:right; width:16px;',
-                'position:relative; top:-4px; left:-1px;',
-                'background-repeat:no-repeat;',
-                'background-position:center;',
-                'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="http://blogger.com">_</a>',
-            '<a class="icon-youtube-16"',
-                'style="',
-                'float:right; width:16px;',
-                'position:relative; top:-4px; left:0px;',
-                'background-repeat:no-repeat;',
-                'background-position:center;',
-                'text-decoration:none; color:#ffffff"',
-                'target="_blank" href="http://youtube.com">_</a>',
-            //---------------------------------------------------------------//
-            '</div>', '</div>', '</div>'
-            //---------------------------------------------------------------//
+            '<div id="splash">',
+                '<div class="inner">',
+                    '<div class="title">', title, '</div>',
+                    '<div class="sub-title">',
+                        '<hr>',
+                        '<a class="icon-information-16 link-icon information"',
+                        'target="_blank" href="/about/">_</a>',
+                        '<div class="text">', subtitle, '</div>',
+                        '<a class="icon-friendfeed-16 link-icon facebook"',
+                        'target="_blank" href="http://facebook.com">_</a>',
+                        '<a class="icon-twitter_1-16 link-icon twitter"',
+                        'target="_blank" href="http://twitter.com">_</a>',
+                        '<a class="icon-blogger-16 link-icon blogger"',
+                        'target="_blank" href="http://blogger.com">_</a>',
+                        '<a class="icon-youtube-16 link-icon youtube"',
+                        'target="_blank" href="http://youtube.com">_</a>',
+                    '</div>',
+                '</div>',
+            '</div>'
         ];
 
         return result.join ('\n');
@@ -390,7 +336,7 @@ var editor = function () {
 
         tbar : editorRibbon,
 
-        html: htmlSplash (),
+        html: splash ('NѻTeξ', 'A re-structured text editor'),
 
         listeners : {
             beforetabchange : beforeTabChange,

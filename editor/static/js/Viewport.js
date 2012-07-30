@@ -22,6 +22,13 @@ var viewport = function () {
             hidden : false,
             layout : 'fit',
             items : [reportManager]
-        }]
+        }],
+
+        listeners: {
+            afterlayout: function () {
+                var ld = Ext.get ('load-progress');
+                if (ld) ld.remove ();
+            }
+        }
     });
 }();
