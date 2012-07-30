@@ -229,18 +229,18 @@ LOGGING = {
 ################################################################################
 
 CSSMIN_INPUT = [
-    'static/reset.css',
-    'static/notex.css',
-    'static/ico/fatcow/icons-16.css',
-    'static/app/editor/css/CodeMirror.css',
-    'static/app/editor/css/CodeMirror.yaml.css',
-    'static/app/editor/css/CodeMirror.rest.css',
+    'static/css/reset.css',
+    'static/css/notex.css',
+    'static/css/icons-16.css',
+    'static/css/sprite.css',
     'static/lib/codemirror/lib/codemirror.css',
     'static/lib/codemirror/lib/util/dialog.css',
-    'static/sprite.css',
+    'static/app/editor/css/CodeMirror.yaml.css',
+    'static/app/editor/css/CodeMirror.rest.css',
+    'static/app/editor/css/CodeMirror.css',
 ]
 
-CSSMIN_OUTPUT = 'static/notex.min.css'
+CSSMIN_OUTPUT = 'static/css/notex.min.css'
 
 ################################################################################
 ################################################################################
@@ -318,7 +318,7 @@ JSMIN_INPUT = [
     'static/app/editor/js/Viewport.js',
 ]
 
-JSMIN_OUTPUT = 'static/notex.min.js'
+JSMIN_OUTPUT = 'static/js/notex.min.js'
 
 ################################################################################
 ################################################################################
