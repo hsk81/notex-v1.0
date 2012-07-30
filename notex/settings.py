@@ -294,6 +294,7 @@ JSMIN_INPUT = [
     'static/lib/extjs/ext-all.js',
     'static/lib/extjs/examples/ux/statusbar/StatusBar.js',
 
+    'static/app/editor/js/Math.uuid.js',
     'static/app/editor/js/Dialog.openFile.js',
     'static/app/editor/js/Dialog.js',
     'static/app/editor/js/CodeMirror.js',
@@ -310,6 +311,9 @@ JSMIN_INPUT = [
     'static/app/editor/js/Editor.tbar.js',
     'static/app/editor/js/Editor.js',
     'static/app/editor/js/StatusBar.js',
+    'static/app/editor/js/Ajax.csrf.js',
+    'static/app/editor/js/KeyMap.js',
+    'static/app/editor/js/Viewport.js',
 ]
 
 JSMIN_OUTPUT = 'static/notex.min.js'

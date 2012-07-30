@@ -1,29 +1,15 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}ico/fatcow/16x16/icons.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/resources/css/ext-all.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css" />
-
-{% block application-css %}
-{% endblock %}
+{% block application-css %}{% endblock %}
 
 <title>NoTex</title>
 <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico">
 
-<script type="text/javascript">
-var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-6838945-8"]);_gaq.push(["_trackPageview"]);
-(function(){var ga=document.createElement("script");ga.type="text/javascript";ga.async=true;
-    ga.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";
-    var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga,s)})();
-</script>
+<script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-6838945-8"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();</script>
 </head>
 
-<body>
-{% block application-js %}
-{% endblock %}
-{% block application-main %}
-{% endblock %}
-</body>
+<body>{% block application-js %}
+{% endblock %}</body>
 </html>
