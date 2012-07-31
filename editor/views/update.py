@@ -50,6 +50,12 @@ def update (request, create_leaf = None):
     if type == 'leaf':
 
         leaf = LEAF.objects.get (pk = ids[1])
+
+        if os.path.islink (leaf.file):
+            with open (leaf.file, 'r') as uuid_file: buf = uuid_file.read ()
+            os.remove (leaf.file)
+            with open (leaf.file, 'w') as uuid_file: uuid_file.write (buf)
+
         with open (leaf.file, 'w') as uuid_file:
 
             uuid_file.write (request.POST['data'].encode ("utf-8"))
