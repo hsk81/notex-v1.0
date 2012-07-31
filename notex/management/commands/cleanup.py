@@ -11,6 +11,10 @@ from optparse import *
 from datetime import *
 from editor.models import ROOT
 
+##
+## INFO: Required for session_engine = eval (settings.SESSION_ENGINE)
+##
+
 import django.contrib.sessions.backends.db
 import django.contrib.sessions.backends.cache
 import django.contrib.sessions.backends.file
