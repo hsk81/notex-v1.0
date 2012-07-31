@@ -184,19 +184,19 @@ class Command (BaseCommand):
         for sid in os.listdir (settings.SESSION_FILE_PATH):
 
             if not re.match (regex, sid): continue
-            prefix, uuid = sid.split ('.')
+            uuid = sid.replace (settings.SESSION_COOKIE_NAME, '')
             session = session_engine.SessionStore (session_key=uuid)
 
             if session.has_key ('timestamp') and \
                beg_datetime <= session['timestamp'] < end_datetime:
 
-                logger.info ('processing session %s' % sid)
+                logger.info ('processing session %s' % uuid)
                 logger.debug ('session is expired')
                 Command.cleanup (session, skip_flags, dry_run)
 
             elif not session.has_key ('timestamp') and clean_admin:
 
-                logger.info ('processing session %s' % sid)
+                logger.info ('processing session %s' % uuid)
                 logger.debug ('no timestamp, assume admin session')
                 Command.cleanup (session, skip_flags, dry_run)
 

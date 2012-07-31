@@ -131,7 +131,7 @@ class ViewTest (TestCase):
         resp = self.client.get ('/editor/?silent')
         self.assertEqual (resp.status_code, 200)
 
-        sid = resp.cookies['sid.']
+        sid = resp.cookies[settings.SESSION_COOKIE_NAME]
         self.assertEqual (sid['path'], '/')
         self.assertIsNotNone (re.match ('^[0-f]{32}$', sid.value))
 
