@@ -62,7 +62,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
             'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
         http_response['Content-Length'] = size
 
-        temp.seek (0); os.remove (object_uri) ## TODO: os.unlink?
+        temp.seek (0); os.remove (object_uri)
 
     else:
 
