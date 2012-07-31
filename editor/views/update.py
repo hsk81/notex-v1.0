@@ -16,6 +16,7 @@ import editor.views
 import os.path
 import logging
 import base64
+import shutil
 import json
 import os
 
@@ -48,16 +49,14 @@ def update (request, create_leaf = None):
 
     (type, ids) = json.loads (base64.b32decode (request.POST['leafId']))
     if type == 'leaf':
-
         leaf = LEAF.objects.get (pk = ids[1])
 
         if os.path.islink (leaf.file):
-            with open (leaf.file, 'r') as uuid_file: buf = uuid_file.read ()
+            source = os.readlink (leaf.file)
             os.remove (leaf.file)
-            with open (leaf.file, 'w') as uuid_file: uuid_file.write (buf)
+            shutil.copy (source, leaf.file)
 
         with open (leaf.file, 'w') as uuid_file:
-
             uuid_file.write (request.POST['data'].encode ("utf-8"))
             leaf.name = request.POST['name']
             leaf.save ()
