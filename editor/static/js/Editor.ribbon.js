@@ -114,7 +114,7 @@ var editorRibbon = function () {
             text: 'Export',
             iconCls: 'icon-report_go-16',
             iconAlign: 'left',
-            tooltip : '<b>Export</b><br/>Save selected report (to <i>local</i> storage)',
+            tooltip : '<b>Export Text & Images</b><br/>Save selected report (to <i>local</i> storage)',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportText')
             }
@@ -131,6 +131,7 @@ var editorRibbon = function () {
             text : 'LaTex',
             iconCls : 'icon-page_white_code-16',
             iconAlign: 'left',
+            tooltip : '<b>Export LaTex</b><br/>Convert selected report to LaTex',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
             }
@@ -139,6 +140,7 @@ var editorRibbon = function () {
             text : 'PDF',
             iconCls : 'icon-page_white_acrobat-16',
             iconAlign: 'left',
+            tooltip : '<b>Export PDF</b><br/>Convert selected report to PDF',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportPdf')
             }
@@ -147,6 +149,7 @@ var editorRibbon = function () {
             text : 'HTML',
             iconCls : 'icon-page_white_world-16',
             iconAlign: 'left',
+            tooltip : '<b>Export</b><br/>Convert selected report to HTML',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
             }
