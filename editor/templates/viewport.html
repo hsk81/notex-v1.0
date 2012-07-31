@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load b64 %}
+{% load staticfiles %}{% load b64 %}
 
 {% block application-css %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/resources/css/ext-all.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/extjs/examples/ux/statusbar/css/statusbar.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/notex.min.css"/>
+<link rel="stylesheet" type="text/css" href="{% static "lib/extjs/resources/css/ext-all.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "lib/extjs/examples/ux/statusbar/css/statusbar.css" %}"/>
+<link rel="stylesheet" type="text/css" href="{% static "css/notex.min.css" %}"/>
 {% endblock %}
 
 {% block application-js %}
@@ -14,7 +14,7 @@
 
 <script type="text/javascript">var urls={createProject:Base64.decode({% url editor:create-project as uri %}'{{ uri|b64_encode }}'),createFolder:Base64.decode({% url editor:create-folder as uri %}'{{ uri|b64_encode }}'),createText:Base64.decode({% url editor:create-text as uri %}'{{ uri|b64_encode }}'),createImage:Base64.decode({% url editor:create-image as uri %}'{{ uri|b64_encode }}'),read:Base64.decode({% url editor:read as uri %}'{{ uri|b64_encode }}'),updateText:Base64.decode({% url editor:update-text as uri %}'{{ uri|b64_encode }}'),updateImage:Base64.decode({% url editor:update-image as uri %}'{{ uri|b64_encode }}'),decreaseRank:Base64.decode({% url editor:decrease-rank as uri %}'{{ uri|b64_encode }}'),increaseRank:Base64.decode({% url editor:increase-rank as uri %}'{{ uri|b64_encode }}'),rename:Base64.decode({% url editor:rename as uri %}'{{ uri|b64_encode }}'),del:Base64.decode({% url editor:delete as uri %}'{{ uri|b64_encode }}'),exportReport:Base64.decode({% url editor:export-report "=" as uri %}'{{ uri|b64_encode }}'),exportText:Base64.decode({% url editor:export-text "=" as uri %}'{{ uri|b64_encode }}'),exportLatex:Base64.decode({% url editor:export-latex "=" as uri %}'{{ uri|b64_encode }}'),exportPdf:Base64.decode({% url editor:export-pdf "=" as uri %}'{{ uri|b64_encode }}'),exportHtml:Base64.decode({% url editor:export-html "=" as uri %}'{{ uri|b64_encode }}'),importReport:Base64.decode({% url editor:import-file "=" as uri %}'{{ uri|b64_encode }}')}</script>
 
-<script type="text/javascript" src="{{ STATIC_URL }}js/notex.min.js"></script>
+<script type="text/javascript" src="{% static "js/notex.min.js" %}"></script>
 
-<script type="text/javascript">Ext.BLANK_IMAGE_URL="{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif";reportManager.csrftoken="{% csrf_token %}";Ext.onReady (function () { Ext.QuickTips.init (); viewport.show (); });</script>
+<script type="text/javascript">Ext.BLANK_IMAGE_URL = "{% static "lib/extjs/resources/images/default/s.gif" %}";reportManager.csrftoken = "{% csrf_token %}";Ext.onReady(function () { Ext.QuickTips.init(); viewport.show();});</script>
 {% endblock %}

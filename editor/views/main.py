@@ -5,7 +5,7 @@ __date__ ="$Mar 27, 2012 1:02:55 PM$"
 ################################################################################
 
 from django.conf import settings
-from django.views.generic.simple import direct_to_template
+from django.shortcuts import render_to_response
 
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
@@ -40,12 +40,7 @@ def main (request):
         print >> sys.stderr, "Session ID: %s" % request.session.session_key
         print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
 
-    return direct_to_template (
-        request, template ='viewport.html', extra_context = {
-            'sid': request.session.session_key,
-            'timestamp': request.session['timestamp']
-        }
-    )
+    return render_to_response ('viewport.html')
 
 ################################################################################
 
