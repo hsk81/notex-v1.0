@@ -1,3 +1,5 @@
+import shutil
+
 __author__ = "hsk81"
 __date__ = "$Mar 27, 2012 1:12:57 PM$"
 
@@ -112,17 +114,17 @@ class ViewTest (TestCase):
         path_to_data = os.path.join (settings.MEDIA_DATA,
             self.client.session.session_key)
         if os.path.exists (path_to_data):
-            subprocess.check_call (['rm', path_to_data, '-rf'])
+            shutil.rmtree (path_to_data, ignore_errors=True)
 
         path_to_temp = os.path.join (settings.MEDIA_TEMP,
             self.client.session.session_key)
         if os.path.exists (path_to_temp):
-            subprocess.check_call (['rm', path_to_temp, '-rf'])
+            shutil.rmtree (path_to_temp, ignore_errors=True)
 
         path_to_usid = os.path.join (settings.SESSION_FILE_PATH,
             settings.SESSION_COOKIE_NAME + self.client.session.session_key)
         if os.path.exists (path_to_usid):
-            subprocess.check_call (['rm', path_to_usid, '-f'])
+            os.remove (path_to_usid)
 
     ###########################################################################
     ###########################################################################
