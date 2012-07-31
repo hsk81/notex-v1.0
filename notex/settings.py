@@ -230,11 +230,12 @@ LOGGING = {
 
 CSSMIN_INPUT = [
     'static/css/reset.css',
-    'static/css/notex.css',
+    'static/css/base.css',
     'static/css/icons-16.css',
     'static/css/sprite.css',
     'static/lib/codemirror/lib/codemirror.css',
     'static/lib/codemirror/lib/util/dialog.css',
+    'static/app/editor/css/Editor.css',
     'static/app/editor/css/CodeMirror.yaml.css',
     'static/app/editor/css/CodeMirror.rest.css',
     'static/app/editor/css/CodeMirror.css',
