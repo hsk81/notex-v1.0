@@ -60,115 +60,100 @@ def init_prj01 (root, dat_path, prj_rank=0):
     prj_name = 'Quickstart'
     prj_path = 'quickstart'
 
-    prj, rank = NODE.objects.create (
-        type=NODE_TYPE.objects.get (_code='project'),
-        root=root,
-        name=prj_name,
-        rank=prj_rank
-    ), 0
+    node, _ = NodeCreator (root).do (prj_rank, 'project', prj_name)
+    creator = LeafCreator (root, node, os.path.join (dat_path,prj_path))
 
-    creator = LeafCreator (
-        root.usid, prj, os.path.join (dat_path, prj_path))
-
-    rank = creator.do (rank, 'text', 'options.yml', 'options.cfg')
-    rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
-    rank = creator.do (rank, 'image', 'quill.b64', 'quill.jpg')
+    leaf, rank = creator.do (0, 'text', 'options.yml', 'options.cfg')
+    leaf, rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
+    leaf, rank = creator.do (rank, 'image', 'quill.b64', 'quill.jpg')
 
 
 def init_prj02 (root, dat_path, prj_rank=0):
     prj_name = 'Simple Article'
     prj_path = 'simple-article'
 
-    prj, rank = NODE.objects.create (
-        type=NODE_TYPE.objects.get (_code='project'),
-        root=root,
-        name=prj_name,
-        rank=prj_rank
-    ), 0
+    node, _ = NodeCreator (root).do (prj_rank, 'project', prj_name)
+    creator = LeafCreator (root, node, os.path.join (dat_path, prj_path))
 
-    creator = LeafCreator (
-        root.usid, prj, os.path.join (dat_path, prj_path))
-
-    rank = creator.do (rank, 'text', 'options.yml', 'options.cfg')
-    rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
-    rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
-    rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
-    rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
-    rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
+    leaf, rank = creator.do (0, 'text', 'options.yml', 'options.cfg')
+    leaf, rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
+    leaf, rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
+    leaf, rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
+    leaf, rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
+    leaf, rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
 
 
 def init_prj03 (root, dat_path, prj_rank=0):
     prj_name = 'Complex Article'
     prj_path = 'complex-article'
 
-    prj, rank = NODE.objects.create (
-        type=NODE_TYPE.objects.get (_code='project'),
-        root=root,
-        name=prj_name,
-        rank=prj_rank
-    ), 0
+    node, _ = NodeCreator (root).do (prj_rank, 'project', prj_name)
+    creator = LeafCreator (root, node, os.path.join (dat_path, prj_path))
 
-    creator = LeafCreator (
-        root.usid, prj, os.path.join (dat_path, prj_path))
-
-    rank = creator.do (rank, 'text', 'options.yml', 'options.cfg')
-    rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
-    rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
-    rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
-    rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
-    rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
+    leaf, rank = creator.do (0, 'text', 'options.yml', 'options.cfg')
+    leaf, rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
+    leaf, rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
+    leaf, rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
+    leaf, rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
+    leaf, rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
 
 def init_prj04 (root, dat_path, prj_rank=0):
     prj_name = 'Report'
     prj_path = 'report'
 
-    prj, rank = NODE.objects.create (
-        type=NODE_TYPE.objects.get (_code='project'),
-        root=root,
-        name=prj_name,
-        rank=prj_rank
-    ), 0
+    node, _ = NodeCreator (root).do (prj_rank, 'project', prj_name)
+    creator = LeafCreator (root, node, os.path.join (dat_path, prj_path))
 
-    creator = LeafCreator (
-        root.usid, prj, os.path.join (dat_path, prj_path))
+    leaf, rank = creator.do (0, 'text', 'options.yml', 'options.cfg')
+    leaf, rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
+    leaf, rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
 
-    rank = creator.do (rank, 'text', 'options.yml', 'options.cfg')
-    rank = creator.do (rank, 'text', 'content.rst', 'content.txt')
-    rank = creator.do (rank, 'text', 'math.rst', 'math.txt')
-
-    for idx in range (9): rank = creator.do (\
+    for idx in range (9): leaf, rank = creator.do (
         rank, 'text', 'chapter-%02d.rst' % idx, 'chapter-%02d.txt' % idx)
 
-    rank = creator.do (rank, 'text', 'footnotes.rst', 'footnotes.txt')
-    rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
-    rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
-    rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
+    leaf, rank = creator.do (rank, 'text', 'footnotes.rst', 'footnotes.txt')
+    leaf, rank = creator.do (rank, 'image', 'emcc.b64', 'emcc.jpg')
+    leaf, rank = creator.do (rank, 'image', 'tm49.b64', 'tm49.jpg')
+    leaf, rank = creator.do (rank, 'image', 'wiki.b64', 'wiki.jpg')
 
 ################################################################################
 ################################################################################
+
+class NodeCreator:
+    def __init__ (self, root):
+        self.root = root
+
+    def do (self, rank, code, node_name):
+
+        return NODE.objects.create (
+            type=NODE_TYPE.objects.get (_code=code),
+            root=self.root,
+            name=node_name,
+            rank=rank
+        ), rank + 1
 
 class LeafCreator:
-    def __init__ (self, usid, node, path):
-        self.usid = usid
+    def __init__ (self, root, node, path):
+        self.root = root
         self.node = node
         self.path = path
 
-    def do (self, rank, code, file_name, name=None):
+    def do (self, rank, code, leaf_name, name=None):
 
-        source = os.path.join (self.path, file_name)
-        link_name = self.get_uuid_path (self.usid)
+        source = os.path.join (self.path, leaf_name)
+        link_name = self.get_uuid_path (self.root.usid)
         os.symlink (source, link_name)
 
-        LEAF.objects.create (
+        return LEAF.objects.create (
             type=LEAF_TYPE.objects.get (_code=code),
             node=self.node,
-            name=name if name else file_name,
+            name=name if name else leaf_name,
             file=link_name,
-            rank=rank)
-
-        return rank + 1
+            rank=rank
+        ), rank + 1
 
     def get_uuid_path (self, session_key):
+
         session_path = os.path.join (settings.MEDIA_DATA, session_key)
         if not os.path.exists (session_path): os.mkdir (session_path)
 
