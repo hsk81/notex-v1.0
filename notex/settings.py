@@ -71,13 +71,13 @@ CACHES = {
     'default' : {
         'BACKEND' : 'django.core.cache.backends.memcached.PyLibMCCache',
         'LOCATION' : '127.0.0.1:11211',
-        'TIMEOUT' : 240, #[s]
+        'TIMEOUT' : 240, ## secs: staleness
     }
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
-SESSION_COOKIE_AGE = 3 * 24 * 60 * 60 ## secs: 3 days
+SESSION_COOKIE_AGE = 3 * 24 * 3600 ## secs: 3d
 SESSION_COOKIE_NAME = 'sid'
 SESSION_COOKIE_SECURE = False
 

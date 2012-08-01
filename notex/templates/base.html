@@ -1,13 +1,25 @@
-{% spaceless %}{% load staticfiles %}<!DOCTYPE html><html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-{% block application-css %}{% endblock %}
-
-<title>NoTex</title>
-<link rel="shortcut icon" href="{% static "favicon.ico" %}">
-<script type="text/javascript">{% include "analytics.js" %}</script>
-</head>
-
-<body>
-<div id="load-progress"><span class="animation"/></div>
-{% block application-js %}{% endblock %}
-</body></html>{% endspaceless %}
+{% spaceless %}
+    {% load cache %}
+    {% load staticfiles %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        {% cache 604800 cache-head %}
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            {% block application-css %}
+            {% endblock %}
+            <title>NoTex</title>
+            <link rel="shortcut icon" href="{% static "favicon.ico" %}">
+            <script type="text/javascript">{% include "analytics.js" %}</script>
+        {% endcache %}
+        <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
+    </head>
+    <body>
+    {% cache 604800 cache-body %}
+        <div id="load-progress"><span class="animation"/></div>
+        {% block application-js %}
+        {% endblock %}
+    {% endcache %}
+    </body>
+    </html>
+{% endspaceless %}

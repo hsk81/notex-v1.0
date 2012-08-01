@@ -2,15 +2,23 @@
 {% load staticfiles %}
 
 {% block application-css %}
-<link rel="stylesheet" type="text/css" href="{% static "lib/extjs/resources/css/ext-all.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "lib/extjs/examples/ux/statusbar/css/statusbar.css" %}"/>
-<link rel="stylesheet" type="text/css" href="{% static "css/notex.min.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static "lib/extjs/resources/css/ext-all.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static "lib/extjs/examples/ux/statusbar/css/statusbar.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static "css/notex.min.css" %}"/>
 {% endblock %}
 
 {% block application-js %}
-<script type="text/javascript">{% include "util.js" %}</script>
-<script type="text/javascript">{% include "base-64.js" %}</script>
-<script type="text/javascript">{% include "urls.js" %}</script>
-<script type="text/javascript" src="{% static "js/notex.min.js" %}"></script>
-<script type="text/javascript">{% include "main.js" %}</script>
+    <script type="text/javascript">{% include "util.js" %}</script>
+    <script type="text/javascript">{% include "base-64.js" %}</script>
+    <script type="text/javascript">{% include "urls.js" %}</script>
+    <script type="text/javascript"
+            src="{% static "js/notex.min.js" %}"></script>
+
+    <script type="text/javascript">
+    Ext.BLANK_IMAGE_URL ="{% static "lib/extjs/resources/images/default/s.gif" %}";
+    Ext.onReady(function () {Ext.QuickTips.init();viewport.show();});
+    </script>
 {% endblock %}
