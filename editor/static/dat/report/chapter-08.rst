@@ -132,7 +132,7 @@ This situation changed dramatically in 1932 with the discovery of the :index:`ne
 
 After the very public demonstration of huge energies released from nuclear fission after the atomic bombings of :index:`Hiroshima` and :index:`Nagasaki` in 1945, the equation |E=mc²| became directly linked in the public eye with the power and peril of nuclear weapons. The equation was featured as early as page 2 of the :index:`Smyth Report`, the official 1945 release by the US government on the development of the atomic bomb, and by 1946 the equation was linked closely enough with Einstein's work that the cover of :index:`Time magazine` prominently featured a picture of Einstein next to an image of a mushroom cloud emblazoned with the equation. [#f57]_ Einstein himself had only a minor role in the :index:`Manhattan Project`: he had cosigned a letter to the U.S. President in 1939 urging funding for research into atomic energy, warning that an atomic bomb was theoretically possible. The letter persuaded :index:`Roosevelt` to devote a significant portion of the wartime budget to atomic research. Without a security clearance, Einstein's only scientific contribution was an analysis of an isotope separation method in theoretical terms. It was inconsequential, on account of Einstein not being given sufficient information (for security reasons) to fully work on the problem. [#f58]_
 
-.. figure:: tm'49.jpg
+.. figure:: tm49.jpg
    :align: center
    :scale: 100 %
 
