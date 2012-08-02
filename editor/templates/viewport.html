@@ -2,12 +2,9 @@
 {% load staticfiles %}
 
 {% block application-css %}
-    <link rel="stylesheet" type="text/css"
-          href="{% static "lib/extjs/resources/css/ext-all.css" %}"/>
-    <link rel="stylesheet" type="text/css"
-          href="{% static "lib/extjs/examples/ux/statusbar/css/statusbar.css" %}"/>
-    <link rel="stylesheet" type="text/css"
-          href="{% static "css/notex.min.css" %}"/>
+    <link rel="stylesheet" href="{% static "lib/extjs/resources/css/ext-all.css" %}"/>
+    <link rel="stylesheet" href="{% static "lib/extjs/examples/ux/statusbar/css/statusbar.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/notex.min.css" %}"/>
 {% endblock %}
 
 {% block application-js %}
