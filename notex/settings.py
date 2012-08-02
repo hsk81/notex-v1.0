@@ -21,9 +21,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'notex',
+        'USER': 'notex'
+    },
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
-    }
+    },
 }
 
 TIME_ZONE = 'Europe/Zurich'
