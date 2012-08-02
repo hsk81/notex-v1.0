@@ -23,7 +23,7 @@ import os
 ################################################################################
 
 def main (request):
-    if request.session.has_key ('timestamp'):
+    if request.session.has_key ('timestamp') and 'refresh' not in request.GET:
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
 
@@ -46,6 +46,9 @@ def main (request):
 def init (request):
     type = ROOT_TYPE.objects.get (_code='root')
     usid = request.session.session_key
+
+    roots = ROOT.objects.filter (_type=type, _usid=usid)
+    if roots.count () > 0: roots.delete ()
     root = ROOT.objects.create (type=type, usid=usid)
 
     dat_path = os.path.join (settings.STATIC_ROOT, 'app', 'editor', 'dat')
