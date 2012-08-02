@@ -5,12 +5,15 @@
     <html>
     <head>
         {% cache 604800 cache-head %}
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <meta charset="utf-8">
             {% block application-css %}
             {% endblock %}
             <title>NoTex</title>
             <link rel="shortcut icon" href="{% static "favicon.ico" %}">
             <script type="text/javascript">{% include "analytics.js" %}</script>
+            <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
         {% endcache %}
         <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
     </head>
