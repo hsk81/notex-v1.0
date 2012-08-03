@@ -14,8 +14,4 @@ pip install numpy
 pip install pyyaml
 pip install flup
 
-if [ ! -f notex/*.db ] ; then
-    ./manage.py syncdb --noinput
-fi
-
 deactivate
