@@ -8,6 +8,7 @@ pip install ipython
 pip install django
 pip install django-jsmin
 pip install django-cssmin
+pip install psycopg2
 pip install pylibmc
 pip install numpy
 pip install pyyaml
