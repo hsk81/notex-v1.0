@@ -312,29 +312,33 @@ var reportManager = function () {
             return;
         }
 
-        if (skipMask == undefined || skipMask != true) {
-            if (tab.el && tab.el.mask) {
-                tab.el.mask ('Please wait', 'x-mask-loading')
-            }
-        }
-
         var tree = Ext.getCmp ('reportManager.tree.id')
         var node = tree.getNodeById (tab.id)
 
-        var url = (tree.isImage (node))
-            ? urls.updateImage
-            : urls.updateText
-        var data = (tab.getData)
-            ? tab.getData ()
-            : node.attributes['data']
+        if (!tree.isImage (node)) {
+            var cm = tab.getEditor ().codeEditor;
+            if (cm.dirty) {
+                if (skipMask == undefined || skipMask != true) {
+                    if (tab.el && tab.el.mask) {
+                        tab.el.mask ('Please wait', 'x-mask-loading')
+                    }
+                }
 
-        reportManager.crud.update ({
-            leafId : node.id,
-            nodeId : node.parentNode.id,
-            name : node.text,
-            data : data ,
-            rank : node.parentNode.indexOf (node)
-        }, url);
+                var data = (tab.getData)
+                    ? tab.getData ()
+                    : node.attributes['data']
+
+                reportManager.crud.update ({
+                    leafId : node.id,
+                    nodeId : node.parentNode.id,
+                    name : node.text,
+                    data : data ,
+                    rank : node.parentNode.indexOf (node)
+                }, urls.updateText);
+
+                cm.dirty = false;
+            }
+        }
     }
 
     // #########################################################################

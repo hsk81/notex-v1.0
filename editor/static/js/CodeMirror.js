@@ -37,7 +37,10 @@ Ext.ux.form.CodeMirror = function () {
             lineNumbers: true,
             matchBrackets: true,
             mode: this.initialConfig.mode,
-            onCursorActivity: onCursorActivity
+            onCursorActivity: onCursorActivity,
+            onChange: function (cm, ctx) {
+                cm.dirty = true;
+            }
         }
 
         if (configuration)

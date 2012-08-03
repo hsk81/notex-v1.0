@@ -19,7 +19,6 @@ import logging
 import zipfile
 import base64
 import json
-import os
 
 ################################################################################
 ################################################################################
@@ -38,38 +37,35 @@ def compress (request, id, translate, ext = 'zip', hook = None):
     else:
         node = NODE.objects.get (id = ids[0])
 
-    while node.node:
-        node = node.node
-
+    while node.node: node = node.node
     object_key = hex (hash ((request.session.session_key, node.id)))
-    object_uri = cache.get (object_key)
-    cache.delete (object_key) ## TODO: reddis?
+    object_val = cache.get (object_key)
 
-    if object_uri and not 'refresh' in request.GET:
+    if object_val:
+        if not 'refresh' in request.GET:
+            if hook: object_val = hook (object_val)
 
-        with open (object_uri, 'r') as temp:
-            object_val = temp.read ()
-        if hook:
-            object_val = hook (object_val)
+            size = len (object_val)
+            temp = tempfile.SpooledTemporaryFile (max_size = size)
+            temp.write (object_val)
 
-        size = len (object_val)
-        temp = tempfile.SpooledTemporaryFile (max_size = size)
-        temp.write (object_val)
+            http_response = HttpResponse (
+                FileWrapper (temp), content_type = 'application/%s' % ext)
+            http_response['Content-Disposition'] = \
+                'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
+            http_response['Content-Length'] = size
 
-        http_response = HttpResponse (
-            FileWrapper (temp), content_type = 'application/%s' % ext)
-        http_response['Content-Disposition'] = \
-            'attachment;filename="%s.%s"' % (node.name.encode ("utf-8"), ext)
-        http_response['Content-Length'] = size
+            temp.seek (0);
 
-        temp.seek (0); os.remove (object_uri)
+        else:
+            js_string = json.dumps ([{
+                'id' : node.id, 'name' : node.name, 'success' : True}])
+            http_response = HttpResponse (
+                js_string, mimetype='application/json')
 
     else:
-
         http_response, object_val = to_zip (request, translate, node)
-        descriptor, object_uri = tempfile.mkstemp ()
-        with os.fdopen (descriptor, 'w') as temp: temp.write (object_val)
-        cache.set (object_key, object_uri)
+        cache.set (object_key, object_val)
 
     return http_response
 

@@ -7,6 +7,7 @@ __date__ = "$Mar 10, 2012 12:40:30 AM$"
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
+from django.core.cache import cache
 
 from editor.models import LEAF
 from uuid import UUID
@@ -51,7 +52,7 @@ def update (request, create_leaf = None):
     if type == 'leaf':
         leaf = LEAF.objects.get (pk = ids[1])
 
-        if os.path.islink (leaf.file):
+        if os.path.islink (leaf.file): ## copy-on-write
             source = os.readlink (leaf.file)
             os.remove (leaf.file)
             shutil.copy (source, leaf.file)
@@ -60,6 +61,10 @@ def update (request, create_leaf = None):
             uuid_file.write (request.POST['data'].encode ("utf-8"))
             leaf.name = request.POST['name']
             leaf.save ()
+
+        while leaf.node.node: leaf.node = leaf.node.node
+        object_key = hex (hash ((request.session.session_key, leaf.node.id)))
+        cache.delete (object_key) ## invalidate cache
 
         response = success (request)
     else:
