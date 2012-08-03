@@ -6,6 +6,7 @@ source bin/activate
 
 pip install ipython
 pip install django
+pip install django-redis
 pip install django-jsmin
 pip install django-cssmin
 pip install psycopg2

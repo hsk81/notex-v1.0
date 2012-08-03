@@ -8,7 +8,7 @@ from cStringIO import StringIO
 
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
-from django.core.cache import cache
+from django.core import cache
 
 from editor.models import NODE
 from editor.models import LEAF
@@ -24,6 +24,7 @@ import json
 ################################################################################
 
 logger = logging.getLogger (__name__)
+cache = cache.get_cache ('redis')
 
 ################################################################################
 ################################################################################
@@ -65,7 +66,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
 
     else:
         http_response, object_val = to_zip (request, translate, node)
-        cache.set (object_key, object_val)
+        cache.set (object_key, object_val, timeout=15*60) ## 15 mins
 
     return http_response
 

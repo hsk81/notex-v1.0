@@ -77,6 +77,11 @@ CACHES = {
         'BACKEND' : 'django.core.cache.backends.memcached.PyLibMCCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
+    },
+    'redis' : {
+        'BACKEND' : 'redis_cache.cache.RedisCache',
+        'LOCATION' : '127.0.0.1:6379',
+        'OPTIONS' : { 'DB': 1 },
     }
 }
 
