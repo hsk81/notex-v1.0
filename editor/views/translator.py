@@ -13,6 +13,8 @@ from base64 import decodestring
 import subprocess
 import mimetypes
 import os.path
+import shutil
+import errno
 import types
 import uuid
 import yaml
@@ -87,17 +89,14 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     origin_dir = os.path.join (settings.MEDIA_TEMP,
         '00000000-0000-0000-0000-000000000000')
     target_dir = os.path.join (settings.MEDIA_TEMP,
-        root.root.usid, str (uuid.uuid4 ()))
-
-    target_sid = os.path.join (settings.MEDIA_TEMP, root.root.usid)
-    subprocess.check_call (['mkdir', target_sid, '-p'])
+        root.root.usid, str (uuid.uuid3 (uuid.NAMESPACE_URL, str (root.id))))
 
     build_dir = os.path.join (target_dir, 'build')
     latex_dir = os.path.join (build_dir, 'latex')
     html_dir = os.path.join (build_dir, 'html')
 
-    subprocess.check_call (['cp', origin_dir, target_dir, '-r'])
-    texexec = unpackTree (root, os.path.join (target_dir, 'source')) or 'xelatex'
+    copytree (origin_dir, target_dir)
+    texexec = unpack (root, os.path.join (target_dir, 'source')) or 'pdflatex'
 
     try:
         if not skip_latex or not skip_pdf:
@@ -124,17 +123,17 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
                     if texexec == 'pdflatex':
-                        subprocess.check_call (['ln', '-s',
+                        subprocess.check_call (['ln', '-sf',
                             os.path.join (os.path.sep, 'usr', 'bin', 'pdflatex'),
                             latex_dir])
                     else:
-                        subprocess.check_call (['ln', '-s',
+                        subprocess.check_call (['ln', '-sf',
                             os.path.join (os.path.sep, 'usr', 'bin', 'xelatex'),
                             latex_dir])
-                        subprocess.check_call (['ln', '-s',
+                        subprocess.check_call (['ln', '-sf',
                             os.path.join (os.path.sep, 'usr', 'bin', 'xdvipdfmx'),
                             latex_dir])
-                        subprocess.check_call (['ln', '-s',
+                        subprocess.check_call (['ln', '-sf',
                             os.path.join (os.path.sep, 'usr', 'bin', 'makeindex'),
                             latex_dir])
 
@@ -144,17 +143,6 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                     subprocess.check_call ([
                         'make', '-C', latex_dir, 'all-pdf', TEXEXEC, TEXOPTS
                     ], stdout = stdout, stderr = stderr)
-
-                    if texexec == 'pdflatex':
-                        subprocess.check_call (['rm', '-f',
-                            os.path.join (latex_dir, 'pdflatex')])
-                    else:
-                        subprocess.check_call (['rm', '-f',
-                            os.path.join (latex_dir, 'xelatex')])
-                        subprocess.check_call (['rm', '-f',
-                            os.path.join (latex_dir, 'xdvipdfmx')])
-                        subprocess.check_call (['rm', '-f',
-                            os.path.join (latex_dir, 'makeindex')])
 
         if not skip_html:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
@@ -178,8 +166,26 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     if not skip_html:
         zip_to_html (zip_buffer, html_dir, title)
 
-    if os.path.exists (target_dir): subprocess.check_call (['rm', target_dir, '-r'])
-    if not os.listdir (target_sid): subprocess.check_call (['rm', target_sid, '-r'])
+################################################################################
+
+def makedir (path):
+
+    try:
+        os.makedirs (path)
+    except OSError as ex:
+        if ex.errno == errno.EEXIST: pass
+        else: raise
+
+def copytree (src, dst):
+
+    makedir (dst)
+    for path in os.listdir (src):
+        srcpath = os.path.join(src, path)
+        dstpath = os.path.join(dst, path)
+        if os.path.isdir (srcpath):
+            copytree (srcpath, dstpath)
+        else:
+            shutil.copy (srcpath, dstpath)
 
 ################################################################################
 
@@ -229,7 +235,7 @@ def zip_to_html (zip_buffer, source_dir, title):
 
 ################################################################################
 
-def unpackTree (root, prefix, texexec = None):
+def unpack (root, prefix, texexec = None):
 
     ls = LEAF.objects.filter (_node = root)
     ns = NODE.objects.filter (_node = root)
@@ -252,7 +258,7 @@ def unpackTree (root, prefix, texexec = None):
 
     for node in ns:
         subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
-        texexec = unpackTree (node, os.path.join (prefix, node.name), texexec)
+        texexec = unpack (node, os.path.join (prefix, node.name), texexec)
 
     return texexec
 
@@ -268,9 +274,9 @@ def yaml2py (leaf, prefix, filename = 'conf.py'):
 
     umap = dict (data)
     if not umap.has_key ('latex_backend'):
-        umap['latex_backend'] = 'xelatex' # default
-    if umap['latex_backend'] != 'xelatex' and umap['latex_backend'] != 'pdflatex':
-        umap['latex_backend'] = 'xelatex' # security: validation!
+        umap['latex_backend'] = 'pdflatex' # default
+    if umap['latex_backend'] != 'pdflatex' and umap['latex_backend'] != 'xelatex':
+        umap['latex_backend'] = 'pdflatex' # security: validation!
 
     with open (os.path.join (prefix, filename), 'w+') as file:
 
