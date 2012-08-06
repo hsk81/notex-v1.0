@@ -128,7 +128,7 @@ var reportManager = function () {
                 cls : 'x-hidden',
                 id : 'form',
                 method : 'POST',
-                action : url.replace ('=', node.id),
+                action : url.replace ('=', node.id) + "?fetch",
                 target : 'iframe'
             });
 
@@ -147,7 +147,7 @@ var reportManager = function () {
         }
 
         Ext.Ajax.request ({
-            url : url.replace ('=', node.id) + "?refresh",
+            url : url.replace ('=', node.id),
             callback : function (opts, status, xhr) {
                 if (status) {
                     var res = Ext.decode (xhr.responseText)[0];

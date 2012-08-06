@@ -42,7 +42,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
     object_val = cache.get (object_key)
 
     if object_val:
-        if not 'refresh' in request.GET:
+        if 'fetch' in request.GET:
             if hook: object_val = hook (object_val)
 
             size = len (object_val)
@@ -58,14 +58,13 @@ def compress (request, id, translate, ext = 'zip', hook = None):
             temp.seek (0);
 
         else:
-            js_string = json.dumps ([{
-                'id' : node.id, 'name' : node.name, 'success' : True}])
-            http_response = HttpResponse (
-                js_string, mimetype='application/json')
+            js_string = json.dumps ([{'id' : node.id, 'name' : node.name, 'success' : True}])
+            http_response = HttpResponse (js_string, mimetype='application/json')
+            cache.set (object_key, object_val, timeout=15*60) ## refresh
 
     else:
-        http_response, object_val = to_zip (request, translate, node)
-        cache.set (object_key, object_val, timeout=15*60) ## 15 mins
+        http_response, object_val, success = to_zip (request, translate, node)
+        if success: cache.set (object_key, object_val, timeout=15*60) ## 15mins
 
     return http_response
 
@@ -76,26 +75,23 @@ def to_zip (request, translate, node):
 
     try:
         translate (node, node.name, zip_buffer);
-        js_string = json.dumps ([{
-            'id' : node.id, 'name' : node.name, 'success' : True}])
-    except Exception as ex:
-        js_string = json.dumps ([{
-            'id' : node.id, 'name' : node.name, 'success' : False}])
+        success = True
 
-        logger.error (ex, exc_info = True, extra =
-        {
+    except Exception as ex:
+        logger.error (ex, exc_info = True, extra = {
             'request' : request,
             'stderr_log' : getattr (ex, 'stderr_log', None),
             'stdout_log' : getattr (ex, 'stdout_log', None)
-        })
+        }); success = False
 
+    js_string = json.dumps ([{'id' : node.id, 'name' : node.name, 'success' : success}])
     http_response = HttpResponse (js_string, mimetype='application/json')
 
     zip_buffer.close ()
     object_value = str_buffer.getvalue ()
     str_buffer.close ()
 
-    return http_response, object_value
+    return http_response, object_value, success
 
 def export_report (request, id):
     return compress (request, id, translator.processToReport)
@@ -117,10 +113,9 @@ def export_pdf (request, id):
         zip_buffer = zipfile.ZipFile (str_buffer, 'r', zipfile.ZIP_STORED)
         object_vals = [zip_buffer.read (info) for info in zip_buffer \
             .infolist () if info.filename.lower ().endswith ('pdf')]
-        result_val = object_vals.pop (0)
         zip_buffer.close ()
 
-        return result_val
+        return object_vals.pop (0)
         
     return compress (request, id, translator.processToPdf, ext = 'pdf',
         hook = zip2pdf)

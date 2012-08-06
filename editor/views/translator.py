@@ -23,27 +23,6 @@ import os
 ################################################################################
 ################################################################################
 
-def is_text (path, bin_path = os.path.join (os.path.sep, 'usr', 'bin')):
-
-    if not mimetypes.inited: mimetypes.init ()
-    mimetype, encoding = mimetypes.guess_type (path)
-    if mimetype and mimetype.startswith ('text'):
-        return True
-
-    arguments = [os.path.join (bin_path, 'file'), '-Lib', path]
-    process = subprocess.Popen (arguments, stdout = subprocess.PIPE)
-    result = process.stdout.read ()
-
-    mimetype, encoding = result.split (';')
-    if mimetype.startswith ('text'):
-        path_to, ext = os.path.splitext (path)
-        mimetypes.add_type (mimetype, ext)
-        return True
-
-    return False
-
-################################################################################
-
 def processToReport (root, prefix, zip_buffer):
 
     processToText (root, prefix, zip_buffer)
@@ -100,54 +79,13 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
 
     try:
         if not skip_latex or not skip_pdf:
-            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
-
-                    subprocess.check_call (['make', '-C', target_dir, 'latex'],
-                        stdout = stdout, stderr = stderr)
-
-                    shutil.copy (
-                        os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
-                        os.path.join (latex_dir, 'sphinxhowto.cls'))
-                    shutil.copy (
-                        os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
-                        os.path.join (latex_dir, 'sphinxmanual.cls'))
-                    shutil.copy (
-                        os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
-                        os.path.join (latex_dir, 'Makefile'))
+            rest2latex (origin_dir, target_dir, latex_dir)
 
         if not skip_pdf:
-            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
-
-                    if texexec == 'pdflatex':
-                        symlink (
-                            os.path.join (os.path.sep, 'usr', 'bin', 'pdflatex'),
-                            os.path.join (latex_dir, 'pdflatex'))
-                    else:
-                        symlink (
-                            os.path.join (os.path.sep, 'usr', 'bin', 'xelatex'),
-                            os.path.join (latex_dir, 'xelatex'))
-                        symlink (
-                            os.path.join (os.path.sep, 'usr', 'bin', 'xdvipdfmx'),
-                            os.path.join (latex_dir, 'xdvipdfmx'))
-                        symlink (
-                            os.path.join (os.path.sep, 'usr', 'bin', 'makeindex'),
-                            os.path.join (latex_dir, 'makeindex'))
-
-                    TEXEXEC = 'TEXEXEC=%s' % texexec
-                    TEXOPTS = 'TEXOPTS=%s' % '-no-shell-escape -halt-on-error'
-
-                    subprocess.check_call ([
-                        'make', '-C', latex_dir, 'all-pdf', TEXEXEC, TEXOPTS
-                    ], stdout = stdout, stderr = stderr)
+            latex2pdf (texexec, target_dir, latex_dir)
 
         if not skip_html:
-            with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
-                with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
-
-                    subprocess.check_call (['make', '-C', target_dir, 'html'],
-                        stdout = stdout, stderr = stderr)
+            rest2html (target_dir)
 
     except Exception as ex:
         with open (os.path.join (target_dir, 'stdout.log'), 'r') as stdout:
@@ -166,30 +104,60 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
 
 ################################################################################
 
-def symlink (src, dst):
+def rest2latex (origin_dir, target_dir, latex_dir):
 
-    if not os.path.exists (dst):
-        os.symlink (src, dst)
+    with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+        with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+            subprocess.check_call (['make', '-C', target_dir, 'latex'],
+                stdout=stdout, stderr=stderr)
 
-def makedir (path):
+    shutil.copy (
+        os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
+        os.path.join (latex_dir, 'sphinxhowto.cls'))
+    shutil.copy (
+        os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
+        os.path.join (latex_dir, 'sphinxmanual.cls'))
+    shutil.copy (
+        os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
+        os.path.join (latex_dir, 'Makefile'))
 
-    try:
-        os.makedirs (path)
-    except OSError as ex:
-        if ex.errno == errno.EEXIST: pass
-        else: raise
 
-def copytree (src, dst):
+def latex2pdf (texexec, target_dir, latex_dir):
 
-    makedir (dst)
-    for path in os.listdir (src):
-        srcpath = os.path.join(src, path)
-        dstpath = os.path.join(dst, path)
-        if os.path.isdir (srcpath):
-            copytree (srcpath, dstpath)
-        else:
-            shutil.copy (srcpath, dstpath)
+    if texexec == 'pdflatex':
+        symlink (
+            os.path.join (os.path.sep, 'usr', 'bin', 'pdflatex'),
+            os.path.join (latex_dir, 'pdflatex'))
+    else:
+        symlink (
+            os.path.join (os.path.sep, 'usr', 'bin', 'xelatex'),
+            os.path.join (latex_dir, 'xelatex'))
+        symlink (
+            os.path.join (os.path.sep, 'usr', 'bin', 'xdvipdfmx'),
+            os.path.join (latex_dir, 'xdvipdfmx'))
+        symlink (
+            os.path.join (os.path.sep, 'usr', 'bin', 'makeindex'),
+            os.path.join (latex_dir, 'makeindex'))
 
+    TEXEXEC = 'TEXEXEC=%s' % texexec
+    TEXOPTS = 'TEXOPTS=%s' % '-no-shell-escape -halt-on-error'
+
+    with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+        with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+            subprocess.check_call ([
+                'make', '-C', latex_dir, 'all-pdf', TEXEXEC, TEXOPTS
+            ], stdout=stdout, stderr=stderr)
+
+
+def rest2html (target_dir):
+
+    with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
+        with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
+            subprocess.check_call (['make', '-C', target_dir, 'html'],
+                stdout=stdout, stderr=stderr)
+
+
+################################################################################
 ################################################################################
 
 def zip_to_latex (zip_buffer, source_dir, title):
@@ -237,34 +205,61 @@ def zip_to_html (zip_buffer, source_dir, title):
             zip_buffer.write (src_path, zip_path)
 
 ################################################################################
+################################################################################
 
 def unpack (root, prefix, texexec = None):
 
-    ls = LEAF.objects.filter (_node = root)
-    ns = NODE.objects.filter (_node = root)
+    for leaf in LEAF.objects.filter (_node = root):
+        texexec = unpack_leaf (leaf, prefix, texexec)
 
-    for leaf in ls:
-
-        if leaf.type.code == 'text':
-            _, ext = os.path.splitext (leaf.name)
-            if ext.lower () in ['.cfg','.yml','.conf','.yaml']:
-                texexec = yaml2py (leaf, prefix); continue
-
-            with open (os.path.join (prefix, leaf.name), 'w') as file:
-                with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
-                file.write (text)
-
-        elif leaf.type.code == 'image':
-            with open (os.path.join (prefix, leaf.name), 'w') as file:
-                with open (leaf.file, 'r') as uuid_file: text = uuid_file.read ()
-                file.write (decodestring (text.split (',')[1]))
-
-    for node in ns:
-        subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
-        texexec = unpack (node, os.path.join (prefix, node.name), texexec)
+    for node in NODE.objects.filter (_node = root):
+        texexec = unpack_node (node, prefix, texexec)
 
     return texexec
 
+def unpack_node (node, prefix, texexec):
+
+    subprocess.check_call (['mkdir', os.path.join (prefix, node.name)])
+    texexec = unpack (node, os.path.join (prefix, node.name), texexec)
+
+    return texexec
+
+def unpack_leaf (leaf, prefix, texexec):
+
+    if leaf.type.code == 'text':
+        texexec = unpack_text (leaf, prefix, texexec)
+
+    elif leaf.type.code == 'image':
+        texexec = unpack_image (leaf, prefix, texexec)
+
+    return texexec
+
+def unpack_text (leaf, prefix, texexec):
+
+    _, ext = os.path.splitext (leaf.name)
+    if ext.lower () in ['.cfg', '.yml', '.conf', '.yaml']:
+        texexec = yaml2py (leaf, prefix)
+
+    else:
+        symlink (leaf.file, os.path.join (prefix, leaf.name))
+
+    return texexec
+
+def unpack_image (leaf, prefix, texexec):
+
+    dst = os.path.join (prefix, leaf.name)
+    src = leaf.file
+
+    if not os.path.exists (dst) or \
+       os.stat (dst).st_size != os.stat (src).st_size:
+
+        with open (dst, 'w') as file:
+            with open (src, 'r') as uuid_file: text = uuid_file.read ()
+            file.write (decodestring (text.split (',')[1]))
+
+    return texexec
+
+################################################################################
 ################################################################################
 
 def yaml2py (leaf, prefix, filename = 'conf.py'):
@@ -354,6 +349,55 @@ def emit_none (key):
         return '%s = None' % key
     else:
         return      'None'
+
+################################################################################
+################################################################################
+
+def symlink (src, dst):
+
+    if not os.path.exists (dst):
+        os.symlink (src, dst)
+
+def makedir (path):
+
+    try:
+        os.makedirs (path)
+
+    except OSError as ex:
+        if ex.errno == errno.EEXIST: pass
+        else: raise
+
+def copytree (src, dst):
+
+    makedir (dst)
+    for path in os.listdir (src):
+
+        srcpath = os.path.join (src, path)
+        dstpath = os.path.join (dst, path)
+
+        if os.path.isdir (srcpath):
+            copytree (srcpath, dstpath)
+        else:
+            shutil.copy (srcpath, dstpath)
+
+def is_text (path, bin_path = os.path.join (os.path.sep, 'usr', 'bin')):
+
+    if not mimetypes.inited: mimetypes.init ()
+    mimetype, encoding = mimetypes.guess_type (path)
+    if mimetype and mimetype.startswith ('text'):
+        return True
+
+    arguments = [os.path.join (bin_path, 'file'), '-Lib', path]
+    process = subprocess.Popen (arguments, stdout = subprocess.PIPE)
+    result = process.stdout.read ()
+
+    mimetype, encoding = result.split (';')
+    if mimetype.startswith ('text'):
+        path_to, ext = os.path.splitext (path)
+        mimetypes.add_type (mimetype, ext)
+        return True
+
+    return False
 
 ################################################################################
 ################################################################################
