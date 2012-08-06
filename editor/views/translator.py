@@ -106,36 +106,34 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
                     subprocess.check_call (['make', '-C', target_dir, 'latex'],
                         stdout = stdout, stderr = stderr)
 
-                    subprocess.check_call (['cp', '-f',
+                    shutil.copy (
                         os.path.join (origin_dir, 'build', 'latex', 'sphinxhowto.cls'),
-                        latex_dir])
-
-                    subprocess.check_call (['cp', '-f',
+                        os.path.join (latex_dir, 'sphinxhowto.cls'))
+                    shutil.copy (
                         os.path.join (origin_dir, 'build', 'latex', 'sphinxmanual.cls'),
-                        latex_dir])
-
-                    subprocess.check_call (['cp', '-f',
+                        os.path.join (latex_dir, 'sphinxmanual.cls'))
+                    shutil.copy (
                         os.path.join (origin_dir, 'build', 'latex', 'Makefile'),
-                        latex_dir])
+                        os.path.join (latex_dir, 'Makefile'))
 
         if not skip_pdf:
             with open (os.path.join (target_dir, 'stdout.log'), 'w') as stdout:
                 with open (os.path.join (target_dir, 'stderr.log'), 'w') as stderr:
 
                     if texexec == 'pdflatex':
-                        subprocess.check_call (['ln', '-sf',
+                        symlink (
                             os.path.join (os.path.sep, 'usr', 'bin', 'pdflatex'),
-                            latex_dir])
+                            os.path.join (latex_dir, 'pdflatex'))
                     else:
-                        subprocess.check_call (['ln', '-sf',
+                        symlink (
                             os.path.join (os.path.sep, 'usr', 'bin', 'xelatex'),
-                            latex_dir])
-                        subprocess.check_call (['ln', '-sf',
+                            os.path.join (latex_dir, 'xelatex'))
+                        symlink (
                             os.path.join (os.path.sep, 'usr', 'bin', 'xdvipdfmx'),
-                            latex_dir])
-                        subprocess.check_call (['ln', '-sf',
+                            os.path.join (latex_dir, 'xdvipdfmx'))
+                        symlink (
                             os.path.join (os.path.sep, 'usr', 'bin', 'makeindex'),
-                            latex_dir])
+                            os.path.join (latex_dir, 'makeindex'))
 
                     TEXEXEC = 'TEXEXEC=%s' % texexec
                     TEXOPTS = 'TEXOPTS=%s' % '-no-shell-escape -halt-on-error'
@@ -167,6 +165,11 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
         zip_to_html (zip_buffer, html_dir, title)
 
 ################################################################################
+
+def symlink (src, dst):
+
+    if not os.path.exists (dst):
+        os.symlink (src, dst)
 
 def makedir (path):
 
