@@ -38,7 +38,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
         node = NODE.objects.get (id = ids[0])
 
     while node.node: node = node.node
-    object_key = hex (hash ((request.session.session_key, node.id)))
+    object_key = hex (hash ((request.session.session_key, translate, node.id)))
     object_val = cache.get (object_key)
 
     if object_val:
