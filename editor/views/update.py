@@ -7,7 +7,7 @@ __date__ = "$Mar 10, 2012 12:40:30 AM$"
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse
-from django.core import cache
+from django.core.cache import cache
 
 from editor.models import LEAF
 from uuid import UUID
@@ -25,7 +25,6 @@ import os
 ################################################################################
 
 logger = logging.getLogger (__name__)
-cache = cache.get_cache ('redis')
 
 ################################################################################
 ################################################################################
