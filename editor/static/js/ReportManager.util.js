@@ -1,15 +1,22 @@
 var reportManagerUtil = function () {
 
-    function prompt_message (title, message, callback, text, iconCls) {
-        if (iconCls == undefined) {
-            iconCls = 'icon-document-16';
-        }
+    function confirm_message (title, message, callback, iconCls) {
+        Ext.MessageBox.show ({
+            title: title,
+            msg: message,
+            buttons: Ext.MessageBox.YESNO,
+            iconCls: iconCls || 'icon-question-16',
+            minWidth: 256,
+            fn: callback
+        });
+    }
 
-        Ext.MessageBox.show({
+    function prompt_message (title, message, callback, text, iconCls) {
+        Ext.MessageBox.show ({
             title: title,
             msg: message,
             buttons: Ext.MessageBox.OKCANCEL,
-            iconCls: iconCls,
+            iconCls: iconCls || 'icon-textfield-16',
             minWidth: 256,
             prompt: true,
             value: text,
@@ -44,6 +51,7 @@ var reportManagerUtil = function () {
 
     return {
         prompt_message: prompt_message,
+        confirm_message: confirm_message,
         error_message: error_message,
         resource: resource
     };

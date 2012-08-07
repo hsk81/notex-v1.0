@@ -11,6 +11,7 @@ var reportManager = function () {
     // #########################################################################
 
     var prompt_message = reportManager.util.prompt_message;
+    var confirm_message = reportManager.util.confirm_message;
     var error_msg = reportManager.util.error_message;
     var resource = reportManager.util.resource;
 
@@ -484,7 +485,7 @@ var reportManager = function () {
             node = node.parentNode
         }
 
-        function _callback (btn, text) {
+        function callback (btn, text) {
             if (btn == 'ok') {
                 tree.el.mask ('Please wait', 'x-mask-loading');
                 var rank = node.childNodes.indexOf (node.lastChild);
@@ -498,7 +499,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Create Folder', 'Enter a name:', _callback, null, 'icon-folder_add-16'
+            'Create Folder', 'Enter a name:', callback, null, 'icon-folder_add-16'
         );
     }
 
@@ -519,7 +520,7 @@ var reportManager = function () {
             node = node.parentNode;
         }
 
-        function _callback (btn, text) {
+        function callback (btn, text) {
             if (btn == 'ok') {
                 tree.el.mask ('Please wait', 'x-mask-loading');
                 var rank = node.childNodes.indexOf (node.lastChild);
@@ -534,7 +535,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Create Text', 'Enter a name:', _callback, null, 'icon-page_add-16'
+            'Create Text', 'Enter a name:', callback, null, 'icon-page_add-16'
         );
     }
 
@@ -555,7 +556,7 @@ var reportManager = function () {
             .replace('<i>','')
             .replace('</i>','');
 
-        function _callback (btn, text) {
+        function callback (btn, text) {
             if (btn == 'ok') {
                 tree.el.mask ('Please wait', 'x-mask-loading');
 
@@ -585,7 +586,7 @@ var reportManager = function () {
         }
 
         prompt_message (
-            'Rename', 'Enter a name:', _callback, text, 'icon-document_rename-16'
+            'Rename', 'Enter a name:', callback, text, 'icon-document_rename-16'
         );
     }
 
@@ -602,8 +603,8 @@ var reportManager = function () {
             return;
         }
 
-        function _onConfirm (id) {
-            if (id != 'yes') {
+        function callback (btn) {
+            if (btn != 'yes') {
                 return;
             }
 
@@ -626,14 +627,27 @@ var reportManager = function () {
             );
         }
 
-        Ext.Msg.show ({
-            title : 'Delete',
-            iconCls : 'icon-delete-16',
-            msg : 'Are you sure you want to delete the selection?',
-            buttons : Ext.Msg.YESNO,
-            fn : _onConfirm,
-            scope : this
-        });
+        if (tree.isText (node)) {
+            var iconCls = 'icon-page_delete-16';
+            var element = 'text'
+        } else if (tree.isImage (node)) {
+            var iconCls = 'icon-picture_delete-16';
+            var element = 'image'
+        } else if (tree.isFolder (node)) {
+            var iconCls = 'icon-folder_delete-16';
+            var element = 'folder'
+        } else if (tree.isReport (node)) {
+            var iconCls = 'icon-report_delete-16';
+            var element = 'report'
+        } else {
+            var iconCls = 'icon-delete-16';
+            var element = 'selection'
+        }
+
+        confirm_message ('Delete',
+            String.format ('Are you sure you want to delete {0}?', element),
+            callback, iconCls
+        )
     }
 
     // #########################################################################
