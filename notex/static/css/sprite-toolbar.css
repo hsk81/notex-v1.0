@@ -1,0 +1,95 @@
+.icon-arrow_undo-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -10px !important;
+}
+
+.icon-arrow_redo-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -46px !important;
+}
+
+.icon-cut-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -82px !important;
+}
+
+.icon-page_white_copy-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -118px !important;
+}
+
+.icon-paste_plain-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -154px !important;
+}
+
+.icon-text_bold-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -190px !important;
+}
+
+.icon-text_italic-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -226px !important;
+}
+
+.icon-text_allcaps-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -262px !important;
+}
+
+.icon-text_subscript-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -298px !important;
+}
+
+.icon-text_superscript-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -334px !important;
+}
+
+.icon-text_lowercase-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -370px !important;
+}
+
+.icon-text_uppercase-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -406px !important;
+}
+
+.icon-text_list_bullets-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -442px !important;
+}
+
+.icon-text_list_numbers-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -478px !important;
+}
+
+.icon-text_indent_remove-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -514px !important;
+}
+
+.icon-text_indent-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -550px !important;
+}
+
+.icon-image-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -586px !important;
+}
+
+.icon-link-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -622px !important;
+}
+
+.icon-text_horizontalrule-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -658px !important;
+}
+
+.icon-hrule-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -694px !important;
+}
+
+.icon-find-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -730px !important;
+}
+
+.icon-document_page_next-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -766px !important;
+}
+
+.icon-document_page_previous-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -802px !important;
+}
+
+.icon-text_replace-16 {
+    background: url(../sprite-toolbar.png) no-repeat -10px -838px !important;
+}

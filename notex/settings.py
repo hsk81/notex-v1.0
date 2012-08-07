@@ -252,6 +252,7 @@ CSSMIN_INPUT += [] if DEBUG else [
     'static/css/base.css',
     'static/css/icons-16.css',
     'static/css/sprite.css',
+    'static/css/sprite-toolbar.css',
     'static/app/editor/css/Editor.css',
     'static/app/editor/css/CodeMirror.yaml.css',
     'static/app/editor/css/CodeMirror.rest.css',
