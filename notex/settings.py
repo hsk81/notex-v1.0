@@ -15,6 +15,7 @@ TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
     SITE_HOST = 'localhost'
+    INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
@@ -25,10 +26,10 @@ DATABASES = {
         'NAME': 'notex',
         'USER': 'notex'
     },
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
-    },
+ ## 'sqlite': {
+ ##     'ENGINE': 'django.db.backends.sqlite3',
+ ##     'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
+ ## },
 }
 
 TIME_ZONE = 'Europe/Zurich'
@@ -74,15 +75,18 @@ MIDDLEWARE_CLASSES = (
 
 CACHES = {
     'default' : {
-        'BACKEND' : 'django.core.cache.backends.memcached.PyLibMCCache',
+        'BACKEND' :
+            'django.core.cache.backends.dummy.DummyCache' if DEBUG else
+            'django.core.cache.backends.memcached.PyLibMCCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
-    'redis' : {
-        'BACKEND' : 'redis_cache.cache.RedisCache',
-        'LOCATION' : '127.0.0.1:6379',
-        'OPTIONS' : { 'DB': 1 },
-    }
+    'memcached' : {
+        'BACKEND' :
+            'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION' : '127.0.0.1:11211',
+        'TIMEOUT' : 240, ## secs: staleness
+    },
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
@@ -240,11 +244,14 @@ LOGGING = {
 
 CSSMIN_INPUT = [
     'static/css/reset.css',
+    'static/lib/codemirror/lib/codemirror.css',
+    'static/lib/codemirror/lib/util/dialog.css',
+]
+
+CSSMIN_INPUT += [] if DEBUG else [
     'static/css/base.css',
     'static/css/icons-16.css',
     'static/css/sprite.css',
-    'static/lib/codemirror/lib/codemirror.css',
-    'static/lib/codemirror/lib/util/dialog.css',
     'static/app/editor/css/Editor.css',
     'static/app/editor/css/CodeMirror.yaml.css',
     'static/app/editor/css/CodeMirror.rest.css',
@@ -306,7 +313,9 @@ JSMIN_INPUT = [
     'static/lib/extjs/adapter/ext/ext-base.js',
     'static/lib/extjs/ext-all.js',
     'static/lib/extjs/examples/ux/statusbar/StatusBar.js',
+]
 
+JSMIN_INPUT += [] if DEBUG else [
     'static/app/editor/js/Math.uuid.js',
     'static/app/editor/js/Dialog.openFile.js',
     'static/app/editor/js/Dialog.js',

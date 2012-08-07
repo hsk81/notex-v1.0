@@ -8,7 +8,7 @@ from cStringIO import StringIO
 
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
-from django.core.cache import cache
+from django.core import cache
 
 from editor.models import NODE
 from editor.models import LEAF
@@ -24,6 +24,7 @@ import json
 ################################################################################
 
 logger = logging.getLogger (__name__)
+cache = cache.get_cache ('memcached')
 
 ################################################################################
 ################################################################################
