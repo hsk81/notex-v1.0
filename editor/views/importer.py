@@ -52,7 +52,8 @@ def from_zip (request, fid, zip_file):
                 _type = ROOT_TYPE.objects.get (_code='root'),
                 _usid = request.session.session_key)
 
-            return create_project (root, fid, zip_buffer)
+            return create_project (request.session.session_key, root, fid,
+                zip_buffer)
 
     except Exception as ex:
         logger.error (ex, exc_info = True, extra =
@@ -63,7 +64,7 @@ def from_zip (request, fid, zip_file):
 
         return failure (message = 'Unknown reason', file_id = fid)
 
-def create_project (root, fid, zip_buffer):
+def create_project (sid, root, fid, zip_buffer):
 
     node = NODE.objects.create (
         type = NODE_TYPE.objects.get (_code='project'),
@@ -72,11 +73,13 @@ def create_project (root, fid, zip_buffer):
         rank = NODE.objects.filter (_root = root).count ())
 
     infolist = zip_buffer.infolist ()
+
     rankdict = dict (zip (infolist, range (len (infolist))))
     infolist = sorted (infolist, key=lambda zip_info: zip_info.filename)
     namelist = map (lambda zi: zi.filename, infolist)
 
     prefix = os.path.commonprefix (namelist)
+
     common = ''
     origin = ''
     parent = {}
@@ -101,7 +104,7 @@ def create_project (root, fid, zip_buffer):
             if zip_info.filename.startswith (html_path): continue
             if zip_info.filename.startswith (pdf_path): continue
 
-            process_zip_info (zip_info, rankdict, parent, file)
+            process_zip_info (zip_info, rankdict, parent, file, sid)
 
     return success (message = None, file_id = fid)
 
@@ -129,7 +132,7 @@ def http_response (success, message, file_id):
 
 ################################################################################
 
-def process_zip_info (zip_info, rankdict, parent, file):
+def process_zip_info (zip_info, rankdict, parent, file, sid):
 
     path, name = os.path.split (zip_info.filename)
     path = os.path.normpath (path)
@@ -146,21 +149,21 @@ def process_zip_info (zip_info, rankdict, parent, file):
 
     if mimetype:
         if mimetype == 'text/plain':
-            create_text (zip_info, rankdict, parent, file)
+            create_text (zip_info, rankdict, parent, file, sid)
         elif mimetype.startswith ('image'):
-            create_image (zip_info, rankdict, parent, file)
+            create_image (zip_info, rankdict, parent, file, sid)
         else:
             _, ext = os.path.splitext (name)
             if ext.lower () in txt_exts:
-                create_text (zip_info, rankdict, parent, file)
+                create_text (zip_info, rankdict, parent, file, sid)
             if ext.lower () in img_exts:
-                create_image (zip_info, rankdict, parent, file)
+                create_image (zip_info, rankdict, parent, file, sid)
     else:
         _, ext = os.path.splitext (name)
         if ext.lower () in txt_exts:
-            create_text (zip_info, rankdict, parent, file)
+            create_text (zip_info, rankdict, parent, file, sid)
         if ext.lower () in img_exts:
-            create_image (zip_info, rankdict, parent, file)
+            create_image (zip_info, rankdict, parent, file, sid)
 
 ################################################################################
 
@@ -193,7 +196,7 @@ def create_folder (zip_info, rankdict, parent):
         name = name,
         rank = rankdict[zip_info])
 
-def create_image (zip_info, rankdict, parent, file):
+def create_image (zip_info, rankdict, parent, file, sid):
 
     path, name = os.path.split (zip_info.filename)
     path = os.path.normpath (path)
@@ -201,7 +204,10 @@ def create_image (zip_info, rankdict, parent, file):
     mimetype, encoding = mimetypes.guess_type (name)
     text = 'data:%s;base64,%s' % (mimetype, base64.encodestring (file.read ()))
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_file_path = os.path.join (
+        settings.MEDIA_ROOT, 'dat', sid, str (uuid ()))
+
+    with open (uuid_file_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
@@ -211,13 +217,16 @@ def create_image (zip_info, rankdict, parent, file):
             file = uuid_file.name,
             rank = rankdict[zip_info])
 
-def create_text (zip_info, rankdict, parent, file):
+def create_text (zip_info, rankdict, parent, file, sid):
 
     path, name = os.path.split (zip_info.filename)
     path = os.path.normpath (path)
     text = file.read ().replace ('\r\n','\n')
 
-    with open (os.path.join (settings.MEDIA_ROOT, 'dat', str (uuid ())), 'w') as uuid_file:
+    uuid_file_path = os.path.join (
+        settings.MEDIA_ROOT, 'dat', sid, str (uuid ()))
+
+    with open (uuid_file_path, 'w') as uuid_file:
         uuid_file.write (text)
 
         _ = LEAF.objects.create (
