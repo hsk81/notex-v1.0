@@ -327,7 +327,7 @@ Ext.ux.form.CodeMirror.rest = function () {
         var sel = this.codeEditor.getSelection ();
         if (sel) {
             allPoints.call (this,
-                '#. ', /^(\s*)([0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
+                '#. ', /^(\s*)([#0-9]+\.)(\s+)/, /^(\s*)(.*)/, sel
             );
         } else {
             nextPoint.call (this, '\n{0}#. \n', /^(\s*)[#0-9]\.(\s+)$/);
@@ -377,7 +377,14 @@ Ext.ux.form.CodeMirror.rest = function () {
         var text = this.codeEditor.getLine (curr.line);
         if (!text.match (rx)) {
             this.codeEditor.setCursor ({
-                line:curr.line - 2, ch:text.length - 1
+                line:curr.line - 1, ch:text.length - 1
+            });
+
+            var curr = this.codeEditor.getCursor ();
+            var text = this.codeEditor.getLine (curr.line);
+
+            this.codeEditor.setCursor ({
+                line:curr.line - 0, ch:text.length - 0
             });
         }
     }
