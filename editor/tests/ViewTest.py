@@ -309,7 +309,7 @@ class ViewTest (TestCase):
         resp = self.client.post (url % project_id)
         self.check (resp)
 
-        resp = self.client.post (url % project_id)
+        resp = self.client.post (url % project_id + '?fetch')
         if zip_file: print >> zip_file, resp
 
         self.assertEqual (resp.status_code, 200)
@@ -318,8 +318,7 @@ class ViewTest (TestCase):
         self.assertEquals (resp['Content-Type'], 'application/%s' % ext)
         self.assertTrue (resp['Content-Length'] > 0);
         self.assertIsNotNone (re.match (
-            r'^attachment;filename="(.*).%s"$' % ext,
-            resp['Content-Disposition']
+            r'^attachment;filename="(.*).%s"$'%ext, resp['Content-Disposition']
         ));
 
         return resp, data

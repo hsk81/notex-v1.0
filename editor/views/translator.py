@@ -148,6 +148,12 @@ def latex2pdf (texexec, target_dir, latex_dir):
                 'make', '-C', latex_dir, 'all-pdf', TEXEXEC, TEXOPTS
             ], stdout=stdout, stderr=stderr)
 
+    if texexec == 'pdflatex':
+        os.remove (os.path.join (latex_dir, 'pdflatex'))
+    else:
+        os.remove (os.path.join (latex_dir, 'xelatex'))
+        os.remove (os.path.join (latex_dir, 'xdvipdfmx'))
+        os.remove (os.path.join (latex_dir, 'makeindex'))
 
 def rest2html (target_dir):
 
