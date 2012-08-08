@@ -316,6 +316,8 @@ var editor = function () {
                 if (self.items.length == 0) {
                     var splash = Ext.get ('splash');
                     if (splash) splash.setDisplayed (false);
+                    var menu = Ext.get ('cssmenu');
+                    if (menu) menu.setDisplayed (false);
                 }
             },
 
@@ -323,6 +325,8 @@ var editor = function () {
                 if (self.items.length == 0) {
                     var splash = Ext.get ('splash');
                     if (splash) splash.setDisplayed (true);
+                    var menu = Ext.get ('cssmenu');
+                    if (menu) menu.setDisplayed (true);
                 }
             }
         },
