@@ -20,8 +20,10 @@
     </head>
     <body>
     {% cache 604800 cache-body %}
-        <div id="load-progress"><span class="animation"/></div>
-        <div id="splash-wrap">{% include 'splash.html' %}</div>
+        <div id="content-wrap">
+            <div id="content">{% include 'splash.html' %}</div>
+            <div id="load-progress"><span class="animation"/></div>
+        </div>
         {% block application-js %}{% endblock %}
     {% endcache %}
     </body>
