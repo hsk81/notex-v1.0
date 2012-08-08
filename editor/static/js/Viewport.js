@@ -28,6 +28,8 @@ var viewport = function () {
             afterlayout: function () {
                 var ld = Ext.get ('load-progress');
                 if (ld) ld.remove ();
+                var sw = Ext.get ('splash-wrap');
+                if (sw) sw.remove ();
             }
         }
     });
