@@ -37,8 +37,20 @@ def main (request):
         print >> sys.stderr, "Session ID: %s" % request.session.session_key
         print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
 
-    return render_to_response (
-        'viewport.html', context_instance=RequestContext (request))
+    return render_to_response ('viewport.html',
+        dictionary=main_args (request),
+        context_instance=RequestContext (request))
+
+def main_args (request):
+
+    return {
+        'keywords' : ','.join ([
+            'article', 'report', 'editor', 'latex', 'restructured', 'text',
+            'pdf', 'html', 'converter', 'sphinx']),
+
+        'description' : 'Edit your articles and reports using re-structured ' +
+            'text and convert them to LaTex, PDF or HTML.'
+    }
 
 ################################################################################
 ################################################################################

@@ -6,8 +6,8 @@
     <head>
     {% cache 604800 cache-head %}
         <meta charset="utf-8">
-        <meta name="keywords" content="article, report, editor, latex, restructured, text, pdf, html, converter, sphinx"/>
-        <meda name="description" content="Edit your articles and reports using re-structured text and convert them to LaTex, PDF or HTML."/>
+        <meta name="keywords" content="{{ keywords }}"/>
+        <meda name="description" content="{{ description }}"/>
 
         {% block application-css %}{% endblock %}
         <title>NoTex - A re-structured text editor</title>
