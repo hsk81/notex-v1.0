@@ -19,9 +19,9 @@
     <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
     </head>
     <body>
-    {% cache 604800 cache-body %}
+    {% cache 604800 cache-body page %}
         <div id="content-wrap">
-            <div id="content">{% include 'splash.html' %}</div>
+            <div id="content">{% include 'page.html' %}</div>
             <div id="load-progress"><span class="animation"/></div>
         </div>
         {% block application-js %}{% endblock %}

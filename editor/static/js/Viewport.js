@@ -26,10 +26,10 @@ var viewport = function () {
 
         listeners: {
             afterlayout: function () {
-                var ld = Ext.get ('load-progress');
-                if (ld) ld.remove ();
-                var sw = Ext.get ('splash-wrap');
-                if (sw) sw.remove ();
+                var load_progress = Ext.get ('load-progress');
+                if (load_progress) load_progress.remove ();
+                var page_wrap = Ext.get ('page-wrap');
+                if (page_wrap) page_wrap.remove ();
             }
         }
     });

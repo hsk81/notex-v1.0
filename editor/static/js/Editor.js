@@ -314,8 +314,8 @@ var editor = function () {
 
             beforeadd: function (self, component, index) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('splash');
-                    if (splash) splash.setDisplayed (false);
+                    var splash = Ext.get ('page');
+                    splash.setDisplayed (false);
                     var menu = Ext.get ('cssmenu');
                     if (menu) menu.setDisplayed (false);
                 }
@@ -323,14 +323,14 @@ var editor = function () {
 
             remove: function (self, component) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('splash');
-                    if (splash) splash.setDisplayed (true);
+                    var splash = Ext.get ('page');
+                    splash.setDisplayed (true);
                     var menu = Ext.get ('cssmenu');
                     if (menu) menu.setDisplayed (true);
                 }
             }
         },
 
-        html: $('#splash-wrap').html ()
+        html: $('#page-wrap').html ()
     });
 }();

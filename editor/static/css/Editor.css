@@ -1,11 +1,11 @@
-#splash-wrap {
+#page-wrap {
 }
 
-#splash {
+#page.home {
     padding: 12.5% 0;
 }
 
-#splash .title {
+#page.home .title {
     text-shadow: #888888 -1.25px -0.75px 2px;
     text-align:center;
     font-weight:bold;
@@ -15,18 +15,18 @@
     color:#f0f0f0;
 }
 
-#splash .sub-title {
+#page.home .sub-title {
     margin-left:auto; margin-right: auto; width:75%; height:32px;
 }
 
-#splash .sub-title hr {
+#page.home .sub-title hr {
     border: 0;
     height: 2px;
     color: #888888;
     background-color: #888888;
 }
 
-#splash .sub-title .text {
+#page.home .sub-title .text {
     float:left;
     position:relative;
     left:-16px;
@@ -35,7 +35,7 @@
     color:#888888;
 }
 
-#splash .link-icon {
+#page.home .link-icon {
     height:16px; width:16px; padding-top:4px;
     background-repeat: no-repeat;
     text-align:center;
@@ -43,22 +43,22 @@
     color:#ffffff;
 }
 
-#splash .information {
+#page.home .information {
     float:left; position:relative; top:-28px;
 }
 
-#splash .youtube {
+#page.home .youtube {
     float:right; position:relative; top:-2px; left:0px;
 }
 
-#splash .blogger {
+#page.home .blogger {
     float:right; position:relative; top:-2px; left:-1px;
 }
 
-#splash .twitter {
+#page.home .twitter {
     float:right; position:relative; top:-2px;
 }
 
-#splash .facebook {
+#page.home .facebook {
     float:right; position:relative; top:-2px;
 }

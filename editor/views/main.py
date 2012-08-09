@@ -49,7 +49,9 @@ def main_args (request):
             'pdf', 'html', 'converter', 'sphinx']),
 
         'description' : 'Edit your articles and reports using re-structured ' +
-            'text and convert them to LaTex, PDF or HTML.'
+            'text and convert them to LaTex, PDF or HTML.',
+
+        'page' : request.GET.get ('pg', 'home'),
     }
 
 ################################################################################
