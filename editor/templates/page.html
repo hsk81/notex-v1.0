@@ -11,10 +11,10 @@
                 <a href='?pg=rest'><span>Re-Structured Text</span></a></li>
             <li class="{% if page == 'spp' %}active{% endif %}">
                 <a href='?pg=spp'><span>SP&P</span></a></li>
-            <li class="{% if page == 'download' %}active{% endif %}">
-                <a href='?pg=download'><span>Download</span></a></li>
             <li class="{% if page == 'faq' %}active{% endif %}">
                 <a href='?pg=faq'><span>FAQ</span></a></li>
+            <li class="{% if page == 'download' %}active{% endif %}">
+                <a href='?pg=download'><span>Download</span></a></li>
         </ul>
     </div>
 
@@ -28,9 +28,9 @@
         {% include 'generic_page.html' %}
     {% elif page == 'spp' %}
         {% include 'generic_page.html' %}
-    {% elif page == 'download' %}
-        {% include 'generic_page.html' %}
     {% elif page == 'faq' %}
+        {% include 'generic_page.html' %}
+    {% elif page == 'download' %}
         {% include 'generic_page.html' %}
     {% endif %}
 </div>
