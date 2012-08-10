@@ -314,8 +314,8 @@ var editor = function () {
 
             beforeadd: function (self, component, index) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('page');
-                    splash.setDisplayed (false);
+                    var page = Ext.get ('page-wrap-content');
+                    page.setDisplayed (false);
                     var menu = Ext.get ('cssmenu');
                     if (menu) menu.setDisplayed (false);
                 }
@@ -323,8 +323,8 @@ var editor = function () {
 
             remove: function (self, component) {
                 if (self.items.length == 0) {
-                    var splash = Ext.get ('page');
-                    splash.setDisplayed (true);
+                    var page = Ext.get ('page-wrap-content');
+                    page.setDisplayed (true);
                     var menu = Ext.get ('cssmenu');
                     if (menu) menu.setDisplayed (true);
                 }

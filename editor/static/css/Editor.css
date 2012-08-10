@@ -1,8 +1,26 @@
 #page-wrap {
 }
 
+#page-wrap-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
+/******************************************************************************
+ * Page
+ *****************************************************************************/
+
+#page h1 { font-weight: bold; font-size: xx-large; color: #888888; }
+#page h2 { font-weight: bold; font-size:  x-large; color: #888888; }
+#page h3 { font-weight: bold; font-size:    large; color: #888888; }
+#page h4 { font-weight: bold; font-size:   medium; color: #888888; }
+
+/******************************************************************************
+ * Home Page
+ *****************************************************************************/
+
 #page.home {
-    padding: 12.5% 0;
+    padding: 10% 0;
 }
 
 #page.home .title {
@@ -61,4 +79,17 @@
 
 #page.home .facebook {
     float:right; position:relative; top:-2px;
+}
+
+/******************************************************************************
+ * Overview Page
+ *****************************************************************************/
+
+#page.overview {
+    margin: 0 64px;
+}
+
+#page.overview p {
+    text-align: justify;
+    padding: 0.5em 0;
 }
