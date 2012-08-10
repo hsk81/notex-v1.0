@@ -18,22 +18,3 @@ body {
     display:table-cell;
     vertical-align:middle;
 }
-
-#load-progress {
-    position: absolute;
-    width: 180px;
-    margin: -70px 0 0 -90px;
-    height: 140px;
-    top: 75%;
-    left: 50%
-}
-
-#load-progress .animation {
-    background: url(../loading.gif) no-repeat;
-    position: absolute;
-    display: block;
-    top: 25px;
-    left: 22px;
-    width: 120px;
-    height: 120px
-}
