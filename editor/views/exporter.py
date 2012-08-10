@@ -65,7 +65,7 @@ def compress (request, id, translate, ext = 'zip', hook = None):
 
     else:
         http_response, object_val, success = to_zip (request, translate, node)
-        if success: cache.set (object_key, object_val, timeout=15*60) ## 15mins
+        if success: cache.set (object_key, object_val, timeout=15*60) ## 15 mins
 
     return http_response
 
