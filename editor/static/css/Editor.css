@@ -86,10 +86,19 @@
  *****************************************************************************/
 
 #page.overview {
-    margin: 0 64px;
+    margin: 0 auto;
+    width: 768px;
 }
 
 #page.overview p {
     text-align: justify;
     padding: 0.5em 0;
+}
+
+#page.overview p strong {
+    font-weight: bold;
+}
+
+#page.overview p em {
+    font-style: italic;
 }
