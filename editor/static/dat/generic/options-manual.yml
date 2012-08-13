@@ -32,13 +32,12 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
-    fontpkg: \\usepackage{libertine} ## for pdflatex
- ## fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine} ## for xelatex
+    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine} ## for xelatex
 
     preamble: ${MKAMBLE}
     maketitle: ${MKTITLE}
     tableofcontents: ${MKTABLE}${COLUMNS}
-    footer: ''
+    footer:
     printindex: ${MKINDEX}
 
 latex_documents:
@@ -48,7 +47,7 @@ latex_documents:
 # LaTex: http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex
 # -----------------------------------------------------------------------------
 
-latex_backend: pdflatex ## or xelatex
+latex_backend: xelatex ## or pdflatex
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html

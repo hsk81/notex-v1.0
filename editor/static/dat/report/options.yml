@@ -29,7 +29,7 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 12pt ## or 11pt or 10pt
-    fontpkg: \\usepackage{libertine}
+    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine} ## for xelatex
 
     preamble: ''
     maketitle: |
@@ -66,7 +66,7 @@ latex_additional_files: [wiki.jpg]
 # LaTex: http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex
 # -----------------------------------------------------------------------------
 
-latex_backend: pdflatex
+latex_backend: xelatex
 
 # -----------------------------------------------------------------------------
 # Date/Time Format: http://docs.python.org/library/datetime.html

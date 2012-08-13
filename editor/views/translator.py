@@ -317,7 +317,7 @@ def emit (value, type, key = None):
     elif type == types.UnicodeType: return emit_string (value, key)
     elif type == types.NoneType: return emit_none (key)
 
-    else: return None ## security: ignore other types!
+    else: return emit_none (key) ## security: ignore other types!
 
 def emit_list (ls, key):
 
@@ -352,9 +352,9 @@ def emit_string (value, key):
 def emit_none (key):
 
     if key:
-        return '%s = None' % key
+        return '%s = u""' % key
     else:
-        return      'None'
+        return      'u""'
 
 ################################################################################
 ################################################################################

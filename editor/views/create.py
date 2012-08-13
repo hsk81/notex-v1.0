@@ -44,12 +44,12 @@ def createProject (request, path = None):
         if data['title']:
             mktitle = '\\\\maketitle'
         else:
-            mktitle = "''"
+            mktitle = ""
         if data['toc']:
             mktable = '\\\\cleardoublepage\\\\tableofcontents'
-            mkamble = "''"
+            mkamble = ""
         else:
-            mktable = "''"
+            mktable = ""
             mkamble = '''|
             \\\\pagestyle{myheadings}
             \\\\pagenumbering{arabic}
@@ -67,11 +67,11 @@ def createProject (request, path = None):
         if data['title']:
             mktitle = '\\\\maketitle'
         else:
-            mktitle = "''"
+            mktitle = ""
         if data['toc']:
             mktable = '\\\\tableofcontents\\\\hrule'
         else:
-            mktable = "''"
+            mktable = ""
 
         mkamble = '''|
         \\\\pagestyle{myheadings}
@@ -84,7 +84,7 @@ def createProject (request, path = None):
     if data['index']:
         mkindex = '\\\\printindex'
     else:
-        mkindex = "''"
+        mkindex = ""
 
     if data['content'] == 'tutorial':
         rstfile = 'generic/content-intro.rst'
