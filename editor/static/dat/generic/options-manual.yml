@@ -33,7 +33,7 @@ latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: ${FONTPSZ} ## 10pt, 11pt or 12pt
     fontpkg: \\usepackage{libertine} ## for pdflatex
- ## fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine O} ## for xelatex
+ ## fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine} ## for xelatex
 
     preamble: ${MKAMBLE}
     maketitle: ${MKTITLE}
