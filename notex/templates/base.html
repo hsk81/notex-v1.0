@@ -1,9 +1,21 @@
-{% spaceless %}
-    {% load cache %}
-    {% load staticfiles %}
-    <!DOCTYPE html>
-    <html>
-    <head>
+{% load ssl %}
+{% load cache %}
+{% load staticfiles %}
+{% ssl %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% cache 604800 cache-head-micro %}
+        <meta itemprop="name" content="NoTex"/>
+        <meta itemprop="description" content="{{ description }}"/>
+        <meta itemprop="url" content="{{ host }}"/>
+        <meta itemprop="image" content="{% static 'notex.png' %}"/>
+        <meta itemprop="softwareApplicationCategory" content="BusinessApplication"/>
+        <meta itemprop="softwareApplicationSubCategory" content="Editor"/>
+        <meta itemprop="downloadURL" content="?pg=download"/>
+        <meta itemprop="browsers" content="chrome firefox"/>
+    {% endcache %}
+
     {% cache 604800 cache-head page %}
         <meta charset="utf-8">
         <meta name="keywords" content="{{ keywords }}"/>
@@ -24,14 +36,14 @@
         {% endif %}
     {% endcache %}
     <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
-    </head>
-    <body>
-    {% cache 604800 cache-body page %}
-        <div id="content-wrap">
-            <div id="content">{% include 'page.html' %}</div>
-        </div>
-        {% block application-js %}{% endblock %}
-    {% endcache %}
-    </body>
-    </html>
-{% endspaceless %}
+</head>
+<body>
+{% cache 604800 cache-body page %}
+    <div id="content-wrap">
+        <div id="content">{% include 'page.html' %}</div>
+    </div>
+    {% block application-js %}{% endblock %}
+{% endcache %}
+</body>
+</html>
+{% end_ssl %}

@@ -66,7 +66,7 @@ def main_args (request):
         'description' : 'Edit your articles and reports using re-structured ' +
             'text and convert them to LaTex, PDF or HTML.',
 
-        'page' : page, 'page_name' : page_name
+        'page' : page, 'page_name' : page_name, 'host' : request.get_host ()
     }
 
 ################################################################################
