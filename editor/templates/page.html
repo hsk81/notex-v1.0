@@ -1,5 +1,12 @@
 <div id="page-wrap">
     <div id="page-wrap-content">
+        <div itemscope itemtype="http://schema.org/SoftwareApplication">
+
+        <meta itemprop="author" content="{{ host }}"/>
+        <meta itemprop="url" content="{{ uri }}"/>
+        <meta itemprop="softwareApplicationCategory" content="BusinessApplication"/>
+        <meta itemprop="softwareApplicationSubCategory" content="Editor"/>
+
         <div id='cssmenu'>
             <ul>
                 <li class="{% if page == 'home' %}active{% endif %}">
@@ -15,7 +22,7 @@
                 <li class="{% if page == 'faq' %}active{% endif %}">
                     <a href='?pg=faq'><span>FAQ</span></a></li>
                 <li class="{% if page == 'download' %}active{% endif %}">
-                    <a href='?pg=download'><span>Download</span></a></li>
+                    <a itemprop="downloadURL" href='?pg=download'><span>Download</span></a></li>
             </ul>
         </div>
 
@@ -34,5 +41,6 @@
         {% elif page == 'download' %}
             {% include 'generic_page.html' %}
         {% endif %}
+        </div>
     </div>
 </div>
