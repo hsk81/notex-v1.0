@@ -3,7 +3,7 @@
 <html>
 <head>
     {% cache 604800 cache-head-micro %}
-        <div itemscope itemtype="http://schema.org/SoftwareApplication">
+    <div itemscope itemtype="http://schema.org/SoftwareApplication">
         <meta itemprop="name" content="NoTex"/>
         <meta itemprop="description" content="{{ description }}"/>
         <meta itemprop="author" content="{{ host }}"/>
@@ -12,7 +12,7 @@
         <meta itemprop="softwareApplicationCategory" content="BusinessApplication"/>
         <meta itemprop="softwareApplicationSubCategory" content="Editor"/>
         <meta itemprop="downloadURL" content="{{ uri }}/?pg=download"/>
-        </div>
+    </div>
     {% endcache %}
 
     {% cache 604800 cache-head page %}
