@@ -10,8 +10,15 @@
         <meda name="description" content="{{ description }}"/>
 
         {% block application-css %}{% endblock %}
+
+        {% if page != 'home' %}
+        <title>NoTex - A re-structured text editor [{{ page_name }}]</title>
+        {% else %}
         <title>NoTex - A re-structured text editor</title>
+        {% endif %}
+
         <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
         {% if not debug %}
         <script type="text/javascript">{% include 'analytics.js' %}</script>
         {% endif %}

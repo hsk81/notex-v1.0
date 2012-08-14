@@ -43,6 +43,21 @@ def main (request):
 
 def main_args (request):
 
+    def get_page_name (page):
+
+        return {
+            'home': 'Home',
+            'overview': 'Overview',
+            'tutorial': 'Tutorial',
+            'rest': 'Re-Structured Text',
+            'spp': 'SP&P',
+            'faq': 'FAQ',
+            'download': 'Download',
+        }[page]
+
+    page = request.GET.get ('pg', 'home')
+    page_name = get_page_name (page)
+
     return {
         'keywords' : ','.join ([
             'article', 'report', 'editor', 'latex', 'restructured', 'text',
@@ -51,7 +66,7 @@ def main_args (request):
         'description' : 'Edit your articles and reports using re-structured ' +
             'text and convert them to LaTex, PDF or HTML.',
 
-        'page' : request.GET.get ('pg', 'home'),
+        'page' : page, 'page_name' : page_name
     }
 
 ################################################################################
