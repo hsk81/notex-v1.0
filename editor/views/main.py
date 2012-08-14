@@ -58,6 +58,14 @@ def main_args (request):
     page = request.GET.get ('pg', 'home')
     page_name = get_page_name (page)
 
+    def get_uri (request):
+
+        protocol = \
+            "https://" if request.is_secure () else \
+            "http://"
+
+        return protocol + request.get_host ()
+
     return {
         'keywords' : ','.join ([
             'article', 'report', 'editor', 'latex', 'restructured', 'text',
@@ -66,7 +74,10 @@ def main_args (request):
         'description' : 'Edit your articles and reports using re-structured ' +
             'text and convert them to LaTex, PDF or HTML.',
 
-        'page' : page, 'page_name' : page_name, 'host' : request.get_host ()
+        'page' : page,
+        'page_name' : page_name,
+
+        'uri' : get_uri (request)
     }
 
 ################################################################################

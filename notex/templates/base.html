@@ -1,14 +1,11 @@
-{% load ssl %}
-{% load cache %}
-{% load staticfiles %}
-{% ssl %}
+{% load ssl %}{% ssl %}{% load cache %}{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
     {% cache 604800 cache-head-micro %}
         <meta itemprop="name" content="NoTex"/>
         <meta itemprop="description" content="{{ description }}"/>
-        <meta itemprop="url" content="{{ host }}"/>
+        <meta itemprop="url" content="{{ uri }}"/>
         <meta itemprop="image" content="{% static 'notex.png' %}"/>
         <meta itemprop="softwareApplicationCategory" content="BusinessApplication"/>
         <meta itemprop="softwareApplicationSubCategory" content="Editor"/>
