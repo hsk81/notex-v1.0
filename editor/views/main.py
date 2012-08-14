@@ -77,7 +77,8 @@ def main_args (request):
         'page' : page,
         'page_name' : page_name,
 
-        'uri' : get_uri (request)
+        'uri' : get_uri (request),
+        'host' : request.get_host ()
     }
 
 ################################################################################
