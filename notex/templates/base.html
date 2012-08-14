@@ -15,14 +15,11 @@
         </div>
     {% endcache %}
 
-    {% cache 604800 cache-head-meta %}
+    {% cache 604800 cache-head page %}
         <meta charset="utf-8">
         <meta name="keywords" content="{{ keywords }}"/>
         <meda name="description" content="{{ description }}"/>
-        <meta name="author" content="{{ host }}"/>
-    {% endcache %}
 
-    {% cache 604800 cache-head page %}
         {% block application-css %}{% endblock %}
 
         {% if page != 'home' %}
