@@ -12,4 +12,6 @@ pip install pylibmc
 pip install pyyaml
 pip install flup
 
+pip install Sphinx
+
 deactivate
