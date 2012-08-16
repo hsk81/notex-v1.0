@@ -13,7 +13,7 @@ import logging
 ###############################################################################
 
 MACH_PROs = [r'notex.ch$', r'blackhan.ch$']
-MACH_VMEs = [r'vmach-v(.*)$']
+MACH_VMEs = [r'vmach.v(.+)$']
 
 def in_rxs (exp, rxs):
     """
