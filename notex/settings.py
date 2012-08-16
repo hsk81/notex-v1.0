@@ -4,13 +4,32 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 ###############################################################################
 ###############################################################################
 
+import re
 import os
+import socket
+import logging
+
+###############################################################################
+###############################################################################
+
+MACH_PROs = [r'notex.ch$', r'blackhan.ch$']
+MACH_VMEs = [r'vmach-v(.*)$']
+
+def in_rxs (exp, rxs):
+    """
+    Returns ``None`` if expression ``exp`` does not match any in list ``rxs``
+    of regular expressions; otherwise returns first match.
+    """
+    return reduce (lambda res, rx: res or re.match (rx, exp), rxs, None)
+
+###############################################################################
+###############################################################################
+
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
-SITE_HOST = 'blackhan.ch'
+SITE_HOST = socket.gethostname ()
 
-import socket
-DEBUG = socket.gethostname () != SITE_HOST
+DEBUG = not in_rxs (SITE_HOST, MACH_PROs + MACH_VMEs)
 TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
@@ -21,16 +40,23 @@ ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
+    'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'notex',
         'USER': 'notex'
     },
- ## 'sqlite': {
- ##     'ENGINE': 'django.db.backends.sqlite3',
- ##     'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
- ## },
+    'sqlite': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
+    },
 }
+
+DATABASES['default'] = \
+    DATABASES['sqlite'] if DEBUG else \
+    DATABASES['postgresql']
+
+del DATABASES['postgresql']
+del DATABASES['sqlite']
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
@@ -119,7 +145,6 @@ INSTALLED_APPS = (
 ################################################################################
 ################################################################################
 
-import logging
 class NoMessageFailuresFilter (logging.Filter):
     """
     See http://github.com/omab/django-social-auth/issues/283
