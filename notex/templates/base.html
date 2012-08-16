@@ -2,19 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {% cache 604800 cache-head-micro %}
-    <div itemscope itemtype="http://schema.org/SoftwareApplication">
-        <meta itemprop="name" content="NoTex"/>
-        <meta itemprop="description" content="{{ description }}"/>
-        <meta itemprop="author" content="{{ host }}"/>
-        <meta itemprop="url" content="{{ uri }}"/>
-        <meta itemprop="image" content="{% static 'notex.png' %}"/>
-        <meta itemprop="softwareApplicationCategory" content="BusinessApplication"/>
-        <meta itemprop="softwareApplicationSubCategory" content="Editor"/>
-        <meta itemprop="downloadURL" content="{{ uri }}/?pg=download"/>
-    </div>
-    {% endcache %}
-
     {% cache 604800 cache-head page %}
         <meta charset="utf-8">
         <meta name="keywords" content="{{ keywords }}"/>
