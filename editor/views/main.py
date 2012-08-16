@@ -7,6 +7,8 @@ __date__ = "$Mar 27, 2012 1:02:55 PM$"
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+from django.utils.decorators import decorator_from_middleware
+from django.middleware.gzip import GZipMiddleware
 
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
@@ -22,6 +24,7 @@ import os
 ################################################################################
 ################################################################################
 
+@decorator_from_middleware (GZipMiddleware)
 def main (request):
     if request.session.has_key ('timestamp') and 'refresh' not in request.GET:
         request.session['timestamp'] = datetime.now ()
