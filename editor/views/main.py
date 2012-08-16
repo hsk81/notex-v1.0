@@ -59,6 +59,8 @@ def main_args (request):
     page_name = get_page_name (page)
 
     return {
+        'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
+
         'keywords' : ','.join ([
             'article', 'report', 'editor', 'latex', 'restructured', 'text',
             'pdf', 'html', 'converter', 'sphinx']),

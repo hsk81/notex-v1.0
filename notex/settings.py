@@ -34,7 +34,6 @@ TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
     SITE_HOST = 'localhost'
-    INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
