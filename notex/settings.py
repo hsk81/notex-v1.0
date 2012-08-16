@@ -52,8 +52,8 @@ DATABASES = {
 }
 
 DATABASES['default'] = \
-    DATABASES['sqlite'] if DEBUG else \
-    DATABASES['postgresql']
+    DATABASES['postgresql'] if in_rxs (SITE_HOST, MACH_PROs) else \
+    DATABASES['sqlite']
 
 del DATABASES['postgresql']
 del DATABASES['sqlite']
