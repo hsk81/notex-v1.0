@@ -6,6 +6,7 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 
 import re
 import os
+import base64
 import socket
 import logging
 
@@ -81,7 +82,7 @@ STATICFILES_FINDERS = (
  ## 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-SECRET_KEY = 'u_rzhb_@f=2_ha)x=$*1zazaoqwvgxhwqaiv)jafy^qnho(096'
+SECRET_KEY = base64.encodestring (os.urandom (24))
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
