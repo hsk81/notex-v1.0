@@ -71,7 +71,9 @@ function svcstop() {
 }
 
 function relink() {
-    $SSHEXEC "cd $SRVROOT/$APPPATH && rm sha-current -f &&" \
+    $SSHEXEC "cd $SRVROOT/$APPPATH &&" \
+        "readlink -f sha-current | xargs rm -rf &&" \
+        "rm sha-current -f &&" \
         "$SRVEXEC ln -s $SHAPATH sha-current"
 }
 
@@ -115,7 +117,7 @@ function pretty() {
 
 pretty archive  "Exporting $GITREPO repository to $PKGARCH archive"
 pretty startvm  "Starting virtual machine -- TODO"
-pretty upload   "Copying $PKGARCH archive to VM/$SRVROOT"
+pretty upload   "Copying $PKGARCH archive to $SRVROOT on virtual machine"
 pretty unpack   "[VM] Decompressing $PKGARCH archive"
 pretty build    "[VM] Bulding $APPPATH/$SHAPATH"
 pretty svcstop  "[VM] Stopping any service for $APPPATH"
