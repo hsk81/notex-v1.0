@@ -61,7 +61,7 @@ def main_args (request):
     page = request.GET.get ('pg', 'home')
     page_name = get_page_name (page)
 
-    return {
+    result = {
         'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
 
         'keywords' : ','.join ([
@@ -73,6 +73,13 @@ def main_args (request):
 
         'page' : page, 'page_name' : page_name
     }
+
+    if settings.IN_RXS (settings.SITE_HOST, settings.MACH_VMES) or True:
+        result['STATIC_URL'] = 'http://static.%s/%s/' % (
+            request.get_host ().split ('.')[-1], ## for VMs w/o proxy!
+            settings.SITE_NAME)
+
+    return result
 
 ################################################################################
 ################################################################################

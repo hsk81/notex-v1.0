@@ -13,8 +13,8 @@ import logging
 ###############################################################################
 ###############################################################################
 
-MACH_PROs = [r'notex.ch$', r'blackhan.ch$']
-MACH_VMEs = [r'vmach(.*)$']
+MACH_PROS = [r'notex.ch$', r'blackhan.ch$']
+MACH_VMES = [r'vmach(.*)$']
 
 def in_rxs (exp, rxs):
     """
@@ -23,6 +23,8 @@ def in_rxs (exp, rxs):
     """
     return reduce (lambda res, rx: res or re.match (rx, exp), rxs, None)
 
+IN_RXS = in_rxs
+
 ###############################################################################
 ###############################################################################
 
@@ -30,7 +32,7 @@ SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
 SITE_HOST = socket.gethostname ()
 
-DEBUG = not in_rxs (SITE_HOST, MACH_PROs + MACH_VMEs)
+DEBUG = not in_rxs (SITE_HOST, MACH_PROS + MACH_VMES)
 TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
@@ -52,7 +54,7 @@ DATABASES = {
 }
 
 DATABASES['default'] = \
-    DATABASES['postgresql'] if in_rxs (SITE_HOST, MACH_PROs) else \
+    DATABASES['postgresql'] if in_rxs (SITE_HOST, MACH_PROS) else \
     DATABASES['sqlite']
 
 del DATABASES['postgresql']
