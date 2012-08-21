@@ -74,7 +74,7 @@ def main_args (request):
         'page' : page, 'page_name' : page_name
     }
 
-    if settings.IN_RXS (settings.SITE_HOST, settings.MACH_VMES) or True:
+    if settings.IN_RXS (settings.SITE_HOST, settings.MACH_VMES):
         result['STATIC_URL'] = 'http://static.%s/%s/' % (
             request.get_host ().split ('.')[-1], ## for VMs w/o proxy!
             settings.SITE_NAME)
