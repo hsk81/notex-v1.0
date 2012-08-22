@@ -55,10 +55,15 @@ function unpack() {
 
 function build() {
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC mkdir -p ../sha-0000000"
+    $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC mkdir -p ../sha-0000000/bin &&" \
         "$SRVEXEC ln -s ../sha-0000000/bin"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC mkdir -p ../sha-0000000/include &&" \
         "$SRVEXEC ln -s ../sha-0000000/include"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC mkdir -p ../sha-0000000/lib &&" \
         "$SRVEXEC ln -s ../sha-0000000/lib"
 
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
