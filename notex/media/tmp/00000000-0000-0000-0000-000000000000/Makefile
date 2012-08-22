@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = /srv/htdocs/http/notex.app/sha-current/bin/python /srv/htdocs/http/notex.app/sha-current/bin/sphinx-build
+SPHINXBUILD   = /srv/http/htdocs/notex.app/sha-current/bin/python /srv/http/htdocs/notex.app/sha-current/bin/sphinx-build
 PAPER         =
 BUILDDIR      = build
 
