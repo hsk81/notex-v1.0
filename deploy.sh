@@ -17,7 +17,7 @@ SSHEXEC="/usr/bin/ssh -p $SSHPORT -i $SSHPASS $SSHUSER@$SSHMACH"
 SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
-OPTIONS="${1}" ## e.g. --upgrade
+PIPOPTS="${1}" ## e.g. --upgrade
 
 ###############################################################################
 ###############################################################################
@@ -62,7 +62,7 @@ function build() {
         "$SRVEXEC ln -s ../sha-0000000/lib"
 
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
-        "$SRVEXEC ./setup.sh $OPTIONS"
+        "$SRVEXEC ./setup.sh $PIPOPTS"
 
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
         "cd notex/ && $SRVEXEC djboss -l DEBUG cssmin -p"
