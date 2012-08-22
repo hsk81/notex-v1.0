@@ -17,6 +17,8 @@ SSHEXEC="/usr/bin/ssh -p $SSHPORT -i $SSHPASS $SSHUSER@$SSHMACH"
 SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
+OPTIONS="${1}" ## e.g. --upgrade
+
 ###############################################################################
 ###############################################################################
 
@@ -53,17 +55,30 @@ function unpack() {
 
 function build() {
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
-        "$SRVEXEC ./setup.sh"
+        "$SRVEXEC ln -s ../sha-0000000/bin"
+    $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC ln -s ../sha-0000000/include"
+    $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC ln -s ../sha-0000000/lib"
+
+    $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "$SRVEXEC ./setup.sh $OPTIONS"
+
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
         "cd notex/ && $SRVEXEC djboss -l DEBUG cssmin -p"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
         "cd notex/ && $SRVEXEC djboss -l DEBUG jsmin -p"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
         "$SRVEXEC ./manage.py syncdb --noinput"
+
+    $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
+        "sudo cp splash /etc/issue"
 }
 
 function svcstop() {
-    SHAPATHs=`$SSHEXEC "ls $SRVROOT/$APPPATH | egrep '^sha-.{7}$'"`
+    SHAPATHs=`$SSHEXEC "ls $SRVROOT/$APPPATH |" \
+        "egrep -v '^sha-0000000$' | egrep -e '^sha-.{7}$'"`
+
     for VALPATH in $SHAPATHs ; do
         $SSHEXEC "cd $SRVROOT/$APPPATH/$VALPATH &&" \
             "$SRVEXEC ./serve.sh stop-all"
@@ -102,7 +117,6 @@ function stopvm() {
 function exportvm() {
     echo -n
 }
-
 
 ###############################################################################
 ###############################################################################
