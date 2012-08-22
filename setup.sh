@@ -14,7 +14,7 @@ fi
 pip install $1 django
 pip install $1 django-jsmin
 pip install $1 django-cssmin
-pip install $1 pylibmc
+pip install $1 python-memcached
 pip install $1 pyyaml
 pip install $1 flup
 pip install $1 Sphinx

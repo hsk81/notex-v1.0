@@ -105,13 +105,13 @@ CACHES = {
     'default' : {
         'BACKEND' :
             'django.core.cache.backends.dummy.DummyCache' if DEBUG else
-            'django.core.cache.backends.memcached.PyLibMCCache',
+            'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
     'memcached' : {
         'BACKEND' :
-            'django.core.cache.backends.memcached.PyLibMCCache',
+            'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
