@@ -47,6 +47,10 @@ function upload() {
 }
 
 function unpack() {
+    $SSHEXEC "if [ -f $SRVROOT/$APPPATH/sha-curent ] ; then" \
+        "cd $SRVROOT/$APPPATH &&" \
+        "readlink -f sha-current | xargs rm -rf &&" \
+        "rm sha-current -f ; fi"
     $SSHEXEC "cd $SRVROOT &&" \
         "$SRVEXEC tar xzvf $SRVROOT/$PKGARCH"
     $SSHEXEC "cd $SRVROOT &&" \
@@ -92,8 +96,6 @@ function svcstop() {
 
 function relink() {
     $SSHEXEC "cd $SRVROOT/$APPPATH &&" \
-        "readlink -f sha-current | xargs rm -rf &&" \
-        "rm sha-current -f &&" \
         "$SRVEXEC ln -s $SHAPATH sha-current"
 }
 
