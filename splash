@@ -12,7 +12,7 @@
     X888xX"   '8888..:  "*888*P"    !"*8888888n..  :  '8888c. .+ d888" Y888*" 
   :~`888f     '*888*"     'Y"      '    "*88888888*    "88888%   ` "Y   Y"    
       ""        `"`                        ^"***"`       "YP'                  
-        A re-structured text editor                                      [1;30;40mv0.0.1[0;37;40m
+        A re-structured text editor                                      [0;37;40mv0.0.2
  
  NoTex is a browser based editor, which allows you to write  reports and theses
  based  on the *re-structured text* markup language. Once written the documents
@@ -20,7 +20,7 @@
 
  To use the editor, please point your browser of choice (not IE) to the address
 
-        [1;33;40mhttp://notex.localhost:8080/[0;37;40m.
+        [1;33;40mhttp://localhost:8080/[0;37;40m.
 
  If you run NoTex on a different host than the browser then you have to replace
  "localhost" with the correct host name; see also [1;33;40mhttp://notex.ch/[0;37;40m.
