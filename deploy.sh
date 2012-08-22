@@ -70,9 +70,9 @@ function build() {
         "$SRVEXEC ./setup.sh $PIPOPTS"
 
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
-        "cd notex/ && $SRVEXEC djboss -l DEBUG cssmin -p"
+        "cd notex/ && $SRVEXEC ../bin/python ../bin/djboss -l DEBUG cssmin -p"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
-        "cd notex/ && $SRVEXEC djboss -l DEBUG jsmin -p"
+        "cd notex/ && $SRVEXEC ../bin/python ../bin/djboss -l DEBUG jsmin -p"
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH && source bin/activate &&" \
         "$SRVEXEC ./manage.py syncdb --noinput"
 
