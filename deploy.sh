@@ -116,7 +116,7 @@ function cleanup() {
 }
 
 function stopvm() {
-    $SSHEXEC "shutdown -hF now"
+    $SSHEXEC "shutdown -rF now"
 }
 
 function exportvm() {
