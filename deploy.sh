@@ -126,10 +126,15 @@ function cleanup() {
             "$SRVEXEC tree -fi $SRVROOT/$APPPATH | egrep pyc$ | xargs -r rm"
     done
 
+    $SSHEXEC "cd $SRVROOT/$APPPATH/sha-current && source bin/activate &&" \
+        "$SRVEXEC ./manage.py cleanup -ae \"$(date +'%Y-%m-%d %H:%M:%S')\""
+
     $SSHEXEC "rm /var/cache/lighttpd/compress/* -rf"
     $SSHEXEC "rm /var/cache/pacman/pkg/* -rf"
     $SSHEXEC "dcfldd if=/dev/zero of=/fillfile bs=4M ; rm /fillfile"
     $SSHEXEC "dcfldd if=/dev/zero of=/home/fillfile bs=4M ; rm /home/fillfile"
+    $SSHEXEC "rm /root/.bash_history -f"
+    $SSHEXEC "rm /home/user/.bash_history -f"
 }
 
 function stopvm() {
@@ -169,8 +174,10 @@ function pretty() {
     echo "done"
 }
 
+if [ $COMMAND == "cleanup" ] ; then
+pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
+else
 pretty startvm  "Starting virtual machine"
-
 if [ $COMMAND == "update" ] ; then
 pretty archive  "Exporting $GITREPO repository to $PKGARCH archive"
 pretty upload   "Copying $PKGARCH archive to $SRVROOT on virtual machine"
@@ -180,10 +187,10 @@ pretty svcstop  "[VM] Stopping any service for $APPPATH"
 pretty relink   "[VM] Relinking static & media with $APPPATH/$SHAPATH"
 pretty svcstart "[VM] Starting $APPPATH/$SHAPATH service"
 fi
-
 pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
 pretty stopvm   "[VM] Shutting down virtual machine"
 pretty exportvm "Exporting VM as an applicance"
+fi
 
 ###############################################################################
 ###############################################################################
