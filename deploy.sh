@@ -199,7 +199,7 @@ pretty svcstart "[VM] Starting $APPPATH/$SHAPATH service"
 fi
 pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
 pretty stopvm   "[VM] Shutting down virtual machine"
-pretty exportvm "Exporting VM as an applicance"
+pretty exportvm "Exporting VM as an appliance"
 fi
 
 ###############################################################################
