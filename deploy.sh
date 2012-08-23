@@ -41,7 +41,7 @@ function startvm() {
                 | cut -d'=' -f2)
 
             if [ $VMSTATE != '"poweroff"' ] ; then
-                sleep 1.250
+                sleep 2.500
             else
                 break
             fi
@@ -154,7 +154,7 @@ function stopvm() {
             | cut -d'=' -f2)
 
         if [ $VMSTATE != '"poweroff"' ] ; then
-            sleep 1.250
+            sleep 2.500
         else
             break
         fi
