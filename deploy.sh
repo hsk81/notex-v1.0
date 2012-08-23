@@ -43,7 +43,7 @@ function startvm() {
             if [ $VMSTATE != '"poweroff"' ] ; then
                 sleep 5.000
             else
-                break
+                sleep 5.000 && break
             fi
         done
     fi
@@ -156,7 +156,7 @@ function stopvm() {
         if [ $VMSTATE != '"poweroff"' ] ; then
             sleep 5.000
         else
-            break
+            sleep 5.000 && break
         fi
     done
 }
