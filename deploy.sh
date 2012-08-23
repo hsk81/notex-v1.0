@@ -17,7 +17,7 @@ SSHEXEC="/usr/bin/ssh -p $SSHPORT -i $SSHPASS $SSHUSER@$SSHMACH"
 SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
-COMMAND=${1-"update"} ## update|export
+COMMAND=${1-"export"} ## export|update
 
 VIRMACH=${2-"notex.ncjk"}
 VERSION=${3-"v000-0.ncjk"}
