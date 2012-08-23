@@ -34,9 +34,12 @@ function startvm() {
         | grep "^VMState=" \
         | cut -d'=' -f2)
 
-    if [ $VMSTATE != '"running"' ] ; then
-        VBoxManage startvm --type headless $VIRMACH
+    if [ $VMSTATE == '"running"' ] ; then
+        VBoxManage controlvm $VIRMACH poweroff
     fi
+
+    VBoxManage snapshot $VIRMACH restorecurrent
+    VBoxManage startvm --type headless $VIRMACH
 }
 
 function archive() {
