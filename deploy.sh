@@ -144,7 +144,7 @@ function stopvm() {
 }
 
 function exportvm() {
-    mkdir -p $OVAPATH && rm -f $OVAPATH/$OVAFILE && \
+    mkdir -p $OVAPATH && \
     VBoxManage export --vsys 0 \
         --product "NoTex - A re-structured text editor" \
         --producturl "http://notex.ch" --vendor "Blackhan.ch" \
