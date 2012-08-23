@@ -35,7 +35,17 @@ function startvm() {
         | cut -d'=' -f2)
 
     if [ $VMSTATE == '"running"' ] ; then
-        VBoxManage controlvm $VIRMACH poweroff
+        VBoxManage controlvm $VIRMACH poweroff && while [ 1 ] ; do
+            VMSTATE=$(VBoxManage showvminfo notex.ncjk --machinereadable \
+                | grep "^VMState=" \
+                | cut -d'=' -f2)
+
+            if [ $VMSTATE != '"poweroff"' ] ; then
+                sleep 1.250
+            else
+                break
+            fi
+        done
     fi
 
     VBoxManage snapshot $VIRMACH restorecurrent
@@ -144,7 +154,7 @@ function stopvm() {
             | cut -d'=' -f2)
 
         if [ $VMSTATE != '"poweroff"' ] ; then
-            sleep 2.500
+            sleep 1.250
         else
             break
         fi
