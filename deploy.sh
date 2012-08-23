@@ -17,10 +17,27 @@ SSHEXEC="/usr/bin/ssh -p $SSHPORT -i $SSHPASS $SSHUSER@$SSHMACH"
 SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
-PIPOPTS="${1}" ## e.g. --upgrade
+COMMAND=${1-"update"} ## update|export
+
+VIRMACH=${2-"notex.ncjk"}
+VERSION=${3-"v000-0.ncjk"}
+OVAPATH=${4-"../notex.pkg"}
+OVAFILE="notex.$VERSION.ova"
+
+PIPOPTS=${5} ## e.g. --upgrade
 
 ###############################################################################
 ###############################################################################
+
+function startvm() {
+    VMSTATE=$(VBoxManage showvminfo $VIRMACH --machinereadable \
+        | grep "^VMState=" \
+        | cut -d'=' -f2)
+
+    if [ $VMSTATE != '"running"' ] ; then
+        VBoxManage startvm --type headless $VIRMACH
+    fi
+}
 
 function archive() {
     cd $SRVROOT/$GITREPO
@@ -33,10 +50,6 @@ function archive() {
     mv temp $APPPATH/$SHAPATH
     tar czvf $PKGARCH $APPPATH/$SHAPATH
     rm $APPPATH -r
-}
-
-function startvm() {
-    echo -n
 }
 
 function upload() {
@@ -77,7 +90,8 @@ function build() {
         "$SRVEXEC ./manage.py syncdb --noinput"
 
     $SSHEXEC "cd $SRVROOT/$APPPATH/$SHAPATH &&" \
-        "sudo cp splash /etc/issue"
+        "cat issue.tpl | sed s/VERSION/$VERSION/ > issue.tmp &&" \
+        "sudo cp issue.tmp /etc/issue && rm issue.tmp"
 }
 
 function svcstop() {
@@ -116,11 +130,29 @@ function cleanup() {
 }
 
 function stopvm() {
-    $SSHEXEC "shutdown -hF now"
+    $SSHEXEC "shutdown -hF now" && while [ 1 ] ; do
+        VMSTATE=$(VBoxManage showvminfo notex.ncjk --machinereadable \
+            | grep "^VMState=" \
+            | cut -d'=' -f2)
+
+        if [ $VMSTATE != '"poweroff"' ] ; then
+            sleep 2.500
+        else
+            break
+        fi
+    done
 }
 
 function exportvm() {
-    echo -n
+    mkdir -p $OVAPATH && rm -f $OVAPATH/$OVAFILE && \
+    VBoxManage export --vsys 0 \
+        --product "NoTex - A re-structured text editor" \
+        --producturl "http://notex.ch" --vendor "Blackhan.ch" \
+        --vendorurl "http://blackhan.ch" \
+        --version $VERSION \
+        --eulafile gpl-3.0.txt \
+        --manifest $VIRMACH \
+        --output $OVAPATH/$OVAFILE
 }
 
 ###############################################################################
@@ -134,17 +166,21 @@ function pretty() {
     echo "done"
 }
 
+pretty startvm  "Starting virtual machine"
+
+if [ $COMMAND == "update" ] ; then
 pretty archive  "Exporting $GITREPO repository to $PKGARCH archive"
-pretty startvm  "Starting virtual machine -- TODO"
 pretty upload   "Copying $PKGARCH archive to $SRVROOT on virtual machine"
 pretty unpack   "[VM] Decompressing $PKGARCH archive"
 pretty build    "[VM] Bulding $APPPATH/$SHAPATH"
 pretty svcstop  "[VM] Stopping any service for $APPPATH"
 pretty relink   "[VM] Relinking static & media with $APPPATH/$SHAPATH"
 pretty svcstart "[VM] Starting $APPPATH/$SHAPATH service"
+fi
+
 pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
-pretty stopvm   "[VM] Shutting down virtual machine -- TODO"
-pretty exportvm "Exporting VM as an applicance -- TODO"
+pretty stopvm   "[VM] Shutting down virtual machine"
+pretty exportvm "Exporting VM as an applicance"
 
 ###############################################################################
 ###############################################################################
