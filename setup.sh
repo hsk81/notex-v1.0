@@ -1,18 +1,22 @@
 #!/bin/bash
 
-git submodule update --init
-virtualenv . --prompt="[notex] "
+if [ -d .git ] ; then
+    git submodule update --init
+fi
+
+virtualenv2 . --prompt="[notex] "
 source bin/activate
 
-pip install ipython
-pip install django
-pip install django-redis
-pip install django-jsmin
-pip install django-cssmin
-pip install psycopg2
-pip install pylibmc
-pip install numpy
-pip install pyyaml
-pip install flup
+if [ -f /usr/bin/postgres ] ; then
+    pip install $1 psycopg2
+fi
+
+pip install $1 django
+pip install $1 django-jsmin
+pip install $1 django-cssmin
+pip install $1 python-memcached
+pip install $1 pyyaml
+pip install $1 flup
+pip install $1 Sphinx
 
 deactivate

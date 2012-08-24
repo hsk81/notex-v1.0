@@ -7,6 +7,8 @@ __date__ = "$Mar 27, 2012 1:02:55 PM$"
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+from django.utils.decorators import decorator_from_middleware
+from django.middleware.gzip import GZipMiddleware
 
 from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
@@ -22,6 +24,7 @@ import os
 ################################################################################
 ################################################################################
 
+@decorator_from_middleware (GZipMiddleware)
 def main (request):
     if request.session.has_key ('timestamp') and 'refresh' not in request.GET:
         request.session['timestamp'] = datetime.now ()
@@ -58,15 +61,9 @@ def main_args (request):
     page = request.GET.get ('pg', 'home')
     page_name = get_page_name (page)
 
-    def get_uri (request):
+    result = {
+        'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
 
-        protocol = \
-            "https://" if request.is_secure () else \
-            "http://"
-
-        return protocol + request.get_host ()
-
-    return {
         'keywords' : ','.join ([
             'article', 'report', 'editor', 'latex', 'restructured', 'text',
             'pdf', 'html', 'converter', 'sphinx']),
@@ -74,12 +71,13 @@ def main_args (request):
         'description' : 'Edit your articles and reports using re-structured ' +
             'text and convert them to LaTex, PDF or HTML.',
 
-        'page' : page,
-        'page_name' : page_name,
-
-        'uri' : get_uri (request),
-        'host' : request.get_host ()
+        'page' : page, 'page_name' : page_name
     }
+
+    if settings.IN_RXS (settings.SITE_HOST, settings.MACH_VMES):
+        result['STATIC_URL'] = 'http://%s/static/' % request.get_host ()
+
+    return result
 
 ################################################################################
 ################################################################################

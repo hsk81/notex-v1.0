@@ -4,33 +4,61 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 ###############################################################################
 ###############################################################################
 
+import re
 import os
+import base64
+import socket
+import logging
+
+###############################################################################
+###############################################################################
+
+MACH_PROS = [r'notex.ch$', r'blackhan.ch$']
+MACH_VMES = [r'vmach(.*)$']
+
+def in_rxs (exp, rxs):
+    """
+    Returns ``None`` if expression ``exp`` does not match any in list ``rxs``
+    of regular expressions; otherwise returns first match.
+    """
+    return reduce (lambda res, rx: res or re.match (rx, exp), rxs, None)
+
+IN_RXS = in_rxs
+
+###############################################################################
+###############################################################################
+
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
-SITE_HOST = 'blackhan.ch'
+SITE_HOST = socket.gethostname ()
 
-import socket
-DEBUG = socket.gethostname () != SITE_HOST
+DEBUG = not in_rxs (SITE_HOST, MACH_PROS + MACH_VMES)
 TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
     SITE_HOST = 'localhost'
-    INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
+    'postgresql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'notex',
         'USER': 'notex'
     },
- ## 'sqlite': {
- ##     'ENGINE': 'django.db.backends.sqlite3',
- ##     'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
- ## },
+    'sqlite': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
+    },
 }
+
+DATABASES['default'] = \
+    DATABASES['postgresql'] if in_rxs (SITE_HOST, MACH_PROS) else \
+    DATABASES['sqlite']
+
+del DATABASES['postgresql']
+del DATABASES['sqlite']
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'
@@ -56,7 +84,7 @@ STATICFILES_FINDERS = (
  ## 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-SECRET_KEY = 'u_rzhb_@f=2_ha)x=$*1zazaoqwvgxhwqaiv)jafy^qnho(096'
+SECRET_KEY = base64.encodestring (os.urandom (24))
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -77,13 +105,13 @@ CACHES = {
     'default' : {
         'BACKEND' :
             'django.core.cache.backends.dummy.DummyCache' if DEBUG else
-            'django.core.cache.backends.memcached.PyLibMCCache',
+            'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
     'memcached' : {
         'BACKEND' :
-            'django.core.cache.backends.memcached.PyLibMCCache',
+            'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
@@ -119,7 +147,6 @@ INSTALLED_APPS = (
 ################################################################################
 ################################################################################
 
-import logging
 class NoMessageFailuresFilter (logging.Filter):
     """
     See http://github.com/omab/django-social-auth/issues/283
