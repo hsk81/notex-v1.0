@@ -174,6 +174,10 @@ function exportvm() {
         --output $OVAPATH/$OVAFILE
 }
 
+function snapshotvm() {
+    VBoxManage snapshot $VIRMACH take $VERSION
+}
+
 ###############################################################################
 ###############################################################################
 
@@ -186,21 +190,24 @@ function pretty() {
 }
 
 if [ $COMMAND == "cleanup" ] ; then
-pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
+pretty cleanup    "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
 else
-pretty startvm  "Starting virtual machine"
+pretty startvm    "Starting virtual machine"
 if [ $COMMAND == "update" ] ; then
-pretty archive  "Exporting $GITREPO repository to $PKGARCH archive"
-pretty upload   "Copying $PKGARCH archive to $SRVROOT on virtual machine"
-pretty unpack   "[VM] Decompressing $PKGARCH archive"
-pretty build    "[VM] Bulding $APPPATH/$SHAPATH"
-pretty svcstop  "[VM] Stopping any service for $APPPATH"
-pretty relink   "[VM] Relinking static & media with $APPPATH/$SHAPATH"
-pretty svcstart "[VM] Starting $APPPATH/$SHAPATH service"
+pretty archive    "Exporting $GITREPO repository to $PKGARCH archive"
+pretty upload     "Copying $PKGARCH archive to $SRVROOT on virtual machine"
+pretty unpack     "[VM] Decompressing $PKGARCH archive"
+pretty build      "[VM] Bulding $APPPATH/$SHAPATH"
+pretty svcstop    "[VM] Stopping any service for $APPPATH"
+pretty relink     "[VM] Relinking static & media with $APPPATH/$SHAPATH"
+pretty svcstart   "[VM] Starting $APPPATH/$SHAPATH service"
 fi
-pretty cleanup  "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
-pretty stopvm   "[VM] Shutting down virtual machine"
-pretty exportvm "Exporting VM as an appliance"
+pretty cleanup    "[VM] Cleaning $APPPATH, caches plus HD pre-compacting"
+pretty stopvm     "[VM] Shutting down virtual machine"
+pretty exportvm   "Exporting $VERSION as an appliance"
+if [ $COMMAND == "update" ] ; then
+pretty snapshotvm "Creating snapshot for $VERSION"
+fi
 fi
 
 ###############################################################################
