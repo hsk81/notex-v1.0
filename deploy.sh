@@ -18,13 +18,16 @@ SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
 COMMAND=${1-"export"} ## export|update
-
-VIRMACH=${2-"notex.ncjk"}
-VERSION=${3-"v000-0.ncjk"}
+EDITION=${2-"ncjk"}
+PIPOPTS=${3} ## e.g. --upgrade
 OVAPATH=${4-"../notex.pkg"}
-OVAFILE="notex.$VERSION.ova"
 
-PIPOPTS=${5} ## e.g. --upgrade
+SHAONEs=$(git rev-parse --short master)
+SHAPATH="sha-$SHAONEs"
+
+VERSION="v$(date +'%Y-%m-%d').$SHAONEs.$EDITION"
+OVAFILE="notex.$VERSION.ova"
+VIRMACH="notex.$EDITION"
 
 ###############################################################################
 ###############################################################################
@@ -53,12 +56,10 @@ function startvm() {
 }
 
 function archive() {
-    cd $SRVROOT/$GITREPO
     rm temp -rf && mkdir temp
     git archive master | tar -x -C temp
     git submodule foreach --recursive \
         'git archive $sha1 | tar -x -C $toplevel/temp/$path'
-    export SHAPATH=sha-`git rev-parse --short master`
     rm $APPPATH -rf && mkdir $APPPATH
     mv temp $APPPATH/$SHAPATH
     tar czvf $PKGARCH $APPPATH/$SHAPATH
@@ -66,7 +67,6 @@ function archive() {
 }
 
 function upload() {
-    cd $SRVROOT/$GITREPO
     $SCPEXEC $PKGARCH $SSHUSER@$SSHMACH:$SRVROOT
     $SSHEXEC "chown http:http $SRVROOT/$PKGARCH"
     rm $PKGARCH
