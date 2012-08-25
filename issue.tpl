@@ -12,7 +12,7 @@
     X888xX"   '8888..:  "*888*P"    !"*8888888n..  :  '8888c. .+ d888" Y888*" 
   :~`888f     '*888*"     'Y"      '    "*88888888*    "88888%   ` "Y   Y"    
       ""        `"`                        ^"***"`       "YP'                  
-        A re-structured text editor                   [0;37;40mVERSION
+        A re-structured text editor                    [0;37;40mVERSION
  
  NoTex is a browser based editor, which allows you to write  reports and theses
  based  on the *re-structured text* markup language. Once written the documents
