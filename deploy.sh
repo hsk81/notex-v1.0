@@ -36,7 +36,7 @@ function startvm() {
 
     if [ $VMSTATE == '"running"' ] ; then
         VBoxManage controlvm $VIRMACH poweroff && while [ 1 ] ; do
-            VMSTATE=$(VBoxManage showvminfo notex.ncjk --machinereadable \
+            VMSTATE=$(VBoxManage showvminfo $VIRMACH --machinereadable \
                 | grep "^VMState=" \
                 | cut -d'=' -f2)
 
