@@ -58,6 +58,7 @@ function startvm() {
 function archive() {
     rm temp -rf && mkdir temp
     git archive master | tar -x -C temp
+    git submodule update --init
     git submodule foreach --recursive \
         'git archive $sha1 | tar -x -C $toplevel/temp/$path'
     rm $APPPATH -rf && mkdir $APPPATH
