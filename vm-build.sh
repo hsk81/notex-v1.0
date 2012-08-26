@@ -213,8 +213,8 @@ pretty stopvm     "[VM] Shutting down virtual machine"
 pretty exportvm   "Exporting $VERSION as an appliance"
 if [ $COMMAND == "update" ] ; then
 pretty snapshotvm "Creating snapshot for $VERSION"
-fi
 pretty relinkcur  "Updating current link to $VERSION"
+fi
 fi
 
 ###############################################################################
