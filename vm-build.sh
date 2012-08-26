@@ -155,9 +155,9 @@ function stopvm() {
             | cut -d'=' -f2)
 
         if [ $VMSTATE != '"poweroff"' ] ; then
-            sleep 5.000
+            sleep 7.500
         else
-            sleep 5.000 && break
+            sleep 7.500 && break
         fi
     done
 }
@@ -176,6 +176,12 @@ function exportvm() {
 
 function snapshotvm() {
     VBoxManage snapshot $VIRMACH take $VERSION
+}
+
+function relinkcur() {
+    cd $OVAPATH && \
+    rm -f notex.current.$EDITION.ova && \
+    ln -s $OVAFILE notex.current.$EDITION.ova
 }
 
 ###############################################################################
@@ -208,6 +214,7 @@ pretty exportvm   "Exporting $VERSION as an appliance"
 if [ $COMMAND == "update" ] ; then
 pretty snapshotvm "Creating snapshot for $VERSION"
 fi
+pretty relinkcur  "Updating current link to $VERSION"
 fi
 
 ###############################################################################
