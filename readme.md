@@ -9,4 +9,3 @@ It's features are:
   * Import and export of reports from/to local/remote storage.
 
 It's major benefit is that it saves the time and effort to install and setup the very powerful *Sphinx* and *LaTex* tools. Using a simple UI and a beautiful markup language it enables to write state-of-art reports.
-...
