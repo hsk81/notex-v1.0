@@ -33,6 +33,7 @@ SITE_NAME = 'notex'
 SITE_HOST = socket.gethostname ()
 
 DEBUG = not in_rxs (SITE_HOST, MACH_PROS + MACH_VMES)
+if 'DEBUG' in os.environ: DEBUG = os.environ['DEBUG']
 TEMPLATE_DEBUG = DEBUG
 
 if DEBUG:
