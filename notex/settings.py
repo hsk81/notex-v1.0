@@ -23,7 +23,7 @@ def in_rxs (exp, rxs):
     """
     return reduce (lambda res, rx: res or re.match (rx, exp), rxs, None)
 
-IN_RXS = in_rxs
+IN_RXS = in_rxs ## public var
 
 ###############################################################################
 ###############################################################################
@@ -107,13 +107,17 @@ CACHES = {
         'BACKEND' :
             'django.core.cache.backends.dummy.DummyCache' if DEBUG else
             'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION' : '127.0.0.1:11211',
+        'LOCATION' : \
+            '192.168.56.1:11211' if in_rxs (SITE_HOST, MACH_PROS) else
+            '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
     'memcached' : {
         'BACKEND' :
             'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION' : '127.0.0.1:11211',
+        'LOCATION' : \
+            '192.168.56.1:11211' if in_rxs (SITE_HOST, MACH_PROS) else
+            '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
 }
@@ -253,6 +257,7 @@ LOGGING = {
             'handlers': ['console-verbose', 'file-exporter'],
             'propagate': False
         },
+
         'editor.views.importer': {
             'level':'ERROR',
             'handlers': ['console-verbose', 'file-importer'],
