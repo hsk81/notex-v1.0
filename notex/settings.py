@@ -7,7 +7,6 @@ __date__ = "$Mar 27, 2012 1:12:57 PM$"
 import re
 import os
 import base64
-import socket
 import logging
 
 ###############################################################################
@@ -30,7 +29,7 @@ IN_RXS = in_rxs ## public var
 
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
-SITE_HOST = socket.gethostname ()
+SITE_HOST = 'notex.ch'
 
 DEBUG = not in_rxs (SITE_HOST, MACH_PROS + MACH_VMES)
 if 'DEBUG' in os.environ: DEBUG = os.environ['DEBUG'] == 'True'
@@ -107,17 +106,13 @@ CACHES = {
         'BACKEND' :
             'django.core.cache.backends.dummy.DummyCache' if DEBUG else
             'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION' : \
-            '192.168.56.1:11211' if in_rxs (SITE_HOST, MACH_PROS) else
-            '127.0.0.1:11211',
+        'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
     'memcached' : {
         'BACKEND' :
             'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION' : \
-            '192.168.56.1:11211' if in_rxs (SITE_HOST, MACH_PROS) else
-            '127.0.0.1:11211',
+        'LOCATION' : '127.0.0.1:11211',
         'TIMEOUT' : 240, ## secs: staleness
     },
 }
