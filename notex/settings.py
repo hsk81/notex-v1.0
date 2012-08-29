@@ -13,7 +13,7 @@ import logging
 ###############################################################################
 ###############################################################################
 
-MACH_PROS = [r'notex.ch$', r'blackhan.ch$']
+MACH_DEVS = [r'localhost$', r'(.*)\.blackhan.ch$']
 MACH_VMES = [r'vmach(.*)$']
 
 def in_rxs (exp, rxs):
@@ -28,17 +28,15 @@ IN_RXS = in_rxs ## public var
 ###############################################################################
 ###############################################################################
 
-SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
-SITE_NAME = 'notex'
-SITE_HOST = 'notex.ch' if not in_rxs (socket.gethostname (), MACH_VMES) else \
-            'vmachine'
-
-DEBUG = not in_rxs (SITE_HOST, MACH_PROS + MACH_VMES)
 if 'DEBUG' in os.environ: DEBUG = os.environ['DEBUG'] == 'True'
+else: DEBUG = in_rxs (socket.getfqdn (), MACH_DEVS)
 TEMPLATE_DEBUG = DEBUG
 
-if DEBUG:
-    SITE_HOST = 'localhost'
+SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
+SITE_NAME = 'notex'
+SITE_HOST = 'vmach-env' if in_rxs (socket.gethostname (), MACH_VMES) else \
+            'localhost' if in_rxs (socket.getfqdn (), MACH_DEVS) else \
+            'notex.ch'
 
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
@@ -56,8 +54,8 @@ DATABASES = {
 }
 
 DATABASES['default'] = \
-    DATABASES['postgresql'] if in_rxs (SITE_HOST, MACH_PROS) else \
-    DATABASES['sqlite']
+    DATABASES['sqlite'] if in_rxs (SITE_HOST, MACH_DEVS + MACH_VMES) else \
+    DATABASES['postgresql']
 
 del DATABASES['postgresql']
 del DATABASES['sqlite']
