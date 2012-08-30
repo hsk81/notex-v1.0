@@ -54,7 +54,6 @@ def main_args (request):
             'overview': 'Overview',
             'tutorial': 'Tutorial',
             'rest': 'Re-Structured Text',
-            'spp': 'SP&P',
             'faq': 'FAQ',
             'download': 'Download',
         }[page]
