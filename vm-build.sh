@@ -17,7 +17,7 @@ SSHEXEC="/usr/bin/ssh -p $SSHPORT -i $SSHPASS $SSHUSER@$SSHMACH"
 SCPEXEC="/usr/bin/scp -P $SSHPORT -i $SSHPASS"
 SRVEXEC="/usr/bin/sudo -u http -g http"
 
-COMMAND=${1-"export"} ## export|update|cleanup
+COMMAND=${1-"update"} ## update|export|cleanup
 EDITION=${2-"ncjk"} ## ncjk|intl
 PIPOPTS=${3} ## e.g. --upgrade
 OVAPATH=${4-"../notex.pkg"}
