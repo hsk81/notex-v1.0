@@ -101,3 +101,29 @@
 #page.overview p em {
     font-style: italic;
 }
+
+/******************************************************************************
+ * Download Page
+ *****************************************************************************/
+
+#page.download {
+    margin: 0 auto;
+    width: 768px;
+}
+
+#page.download p {
+    text-align: justify;
+    padding: 0.5em 0;
+}
+
+#page.download p strong {
+    font-weight: bold;
+}
+
+#page.download p em {
+    font-style: italic;
+}
+
+#page.download ul li {
+    margin-left: 2em;
+}
