@@ -65,8 +65,8 @@ def main_args (request):
         'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
 
         'keywords' : ','.join ([
-            'article', 'report', 'editor', 'latex', 'restructured', 'text',
-            'pdf', 'html', 'converter', 'sphinx']),
+            'article', 'report', 'thesis', 'book', 'editor', 'latex',
+            'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']),
 
         'description' : 'Edit your articles and reports using re-structured ' +
             'text and convert them to LaTex, PDF or HTML.',
