@@ -13,7 +13,7 @@ import logging
 ###############################################################################
 ###############################################################################
 
-MACH_DEVS = [r'localhost$', r'(.*)\.blackhan.ch$']
+MACH_DEVS = [r'(.*)\.blackhan.ch$']
 MACH_VMES = [r'vmach(.*)$']
 
 def in_rxs (exp, rxs):
@@ -34,31 +34,23 @@ TEMPLATE_DEBUG = DEBUG
 
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
-SITE_HOST = 'vmach-env' if in_rxs (socket.gethostname (), MACH_VMES) else \
-            'localhost' if in_rxs (socket.getfqdn (), MACH_DEVS) else \
-            'notex.ch'
+SITE_HOST = 'localhost' if in_rxs (socket.getfqdn (), MACH_DEVS + MACH_VMES) \
+       else 'notex.ch'
 
 ADMINS = (('admin', 'admin@mail.net'),)
 MANAGERS = ADMINS
 
-DATABASES = {
-    'postgresql': {
+if in_rxs (socket.getfqdn (), MACH_DEVS + MACH_VMES):
+    DATABASES = {'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
+    }}
+else:
+    DATABASES = {'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'notex',
         'USER': 'notex'
-    },
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join (SITE_ROOT, 'sqlite.db'),
-    },
-}
-
-DATABASES['default'] = \
-    DATABASES['sqlite'] if in_rxs (SITE_HOST, MACH_DEVS + MACH_VMES) else \
-    DATABASES['postgresql']
-
-del DATABASES['postgresql']
-del DATABASES['sqlite']
+    }}
 
 TIME_ZONE = 'Europe/Zurich'
 LANGUAGE_CODE = 'en-us'

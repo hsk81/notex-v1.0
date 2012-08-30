@@ -18,6 +18,7 @@ from uuid import uuid4 as uuid_random
 from datetime import datetime
 
 import os.path
+import socket
 import sys
 import os
 
@@ -74,7 +75,7 @@ def main_args (request):
         'page' : page, 'page_name' : page_name
     }
 
-    if settings.IN_RXS (settings.SITE_HOST, settings.MACH_VMES):
+    if settings.IN_RXS (socket.getfqdn (), settings.MACH_VMES):
         result['STATIC_URL'] = 'http://%s/static/' % request.get_host ()
 
     return result
