@@ -59,6 +59,8 @@ var reportManager = function () {
                         } else {
                             import_failure (file.name, response.message);
                         }
+                    } else if (this.status == 413) {
+                        import_failure (file.name, resource.LARGE_FILE);
                     } else {
                         import_failure (file.name, resource.UNKNOWN_ERROR);
                     }
