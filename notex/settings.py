@@ -61,13 +61,12 @@ USE_L10N = True
 USE_TZ = True
 
 MEDIA_ROOT = os.path.join (SITE_ROOT, 'media')
-MEDIA_URL = 'http://media.%s/%s/' % (SITE_HOST, SITE_NAME)
-
+MEDIA_URL = '/media/'
 MEDIA_DATA = os.path.join (MEDIA_ROOT, 'dat')
 MEDIA_TEMP = os.path.join (MEDIA_ROOT, 'tmp')
 
 STATIC_ROOT = os.path.join (SITE_ROOT, 'static')
-STATIC_URL = 'http://static.%s/%s/' % (SITE_HOST, SITE_NAME)
+STATIC_URL = '/static/'
 STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
