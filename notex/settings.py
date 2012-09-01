@@ -112,7 +112,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 3 * 24 * 3600 ## secs: 3d
 SESSION_COOKIE_NAME = 'sid'
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = not DEBUG
 
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
