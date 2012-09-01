@@ -10,6 +10,8 @@
                     <a href='?pg=tutorial'><span>Tutorial</span></a></li>
                 <li class="{% if page == 'rest' %}active{% endif %}">
                     <a href='?pg=rest'><span>Re-Structured Text</span></a></li>
+                <li class="{% if page == 'ssl' %}active{% endif %}">
+                    <a href='?pg=ssl'><span>Security</span></a></li>
                 <li class="{% if page == 'faq' %}active{% endif %}">
                     <a href='?pg=faq'><span>FAQ</span></a></li>
                 <li class="{% if page == 'download' %}active{% endif %}">
@@ -24,6 +26,8 @@
         {% elif page == 'tutorial' %}
             {% include 'generic_page.html' %}
         {% elif page == 'rest' %}
+            {% include 'generic_page.html' %}
+        {% elif page == 'ssl' %}
             {% include 'generic_page.html' %}
         {% elif page == 'faq' %}
             {% include 'generic_page.html' %}
