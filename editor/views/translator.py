@@ -102,6 +102,8 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     if not skip_html:
         zip_to_html (zip_buffer, html_dir, title)
 
+    shutil.rmtree (target_dir)
+
 ################################################################################
 
 def rest2latex (origin_dir, target_dir, latex_dir):
