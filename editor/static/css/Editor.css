@@ -1,3 +1,7 @@
+/******************************************************************************
+ * Page Wrap
+ *****************************************************************************/
+
 #page-wrap {
 }
 
@@ -17,7 +21,7 @@
 #page h4 { font-weight: bold; font-size:   medium; color: #888888; }
 
 /******************************************************************************
- * Home Page
+ * Page: Home
  *****************************************************************************/
 
 #page.home {
@@ -82,55 +86,33 @@
 }
 
 /******************************************************************************
- * Overview Page
+ * Page: Textual
  *****************************************************************************/
 
-#page.overview {
+#page.textual {
     margin: 0 auto;
     width: 768px;
 }
 
-#page.overview p {
+#page.textual p {
     text-align: justify;
     padding: 0.5em 0;
 }
 
-#page.overview p strong {
+#page.textual p strong {
     font-weight: bold;
 }
 
-#page.overview p em {
+#page.textual p em {
     font-style: italic;
 }
 
-/******************************************************************************
- * Download Page
- *****************************************************************************/
-
-#page.download {
-    margin: 0 auto;
-    width: 768px;
-}
-
-#page.download p {
-    text-align: justify;
-    padding: 0.5em 0;
-}
-
-#page.download p strong {
-    font-weight: bold;
-}
-
-#page.download p em {
-    font-style: italic;
-}
-
-#page.download ul li {
+#page.textual ul li {
     margin-left: 2em;
 }
 
 /******************************************************************************
- * Footer
+ * Page Wrap: Footer
  *****************************************************************************/
 
 #page-wrap-content .footer-sticky {
@@ -152,3 +134,5 @@
     width: 132px;
     height: 32px;
 }
+
+/*****************************************************************************/
