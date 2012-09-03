@@ -102,7 +102,8 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
     if not skip_html:
         zip_to_html (zip_buffer, html_dir, title)
 
-    shutil.rmtree (target_dir)
+    if not settings.DEBUG:
+        shutil.rmtree (os.path.join (settings.MEDIA_TEMP, root.root.usid))
 
 ################################################################################
 

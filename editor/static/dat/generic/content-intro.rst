@@ -372,3 +372,6 @@ RST Documentation
 
 .. [#f03] When the default domain contains a `class` directive, this directive will be shadowed. Therefore, |NoTex| re-exports it as `rst-class`.
 
+.. |NoTex| replace::
+   :latex:`\textsc{NoTex}`
+   :html:`<span style="font-variant: small-caps;">NoTex</span>`
