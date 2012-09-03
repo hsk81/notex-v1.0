@@ -161,12 +161,12 @@
     <h2>Directives</h2>
     <p>A directive (<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#directives" target="_blank">ref</a>) is a generic block of explicit markup. Docutils supports the following directives:</p>
 
-    <p><em>Admonitions:</em> <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#attention" target="_blank">attention</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#caution" target="_blank">caution</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#danger" target="_blank">danger</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#error" target="_blank">error</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#hint" target="_blank">hint</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">important</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">note</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#tip" target="_blank">tip</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#warning" target="_blank">warning</a> and the generic <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#admonition" target="_blank">admonition</a>. (Most themes style only "note" and "warning" specially.)</p>
+    <p><em>Admonitions</em>: <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#attention" target="_blank">attention</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#caution" target="_blank">caution</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#danger" target="_blank">danger</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#error" target="_blank">error</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#hint" target="_blank">hint</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">important</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#important" target="_blank">note</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#tip" target="_blank">tip</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#warning" target="_blank">warning</a> and the generic <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#admonition" target="_blank">admonition</a>. (Most themes style only "note" and "warning" specially.)</p>
 
-    <p><em>Images:</em>
+    <p><em>Images</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#image" target="_blank">image</a> (see also <a href="#id2">images</a> below), and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure" target="_blank">figure</a> (an image with caption and optional legend).</p>
-    <p><em>Additional body elements:</em>
+    <p><em>Additional body elements</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#table-of-contents" target="_blank">contents</a> (a local, i.e. for the current file only, table of contents),
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#container" target="_blank">container</a> (a container with a custom class, useful to generate an outer &lt;div&gt; in HTML),
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#rubric" target="_blank">rubric</a> (a heading without relation to the document sectioning),
@@ -175,18 +175,18 @@
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#epigraph" target="_blank">epigraph</a> (a block quote with optional attribution line),
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#highlights" target="_blank">highlights</a>, <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#pull-quote" target="_blank">pull-quote</a> (block quotes with their own class attribute), and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#compound" target="_blank">compound</a> (a compound paragraph).</p>
-    <p><em>Special tables:</em>
+    <p><em>Special tables</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#table" target="_blank">table</a> (a table with title),
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#csv-table" target="_blank">csv-table</a> (a table generated from comma-separated values), and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#list-table" target="_blank">list-table</a> (a table generated from a list of lists).</p>
-    <p><em>Special directives:</em>
+    <p><em>Special directives</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#raw" target="_blank">raw</a> (include raw target-format markup),
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#include" target="_blank">include</a> (include re-structured text from another file) – when given an absolute include file path, this directive takes it as relative to the source directory, and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#class" target="_blank">class</a> (assign a class attribute to the next element).</p>
-    <p><em>HTML specifics:</em>
+    <p><em>HTML specifics</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#meta" target="_blank">meta</a> (generation of HTML <meta> tags), and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#title" target="_blank">title</a> (override document title).</p>
-    <p><em>Influencing markup:</em>
+    <p><em>Influencing markup</em>:
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#default-role" target="_blank">default-role</a> (set a new default role), and
         <a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#role" target="_blank">role</a> (create a new role).
        Since these are only per-file, better use <a href="http://sphinx.pocoo.org/config.html#confval-default_role" target="_blank">default_role</a>.</p>
@@ -289,8 +289,8 @@
     <h2>Gotchas</h2>
     <p>There are some problems one commonly runs into while authoring RST documents:</p>
 
-    <p><em>Separation of inline markup:</em> As said above, inline markup spans must be separated from the surrounding text by non-word characters, you have to use a backslash-escaped space to get around that. See <a href="http://docutils.sf.net/docs/ref/rst/restructuredtext.html#inline-markup" target="_blank">the reference</a> for the details.</p>
-    <p><em>No nested inline markup:</em>Something like <tt>*see :func:`foo`*</tt> is not possible.</p>
+    <p><em>Separation of inline markup</em>: As said above, inline markup spans must be separated from the surrounding text by non-word characters, you have to use a backslash-escaped space to get around that. See <a href="http://docutils.sf.net/docs/ref/rst/restructuredtext.html#inline-markup" target="_blank">the reference</a> for the details.</p>
+    <p><em>No nested inline markup</em>: Something like <tt>*see :func:`foo`*</tt> is not possible.</p>
 
     <h4>Footnotes</h4>
     <p><a href="#id1" id="ft1">[1]</a>&nbsp;This document is a slightly altered version of <a href="http://sphinx.pocoo.org/rest.html" target="_blank">sphinx.pocoo.org/rest.html</a>.</p>
