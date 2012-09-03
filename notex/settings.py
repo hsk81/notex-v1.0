@@ -112,7 +112,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 3 * 24 * 3600 ## secs: 3d
 SESSION_COOKIE_NAME = 'sid'
-SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not in_rxs (socket.getfqdn (), MACH_DEVS + MACH_VMES)
 
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
@@ -159,12 +159,12 @@ LOGGING = {
 
     'formatters': {
         'simplis': {
-            'format': '[%(asctime)s] %(levelname)s -- ' \
-                '%(message)s',
+            'format': '[%(asctime)s] %(levelname)s -- '
+                      '%(message)s',
         },
         'verbose': {
-            'format': '[%(asctime)s] %(levelname)s %(name)s:%(lineno)d -- ' \
-                '%(message)s',
+            'format': '[%(asctime)s] %(levelname)s %(name)s:%(lineno)d -- '
+                      '%(message)s',
         },
     },
 
