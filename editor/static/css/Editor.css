@@ -99,11 +99,11 @@
     padding: 0.5em 0;
 }
 
-#page.textual p strong {
+#page.textual strong {
     font-weight: bold;
 }
 
-#page.textual p em {
+#page.textual em {
     font-style: italic;
 }
 
