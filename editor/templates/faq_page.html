@@ -1,0 +1,61 @@
+<div id="page" class="textual overview">
+
+    <p>This section provides answers to frequently asked and important questions. If you want to ask a new one then check out <a href="http://github.com/hsk81/notex/wiki/Questions-&-Answers" target="_blank">questions & answers</a> or write an e-mail provided at the end of this page.</p>
+
+    <h2>Security</h2>
+
+    <h3>How is my communication protected?</h3>
+    <p>NoTex applies standard SSL with 256 bit encryption, based on a certificated issued by <a href="http://godaddy.com" target="_blank">GoDaddy.com</a>. That means nobody between your computer and the editor's server can eavesdrop and access the data. You can confirm this statement by clicking on the padlock icon in the address bar of your browser. Plus you should see the SSL seal at the footer of every page: If you click on it you'll see the issuer's verification.</p>
+
+    <h3>How is my data protected?</h3>
+    <p>Your data is kept on servers in the European Union; the data itself is <em>not</em> encrypted, which means the administrators could have access to it, although internal policy forbids this. Having said that, it's planned to introduce client side encryption, in which case even a person with physical access to the hard disks would not be able to read your data.</p>
+
+    <p>If you do not feel comfortable with the current situation, then their is an offline solution available at the <a href="?pg=download">download</a> page: Once installed, it works even without an internet access.</p>
+
+    <h3>Where do I sign up & login?</h3>
+    <p>NoTex does not require you to sign up or login; just use it. If you re-visit the site then you're identified based on a secure cookie which has been generated and stored (in your browser) at your last visit. If you delete your cookie then there is no possibility to associate you with the last visit; therefore the editor will create a new session for you.</p>
+
+   <h2>Data</h2>
+
+    <h3>How much space do I have?</h3>
+    <p>Not much; NoTex is not meant as a storage solution for large amounts of data. But it is planned to introduce a Dropbox integration, where your data within the editor would be stored (encrypted!) on Dropbox' servers. At the moment it's recommended, to export regularly your data to your computer. Or you get the offline solution from the <a href="?pg=download">download</a> page, which works locally.</p>
+
+    <h3>How long do you keep my data?</h3>
+    <p>If you do not re-visit NoTex for longer than 3 days, then all your data is deleted. It is not recoverable and there is no support for any requests w.r.t. lost data. As long as you keep using NoTex on a regular basis (at least once every 72 hours), then your data is kept on the servers.</p>
+
+    <h3>I deleted my cookies; can I access my data?</h3>
+    <p>No; your data will automatically be deleted within 3 days. NoTex uses a secure cookie to identify re-visiting users; if you delete it, then there is no possibility to associate you with your now in-accessible data. Either export regularly your data to your computer, and re-import it in such a situation, or use the offline solution available at the <a href="?pg=download">download</a> page.</p>
+
+    <h2>Performance</h2>
+
+    <h3>Why does the PDF conversion take so long?</h3>
+    <p>Converting re-structured text to LaTex is not an expensive operation, but translating LaTex to PDF involves significant amount of processing; even on modern machines it can take not only milli-seconds but some seconds and even minutes.</p>
+
+    <h3>Can the PDF conversion be accelerated?</h3>
+    <p>Yes, to some extend: NoTex uses by default the <em>xelatex</em> backend to do the LaTex translation, which is compared to the <em>pdflatex</em> backend slower (not terribly but significantly). The <a href="http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex" target="_blank">wiki</a> explains how you can change the backend.</p>
+
+    <p>It can also happen, that our servers cannot cope with the user load: It such cases either simply wait and re-try later on, or check out the offline solution; see <a href="?pg=download">download</a> page.</p>
+
+    <h2>Documentation</h2>
+
+    <h3>What is the <em>options.cfg</em> configuration file about?</h3>
+    <p>The <a href="http://github.com/hsk81/notex/wiki/Configuration-File:-options.cfg" target="_blank">options.cfg</a> wiki page explains in detail how use the configuration file and apply it within a report or project. It basically contains meta-information about the project and allows tweaking of the conversion parameters.</p>
+
+    <h3>Where can I find information about <em>content.txt</em>?</h3>
+    <p>The <a href="http://github.com/hsk81/notex/wiki/Content-File:-content.txt" target="_blank">content.txt</a> wiki page explains in detail how use it within a report or project. It's the main file for your content.</p>
+
+    <h2>Miscellanea</h2>
+
+    <h3>What does <em>NoTex</em> mean?</h3>
+    <p>It's a pun on <em>Tex</em>, since if the NoTex editor is properly used, you can avoid using (and learning) <em>Tex</em> or <em>LaTex</em>. Knowing LaTex is not a disadvantage though, since you can apply it to change NoTex' default templates.</p>
+
+    <h3>How can I contact you?</h3>
+    <p>Either ask a question on the <a href="http://github.com/hsk81/notex/wiki/Questions-&-Answers" target="_blank">wiki</a> page, or send an email to <em style="text-decoration: underline;">contact</em> [at-sign] <em style="text-decoration: underline;">blackhan.ch</em>. Prepend the subject line with either <tt>[NoTex Question]</tt>, <tt>[NoTex - Feature Request]</tt>, <tt>[NoTex - Bug Report]</tt> or <tt>[NoTex - Feedback]</tt>.</p>
+
+    <p>Questions answered in this FAQ will not be responded to, except there is a need for clarification. The provided e-mail address is not a support line, and there is absolutely no guarantee that you'll get any re-action.</p>
+
+</div>
+
+<div class="footer">
+    {% include 'ssl-seal.html' %}
+</div>
