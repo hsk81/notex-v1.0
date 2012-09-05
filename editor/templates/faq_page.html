@@ -49,6 +49,13 @@
     <h3>What does <em>NoTex</em> mean?</h3>
     <p>It's a pun on <em>Tex</em>, since if the NoTex editor is properly used, you can avoid using (and learning) <em>Tex</em> or <em>LaTex</em>. Knowing LaTex is not a disadvantage though, since you can apply it to change NoTex' default templates.</p>
 
+    <h3>What technology do you use?</h3>
+    <p>The editor's front-end has entirely been written with the <a href="http://www.sencha.com/products/extjs/" target="_blank">ExtJS</a> JavaScript framework plus the JavaScript code editor component <a href="http://codemirror.net/" target="_blank">CodeMirror</a>;  and for the back-end the <a href="http://www.djangoproject.com" target="_blank">Django</a> Python web framework is being used. The back-end applies the Python document generator <a href="http://sphinx.pocoo.org/" target="_blank">Sphinx</a> to translate the RST input files to the various target formats; <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> is the <em>"markup syntax and parser component"</em> of <a href="http://docutils.sourceforge.net/index.html" target="_blank">Docutils</a>. LaTex is translated to PDF using <a href="http://www.tug.org/texlive/" target="_blank">TeX Live</a>.</p>
+
+    <p>There is some work underway to split the project's editor and translation part using the Python micro-framework <a href="http://flask.pocoo.org/" target="_blank">Flask</a> and the Python distributed task queue <a href="http://celeryproject.org/" target="_blank">Celery</a>. But this will take some time; see <a href="https://github.com/hsk81/webed" target="_blank">WebEd</a>.</p>
+
+    <p>I'd like to thank to all those countless people who provided these software packages and enabled it to make NoTex possible. It took some time to learn all of them, but it's always a fantastic experience, and I'm again and again astonished with what kind of ingenious solutions people come up with to solve particular problems. Thanks for making all of it available as open source!</p>
+
     <h3>How can I contact you?</h3>
     <p>Either ask a question on the <a href="http://github.com/hsk81/notex/wiki/Questions-&-Answers" target="_blank">wiki</a> page, or send an email to <em style="text-decoration: underline;">contact</em> [at-sign] <em style="text-decoration: underline;">blackhan.ch</em>. Prepend the subject line with either <tt>[NoTex Question]</tt>, <tt>[NoTex - Feature Request]</tt>, <tt>[NoTex - Bug Report]</tt> or <tt>[NoTex - Feedback]</tt>.</p>
 
