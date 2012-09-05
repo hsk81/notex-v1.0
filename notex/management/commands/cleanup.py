@@ -11,6 +11,8 @@ from optparse import *
 from datetime import *
 from editor.models import ROOT
 
+from django.contrib.sessions.models import Session
+
 ##
 ## INFO: Required for session_engine = eval (settings.SESSION_ENGINE)
 ##
@@ -185,19 +187,25 @@ class Command (BaseCommand):
         session_engine = eval (settings.SESSION_ENGINE)
         regex = settings.SESSION_COOKIE_NAME + r'[0-9a-f]{32}'
 
-        for sid in os.listdir (settings.SESSION_FILE_PATH):
+        sids = os.listdir (settings.SESSION_FILE_PATH)
+        sids += map (
+            lambda s2v: settings.SESSION_COOKIE_NAME + s2v['session_key'],
+            Session.objects.values ('session_key'))
 
-            if not re.match (regex, sid): continue
+        for sid in filter (lambda sid: re.match (regex, sid), sids):
+
             uuid = sid.replace (settings.SESSION_COOKIE_NAME, '')
             session = session_engine.SessionStore (session_key=uuid)
 
-            if clean_all or \
-               session.has_key ('timestamp') and \
+            if clean_all or\
+               session.has_key ('timestamp') and\
                beg_datetime <= session['timestamp'] < end_datetime:
 
                 logger.info ('processing session %s' % uuid)
                 logger.debug ('no timestamp, cleaning all')
                 Command.cleanup (session, skip_flags, dry_run)
+
+                session.delete ()
 
     main = staticmethod (main)
 
