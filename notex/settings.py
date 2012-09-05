@@ -108,7 +108,7 @@ CACHES = {
     },
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_FILE_PATH = os.path.join (SITE_ROOT, 'session/')
 SESSION_COOKIE_AGE = 3 * 24 * 3600 ## secs: 3d
 SESSION_COOKIE_NAME = 'sid'
