@@ -117,11 +117,11 @@ class Command (BaseCommand):
             )
         ),
 
-        make_option ('-a', '--include-admin',
+        make_option ('-a', '--all',
             action='store_true',
-            dest='clean_admin',
+            dest='clean_all',
             default=False,
-            help='include admin sessions in cleanup'
+            help='include all sessions in cleanup'
         ),
 
         make_option ('-d', '--dry-run',
@@ -130,7 +130,7 @@ class Command (BaseCommand):
             default=False,
             help='disables actual cleanup'
         ),
-        )
+    )
 
     ############################################################################
     def handle (self, *args, **options):
@@ -153,7 +153,7 @@ class Command (BaseCommand):
             'skip_usid': options['skip_usid']
         }
 
-        clean_admin = options['clean_admin']
+        clean_all = options['clean_all']
         dry_run = options['dry_run']
 
         try:
@@ -166,7 +166,7 @@ class Command (BaseCommand):
                 logger.info ('cleaning till %s ..' % interval['end_datetime']
                     .strftime ('%Y-%m-%d %H:%M:%S'))
 
-            Command.main (interval, skip_flags, clean_admin, dry_run)
+            Command.main (interval, skip_flags, clean_all, dry_run)
             logger.info ('done')
 
         except KeyboardInterrupt:
@@ -176,7 +176,7 @@ class Command (BaseCommand):
             logger.exception (ex)
 
     ############################################################################
-    def main (interval, skip_flags, clean_admin, dry_run):
+    def main (interval, skip_flags, clean_all, dry_run):
     ############################################################################
 
         beg_datetime = interval['beg_datetime']
@@ -191,17 +191,12 @@ class Command (BaseCommand):
             uuid = sid.replace (settings.SESSION_COOKIE_NAME, '')
             session = session_engine.SessionStore (session_key=uuid)
 
-            if session.has_key ('timestamp') and \
+            if clean_all or \
+               session.has_key ('timestamp') and \
                beg_datetime <= session['timestamp'] < end_datetime:
 
                 logger.info ('processing session %s' % uuid)
-                logger.debug ('session is expired')
-                Command.cleanup (session, skip_flags, dry_run)
-
-            elif not session.has_key ('timestamp') and clean_admin:
-
-                logger.info ('processing session %s' % uuid)
-                logger.debug ('no timestamp, assume admin session')
+                logger.debug ('no timestamp, cleaning all')
                 Command.cleanup (session, skip_flags, dry_run)
 
     main = staticmethod (main)
