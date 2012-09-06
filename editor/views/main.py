@@ -59,17 +59,17 @@ def main_args (request):
             'overview' :
                 """
                 Overview - NoTex: An introduction to the editor plus motivation
-                for the restructured text markup language.
+                for the restructured text markup.
                 """,
             'tutorial' :
                 """
                 Tutorial - NoTex: A step-by-step guide explaining the editor's
-                user interface and how to create a report/project.
+                UI and how to create a report.
                 """,
             'rest' :
                 """
-                Restructured Text - NoTex: A primer/tutorial about the
-                restructured text markup language.
+                Restructured Text - NoTex: A primer about the restructured text
+                markup.
                 """,
             'faq' :
                 """
@@ -79,7 +79,7 @@ def main_args (request):
             'download' :
                 """
                 Download - NoTex: Browser based standalone version for people
-                who prefer to use an offline editor.
+                who prefer to use their editor offline.
                 """,
         }
 
@@ -91,23 +91,53 @@ def main_args (request):
         lookup = {
             'home' :
                 """
-                Edit your articles and reports using restructured text and
-                convert them to LaTex, PDF or HTML.
+                NoTex enables to write books, reports, articles and theses using
+                the restructured text markup language and convert them to LaTex,
+                PDF or HTML. The PDF files are of high publication quality and
+                are produced via Sphinx with the Texlive LaTex suite.
                 """,
             'overview' :
                 """
+                An overview of word processing systems comparing them w.r.t. to
+                the content versus presentation separation: Word and LaTex are
+                shown to mix content and presentation (Word on a visual and
+                LaTex on a markup level) and then an argument in favor of
+                restructured text is made, which cleanly separates the content
+                and presentation domains.
                 """,
             'tutorial' :
                 """
+                A tutorial about user interface of NoTex, explaining the various
+                elements like report manager, menu, editor, main toolbar and
+                status bar. It provides a brief step-by-step guide explaining
+                how a novice user can create his first report and convert it to
+                a PDF file.
                 """,
             'rest' :
                 """
+                A primer on the restructured text markup language, explaining
+                the most important elements of it. The following ones are
+                mentioned: paragraphs, inline markup, lists and quote-like
+                blocks, source code, tables, hyperlinks, sections, explicit
+                markup, directives, images, footnotes, citations, substitutions
+                and comments.
                 """,
             'faq' :
                 """
+                A list of frequently asked or important question with their
+                answers. The list covers topics about security, data,
+                performance and documentation plus miscellaneous subjects like
+                licencing, technology and contact information are clarified.
                 """,
             'download' :
                 """
+                Offers two virtual machines for VirtualBox which enable to run
+                NoTex as a standalone application: They are meant for people
+                who like to keep their information for security and privacy
+                reasons on a local device or network. Their is an international
+                version with support for Chinese, Japanese and Korean (plus some
+                other Asian languages) and a non-CJK version which omits these
+                languages.
                 """,
         }
 
@@ -116,7 +146,7 @@ def main_args (request):
 
     def get_page_keywords (page):
 
-        default = [
+        default = ['reStructuredText',
             'article', 'report', 'thesis', 'book', 'editor', 'latex',
             'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']
         lookup = {
