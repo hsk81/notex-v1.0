@@ -21,6 +21,7 @@ import os.path
 import socket
 import sys
 import os
+import re
 
 ################################################################################
 ################################################################################
@@ -82,7 +83,8 @@ def main_args (request):
                 """,
         }
 
-        return lookup[page] if page in lookup else lookup['home']
+        return re.sub(r'^\s+', '', lookup[page] if page in lookup else
+            lookup['home'], flags=re.MULTILINE).replace ('\n', ' ')
 
     def get_page_description (page):
 
@@ -109,7 +111,8 @@ def main_args (request):
                 """,
         }
 
-        return lookup[page] if page in lookup else lookup['home']
+        return re.sub(r'^\s+', '', lookup[page] if page in lookup else
+            lookup['home'], flags=re.MULTILINE).replace ('\n', ' ')
 
     def get_page_keywords (page):
 
