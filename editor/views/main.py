@@ -53,7 +53,7 @@ def main_args (request):
             'home': 'Home',
             'overview': 'Overview',
             'tutorial': 'Tutorial',
-            'rest': 'Re-Structured Text',
+            'rest': 'Restructured Text',
             'faq': 'FAQ',
             'download': 'Download',
         }[page]
