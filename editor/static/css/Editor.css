@@ -70,7 +70,7 @@
 }
 
 #page.home .youtube {
-    float:right; position:relative; top:-2px; left:0px;
+    float:right; position:relative; top:-2px; left:0;
 }
 
 #page.home .blogger {
@@ -83,6 +83,39 @@
 
 #page.home .facebook {
     float:right; position:relative; top:-2px;
+}
+
+#page.home .subline {
+    width: 100%;
+    margin-top: 36px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page.home .subline ul {
+    list-style-type:none;
+    text-align:center;
+    background-color:#f0f0f0;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+
+#page.home .subline ul li {
+    display:inline;
+    font-family: monospace;
+    font-weight: normal;
+    font-size: 1em;
+    line-height: 32px;
+}
+
+#page.home .subline ul li.subline-text {
+    padding: 6.5px 32px 6.5px 1px;
+    border-left: 1px solid #888888;
+}
+
+#page.home .subline ul li.subline-icon {
+    padding: 0 9px;
+    background-repeat: no-repeat;
 }
 
 /******************************************************************************
