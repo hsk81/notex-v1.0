@@ -54,37 +54,37 @@ def main_args (request):
             'home' :
                 """
                 NoTex: A restructured text editor plus a PDF, LaTex and HTML
-                converter
+                converter.
                 """,
             'overview' :
                 """
                 Overview - NoTex: An introduction to the editor plus motivation
-                for the restructured text markup language
+                for the restructured text markup language.
                 """,
             'tutorial' :
                 """
                 Tutorial - NoTex: A step-by-step guide explaining the editor's
-                user interface and how to create a report/project
+                user interface and how to create a report/project.
                 """,
             'rest' :
                 """
                 Restructured Text - NoTex: A primer/tutorial about the
-                restructured text markup language
+                restructured text markup language.
                 """,
             'faq' :
                 """
                 FAQ - NoTex: Frequently asked and important questions about
-                security, data, performance, documentation and miscellanea
+                security, data, performance, documentation and miscellanea.
                 """,
             'download' :
                 """
                 Download - NoTex: Browser based standalone version for people
-                who prefer to use an offline editor
+                who prefer to use an offline editor.
                 """,
         }
 
-        return re.sub(r'^\s+', '', lookup[page] if page in lookup else
-            lookup['home'], flags=re.MULTILINE).replace ('\n', ' ')
+        return re.sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page]  if page
+            in lookup else lookup['home'], flags=re.M).replace ('\n', ' '))
 
     def get_page_description (page):
 
@@ -111,8 +111,8 @@ def main_args (request):
                 """,
         }
 
-        return re.sub(r'^\s+', '', lookup[page] if page in lookup else
-            lookup['home'], flags=re.MULTILINE).replace ('\n', ' ')
+        return re.sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page]  if page
+            in lookup else lookup['home'], flags=re.M).replace ('\n', ' '))
 
     def get_page_keywords (page):
 
