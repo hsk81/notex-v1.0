@@ -17,7 +17,7 @@ This separation of content from presentation w.r.t. simple and strong emphasis m
    expressions, source code, comments, citations, footnotes, indices,
    glossaries
 
-and many more in a very *natural* and *textual* form. This form or way of writing has a name: **Re-Structured Text** or simply **RST**. [#f01]_
+and many more in a very *natural* and *textual* form. This form or way of writing has a name: **Restructured Text** or simply **RST**. [#f01]_
 
 RST is an easy to read (and to learn!) language, which enables you to write manuscripts in the most obvious way. Plus it maintains the required precision such that a software like |NoTex| is able to convert the manuscript to publication quality PDF or HTML documents.
 
@@ -37,7 +37,7 @@ As you may have noticed while *content.txt* is about **content**, *options.cfg* 
 
 Would you like to provide feedback [#f04]_ or perhaps even participate in the development of |NoTex| then please feel free to visit http://github.com/hsk81/notex.
 
-.. [#f01] `"Re-Structured Text" <http://sphinx.pocoo.org/rest.html>`_ provides an excellent introduction.
+.. [#f01] `"Restructured Text" <http://sphinx.pocoo.org/rest.html>`_ provides an excellent introduction.
 
 .. [#f02] `content.txt <http://github.com/hsk81/notex/wiki/Configuration-File:-content.txt>`_ explains the main file of a report.
 
