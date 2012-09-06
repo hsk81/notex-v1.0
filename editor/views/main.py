@@ -47,31 +47,103 @@ def main (request):
 
 def main_args (request):
 
-    def get_page_name (page):
+    def get_page_title (page):
 
-        return {
-            'home': 'Home',
-            'overview': 'Overview',
-            'tutorial': 'Tutorial',
-            'rest': 'Restructured Text',
-            'faq': 'FAQ',
-            'download': 'Download',
-        }[page]
+        lookup = {
+            'home' :
+                """
+                NoTex: A restructured text editor plus a PDF, LaTex and HTML
+                converter
+                """,
+            'overview' :
+                """
+                Overview - NoTex: An introduction to the editor plus motivation
+                for the restructured text markup language
+                """,
+            'tutorial' :
+                """
+                Tutorial - NoTex: A step-by-step guide explaining the editor's
+                user interface and how to create a report/project
+                """,
+            'rest' :
+                """
+                Restructured Text - NoTex: A primer/tutorial about the
+                restructured text markup language
+                """,
+            'faq' :
+                """
+                FAQ - NoTex: Frequently asked and important questions about
+                security, data, performance, documentation and miscellanea
+                """,
+            'download' :
+                """
+                Download - NoTex: Browser based standalone version for people
+                who prefer to use an offline editor
+                """,
+        }
+
+        return lookup[page] if page in lookup else lookup['home']
+
+    def get_page_description (page):
+
+        lookup = {
+            'home' :
+                """
+                Edit your articles and reports using restructured text and
+                convert them to LaTex, PDF or HTML.
+                """,
+            'overview' :
+                """
+                """,
+            'tutorial' :
+                """
+                """,
+            'rest' :
+                """
+                """,
+            'faq' :
+                """
+                """,
+            'download' :
+                """
+                """,
+        }
+
+        return lookup[page] if page in lookup else lookup['home']
+
+    def get_page_keywords (page):
+
+        default = [
+            'article', 'report', 'thesis', 'book', 'editor', 'latex',
+            'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']
+        lookup = {
+            'home' : default + [
+                'home'],
+            'overview' : default + [
+                'overview', 'introduction', 'background', 'information'],
+            'tutorial' : default + [
+                'guide', 'user interface', 'first', 'report', 'project'],
+            'rest' : default + [
+                'primer', 'tutorial', 'markup', 'language'],
+            'faq' : default + [
+                'faq', 'frequently asked', 'important', 'questions'],
+            'download' : default + [
+                'download', 'standalone', 'version', 'offline'],
+        }
+
+        return lookup[page] if page in lookup else default
 
     page = request.GET.get ('pg', 'home')
-    page_name = get_page_name (page)
+    page_title = get_page_title (page)
+    page_description = get_page_description (page)
+    page_keywords = get_page_keywords (page)
 
     result = {
+        'page' : page,
+        'page_title' : page_title,
+        'page_description' : page_description,
+        'page_keywords' : ','.join (page_keywords),
         'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
-
-        'keywords' : ','.join ([
-            'article', 'report', 'thesis', 'book', 'editor', 'latex',
-            'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']),
-
-        'description' : 'Edit your articles and reports using restructured ' +
-            'text and convert them to LaTex, PDF or HTML.',
-
-        'page' : page, 'page_name' : page_name
     }
 
     if settings.IN_RXS (socket.getfqdn (), settings.MACH_VMES):

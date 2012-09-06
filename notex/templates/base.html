@@ -4,13 +4,13 @@
 <head>
     {% cache 604800 cache-head page %}
         <meta charset="utf-8">
-        <meta name="keywords" content="{{ keywords }}"/>
-        <meta name="description" content="{{ description }}"/>
+        <meta name="keywords" content="{{ page_keywords }}"/>
+        <meta name="description" content="{{ page_description }}"/>
 
         {% block application-css %}{% endblock %}
 
-        {% if page != 'home' %}
-        <title>NoTex - A restructured text editor [{{ page_name }}]</title>
+        {% if page_title %}
+        <title>{{ page_title }}</title>
         {% else %}
         <title>NoTex - A restructured text editor</title>
         {% endif %}
