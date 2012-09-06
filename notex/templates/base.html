@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {% cache 604800 cache-head page %}
+    {% cache 86400 cache-head page %}
         <meta charset="utf-8">
         <meta name="keywords" content="{{ page_keywords }}"/>
         <meta name="description" content="{{ page_description }}"/>
@@ -24,7 +24,7 @@
     <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
 </head>
 <body>
-{% cache 604800 cache-body page %}
+{% cache 86400 cache-body page %}
     <div id="content-wrap">
         <div id="content">{% include 'page.html' %}</div>
     </div>
