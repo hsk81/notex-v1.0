@@ -68,7 +68,7 @@ def main_args (request):
             'article', 'report', 'thesis', 'book', 'editor', 'latex',
             'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']),
 
-        'description' : 'Edit your articles and reports using re-structured ' +
+        'description' : 'Edit your articles and reports using restructured ' +
             'text and convert them to LaTex, PDF or HTML.',
 
         'page' : page, 'page_name' : page_name
