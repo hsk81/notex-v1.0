@@ -102,9 +102,8 @@
 
 #page.home .subline ul li {
     display:inline;
-    font-family: monospace;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 0.75em;
     line-height: 32px;
 }
 
