@@ -12,7 +12,18 @@ import views
 
 urlpatterns = patterns ('',
 
-    url (r'^$', views.main, name='view.main'),
+    url (r'^$', views.main, name='main'),
+
+    ##
+    ## navigation menu
+    ##
+
+    url (r'^home/$', views.home, name='home'),
+    url (r'^overview/$', views.overview, name='overview'),
+    url (r'^tutorial/$', views.tutorial, name='tutorial'),
+    url (r'^rest/$', views.rest, name='rest'),
+    url (r'^faq/$', views.faq, name='faq'),
+    url (r'^download/$', views.download, name='download'),
 
     ##
     ## crud : create, read, update & delete

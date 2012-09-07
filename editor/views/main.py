@@ -27,7 +27,7 @@ import re
 ################################################################################
 
 @decorator_from_middleware (GZipMiddleware)
-def main (request):
+def main (request, page=None):
     if request.session.has_key ('timestamp') and 'refresh' not in request.GET:
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
@@ -43,10 +43,10 @@ def main (request):
         print >> sys.stderr, "Time Stamp: %s" % request.session['timestamp']
 
     return render_to_response ('viewport.html',
-        dictionary=main_args (request),
+        dictionary=main_args (request, page),
         context_instance=RequestContext (request))
 
-def main_args (request):
+def main_args (request, page):
 
     def get_page_title (page):
 
@@ -165,7 +165,7 @@ def main_args (request):
 
         return lookup[page] if page in lookup else default
 
-    page = request.GET.get ('pg', 'home')
+    page = page if page else request.GET.get ('pg', 'home') ## TODO: else 'home'
     page_title = get_page_title (page)
     page_description = get_page_description (page)
     page_keywords = get_page_keywords (page)
@@ -182,6 +182,16 @@ def main_args (request):
         result['STATIC_URL'] = 'http://%s/static/' % request.get_host ()
 
     return result
+
+################################################################################
+################################################################################
+
+def home (request): return main (request, page='home')
+def overview (request): return main (request, page='overview')
+def tutorial (request): return main (request, page='tutorial')
+def rest (request): return main (request, page='rest')
+def faq (request): return main (request, page='faq')
+def download (request): return main (request, page='download')
 
 ################################################################################
 ################################################################################

@@ -10,7 +10,7 @@
     <h3>How is my data protected?</h3>
     <p>Your data is kept on servers in the European Union; the data itself is <em>not</em> encrypted, which means the administrators could have access to it, although internal policy forbids this. Having said that, it's planned to introduce client side encryption, in which case even a person with physical access to the hard disks would not be able to read your data.</p>
 
-    <p>If you do not feel comfortable with the current situation, then there is an offline solution available at the <a href="?pg=download">download</a> page: Once installed, it works even without an internet access.</p>
+    <p>If you do not feel comfortable with the current situation, then there is an offline solution available at the <a href="{% url editor:download %}">download</a> page: Once installed, it works even without an internet access.</p>
 
     <h3>Where do I sign up & login?</h3>
     <p>NoTex does not require you to sign up or login; just use it. If you re-visit the site then you're identified based on a secure cookie which has been generated and stored (in your browser) at your last visit. If you delete your cookie then there is no possibility to associate you with the last visit; therefore the editor will create a new session for you.</p>
@@ -18,13 +18,13 @@
    <h2>Data</h2>
 
     <h3>How much space do I have?</h3>
-    <p>Not much; NoTex is not meant as a storage solution for large amounts of data. But it is planned to introduce a Dropbox integration, where your data within the editor would be stored (encrypted!) on Dropbox' servers. At the moment it's recommended, to export regularly your data to your computer. Or you get the offline solution from the <a href="?pg=download">download</a> page, which works locally.</p>
+    <p>Not much; NoTex is not meant as a storage solution for large amounts of data. But it is planned to introduce a Dropbox integration, where your data within the editor would be stored (encrypted!) on Dropbox' servers. At the moment it's recommended, to export regularly your data to your computer. Or you get the offline solution from the <a href="{% url editor:download %}">download</a> page, which works locally.</p>
 
     <h3>How long do you keep my data?</h3>
     <p>If you do not re-visit NoTex for longer than 3 days, then all your data is deleted. It is not recoverable and there is no support for any requests w.r.t. lost data. As long as you keep using NoTex on a regular basis (at least once every 72 hours), then your data is kept on the servers.</p>
 
     <h3>I deleted my cookies; can I access my data?</h3>
-    <p>No; your data will automatically be deleted within 3 days. NoTex uses a secure cookie to identify re-visiting users; if you delete it, then there is no possibility to associate you with your now in-accessible data. Either export regularly your data to your computer, and re-import it in such a situation, or use the offline solution available at the <a href="?pg=download">download</a> page.</p>
+    <p>No; your data will automatically be deleted within 3 days. NoTex uses a secure cookie to identify re-visiting users; if you delete it, then there is no possibility to associate you with your now in-accessible data. Either export regularly your data to your computer, and re-import it in such a situation, or use the offline solution available at the <a href="{% url editor:download %}">download</a> page.</p>
 
     <h2>Performance</h2>
 
@@ -34,7 +34,7 @@
     <h3>Can the PDF conversion be accelerated?</h3>
     <p>Yes, to some extend: NoTex uses by default the <em>xelatex</em> backend to do the LaTex translation, which is compared to the <em>pdflatex</em> backend slower (not terribly but significantly). The <a href="http://github.com/hsk81/notex/wiki/LaTex-Backend:-pdflatex-vs-xelatex" target="_blank">wiki</a> explains how you can change the backend.</p>
 
-    <p>It can also happen, that our servers cannot cope with the user demand: It such cases either simply wait and re-try later on, or check out the offline solution; see <a href="?pg=download">download</a> page.</p>
+    <p>It can also happen, that our servers cannot cope with the user demand: It such cases either simply wait and re-try later on, or check out the offline solution; see <a href="{% url editor:download %}">download</a> page.</p>
 
     <h2>Documentation</h2>
 

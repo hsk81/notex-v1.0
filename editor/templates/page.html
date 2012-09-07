@@ -3,17 +3,17 @@
         <div id='cssmenu'>
             <ul>
                 <li class="{% if page == 'home' %}active{% endif %}">
-                    <a href='?pg=home'><span>Home</span></a></li>
+                    <a href='{% url editor:home %}'><span>Home</span></a></li>
                 <li class="{% if page == 'overview' %}active{% endif %}">
-                    <a href='?pg=overview'><span>NoTex</span></a></li>
+                    <a href='{% url editor:overview %}'><span>NoTex</span></a></li>
                 <li class="{% if page == 'tutorial' %}active{% endif %}">
-                    <a href='?pg=tutorial'><span>Tutorial</span></a></li>
+                    <a href='{% url editor:tutorial %}'><span>Tutorial</span></a></li>
                 <li class="{% if page == 'rest' %}active{% endif %}">
-                    <a href='?pg=rest'><span>Restructured Text</span></a></li>
+                    <a href='{% url editor:rest %}'><span>Restructured Text</span></a></li>
                 <li class="{% if page == 'faq' %}active{% endif %}">
-                    <a href='?pg=faq'><span>FAQ</span></a></li>
+                    <a href='{% url editor:faq %}'><span>FAQ</span></a></li>
                 <li class="{% if page == 'download' %}active{% endif %}">
-                    <a href='?pg=download'><span>Download</span></a></li>
+                    <a href='{% url editor:download %}'><span>Download</span></a></li>
             </ul>
         </div>
 

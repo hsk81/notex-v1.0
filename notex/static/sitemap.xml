@@ -9,21 +9,21 @@
   <loc>http://notex.ch/editor/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=home</loc>
+  <loc>http://notex.ch/editor/home/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=overview</loc>
+  <loc>http://notex.ch/editor/overview/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=tutorial</loc>
+  <loc>http://notex.ch/editor/tutorial/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=rest</loc>
+  <loc>http://notex.ch/editor/rest/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=faq</loc>
+  <loc>http://notex.ch/editor/faq/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/?pg=download</loc>
+  <loc>http://notex.ch/editor/download/</loc>
 </url>
 </urlset>
