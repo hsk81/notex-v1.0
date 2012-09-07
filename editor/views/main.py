@@ -59,7 +59,7 @@ def main_args (request):
             'overview' :
                 """
                 Overview - NoTex: An introduction to the editor plus motivation
-                for the restructured text markup.
+                for restructured text.
                 """,
             'tutorial' :
                 """
@@ -68,13 +68,12 @@ def main_args (request):
                 """,
             'rest' :
                 """
-                Restructured Text - NoTex: A primer about the restructured text
-                markup.
+                Restructured Text - NoTex: A primer about restructured text.
                 """,
             'faq' :
                 """
                 FAQ - NoTex: Frequently asked and important questions about
-                security, data, performance, documentation and miscellanea.
+                security, data, performance, documentation etc.
                 """,
             'download' :
                 """
