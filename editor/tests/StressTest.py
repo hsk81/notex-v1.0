@@ -68,7 +68,7 @@ class StressTest (TestCase):
         for index in range (StressTest.x_iteration):
             self.util_create_project ()
     def util_create_project (self):
-        resp = self.client.post ('/editor/create-project', {
+        resp = self.client.post ('/editor/create-project/', {
             'nodeId': 'LMRHE33POQRCYIC3LVOQ====', ## root
             'data': json.dumps ({
                 'project': 'PROJECT',
@@ -90,7 +90,7 @@ class StressTest (TestCase):
         for index in range (StressTest.x_iteration):
             self.util_create_folder (data['id'])
     def util_create_folder (self, project_id):
-        resp = self.client.post ('/editor/create-folder', {
+        resp = self.client.post ('/editor/create-folder/', {
             'nodeId': project_id,
             'name': 'folder',
             'rank': '2'})
@@ -103,7 +103,7 @@ class StressTest (TestCase):
         for index in range (StressTest.x_iteration):
             self.util_create_text (data['id'])
     def util_create_text (self, project_id):
-        resp = self.client.post ('/editor/create-text', {
+        resp = self.client.post ('/editor/create-text/', {
             'nodeId': project_id,
             'name': 'content.txt',
             'rank': '2',
@@ -117,7 +117,7 @@ class StressTest (TestCase):
         for index in range (StressTest.x_iteration):
             self.util_create_image (data['id'])
     def util_create_image (self, project_id):
-        resp = self.client.post ('/editor/create-image', {
+        resp = self.client.post ('/editor/create-image/', {
             'nodeId': project_id,
             'name': 'content.text',
             'rank': '2',
@@ -168,7 +168,7 @@ class StressTest (TestCase):
         resp = self.util_read_node (data['id'])
         data = json.loads (resp.content)[0]
         for index in range (StressTest.x_iteration):
-            self.util_update (data, '/editor/update-text')
+            self.util_update (data, '/editor/update-text/')
 
     def test_update_image (self):
         resp = self.util_create_project ()
@@ -176,7 +176,7 @@ class StressTest (TestCase):
         resp = self.util_read_node (data['id'])
         data = json.loads (resp.content)[0]
         for index in range (StressTest.x_iteration):
-            self.util_update (data, '/editor/update-image')
+            self.util_update (data, '/editor/update-image/')
 
     def util_update (self, leaf_data, url):
         resp = self.client.post (url, {

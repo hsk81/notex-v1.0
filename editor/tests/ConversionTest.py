@@ -50,7 +50,7 @@ class ConversionTest (TestCase):
         return resp
 
     def create_project (self):
-        resp = self.client.post ('/editor/create-project', {
+        resp = self.client.post ('/editor/create-project/', {
             'nodeId': 'LMRHE33POQRCYIC3LVOQ====', ## root
             'data': json.dumps ({
                 'project': 'PROJECT',

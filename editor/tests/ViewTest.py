@@ -63,7 +63,7 @@ class ViewTest (TestCase):
     ###########################################################################
 
     def test_create_project (self):
-        resp = self.client.post ('/editor/create-project', {
+        resp = self.client.post ('/editor/create-project/', {
             'nodeId': 'LMRHE33POQRCYIC3LVOQ====', ## root
             'data': json.dumps ({
                 'project': 'PROJECT',
@@ -81,7 +81,7 @@ class ViewTest (TestCase):
 
     def test_create_folder (self):
         resp, data = self.test_create_project ()
-        resp = self.client.post ('/editor/create-folder', {
+        resp = self.client.post ('/editor/create-folder/', {
             'nodeId': data['id'],
             'name': 'folder',
             'rank': '2'})
@@ -90,7 +90,7 @@ class ViewTest (TestCase):
 
     def test_create_text (self):
         resp, data = self.test_create_project ()
-        resp = self.client.post ('/editor/create-text', {
+        resp = self.client.post ('/editor/create-text/', {
             'nodeId': data['id'],
             'name': 'content.txt',
             'rank': '2',
@@ -100,7 +100,7 @@ class ViewTest (TestCase):
 
     def test_create_image (self):
         resp, data = self.test_create_project ()
-        resp = self.client.post ('/editor/create-image', {
+        resp = self.client.post ('/editor/create-image/', {
             'nodeId': data['id'],
             'name': 'content.text',
             'rank': '2',
@@ -171,10 +171,10 @@ class ViewTest (TestCase):
     ###########################################################################
 
     def test_update_text (self):
-        return self.check_update ('/editor/update-text')
+        return self.check_update ('/editor/update-text/')
 
     def test_update_image (self):
-        return self.check_update ('/editor/update-image')
+        return self.check_update ('/editor/update-image/')
 
     def check_update (self, url):
         resp, node_data, _ = self.test_read_node ()
