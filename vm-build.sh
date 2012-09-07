@@ -181,7 +181,8 @@ function snapshotvm() {
 function relinkcur() {
     cd $OVAPATH && \
     rm -f notex.current.$EDITION.ova && \
-    ln -s $OVAFILE notex.current.$EDITION.ova
+    ln -s $OVAFILE notex.current.$EDITION.ova && \
+    chmod +r $OVAFILE
 }
 
 ###############################################################################
