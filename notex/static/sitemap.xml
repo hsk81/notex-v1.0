@@ -6,9 +6,6 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>https://notex.ch/editor/</loc>
-</url>
-<url>
   <loc>https://notex.ch/editor/home/</loc>
 </url>
 <url>
