@@ -27,7 +27,7 @@ import re
 ################################################################################
 
 @decorator_from_middleware (GZipMiddleware)
-def main (request, page=None):
+def main (request, page='home'):
     if request.session.has_key ('timestamp') and 'refresh' not in request.GET:
         request.session['timestamp'] = datetime.now ()
         request.session.save ()
@@ -82,8 +82,9 @@ def main_args (request, page):
                 """,
         }
 
-        return re.sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page]  if page
-            in lookup else lookup['home'], flags=re.M).replace ('\n', ' '))
+        return re \
+            .sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page], flags=re.M)
+            .replace ('\n', ' '))
 
     def get_page_description (page):
 
@@ -140,41 +141,48 @@ def main_args (request, page):
                 """,
         }
 
-        return re.sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page]  if page
-            in lookup else lookup['home'], flags=re.M).replace ('\n', ' '))
+        return re \
+            .sub(r'\s+$', '', re.sub(r'^\s+', '', lookup[page], flags=re.M)
+            .replace ('\n', ' '))
 
     def get_page_keywords (page):
 
-        default = ['reStructuredText',
+        common = ['reStructuredText',
             'article', 'report', 'thesis', 'book', 'editor', 'latex',
             'restructured', 'text', 'pdf', 'html', 'converter', 'sphinx']
         lookup = {
-            'home' : default + [
+            'home' : common + [
                 'home'],
-            'overview' : default + [
+            'overview' : common + [
                 'overview', 'introduction', 'background', 'information'],
-            'tutorial' : default + [
+            'tutorial' : common + [
                 'guide', 'user interface', 'first', 'report', 'project'],
-            'rest' : default + [
+            'rest' : common + [
                 'primer', 'tutorial', 'markup', 'language'],
-            'faq' : default + [
+            'faq' : common + [
                 'faq', 'frequently asked', 'important', 'questions'],
-            'download' : default + [
+            'download' : common + [
                 'download', 'standalone', 'version', 'offline'],
         }
 
-        return lookup[page] if page in lookup else default
+        return lookup[page]
 
-    page = page if page else request.GET.get ('pg', 'home') ## TODO: else 'home'
+    def get_page_canonical_url (page):
+
+        return request.build_absolute_uri () if page != 'home' else \
+               request.build_absolute_uri ('/editor/home/')
+
     page_title = get_page_title (page)
     page_description = get_page_description (page)
     page_keywords = get_page_keywords (page)
+    page_canonical_url = get_page_canonical_url (page)
 
     result = {
         'page' : page,
         'page_title' : page_title,
         'page_description' : page_description,
         'page_keywords' : ','.join (page_keywords),
+        'page_canonical_url' : page_canonical_url,
         'dbg' : settings.DEBUG, ## avoid template debug tag trouble!
     }
 
