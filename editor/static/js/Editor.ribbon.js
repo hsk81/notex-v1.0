@@ -127,15 +127,6 @@ var editorRibbon = function () {
         columns: 3,
         defaults: { scale: 'small' },
         items: [{
-            id : 'btn.export-latex.editor.id',
-            text : 'LaTex',
-            iconCls : 'icon-page_white_code-16',
-            iconAlign: 'left',
-            tooltip : '<b>Export LaTex</b><br/>Convert selected report to LaTex',
-            handler : function (button, event) {
-                Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
-            }
-        },{
             id : 'btn.export-pdf.editor.id',
             text : 'PDF',
             iconCls : 'icon-page_white_acrobat-16',
@@ -152,6 +143,15 @@ var editorRibbon = function () {
             tooltip : '<b>Export</b><br/>Convert selected report to HTML',
             handler : function (button, event) {
                 Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
+            }
+        },{
+            id : 'btn.export-latex.editor.id',
+            text : 'LaTex',
+            iconCls : 'icon-page_white_code-16',
+            iconAlign: 'left',
+            tooltip : '<b>Export LaTex</b><br/>Convert selected report to LaTex',
+            handler : function (button, event) {
+                Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
             }
         }]
 

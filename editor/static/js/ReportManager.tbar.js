@@ -73,13 +73,6 @@ var reportManagerTBar = function () {
             plain : true,
 
             items : [{
-                id : 'btn.export-latex.report-manager.id',
-                iconCls : 'icon-page_white_code-16',
-                text : 'Latex Files',
-                handler : function (button, event) {
-                    Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
-                }
-            },{
                 id : 'btn.export-pdf.report-manager.id',
                 iconCls : 'icon-page_white_acrobat-16',
                 text : 'PDF Report',
@@ -92,6 +85,13 @@ var reportManagerTBar = function () {
                 text : 'HTML Files',
                 handler : function (button, event) {
                     Ext.getCmp ('reportManager.id').fireEvent ('exportHtml')
+                }
+            },{
+                id : 'btn.export-latex.report-manager.id',
+                iconCls : 'icon-page_white_code-16',
+                text : 'LaTex Files',
+                handler : function (button, event) {
+                    Ext.getCmp ('reportManager.id').fireEvent ('exportLatex')
                 }
             }]
         }
