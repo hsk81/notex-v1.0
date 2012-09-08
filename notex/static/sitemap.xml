@@ -6,24 +6,24 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>http://notex.ch/editor/</loc>
+  <loc>https://notex.ch/editor/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/home/</loc>
+  <loc>https://notex.ch/editor/home/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/overview/</loc>
+  <loc>https://notex.ch/editor/overview/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/tutorial/</loc>
+  <loc>https://notex.ch/editor/tutorial/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/rest/</loc>
+  <loc>https://notex.ch/editor/rest/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/faq/</loc>
+  <loc>https://notex.ch/editor/faq/</loc>
 </url>
 <url>
-  <loc>http://notex.ch/editor/download/</loc>
+  <loc>https://notex.ch/editor/download/</loc>
 </url>
 </urlset>
