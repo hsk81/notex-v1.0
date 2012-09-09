@@ -51,7 +51,6 @@ function startvm() {
         done
     fi
 
-    VBoxManage snapshot $VIRMACH restorecurrent
     VBoxManage startvm --type headless $VIRMACH
 }
 
