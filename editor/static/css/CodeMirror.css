@@ -25,3 +25,8 @@
     left: -1.4em;
     color: #ff0000;
 }
+
+.CodeMirror .cm-spell-error {
+    color: #ff0000;
+    font-style: italic;
+}

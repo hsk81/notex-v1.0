@@ -8,21 +8,56 @@ Ext.namespace ('Ext.ux.form');
 
 Ext.ux.form.CodeMirror.rest = function () {
 
+    var rx_substitution = /^\|[^\|]+?\|/;
+    var rx_role = /^:[^:]+?:`[^`]+?`/;
+    var rx_abbreviation = /^[A-Z]{2,}/;
+
+    var rx_protocol = "([Hh][Tt][Tt][Pp][Ss]?://)?"
+    var rx_domain = "([\\d\\w.-]+)\\.(\\w{2,6})"
+    var rx_path = "(/[~=:#&\\d\\w.-]+)*/?" //
+    var rx_uri = new RegExp (String.format ("(?:^{0}{1}{2})",
+        rx_protocol, rx_domain, rx_path
+    ));
+
+    var rx_footnote_link = /^\[(.+?)\]_\s|^\[(.+?)\]_/;
+    var rx_footnote_body = /^\.\.(\s+)\[(.+?)\]/;
+
+    var rx_basic = "!\"#$%&'()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
+    var rx_extended = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
+    var rx_supscript = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ";
+    var rx_subscript = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜ";
+    var rx_extra = "≈×";
+    var rx_word = new RegExp (String.format ("^[^{0}{1}{2}{3}{4}\\d\\s]{2,}",
+        rx_basic, rx_extended, rx_supscript, rx_subscript, rx_extra
+    ));
+
     function onAfterRenderBeg (textarea) {
 
         CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
             var overlay = {
                 token: function (stream, state) {
-                    if (stream.match (/^\[(.+?)\]_\s|^\[(.+?)\]_/))
-                        return "rest-footnote";
-                    if (stream.match (/^\.\.(\s+)\[(.+?)\]/))
-                        return "rest-footnote";
+                    if (stream.match (rx_substitution)) return null;
+                    if (stream.match (rx_role)) return null;
+                    if (stream.match (rx_abbreviation)) return null;
+
+                    if (stream.match (rx_uri)) return "rest-uri";
+                    if (stream.match (rx_footnote_link)) return "rest-footnote";
+                    if (stream.match (rx_footnote_body)) return "rest-footnote";
+
+                    if (stream.match (rx_word) &&
+                        Ext.ux.form.CodeMirror.typo &&
+                       !Ext.ux.form.CodeMirror.typo.check (stream.current ()))
+                        return "spell-error";
 
                     while (stream.next () != null) {
-                        if (stream.match (/^\[(.+?)\]_/, false))
-                            return null;
-                        if (stream.match (/^\.\.(\s+)\[(.+?)\]/, false))
-                            return null;
+                        if (stream.match (rx_substitution)) continue;
+                        if (stream.match (rx_role)) continue;
+                        if (stream.match (rx_abbreviation)) continue;
+
+                        if (stream.match (rx_uri, false)) return null;
+                        if (stream.match (rx_footnote_link, false)) return null;
+                        if (stream.match (rx_footnote_body, false)) return null;
+                        if (stream.match (rx_word, false)) return null;
                     }
 
                     return null;

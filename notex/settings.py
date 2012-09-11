@@ -334,6 +334,7 @@ JSMIN_INPUT = [
     'static/lib/extjs/adapter/ext/ext-base.js',
     'static/lib/extjs/ext-all.js',
     'static/lib/extjs/examples/ux/statusbar/StatusBar.js',
+    'static/lib/typo.js/typo/typo.js',
 ]
 
 JSMIN_INPUT += [] if DEBUG else [

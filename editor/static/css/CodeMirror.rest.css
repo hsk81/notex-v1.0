@@ -1,3 +1,7 @@
+.CodeMirror .cm-rest-uri {
+    color: #000088;
+}
+
 .CodeMirror .cm-rest-footnote {
     color: #008800;
 }
