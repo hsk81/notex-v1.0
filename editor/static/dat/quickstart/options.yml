@@ -2,7 +2,7 @@
 # General: http://sphinx.pocoo.org/config.html#general-configuration
 # -----------------------------------------------------------------------------
 
-project: NoTex Quickstart
+project: NoTex Quick Start
 author: Blackhan.ch
 copyright: ${date %Y}, ${author}
 
