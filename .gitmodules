@@ -9,4 +9,4 @@
 	url = git://github.com/hsk81/CodeMirror.git
 [submodule "notex/static/lib/typo.js.git"]
 	path = notex/static/lib/typo.js.git
-	url = git@github.com:hsk81/Typo.js.git
+	url = git://github.com/hsk81/Typo.js.git
