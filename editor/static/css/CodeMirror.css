@@ -27,6 +27,5 @@
 }
 
 .CodeMirror .cm-spell-error {
-    color: #ff0000;
-    font-style: italic;
+    background: url(images/underline.gif) bottom repeat-x;
 }
