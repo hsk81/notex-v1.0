@@ -12,9 +12,9 @@ Ext.ux.form.CodeMirror.rest = function () {
     var rx_role = /^:[^:]+?:`[^`]+?`/;
     var rx_abbreviation = /^[A-Z]{2,}/;
 
-    var rx_protocol = "([Hh][Tt][Tt][Pp][Ss]?://)?"
-    var rx_domain = "([\\d\\w.-]+)\\.(\\w{2,6})"
-    var rx_path = "(/[~=:#&\\d\\w.-]+)*/?" //
+    var rx_protocol = "([Hh][Tt][Tt][Pp][Ss]?://)?";
+    var rx_domain = "([\\d\\w.-]+)\\.(\\w{2,6})";
+    var rx_path = "(/[~=:#&\\d\\w.-]+)*/?";
     var rx_uri = new RegExp (String.format ("(?:^{0}{1}{2})",
         rx_protocol, rx_domain, rx_path
     ));
