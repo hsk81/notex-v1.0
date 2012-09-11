@@ -2,7 +2,7 @@
 Background
 ==========
 
-Mass–velocity relationship
+Mass-velocity relationship
 ==========================
 
 In developing :index:`special relativity`, Einstein found that the kinetic energy of a moving body is
