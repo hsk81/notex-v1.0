@@ -47,6 +47,8 @@
     <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Viewport.js"></script>
     {% endif %}
 
+    <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.typo.js" async></script>
+
     <script type="text/javascript">
     Ext.BLANK_IMAGE_URL ="{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif";
     Ext.onReady(function () {Ext.QuickTips.init();viewport.show();});
