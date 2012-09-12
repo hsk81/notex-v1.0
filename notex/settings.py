@@ -338,6 +338,7 @@ JSMIN_INPUT = [
 ]
 
 JSMIN_INPUT += [] if DEBUG else [
+    'static/app/editor/js/Assert.js',
     'static/app/editor/js/Math.uuid.js',
     'static/app/editor/js/Dialog.openFile.js',
     'static/app/editor/js/Dialog.js',

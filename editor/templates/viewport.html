@@ -25,6 +25,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/notex.min.js"></script>
 
     {% if dbg %}
+    <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Assert.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Math.uuid.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Dialog.openFile.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Dialog.js"></script>
@@ -47,10 +48,9 @@
     <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/Viewport.js"></script>
     {% endif %}
 
-    <script type="text/javascript" src="{{ STATIC_URL }}app/editor/js/CodeMirror.typo.js" async></script>
-
+    <script type="text/javascript">{% include 'worker.js' %}</script>
     <script type="text/javascript">
-    Ext.BLANK_IMAGE_URL ="{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif";
-    Ext.onReady(function () {Ext.QuickTips.init();viewport.show();});
+        Ext.BLANK_IMAGE_URL ="{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif";
+        Ext.onReady(function () {Ext.QuickTips.init();viewport.show();});
     </script>
 {% endblock %}
