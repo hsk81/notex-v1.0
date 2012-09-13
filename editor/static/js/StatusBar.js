@@ -125,7 +125,7 @@ var statusBar = function () {
         typeAhead: true,
         mode: 'local',
         triggerAction: 'all',
-        emptyText: 'Spell checking ..',
+        emptyText: 'Spell check language ..',
         selectOnFocus: true,
         width: 164,
 
@@ -157,7 +157,7 @@ var statusBar = function () {
 
                     statusBar.showBusy ({text: 'Please wait ..'});
                     progressBar.show ();
-                    progressBar.setMode ('loading');
+                    progressBar.setMode ('load');
                     progressBar.wait ({
                         increment : progressBar.increment,
                         interval : progressBar.interval
