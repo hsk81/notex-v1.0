@@ -22,7 +22,7 @@ self.onmessage = function (e) {
     var dicData = get (args.path + '/' + args.lang + '/' + args.lang + '.dic');
     assert (dicData, 'dicData undefined');
 
-    self.postMessage (JSON.stringify({
+    self.postMessage (JSON.stringify ({
         lang: args.lang,
         affData: affData,
         dicData: dicData
