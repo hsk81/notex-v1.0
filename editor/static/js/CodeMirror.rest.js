@@ -24,8 +24,8 @@ Ext.ux.form.CodeMirror.rest = function () {
 
     var rx_word_bas = "!\"#$%&()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
     var rx_word_ext = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
-    var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ";
-    var rx_word_sub = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔ";
+    var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾";
+    var rx_word_sub = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎";
     var rx_word_xxx = "≈≡×";
     var rx_word = new RegExp (String.format ("^[^{0}{1}{2}{3}{4}\\d\\s]{2,}",
         rx_word_bas, rx_word_ext, rx_word_sup, rx_word_sub, rx_word_xxx
