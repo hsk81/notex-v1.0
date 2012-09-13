@@ -1,1 +1,0 @@
-var worker = new Worker ('{{ STATIC_URL }}app/editor/js/CodeMirror.typo.js'); worker.onmessage = function (e) { var args = JSON.parse(e.data); Ext.ux.form.CodeMirror.typo = new Typo (args.lang, args.affData, args.dicData); }; worker.postMessage (JSON.stringify ({ lang: 'en_US', path: '{{ STATIC_URL }}/lib/typo.js/typo/dictionaries' }));

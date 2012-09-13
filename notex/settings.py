@@ -346,6 +346,7 @@ JSMIN_INPUT += [] if DEBUG else [
     'static/app/editor/js/CodeMirror.mime.js',
     'static/app/editor/js/CodeMirror.yaml.js',
     'static/app/editor/js/CodeMirror.rest.js',
+    'static/app/editor/js/CodeMirror.typo.js',
     'static/app/editor/js/ReportManager.util.js',
     'static/app/editor/js/ReportManager.crud.js',
     'static/app/editor/js/ReportManager.tree.js',

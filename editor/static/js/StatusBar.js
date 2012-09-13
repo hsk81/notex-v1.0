@@ -68,6 +68,8 @@ var statusBar = function () {
                 this.mode = 'Importing'
             else if (mode == 'export')
                 this.mode = 'Exporting'
+            else if (mode == 'load')
+                this.mode = 'Loading'
             else
                 this.mode = 'Waiting'
         },
@@ -106,13 +108,15 @@ var statusBar = function () {
 
     var langStore = new Ext.data.ArrayStore ({
         fields: ['code', {name:'l2c', convert: function (v, record) {
-                var r = record.split ("_");
-                return statusBarLang.map2language (r[0]) + ":" +
+                var r = record.split ('_');
+                return String.format ('{0} {1}',
+                    statusBarLang.map2language (r[0]),
                     statusBarLang.map2country (r[1])
+                );
             }
         }],
 
-        data : ['de_DE','en_GB','en_US','tr_TR']
+        data : ['de_AT', 'de_BE', 'de_CH', 'de_DE', 'de_LI', 'de_LU', 'en_AG', 'en_AU', 'en_BS', 'en_BW', 'en_BZ', 'en_CA', 'en_DK', 'en_GB', 'en_GH', 'en_HK', 'en_IE', 'en_IN', 'en_JM', 'en_NA', 'en_NG', 'en_NZ', 'en_PH', 'en_SG', 'en_TT', 'en_US', 'en_ZA', 'en_ZW', 'es_AR', 'es_BO', 'es_CL', 'es_CO', 'es_CR', 'es_CU', 'es_DO', 'es_EC', 'es_ES', 'es_GT', 'es_HN', 'es_MX', 'es_NI', 'es_PA', 'es_PE', 'es_PR', 'es_PY', 'es_SV', 'es_UY', 'es_VE']
     });
 
     var langCombo = new Ext.form.ComboBox ({
@@ -123,7 +127,49 @@ var statusBar = function () {
         triggerAction: 'all',
         emptyText: 'Spell checking ..',
         selectOnFocus: true,
-        width: 164
+        width: 164,
+
+        listeners:{
+            'select': function (self, record, index) {
+                var lingua = record.json;
+                assert (lingua);
+
+                var engine = Ext.ux.form.CodeMirror.typo[lingua];
+                if (engine) {
+                    Ext.ux.form.CodeMirror.typo_engine = engine;
+                } else {
+                    var worker = new Worker (location.static_url +
+                        'app/editor/js/CodeMirror.typo.worker.js'
+                    );
+
+                    worker.onmessage = function (event) {
+                        var typo = Typo.prototype.load (event.data);
+                        assert (typo);
+
+                        Ext.ux.form.CodeMirror.typo[lingua] = typo;
+                        Ext.ux.form.CodeMirror.typo_engine = typo;
+
+                        progressBar.reset (true);
+                        statusBar.clearStatus ({useDefaults:true});
+                    };
+
+                    Ext.ux.form.CodeMirror.typo_engine = null;
+
+                    statusBar.showBusy ({text: 'Please wait ..'});
+                    progressBar.show ();
+                    progressBar.setMode ('loading');
+                    progressBar.wait ({
+                        increment : progressBar.increment,
+                        interval : progressBar.interval
+                    });
+
+                    worker.postMessage ({
+                        lingua: record.json,
+                        static: location.static_url
+                    });
+                }
+            }
+        }
     });
 
     return new Ext.ux.StatusBar ({

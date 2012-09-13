@@ -234,7 +234,8 @@ var statusBarLang = function () {
         'ID':'Indonesia',
         'UA':'Ukraine',
         'QA':'Qatar',
-        'MZ':'Mozambique'
+        'MZ':'Mozambique',
+        'ZW':'Zimbabwe'
     }
 
     var c2l = {
@@ -381,7 +382,7 @@ var statusBarLang = function () {
     }
 
     return {
-        map2country: function (code) { return c2c[code]; },
-        map2language: function (code) { return c2l[code]; }
+        map2country: function (code) { return c2c[code] ? c2c[code] : code; },
+        map2language: function (code) { return c2l[code] ? c2l[code] : code; }
     }
 }();

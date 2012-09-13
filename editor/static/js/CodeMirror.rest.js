@@ -45,9 +45,9 @@ Ext.ux.form.CodeMirror.rest = function () {
                     if (stream.match (rx_footnote_body)) return "rest-footnote";
 
                     if (stream.match (rx_word) &&
-                        Ext.ux.form.CodeMirror.typo &&
-                       !Ext.ux.form.CodeMirror.typo.check (stream.current ()
-                            .replace (/^'+/,'').replace (/'+$/,'')))
+                        Ext.ux.form.CodeMirror.typo_engine &&
+                       !Ext.ux.form.CodeMirror.typo_engine.check (stream.current ()
+                           .replace (/^'+/,'').replace (/'+$/,'')))
 
                         return "spell-error";
 

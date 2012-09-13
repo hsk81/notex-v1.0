@@ -1,32 +1,21 @@
-importScripts ("Assert.js");
+window.onload = function () {
+    var worker = new Worker (
+        location.static_url + 'app/editor/js/CodeMirror.typo.worker.js'
+    );
 
-self.onmessage = function (e) {
-    assert (e.data, 'e.data undefined');
+    worker.onmessage = function (event) {
+        var typo = Typo.prototype.load (event.data);
+        assert (typo);
+        assert (typo.check ('test'));
 
-    var args = JSON.parse (e.data);
-    assert (args, 'args undefined')
-    assert (args.path, 'path undefined')
-    assert (args.lang, 'lang undefined')
+        Ext.ux.form.CodeMirror.typo = { 'en_US': typo };
+        Ext.ux.form.CodeMirror.typo_engine = typo;
+    };
 
-    function get (path) {
-        var req = new XMLHttpRequest();
-        req.open("GET", path, false);
-        req.overrideMimeType("text/plain; charset=ISO8859-1");
-        req.send(null);
+    Ext.ux.form.CodeMirror.typo_engine = null;
 
-        return req.responseText;
-    }
-
-    var affData = get (args.path + '/' + args.lang + '.aff');
-    assert (affData, 'affData undefined');
-    var dicData = get (args.path + '/' + args.lang + '.dic');
-    assert (dicData, 'dicData undefined');
-
-    self.postMessage (JSON.stringify ({
-        lang: args.lang,
-        affData: affData,
-        dicData: dicData
-    }));
-
-    self.close ();
+    worker.postMessage ({
+        lingua: 'en_US',
+        static: location.static_url
+    });
 };

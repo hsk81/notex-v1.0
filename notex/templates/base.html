@@ -26,6 +26,9 @@
 </head>
 <body>
 {% cache 180 cache-body page %}
+    <script type="text/javascript">
+        location.static_url = "{{ STATIC_URL }}";
+    </script>
     <div id="content-wrap">
         <div id="content">{% include 'page.html' %}</div>
     </div>
