@@ -104,11 +104,35 @@ var statusBar = function () {
         }
     });
 
+    var langStore = new Ext.data.ArrayStore ({
+        fields: ['code', {name:'l2c', convert: function (v, record) {
+                var r = record.split ("_");
+                return statusBarLang.map2language (r[0]) + ":" +
+                    statusBarLang.map2country (r[1])
+            }
+        }],
+
+        data : ['de_DE','en_GB','en_US','tr_TR']
+    });
+
+    var langCombo = new Ext.form.ComboBox ({
+        store: langStore,
+        displayField: 'l2c',
+        typeAhead: true,
+        mode: 'local',
+        triggerAction: 'all',
+        emptyText: 'Spell checking ..',
+        selectOnFocus: true,
+        width: 164
+    });
+
     return new Ext.ux.StatusBar ({
         id: 'status-bar.id',
         defaultText: 'NoTex',
         text: 'NoTex',
-        items: [progressBar, '-', infoButton, '-', zoom, slider],
+        items: [
+            progressBar, '-', infoButton, '-', langCombo, '-', zoom, slider
+        ],
 
         listeners: {
             initComponent: function  () {
@@ -134,6 +158,8 @@ var statusBar = function () {
             if (value) infoButton.enable ();
             else infoButton.disable ();
             infoButton.editor = value;
-        }
+        },
+
+        lang: statusBarLang
     });
 }();

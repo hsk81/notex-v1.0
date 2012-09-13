@@ -356,6 +356,7 @@ JSMIN_INPUT += [] if DEBUG else [
     'static/app/editor/js/Editor.tbar.js',
     'static/app/editor/js/Editor.js',
     'static/app/editor/js/StatusBar.js',
+    'static/app/editor/js/StatusBar.lang.js',
     'static/app/editor/js/Ajax.csrf.js',
     'static/app/editor/js/KeyMap.js',
     'static/app/editor/js/Viewport.js',

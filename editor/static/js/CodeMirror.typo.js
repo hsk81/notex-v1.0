@@ -17,9 +17,9 @@ self.onmessage = function (e) {
         return req.responseText;
     }
 
-    var affData = get (args.path + '/' + args.lang + '/' + args.lang + '.aff');
+    var affData = get (args.path + '/' + args.lang + '.aff');
     assert (affData, 'affData undefined');
-    var dicData = get (args.path + '/' + args.lang + '/' + args.lang + '.dic');
+    var dicData = get (args.path + '/' + args.lang + '.dic');
     assert (dicData, 'dicData undefined');
 
     self.postMessage (JSON.stringify ({
