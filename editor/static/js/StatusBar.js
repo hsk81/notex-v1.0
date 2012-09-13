@@ -134,40 +134,34 @@ var statusBar = function () {
                 var lingua = record.json;
                 assert (lingua);
 
-                var engine = Ext.ux.form.CodeMirror.typo[lingua];
-                if (engine) {
-                    Ext.ux.form.CodeMirror.typo_engine = engine;
-                } else {
-                    var worker = new Worker (location.static_url +
-                        'app/editor/js/CodeMirror.typo.worker.js'
-                    );
+                var worker = new Worker (location.static_url +
+                    'app/editor/js/CodeMirror.typo.worker.js'
+                );
 
-                    worker.onmessage = function (event) {
-                        var typo = Typo.prototype.load (event.data);
-                        assert (typo);
+                worker.onmessage = function (event) {
+                    var typo = Typo.prototype.load (event.data);
+                    assert (typo);
 
-                        Ext.ux.form.CodeMirror.typo[lingua] = typo;
-                        Ext.ux.form.CodeMirror.typo_engine = typo;
+                    Ext.ux.form.CodeMirror.typo_engine = typo;
 
-                        progressBar.reset (true);
-                        statusBar.clearStatus ({useDefaults:true});
-                    };
+                    progressBar.reset (true);
+                    statusBar.clearStatus ({useDefaults:true});
+                };
 
-                    Ext.ux.form.CodeMirror.typo_engine = null;
+                Ext.ux.form.CodeMirror.typo_engine = null;
 
-                    statusBar.showBusy ({text: 'Please wait ..'});
-                    progressBar.show ();
-                    progressBar.setMode ('load');
-                    progressBar.wait ({
-                        increment : progressBar.increment,
-                        interval : progressBar.interval
-                    });
+                statusBar.showBusy ({text: 'Please wait ..'});
+                progressBar.show ();
+                progressBar.setMode ('load');
+                progressBar.wait ({
+                    increment : progressBar.increment,
+                    interval : progressBar.interval
+                });
 
-                    worker.postMessage ({
-                        lingua: record.json,
-                        static: location.static_url
-                    });
-                }
+                worker.postMessage ({
+                    lingua: record.json,
+                    static: location.static_url
+                });
             }
         }
     });

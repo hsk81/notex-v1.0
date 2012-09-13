@@ -6,9 +6,6 @@ window.onload = function () {
     worker.onmessage = function (event) {
         var typo = Typo.prototype.load (event.data);
         assert (typo);
-        assert (typo.check ('test'));
-
-        Ext.ux.form.CodeMirror.typo = { 'en_US': typo };
         Ext.ux.form.CodeMirror.typo_engine = typo;
     };
 
