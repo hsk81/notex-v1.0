@@ -12,23 +12,23 @@ Ext.ux.form.CodeMirror.rest = function () {
     var rx_role = /^:[^:]+?:`[^`]+?`/;
     var rx_abbreviation = /^[A-Z]{2,}/;
 
-    var rx_protocol = "([Hh][Tt][Tt][Pp][Ss]?://)?";
-    var rx_domain = "([\\d\\w.-]+)\\.(\\w{2,6})";
-    var rx_path = "(/[~=:#&\\d\\w.-]+)*/?";
+    var rx_uri_prot = "([Hh][Tt][Tt][Pp][Ss]?://)?";
+    var rx_uri_doma = "([\\d\\w.-]+)\\.(\\w{2,6})";
+    var rx_uri_path = "(/[~=:#&\\d\\w.-]+)*/?";
     var rx_uri = new RegExp (String.format ("(?:^{0}{1}{2})",
-        rx_protocol, rx_domain, rx_path
+        rx_uri_prot, rx_uri_doma, rx_uri_path
     ));
 
     var rx_footnote_link = /^\[(.+?)\]_\s|^\[(.+?)\]_/;
     var rx_footnote_body = /^\.\.(\s+)\[(.+?)\]/;
 
-    var rx_basic = "!\"#$%&()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
-    var rx_extended = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
-    var rx_supscript = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ";
-    var rx_subscript = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔₕₖₗₘₙₚₛₜ";
-    var rx_extra = "≈≡×";
+    var rx_word_bas = "!\"#$%&()*+,-./:;<=>?@[\\\\\\]^_`{|}~";
+    var rx_word_ext = "€‚ƒ„…†‡ˆ‰‹•—™›¡¢£¤¥¦§¨©ª«¬®¯°±´µ¶·¸º»¼½¾¿";
+    var rx_word_sup = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ";
+    var rx_word_sub = "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₔ";
+    var rx_word_xxx = "≈≡×";
     var rx_word = new RegExp (String.format ("^[^{0}{1}{2}{3}{4}\\d\\s]{2,}",
-        rx_basic, rx_extended, rx_supscript, rx_subscript, rx_extra
+        rx_word_bas, rx_word_ext, rx_word_sup, rx_word_sub, rx_word_xxx
     ));
 
     function onAfterRenderBeg (textarea) {
