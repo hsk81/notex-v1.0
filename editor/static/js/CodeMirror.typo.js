@@ -32,7 +32,6 @@ window.onload = function () {
 
     worker.onmessage = function (event) {
         var typo = Typo.prototype.load (event.data);
-        assert (typo);
         Ext.ux.form.CodeMirror.typo_engine = typo;
     };
 
@@ -41,4 +40,7 @@ window.onload = function () {
     worker.postMessage ({
         lingua: lingua, static: location.static_url
     });
+
+    var langCombo = Ext.getCmp ('status-bar.cmb-lang.id');
+    langCombo.setValueFor (lingua);
 };

@@ -107,19 +107,72 @@ var statusBar = function () {
     });
 
     var langStore = new Ext.data.ArrayStore ({
-        fields: ['code', {name:'l2c', convert: function (v, record) {
-                var r = record.split ('_');
-                return String.format ('{0} {1}',
-                    statusBarLang.map2language (r[0]),
-                    statusBarLang.map2country (r[1])
+        fields: [{name:'code'}, {name:'l2c', convert: function (v, r) {
+                var record = r.code.split ('_');
+                return String.format ('{0}: {1}',
+                    statusBarLang.map2language (record[0]),
+                    statusBarLang.map2country (record[1])
                 );
             }
         }],
-
-        data : ['de_AT', 'de_BE', 'de_CH', 'de_DE', 'de_LI', 'de_LU', 'en_AG', 'en_AU', 'en_BS', 'en_BW', 'en_BZ', 'en_CA', 'en_DK', 'en_GB', 'en_GH', 'en_HK', 'en_IE', 'en_IN', 'en_JM', 'en_NA', 'en_NG', 'en_NZ', 'en_PH', 'en_SG', 'en_TT', 'en_US', 'en_ZA', 'en_ZW', 'es_AR', 'es_BO', 'es_CL', 'es_CO', 'es_CR', 'es_CU', 'es_DO', 'es_EC', 'es_ES', 'es_GT', 'es_HN', 'es_MX', 'es_NI', 'es_PA', 'es_PE', 'es_PR', 'es_PY', 'es_SV', 'es_UY', 'es_VE']
+        sortInfo: {
+            field: 'l2c',
+            direction: 'ASC'
+        },
+        data : [
+            {code: 'de_AT'},
+            {code: 'de_BE'},
+            {code: 'de_CH'},
+            {code: 'de_DE'},
+            {code: 'de_LI'},
+            {code: 'de_LU'},
+            {code: 'en_AG'},
+            {code: 'en_AU'},
+            {code: 'en_BS'},
+            {code: 'en_BW'},
+            {code: 'en_BZ'},
+            {code: 'en_CA'},
+            {code: 'en_DK'},
+            {code: 'en_GB'},
+            {code: 'en_GH'},
+            {code: 'en_HK'},
+            {code: 'en_IE'},
+            {code: 'en_IN'},
+            {code: 'en_JM'},
+            {code: 'en_NA'},
+            {code: 'en_NG'},
+            {code: 'en_NZ'},
+            {code: 'en_PH'},
+            {code: 'en_SG'},
+            {code: 'en_TT'},
+            {code: 'en_US'},
+            {code: 'en_ZA'},
+            {code: 'en_ZW'},
+            {code: 'es_AR'},
+            {code: 'es_BO'},
+            {code: 'es_CL'},
+            {code: 'es_CO'},
+            {code: 'es_CR'},
+            {code: 'es_CU'},
+            {code: 'es_DO'},
+            {code: 'es_EC'},
+            {code: 'es_ES'},
+            {code: 'es_GT'},
+            {code: 'es_HN'},
+            {code: 'es_MX'},
+            {code: 'es_NI'},
+            {code: 'es_PA'},
+            {code: 'es_PE'},
+            {code: 'es_PR'},
+            {code: 'es_PY'},
+            {code: 'es_SV'},
+            {code: 'es_UY'},
+            {code: 'es_VE'}
+        ]
     });
 
     var langCombo = new Ext.form.ComboBox ({
+        id: 'status-bar.cmb-lang.id',
         store: langStore,
         displayField: 'l2c',
         typeAhead: true,
@@ -130,15 +183,15 @@ var statusBar = function () {
         forceSelection: true,
         width: 164,
 
-        listeners:{
-            'change': function (self, newValue, oldValue) {
+        listeners: {
+            change: function (self, newValue, oldValue) {
                 if (oldValue && !newValue) {
                     Ext.ux.form.CodeMirror.typo_engine = null;
                 }
             },
 
-            'select': function (self, record, index) {
-                var lingua = record.json;
+            select: function (self, record, index) {
+                var lingua = record.json.code;
                 assert (lingua);
 
                 var worker = new Worker (location.static_url +
@@ -166,8 +219,21 @@ var statusBar = function () {
                 });
 
                 worker.postMessage ({
-                    lingua: record.json, static: location.static_url
+                    lingua: record.json.code, static: location.static_url
                 });
+            }
+        },
+
+        setValueFor: function (item) {
+            var store = this.getStore ();
+            var index = store.findBy (function (r) {
+                return r.json.code == item;
+            });
+
+            if (index >= 0) {
+                var record = store.getAt (index);
+                var value = record.get ('l2c');
+                this.setValue (value);
             }
         }
     });
@@ -192,7 +258,7 @@ var statusBar = function () {
             cursor: function (position) {
                 if (position) {
                     infoButton.setText (String.format (
-                        '{0}:{1}', position.line+1, position.ch+1
+                        '{0}:{1}', position.line + 1, position.ch + 1
                     ));
                 } else {
                     infoButton.setText (null);
