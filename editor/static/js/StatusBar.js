@@ -127,9 +127,16 @@ var statusBar = function () {
         triggerAction: 'all',
         emptyText: 'Spell check language ..',
         selectOnFocus: true,
+        forceSelection: true,
         width: 164,
 
         listeners:{
+            'change': function (self, newValue, oldValue) {
+                if (oldValue && !newValue) {
+                    Ext.ux.form.CodeMirror.typo_engine = null;
+                }
+            },
+
             'select': function (self, record, index) {
                 var lingua = record.json;
                 assert (lingua);
@@ -159,8 +166,7 @@ var statusBar = function () {
                 });
 
                 worker.postMessage ({
-                    lingua: record.json,
-                    static: location.static_url
+                    lingua: record.json, static: location.static_url
                 });
             }
         }
