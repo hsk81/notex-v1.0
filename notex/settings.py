@@ -32,6 +32,8 @@ if 'DEBUG' in os.environ: DEBUG = os.environ['DEBUG'] == 'True'
 else: DEBUG = in_rxs (socket.getfqdn (), MACH_DEVS)
 TEMPLATE_DEBUG = DEBUG
 
+INTERNAL_IPS = ('127.0.0.1',)
+
 SITE_ROOT = os.path.realpath (os.path.dirname (__file__))
 SITE_NAME = 'notex'
 SITE_HOST = 'localhost' if in_rxs (socket.getfqdn (), MACH_DEVS + MACH_VMES) \
@@ -84,6 +86,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,6 +136,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'notex', 'tags', 'editor',
+    'debug_toolbar',
 )
 
 ################################################################################
