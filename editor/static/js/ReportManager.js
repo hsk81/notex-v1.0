@@ -661,16 +661,12 @@ var reportManager = function () {
         var model = tree.getSelectionModel ();
         var node = model.getSelectedNode ();
 
-        if (node == undefined) {
+        if (node == undefined || tree.isReport (node.previousSibling)) {
             return;
         }
 
-        if (tree.isReport (node.previousSibling)) {
-            return;
-        }
-
-        var pnod = prev (node)
-        if (tree.isReport (pnod)) {
+        var pnod = prev (node);
+        if (pnod == undefined || tree.isReport (pnod)) {
             return;
         }
 
@@ -728,16 +724,12 @@ var reportManager = function () {
         var model = tree.getSelectionModel ();
         var node = model.getSelectedNode ();
 
-        if (node == undefined) {
+        if (node == undefined || tree.isReport (node.nextSibling)) {
             return;
         }
 
-        if (tree.isReport (node.nextSibling)) {
-            return;
-        }
-
-        var nnod = next (node)
-        if (tree.isReport (nnod)) {
+        var nnod = next (node);
+        if (nnod == undefined || tree.isReport (nnod)) {
             return;
         }
 
