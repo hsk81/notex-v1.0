@@ -182,6 +182,7 @@ var statusBar = function () {
     });
 
     var langCombo = new Ext.form.ComboBox ({
+        tpl: '<tpl for="."><div ext:qtip="{l2c}" class="x-combo-list-item">{l2c}</div></tpl>',
         id: 'status-bar.cmb-lang.id',
         store: langStore,
         displayField: 'l2c',
