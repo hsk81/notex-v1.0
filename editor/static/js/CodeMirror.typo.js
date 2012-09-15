@@ -10,8 +10,7 @@ window.onload = function () {
         }
 
         if (language2country &&
-            language2country.indexOf &&
-            language2country.indexOf ('en') !== -1) {
+            language2country != 'cleared') {
             return normalize (language2country, 'en_US');
         } else {
             return undefined;
@@ -19,11 +18,13 @@ window.onload = function () {
     }
 
     var lingua = get_lingua (
-        window.navigator.userLanguage || window.navigator.language
+        Ext.util.Cookies.get ('lang') ||
+        window.navigator.userLanguage ||
+        window.navigator.language
     );
 
     if (lingua == undefined) {
-        return; // do not set a default spell checker
+        return; // no default spell checker!
     }
 
     var worker = new Worker (
@@ -31,16 +32,17 @@ window.onload = function () {
     );
 
     worker.onmessage = function (event) {
-        var typo = Typo.prototype.load (event.data);
-        Ext.ux.form.CodeMirror.typo_engine = typo;
+        if (event.data) {
+            var typo = Typo.prototype.load (event.data);
+            Ext.ux.form.CodeMirror.typo_engine = typo;
+        } else {
+            Ext.getCmp ('status-bar.cmb-lang.id').reset ();
+        }
     };
-
-    Ext.ux.form.CodeMirror.typo_engine = null;
 
     worker.postMessage ({
         lingua: lingua, static: location.static_url
     });
 
-    var langCombo = Ext.getCmp ('status-bar.cmb-lang.id');
-    langCombo.setValueFor (lingua);
+    Ext.getCmp ('status-bar.cmb-lang.id').setValueFor (lingua);
 };

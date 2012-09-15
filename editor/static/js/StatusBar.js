@@ -1,16 +1,7 @@
 var statusBar = function () {
 
-    function change (slider, newValue, thumb) {
-        Ext.util.Cookies.set ('zoom', newValue);
-        Ext.getCmp ('slider.zoom.id').setText (newValue + '%');
-        Ext.getCmp ('editor.id').fireEvent ('zoom', newValue);
-    }
-
-    var tip = new Ext.slider.Tip ({
-        getText: function (thumb){
-            return String.format ('<b>Zoom {0}%</b>', thumb.value);
-        }
-    });
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     function getInitialValue () {
         var strValue = Ext.util.Cookies.get ('zoom')
@@ -46,12 +37,24 @@ var statusBar = function () {
         value : getInitialValue (),
         minValue : 50,
         maxValue : 150,
-        plugins : tip,
+
+        plugins : new Ext.slider.Tip ({
+            getText: function (thumb){
+                return String.format ('<b>Zoom {0}%</b>', thumb.value);
+            }
+        }),
 
         listeners : {
-            change : change
+            change : function (slider, newValue, thumb) {
+                Ext.util.Cookies.set ('zoom', newValue);
+                Ext.getCmp ('slider.zoom.id').setText (newValue + '%');
+                Ext.getCmp ('editor.id').fireEvent ('zoom', newValue);
+            }
         }
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     var progressBar = new Ext.ProgressBar ({
         id : 'progress-bar.id',
@@ -83,10 +86,13 @@ var statusBar = function () {
             },
 
             hide : function (self) {
-                self.total = 0
+                self.total = 0;
             }
         }
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     var infoButton = new Ext.Button ({
         tooltip: '<b>Line:Char</b> or <b>Lines:Words:Chars</b>',
@@ -106,6 +112,9 @@ var statusBar = function () {
         }
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
     var langStore = new Ext.data.ArrayStore ({
         fields: [{name:'code'}, {name:'l2c', convert: function (v, r) {
                 var record = r.code.split ('_');
@@ -115,10 +124,11 @@ var statusBar = function () {
                 );
             }
         }],
+
         sortInfo: {
-            field: 'l2c',
-            direction: 'ASC'
+            field: 'l2c', direction: 'ASC'
         },
+
         data : [
             {code: 'de_AT'},
             {code: 'de_BE'},
@@ -187,6 +197,7 @@ var statusBar = function () {
             change: function (self, newValue, oldValue) {
                 if (oldValue && !newValue) {
                     Ext.ux.form.CodeMirror.typo_engine = null;
+                    Ext.util.Cookies.set ('lang', 'cleared');
                 }
             },
 
@@ -199,18 +210,20 @@ var statusBar = function () {
                 );
 
                 worker.onmessage = function (event) {
-                    var typo = Typo.prototype.load (event.data);
-                    assert (typo);
-
-                    Ext.ux.form.CodeMirror.typo_engine = typo;
+                    if (event.data) {
+                        var typo = Typo.prototype.load (event.data);
+                        Ext.ux.form.CodeMirror.typo_engine = typo;
+                        Ext.util.Cookies.set ('lang', lingua);
+                    } else {
+                        self.reset ();
+                    }
 
                     progressBar.reset (true);
                     statusBar.clearStatus ({useDefaults:true});
                 };
 
-                Ext.ux.form.CodeMirror.typo_engine = null;
-
                 statusBar.showBusy ({text: 'Please wait ..'});
+
                 progressBar.show ();
                 progressBar.setMode ('load');
                 progressBar.wait ({
@@ -237,6 +250,9 @@ var statusBar = function () {
             }
         }
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     return new Ext.ux.StatusBar ({
         id: 'status-bar.id',
@@ -274,4 +290,8 @@ var statusBar = function () {
 
         lang: statusBarLang
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
 }();

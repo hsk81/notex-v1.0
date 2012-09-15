@@ -10,18 +10,22 @@ self.onmessage = function (event) {
     var dic_path = args.static + 'lib/typo.js/typo/dictionaries';
 
     function get (path) {
-        var req = new XMLHttpRequest();
-        req.open("GET", path, false);
-        req.overrideMimeType("text/plain; charset=ISO8859-1");
-        req.send(null);
+        var xhr = new XMLHttpRequest ();
+        xhr.open ("GET", path, false);
+        xhr.overrideMimeType ("text/plain; charset=ISO8859-1");
+        xhr.send (null);
 
-        return req.responseText;
+        if (xhr.status == 200) {
+            return xhr.responseText;
+        } else {
+            return null;
+        }
     }
 
     var aff_data = get (dic_path + '/' + args.lingua + '.aff');
-    assert (aff_data, 'aff_data undefined');
+    if (!aff_data) { self.postMessage (null); return; }
     var dic_data = get (dic_path + '/' + args.lingua + '.dic');
-    assert (dic_data, 'dic_data undefined');
+    if (!dic_data) { self.postMessage (null); return; }
 
     importScripts (lib_path);
 
