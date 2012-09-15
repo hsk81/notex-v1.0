@@ -40,7 +40,7 @@ var statusBar = function () {
 
         plugins : new Ext.slider.Tip ({
             getText: function (thumb){
-                return String.format ('<b>Zoom {0}%</b>', thumb.value);
+                return String.format ('<b>Text Zoom {0}%</b>', thumb.value);
             }
         }),
 
