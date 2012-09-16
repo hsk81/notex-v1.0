@@ -55,13 +55,14 @@ function startvm() {
 }
 
 function archive() {
-    rm temp -rf && mkdir temp
-    git archive master | tar -x -C temp
-    git submodule update --init
+    rm /tmp/notex.tmp -rf && mkdir -p /tmp/notex.tmp/$(pwd)
+    git archive master | tar -x -C /tmp/notex.tmp/$(pwd)
+    git submodule update --init --recursive
     git submodule foreach --recursive \
-        'git archive $sha1 | tar -x -C $toplevel/temp/$path'
+        'git archive $sha1 | tar -x -C /tmp/notex.tmp/$toplevel/$path'
     rm $APPPATH -rf && mkdir $APPPATH
-    mv temp $APPPATH/$SHAPATH
+    mv /tmp/notex.tmp/$(pwd) $APPPATH/$SHAPATH
+    rm /tmp/notex.tmp
     tar czvf $PKGARCH $APPPATH/$SHAPATH
     rm $APPPATH -r
 }
