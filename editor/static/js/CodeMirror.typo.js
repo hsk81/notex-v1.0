@@ -10,7 +10,9 @@ window.onload = function () {
         }
 
         if (language2country &&
-            language2country != 'cleared') {
+            language2country != 'cleared' &&
+            language2country.match (/^de|^en|^es/))
+        {
             return normalize (language2country, 'en_US');
         } else {
             return undefined;
