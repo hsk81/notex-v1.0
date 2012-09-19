@@ -57,13 +57,13 @@ def main_args (request, page):
         lookup = {
             'home' :
                 """
-                NoTex: A restructured text editor plus a PDF, LaTex and HTML
+                NoTex: A reStructuredText editor plus a PDF, LaTex and HTML
                 converter.
                 """,
             'overview' :
                 """
                 Overview - NoTex: An introduction to the editor plus motivation
-                for restructured text.
+                for reStructuredText.
                 """,
             'tutorial' :
                 """
@@ -72,7 +72,7 @@ def main_args (request, page):
                 """,
             'rest' :
                 """
-                Restructured Text - NoTex: A primer about restructured text.
+                ReStructuredText - NoTex: A primer about reStructuredText.
                 """,
             'faq' :
                 """
@@ -96,7 +96,7 @@ def main_args (request, page):
             'home' :
                 """
                 NoTex enables to write books, reports, articles and theses using
-                the restructured text markup language and convert them to LaTex,
+                the reStructuredText markup language and convert them to LaTex,
                 PDF or HTML. The PDF files are of high publication quality and
                 are produced via Sphinx with the Texlive LaTex suite.
                 """,
@@ -106,7 +106,7 @@ def main_args (request, page):
                 the content versus presentation separation: Word and LaTex are
                 shown to mix content and presentation (Word on a visual and
                 LaTex on a markup level) and then an argument in favor of
-                restructured text is made, which cleanly separates the content
+                reStructuredText is made, which cleanly separates the content
                 and presentation domains.
                 """,
             'tutorial' :
@@ -119,7 +119,7 @@ def main_args (request, page):
                 """,
             'rest' :
                 """
-                A primer on the restructured text markup language, explaining
+                A primer on the reStructuredText markup language, explaining
                 the most important elements of it. The following ones are
                 mentioned: paragraphs, inline markup, lists and quote-like
                 blocks, source code, tables, hyperlinks, sections, explicit
