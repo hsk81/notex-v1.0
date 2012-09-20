@@ -143,6 +143,20 @@
     margin-left: 2em;
 }
 
+#page.textual div.figure {
+    width: 652px;
+    margin: 0 auto;
+}
+
+#page.textual div.figure img {
+    width: 100%;
+}
+
+#page.textual div.figure p {
+    text-align: justify;
+    font-size: xx-small;
+}
+
 /******************************************************************************
  * Page Wrap: Footer
  *****************************************************************************/

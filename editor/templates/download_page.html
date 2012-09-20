@@ -38,9 +38,9 @@
 
     <p>and follow the instructions of the import wizard. Once the import is done, start the virtual machine.</p>
 
-    <div style="width: 652px; margin: 0 auto;">
-        <img src="{{ STATIC_URL }}app/editor/img/vm-import.gif" style="width: 100%;" alt="Application Import Wizard">
-        <p style="text-align: justify; font-size: xx-small;"><b>VM Import Wizard:</b> It is possible to tweak the virtual machine settings at import, e.g. you can increase the number of CPUs or the amount of RAM allocated to experience better performance (the defaults should be more than enough though). Deselecting the DVD check box and reinitializing the MAC address are recommended.</p>
+    <div class="figure">
+        <img src="{{ STATIC_URL }}app/editor/img/vm-import.gif" alt="Application Import Wizard">
+        <p><b>VM Import Wizard:</b> It is possible to tweak the virtual machine settings at import, e.g. you can increase the number of CPUs or the amount of RAM allocated to experience better performance (the defaults should be more than enough though). Deselecting the DVD check box and reinitializing the MAC address are recommended.</p>
     </div>
 
     <h2>Usage</h2>
@@ -53,9 +53,9 @@
 
     <p>If you run the editor on a different host than the browser, then you may have to replace <em>localhost</em> with the correct host name.</p>
 
-    <div style="width: 652px; margin: 0 auto;">
-        <img src="{{ STATIC_URL }}app/editor/img/vm-running.gif" style="width: 100%;" alt="Notex VM">
-        <p style="text-align: justify; font-size: xx-small;"><b>NoTex VM:</b> Once the virtual machine has booted up, you should see a screen similar to what is shown above. Let the VM run in the background, open a browser and enter the address <a target="_blank" href="http://localhost:8080/">http://localhost:8080/</a> to connect to the application.</p>
+    <div class="figure">
+        <img src="{{ STATIC_URL }}app/editor/img/vm-running.gif" alt="Notex VM">
+        <p><b>NoTex VM:</b> Once the virtual machine has booted up, you should see a screen similar to what is shown above. Let the VM run in the background, open a browser and enter the address <a target="_blank" href="http://localhost:8080/">http://localhost:8080/</a> to connect to the application.</p>
     </div>
 
     <p>Although the virtual machine shows a <em>login prompt</em> at the console, it is not possible to do so, since for security reasons all password logins to the system have been disabled. Your data is stored <em>within</em> the VM, so make sure to export your data (using NoTex) in case you intend to delete the VM completely.</p>
