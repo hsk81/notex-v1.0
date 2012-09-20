@@ -152,6 +152,11 @@
     width: 100%;
 }
 
+#page.textual div.figure img.border{
+    border: #000000 solid 1px;
+    border-radius: 3px;
+}
+
 #page.textual div.figure p {
     text-align: justify;
     font-size: xx-small;
