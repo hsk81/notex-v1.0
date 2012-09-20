@@ -2,16 +2,16 @@
 ${PROJECT}
 ====
 
-This is the main document *content.txt* of your article/report: It is written in **restructured text** and you see the title above. If you change it, then you'll see in the HTML output the corresponding difference. But you have to apply the same change to the **project** setting in the *options.cfg* configuration, to have the same effect on the Latex/PDF output.
+This is the main document *content.txt* of your article/report: It is written in **reStructuredText** and you see the title above. If you change it, then you'll see in the HTML output the corresponding difference. But you have to apply the same change to the **project** setting in the *options.cfg* configuration, to have the same effect on the Latex/PDF output.
 
-*Experienced* user can just erase the content of this document and start writing their own, but if you're a *novice* user just make sure to read *quickstart* to |NoTex| and then continue here. The remainder is a tutorial about restructured text.\ [#f01]_
+*Experienced* user can just erase the content of this document and start writing their own, but if you're a *novice* user just make sure to read *quickstart* to |NoTex| and then continue here. The remainder is a tutorial about reStructuredText.\ [#f01]_
 
-Restructured Text
-==================
+ReStructuredText
+================
 
 .. highlightlang:: rest
 
-This section is a brief introduction to :index:`restructured text` (RST) concepts and syntax, intended to provide authors with enough information to write documents productively.  Since RST was designed to be a simple, unobtrusive markup language, this will not take too long.
+This section is a brief introduction to :index:`reStructuredText` (RST) concepts and syntax, intended to provide authors with enough information to write documents productively.  Since RST was designed to be a simple, unobtrusive markup language, this will not take too long.
 
 Paragraphs
 ----------
@@ -232,7 +232,7 @@ A :index:`directive` is a generic block of explicit markup. Besides roles, it is
 * Special directives:
 
   - `raw` (include raw target-format markup),
-  - `include` (include :index:`restructured text` from another file),
+  - `include` (include :index:`reStructuredText` from another file),
   
     -- in |NoTex| when given an absolute include file path, this directive takes it as relative to the source directory, and
        
@@ -362,7 +362,7 @@ There are some problems one commonly runs into while authoring RST documents:
 RST Documentation
 -----------------
 
-`Restructured Text User Documentation <http://docutils.sourceforge.net/rst.html>`_ is *the* authoritative reference for RST; *advanced* users are encouraged to consult it regularly, while *novice* to *medium* level users can simply ignore it.
+`reStructuredText User Documentation <http://docutils.sourceforge.net/rst.html>`_ is *the* authoritative reference for RST; *advanced* users are encouraged to consult it regularly, while *novice* to *medium* level users can simply ignore it.
 
 .. rubric:: Footnotes
 
