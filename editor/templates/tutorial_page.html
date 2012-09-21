@@ -7,7 +7,7 @@
     <p>The user interface is split into four areas: On the left the <em>report manager</em> (with its own toolbar), in the central area either the NoTex <em>menu</em> (including this tutorial page) or the <em>editor</em> (not visible yet) and in the header the <em>main toolbar</em> on top of the central area; the footer contains the <em>status bar</em>.</p>
 
     <div class="figure">
-        <img class="border" src="{{ STATIC_URL }}app/editor/img/ui-area.gif" alt="UI Areas">
+        <img class="border-grey" src="{{ STATIC_URL }}app/editor/img/ui-area.gif" alt="UI Areas">
         <p><b>UI Areas:</b> The four areas of the application; the editor is only shown if a document is open. It has its own toolbar which is focused only on the reStructuredText markup.</p>
     </div>
 
@@ -52,13 +52,18 @@
     <p>In the main toolbar click on the small arrow next to the <em>Add</em> button, and select from the drop down menu the <em>Report</em> entry. The <em>Create Report</em> wizard should appear: Enter <em>Tutorial</em> for the project name and your own name for author(s). Skip all the other values, but the last one: Select for content <em>tutorial</em> (instead of <em>empty</em>) and click the <em>Create</em> button.</p>
 
     <div class="figure" style="width: 512px;">
-        <img src="{{ STATIC_URL }}app/editor/img/ui-wizard.gif" alt="UI Areas">
+        <img src="{{ STATIC_URL }}app/editor/img/ui-wizard.gif" alt="Report Wizard">
         <p><b>Report Wizard:</b> It helps you the create a new report and tweak parameters like <em>document type</em>, <em>font size</em>, <em>number of columns</em> etc.</p>
     </div>
 
     <p>A new <em>Tutorial</em> project should be created. In the report manager open the corresponding <em>content.txt</em> file: You should see now an example reStructuredText markup explaining .. well reStructuredText! You can read it later.</p>
 
     <p>Now, just hit the <em>Export as .. PDF</em> button, and NoTex should deliver in a few seconds a PDF version for the current project; congratulations! You can also experiment with exporting as LaTex or HTML. Or you could do a simple export and re-import the project back into NoTex.</p>
+
+    <div class="figure" style="width: 540px;">
+        <img class="border-black" src="{{ STATIC_URL }}app/editor/img/pdf-tutorial.gif" alt="PDF Export">
+        <p><b>PDF Export:</b> This is the first page of the exported PDF; it was generated from a regular text, which was written using the reStructuredText markup.</p>
+    </div>
 
     <h2>What now?</h2>
 

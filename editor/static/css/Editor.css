@@ -152,7 +152,12 @@
     width: 100%;
 }
 
-#page.textual div.figure img.border{
+#page.textual div.figure img.border-black {
+    border: #000000 solid 1px;
+    border-radius: 2px;
+}
+
+#page.textual div.figure img.border-grey {
     border: #888888 solid 1px;
     border-radius: 2px;
 }
