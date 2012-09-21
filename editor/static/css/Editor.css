@@ -143,6 +143,30 @@
     margin-left: 2em;
 }
 
+#page.textual div.slag-rhs {
+    float: right;
+    margin-left: 1em;
+}
+
+#page.textual div.slag-lhs {
+    float: left;
+    margin-right: 1em;
+}
+
+#page.textual div.slag {
+    font-weight: bold;
+    font-size: large;
+    color: #888888;
+    text-align: center;
+    width: 25%;
+}
+
+#page.textual div.slag hr {
+    height: 4px;
+    background-color: #888888;
+    border: 0;
+}
+
 #page.textual div.figure {
     width: 652px;
     margin: 0 auto;
