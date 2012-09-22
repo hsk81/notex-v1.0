@@ -6,21 +6,36 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>https://notex.ch/editor/home/</loc>
+    <loc>https://notex.ch/editor/home/</loc>
 </url>
 <url>
-  <loc>https://notex.ch/editor/overview/</loc>
+    <loc>https://notex.ch/editor/overview/</loc>
 </url>
 <url>
-  <loc>https://notex.ch/editor/tutorial/</loc>
+    <loc>https://notex.ch/editor/tutorial/</loc>
+    <image:image>
+        <image:loc>https://notex.ch/static/app/editor/img/ui-area.gif</image:loc>
+    </image:image>
+    <image:image>
+        <image:loc>https://notex.ch/static/app/editor/img/ui-wizard.gif</image:loc>
+    </image:image>
+    <image:image>
+        <image:loc>https://notex.ch/static/app/editor/img/pdf-tutorial.gif</image:loc>
+    </image:image>
 </url>
 <url>
-  <loc>https://notex.ch/editor/rest/</loc>
+    <loc>https://notex.ch/editor/rest/</loc>
 </url>
 <url>
-  <loc>https://notex.ch/editor/faq/</loc>
+    <loc>https://notex.ch/editor/faq/</loc>
 </url>
 <url>
-  <loc>https://notex.ch/editor/download/</loc>
+    <loc>https://notex.ch/editor/download/</loc>
+    <image:image>
+        <image:loc>https://notex.ch/static/app/editor/img/vm-import.gif</image:loc>
+    </image:image>
+    <image:image>
+        <image:loc>https://notex.ch/static/app/editor/img/vm-running.gif</image:loc>
+    </image:image>
 </url>
 </urlset>
