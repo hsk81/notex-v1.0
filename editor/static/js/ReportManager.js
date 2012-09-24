@@ -56,6 +56,9 @@ var reportManager = function () {
                         if (response.success) {
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
+                            tracker.event ({
+                                category: 'I/O', action: 'Import', value: 1
+                            });
                         } else {
                             import_failure (file.name, response.message);
                         }
@@ -80,6 +83,10 @@ var reportManager = function () {
     }
 
     function import_failure (filename, message) {
+        tracker.event ({
+            category: 'I/O', action: 'Import', label: filename, value: 0
+        });
+
         error_msg (String.format (
             'importing <i>{0}</i> failed: {1}', filename, message
         ));
@@ -139,12 +146,22 @@ var reportManager = function () {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
             form.dom.submit ();
+
+            tracker.event ({category: 'I/O',
+                action: 'Export', label: url.replace ('=', 'id'), value: 1
+            });
+
             enableExport ();
         }
 
         var _onFailure = function (xhr, opts, res) {
             progressBar.reset (true);
             statusBar.clearStatus ({useDefaults:true});
+
+            tracker.event ({category: 'I/O',
+                action: 'Export', label: url.replace ('=', 'id'), value: 0
+            });
+
             export_failure (res.name, resource.UNKNOWN_ERROR);
             enableExport ();
         }

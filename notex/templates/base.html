@@ -20,6 +20,8 @@
 
         {% if not dbg %}
         <script type="text/javascript">{% include 'analytics.js' %}</script>
+        {% else %}
+        <script type="text/javascript">var _gaq = undefined;</script>
         {% endif %}
     {% endcache %}
     <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
