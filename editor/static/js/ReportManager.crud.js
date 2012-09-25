@@ -18,6 +18,11 @@ var reportManagerCrud = function () {
             tree.getLoader ().load (root, function (root) {
                 var createdNode = tree.getNodeById (nodeId);
                 var path = createdNode.getPath ();
+
+                tracker.event ({category: 'CRUD', action: 'Create',
+                    label: createdNode.attributes['cls'], value: 1
+                });
+
                 tree.expandPath (path, undefined, function (success, node) {
                     if (success) { node.select (); }
                 });
@@ -28,6 +33,7 @@ var reportManagerCrud = function () {
 
         function _onFailure (xhr, opts) {
             var tree = Ext.getCmp ('reportManager.tree.id')
+            tracker.event ({category: 'CRUD', action: 'Create', value: 0});
             tree.el.unmask ()
         }
 
@@ -57,11 +63,19 @@ var reportManagerCrud = function () {
     function read () {
 
         function _onSuccess (xhr, opts) {
-            //@DONE!
+            var tree = Ext.getCmp ('reportManager.tree.id');
+            var nodeId = Ext.decode (xhr.responseText)[0].id;
+            var node = tree.getNodeById (nodeId);
+
+            tracker.event ({category: 'CRUD', action: 'Read',
+                label: node.attributes['cls'], value: 1
+            });
         }
 
         function _onFailure (xhr, opts) {
-            //@DONE!
+            tracker.event ({category: 'CRUD', action: 'Read',
+                value: 0
+            });
         }
 
         return function (crudInfo) {
@@ -124,6 +138,9 @@ var reportManagerCrud = function () {
                 }
             );
 
+            tracker.event ({category: 'CRUD', action: 'Update',
+                label: node.attributes['cls'], value: 1
+            });
         }
 
         function _onFailure (xhr, opts) {
@@ -137,6 +154,10 @@ var reportManagerCrud = function () {
             } else {
                 error_msg (String.format (resource.UPDATE_ERROR, undefined));
             }
+
+            tracker.event ({category: 'CRUD', action: 'Update',
+                value: 0
+            });
         }
 
         return function (crudInfo, url) {
@@ -180,6 +201,10 @@ var reportManagerCrud = function () {
                 node.setText (res.name)
             }
 
+            tracker.event ({category: 'CRUD', action: 'Rename',
+                label: node ? node.attributes['cls'] : null, value: 1
+            });
+
             tree.el.unmask ()
         }
 
@@ -197,6 +222,10 @@ var reportManagerCrud = function () {
                     resource.UPDATE_ERROR, undefined
                 ));
             }
+
+            tracker.event ({category: 'CRUD', action: 'Rename',
+                value: 0
+            });
         }
 
         return function (crudInfo) {
@@ -225,6 +254,9 @@ var reportManagerCrud = function () {
     function del () {
 
         function _onSuccess (xhr, opts) {
+            tracker.event ({category: 'CRUD', action: 'Delete',
+                value: 1
+            });
         }
 
         function _onFailure (xhr, opts) {
@@ -241,6 +273,10 @@ var reportManagerCrud = function () {
                     resource.DELETE_ERROR, undefined
                 ));
             }
+
+            tracker.event ({category: 'CRUD', action: 'Delete',
+                label: node ? node.attributes['cls'] : null, value: 0
+            });
         }
 
         return function (crudInfo) {
