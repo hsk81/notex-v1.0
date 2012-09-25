@@ -148,7 +148,7 @@ var reportManager = function () {
             form.dom.submit ();
 
             tracker.event ({category: 'I/O',
-                action: 'Export', label: url.replace ('=', 'id'), value: 1
+                action: 'Export', label: url.replace (/=(.*)$/, ''), value: 1
             });
 
             enableExport ();
@@ -159,7 +159,7 @@ var reportManager = function () {
             statusBar.clearStatus ({useDefaults:true});
 
             tracker.event ({category: 'I/O',
-                action: 'Export', label: url.replace ('=', 'id'), value: 0
+                action: 'Export', label: url.replace (/=(.*)$/, ''), value: 0
             });
 
             export_failure (res.name, resource.UNKNOWN_ERROR);
