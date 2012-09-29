@@ -111,6 +111,26 @@ var reportManagerTree = function () {
         }
     }
 
+    function load (self, node, response) {
+        if (response.status == 200) {
+            if (!node.isRoot) {
+                tracker.event ({category: 'CRUD', action: 'Read',
+                    label: node.attributes['cls'], value: 1
+                });
+            }
+        } else {
+            tracker.event ({category: 'CRUD', action: 'Read',
+                label: node.attributes['cls'], value: 0
+            });
+        }
+    }
+
+    function loadexception (self, node, response) {
+        tracker.event ({category: 'CRUD', action: 'Read',
+            label: node.attributes['cls'], value: 0
+        });
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
@@ -147,7 +167,14 @@ var reportManagerTree = function () {
 
     return new Ext.tree.TreePanel ({
 
-        loader : new Ext.tree.TreeLoader ({url : urls.read}),
+        loader : new Ext.tree.TreeLoader ({
+            url : urls.read,
+            listeners : {
+                load : load,
+                loadexception : loadexception
+            }
+        }),
+
         id : 'reportManager.tree.id',
         autoScroll : true,
         rootVisible : false,
