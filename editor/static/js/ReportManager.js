@@ -56,8 +56,8 @@ var reportManager = function () {
                         if (response.success) {
                             var tree = Ext.getCmp ('reportManager.tree.id')
                             tree.getLoader ().load (tree.root, null, this)
-                            tracker.event ({
-                                category: 'I/O', action: 'Import', value: 1
+                            tracker.event ({category: 'I/O', action: 'Import',
+                                label: '/editor/import-archive/', value: 1
                             });
                         } else {
                             import_failure (file.name, response.message);
@@ -83,8 +83,8 @@ var reportManager = function () {
     }
 
     function import_failure (filename, message) {
-        tracker.event ({
-            category: 'I/O', action: 'Import', label: filename, value: 0
+        tracker.event ({category: 'I/O', action: 'Import',
+            label: '/editor/import-archive/' + filename, value: 0
         });
 
         error_msg (String.format (
@@ -285,6 +285,9 @@ var reportManager = function () {
 
                 tree.fireEvent('createNode', newNode, {refNode:node}, {
                     success:function (args) {
+                        tracker.event ({category: 'I/O', action: 'Import',
+                            label: '/editor/import-file/', value: 1
+                        });
                         reportManager.crud.update ({
                             leafId: newNode.id,
                             nodeId: newNode.parentNode.id,
@@ -314,6 +317,9 @@ var reportManager = function () {
     }
 
     function open_failure (filename, message) {
+        tracker.event ({category: 'I/O', action: 'Import',
+            label: '/editor/import-file/' + filename, value: 0
+        });
         error_msg (String.format (
             'Opening <i>{0}</i> failed: {1}!', filename, message
         ));
@@ -517,8 +523,8 @@ var reportManager = function () {
             }
         }
 
-        prompt_message (
-            'Create Folder', 'Enter a name:', callback, null, 'icon-folder_add-16'
+        prompt_message ('Create Folder',
+            'Enter a name:', callback, null, 'icon-folder_add-16'
         );
     }
 
@@ -604,8 +610,8 @@ var reportManager = function () {
             }
         }
 
-        prompt_message (
-            'Rename', 'Enter a name:', callback, text, 'icon-document_rename-16'
+        prompt_message ('Rename',
+            'Enter a name:', callback, text, 'icon-document_rename-16'
         );
     }
 
