@@ -33,7 +33,7 @@ Ext.ux.form.CodeMirror.rest = function () {
 
     function onAfterRenderBeg (textarea) {
 
-        CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
+        CodeMirror.defineMode ("rst-overlay", function (config, parserConfig) {
             var overlay = {
                 token: function (stream, state) {
                     if (stream.match (rx_substitution)) return null;
@@ -71,6 +71,89 @@ Ext.ux.form.CodeMirror.rest = function () {
             );
 
             return CodeMirror.overlayMode (mode, overlay);
+        });
+
+        CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
+
+            var rstMode = CodeMirror.getMode(config, "rst-overlay");
+            var texMode = CodeMirror.getMode(config, "stex");
+
+            function texTokenizer (stream, state) {
+
+                var match = stream.match (/^[^\s]+/, false);
+                if (match && !stream.column ()) {
+                    state.token = rstTokenizer;
+                    state.localState = null;
+                    return rstTokenizer (stream, state);
+                }
+
+                return texMode.token (stream, state.locState);
+            }
+
+            function rstTokenizer (stream, state) {
+
+                var token = rstMode.token (stream, state.rstState);
+                if (token == 'meta' && stream.current () == '.. ') {
+                    state.directive = true;
+                } else
+
+                if (token == 'attribute' && stream.current () == 'math::') {
+                    if (state.directive) {
+                        state.token = texTokenizer;
+                        state.locState = texMode.startState (state.rstState);
+                        state.directive = false;
+                    }
+                } else
+
+                if (token == 'attribute' && stream.current () == 'raw:: ') {
+                    state.raw = true;
+                } else
+
+                if (token == 'body' && stream.current () == 'latex') {
+                    if (state.directive && state.raw) {
+                        state.token = texTokenizer;
+                        state.locState = texMode.startState (state.rstState);
+                        state.directive = state.raw = false;
+                    }
+                }
+
+                return token;
+            }
+
+            return {
+                startState: function () {
+                    return {
+                        mode: "rst-plus",
+                        token: rstTokenizer,
+                        rstState: rstMode.startState (),
+                        locState: null
+                    };
+                },
+
+                copyState: function (state) {
+                    return {
+                        mode: state.mode,
+                        token: state.token,
+                        rstState: CodeMirror.copyState (
+                            rstMode, state.rstState
+                        ),
+                        locState: (state.locState) ? CodeMirror.copyState (
+                            texMode, state.locState
+                        ) : undefined
+                    };
+                },
+
+                token: function (stream, state) {
+                    return state.token (stream, state);
+                },
+
+                innerMode: function(state) {
+                    return {
+                        mode: state.token == rstTokenizer ? rstMode : texMode,
+                        state: state.locState || state.rstState
+                    };
+                }
+            }
         });
 
         return {
