@@ -33,8 +33,10 @@ Ext.ux.form.CodeMirror.rest = function () {
 
     function onAfterRenderBeg (textarea) {
 
-        CodeMirror.defineMode ("rst-overlay", function (config, parserConfig) {
-            var overlay = {
+        CodeMirror.defineMode ("rst-overlay", function (config) {
+
+            var rstMode = CodeMirror.getMode (config, "text/x-rst");
+            var rstOverlay = {
                 token: function (stream, state) {
                     if (stream.match (rx_substitution)) return null;
                     if (stream.match (rx_role)) return null;
@@ -66,14 +68,10 @@ Ext.ux.form.CodeMirror.rest = function () {
                 }
             };
 
-            var mode = CodeMirror.getMode (
-                config, parserConfig.backdrop || "text/x-rst"
-            );
-
-            return CodeMirror.overlayMode (mode, overlay);
+            return CodeMirror.overlayMode (rstMode, rstOverlay);
         });
 
-        CodeMirror.defineMode ("rst-plus", function (config, parserConfig) {
+        CodeMirror.defineMode ("rst-plus", function (config) {
 
             var rstMode = CodeMirror.getMode(config, "rst-overlay");
             var texMode = CodeMirror.getMode(config, "stex");
