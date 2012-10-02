@@ -93,7 +93,11 @@ def process_to (root, title, zip_buffer, skip_pdf = True, skip_latex = True,
 
                 ex.stderr_log = stderr.read ()
                 ex.stdout_log = stdout.read ()
-                raise
+
+        if not settings.DEBUG:
+            shutil.rmtree (os.path.join (settings.MEDIA_TEMP, root.root.usid))
+
+        raise
 
     if not skip_latex:
         zip_to_latex (zip_buffer, latex_dir, title)
