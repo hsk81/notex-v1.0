@@ -6,6 +6,8 @@
 
 Once you have entered some significant amount of text, you can transform your input into a nice looking PDF or HTML. Since you have separated content from presentation, multiple target formats become feasible and it is easy for |NoTex| to produce the desired PDF or HTML documents.
 
+PDF/HTML translations with multiple languages are not a problem: For example the following glyphs should be rendered in both target formats without any issue: エディタ (Japanese), редактор (Russian), συντάκτης (Greek). With the correct fonts other languages (e.g. Chinese 中) can also be processed.
+
 While you write though, you may want to *emphasize* certain words or thoughts: Just put them between two asterisks ``*``. Emphasizing does not mean to write words in an italic script, since the italic script is just *one* way of expressing emphasis: You could underline them, use another color or just capital letters; it does not matter, since in all cases your one and only intent is *emphasis*. Therefore |NoTex| has one form of a simple emphasis, which is putting the words between asterisks. In the PDF/HTML the emphasized words are indeed put into italics, but that is a presentation issue not a matter of content.
 
 Similarly if you feel that some of your thoughts are **very** important, just use double asterisks ``**``. They will be rendered bold since |NoTex| *defines* that very important elements of a text should be presented boldfaced, but that's again presentation and not content.

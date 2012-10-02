@@ -35,7 +35,9 @@ htmlhelp_basename: sourcedoc
 latex_elements:
     papersize: letterpaper ## or a4paper
     pointsize: 12pt ## or 10pt or 11pt
-    fontpkg: \\setmainfont[Mapping=tex-text]{Linux Libertine}
+    fontpkg: |
+        \\setmainfont[Mapping=tex-text]{Linux Libertine}
+        \\usepackage{xeCJK}\\setCJKmainfont{Sazanami Gothic}
 
     preamble: |
         \\pagestyle{myheadings}
