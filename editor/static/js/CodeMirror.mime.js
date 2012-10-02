@@ -35,7 +35,6 @@ Ext.ux.form.CodeMirror.mime = function () {
                     if (mode) { result = mode.name; }
             }
 
-            console.debug ('[ext2mode]', extension, mime, result);
             return result;
         }
     }
