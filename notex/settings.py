@@ -293,10 +293,13 @@ JSMIN_INPUT = [
 
     'static/lib/codemirror/lib/codemirror.js',
     'static/lib/codemirror/lib/util/searchcursor.js',
+    'static/lib/codemirror/lib/util/multiplex.js',
     'static/lib/codemirror/lib/util/overlay.js',
     'static/lib/codemirror/lib/util/search.js',
     'static/lib/codemirror/lib/util/dialog.js',
+
     'static/lib/codemirror/mode/clike/clike.js',
+    'static/lib/codemirror/mode/commonlisp/commonlisp.js',
     'static/lib/codemirror/mode/css/css.js',
     'static/lib/codemirror/mode/diff/diff.js',
     'static/lib/codemirror/mode/gfm/gfm.js',
@@ -333,6 +336,8 @@ JSMIN_INPUT = [
     'static/lib/codemirror/mode/xml/xml.js',
     'static/lib/codemirror/mode/xquery/xquery.js',
     'static/lib/codemirror/mode/yaml/yaml.js',
+    'static/lib/codemirror/mode/vb/vb.js',
+    'static/lib/codemirror/mode/vbscript/vbscript.js',
 
     'static/lib/jquery/jquery.min.js',
     'static/lib/extjs/adapter/ext/ext-base.js',
