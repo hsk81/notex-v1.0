@@ -9,6 +9,12 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 
 import socket
+import logging
+
+################################################################################
+################################################################################
+
+logger = logging.getLogger (__name__)
 
 ################################################################################
 ################################################################################
@@ -30,21 +36,26 @@ def checkout (request):
     item_uuid = request.GET.get ('item', None)
 
     if settings.DEBUG and test:
-        return HttpResponse (status=403,
-            content='debug: %s, test: %s' % (settings.DEBUG, test))
+        content = 'debug: %s, test: %s' % (settings.DEBUG, test)
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
 
     if address != settings.CHECKOUT_RECVADDR:
-        return HttpResponse (status=403,
-            content='address: %s != %s' % (address, settings.CHECKOUT_RECVADDR))
+        content = 'address: %s != %s' % (address, settings.CHECKOUT_RECVADDR)
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
 
     name, aliases, ips = socket.gethostbyname_ex (settings.CHECKOUT_NOTIFIER)
+
     if not settings.DEBUG and name != settings.CHECKOUT_NOTIFIER:
-        return HttpResponse (status=403,
-            content='name: %s != %s' % (name, settings.CHECKOUT_NOTIFIER))
+        content = 'name: %s != %s' % (name, settings.CHECKOUT_NOTIFIER)
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
 
     if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
-        return HttpResponse (status=403,
-            content='REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips))
+        content = 'REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips)
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
 
     ##
     ## TODO: Store everything to a database for accounting purposes and *then*
@@ -52,9 +63,14 @@ def checkout (request):
     ##
 
     if not send_mail:
-        return HttpResponse (status=403, content='mail: %s' % send_mail)
+        content = 'mail: %s' % send_mail
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
+
     if not item_uuid:
-        return HttpResponse (status=403, content='item: %s' % item_uuid)
+        content = 'item: %s' % item_uuid
+        logger.error (content)
+        return HttpResponse (status=403, content=content)
 
     return HttpResponse ("*ok*")
 
