@@ -59,14 +59,10 @@ def checkout (request):
     ##
 
     if not send_mail:
-        content = 'mail: %s' % send_mail
-        logger.error (content)
-        return HttpResponse (status=403, content=content)
+        logger.warning ('mail: %s' % send_mail)
 
     if not item_uuid:
-        content = 'item: %s' % item_uuid
-        logger.error (content)
-        return HttpResponse (status=403, content=content)
+        logger.warning ('item: %s' % item_uuid)
 
     return HttpResponse ("*ok*")
 
