@@ -29,7 +29,7 @@ def checkout (request):
     send_mail = request.GET.get ('mail', None)
     item_uuid = request.GET.get ('item', None)
 
-    if not settings.DEBUG and test:
+    if settings.DEBUG and test:
         return HttpResponse (status=403,
             content='debug: %s, test: %s' % (settings.DEBUG, test))
 
