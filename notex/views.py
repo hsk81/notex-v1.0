@@ -46,7 +46,7 @@ def checkout (request):
         return HttpResponse (status=403, content=content)
 
     name, aliases, ips = socket.gethostbyname_ex (settings.CHECKOUT_NOTIFIER)
-    if not settings.DEBUG and test: ips += settings.CHECKOUT_TESTADDR
+    if not settings.DEBUG and test: ips.append (settings.CHECKOUT_TESTADDR)
 
     if not settings.DEBUG and name != settings.CHECKOUT_NOTIFIER:
         content = 'name: %s != %s' % (name, settings.CHECKOUT_NOTIFIER)
