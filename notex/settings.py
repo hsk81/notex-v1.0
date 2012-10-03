@@ -15,6 +15,7 @@ import logging
 
 CHECKOUT_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
 CHECKOUT_NOTIFIER = 'blockchain.info'
+CHECKOUT_TESTADDR = '91.203.74.202'
 
 ###############################################################################
 ###############################################################################
