@@ -17,7 +17,7 @@ admin.autodiscover ()
 
 urlpatterns = patterns ('',
     (r'^editor/', include('editor.urls', namespace='editor')),
-    (r'^checkout/', include('checkout.urls', namespace='checkout')),
+    (r'^erp/', include('erp.urls', namespace='erp')),
     (r'^admin/doc/', include ('django.contrib.admindocs.urls')),
     (r'^admin/', include (admin.site.urls)),
 )

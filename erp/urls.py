@@ -11,7 +11,7 @@ import views
 ################################################################################
 
 urlpatterns = patterns ('',
-    url (r'^$', views.transact, name='transact'),
+    url (r'^btc-transact/$', views.btc_transact, name='btc-transact'),
 )
 
 ################################################################################

@@ -9,13 +9,6 @@ from django.db.models import *
 ################################################################################
 ################################################################################
 
-CHECKOUT_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
-CHECKOUT_NOTIFIER = 'blockchain.info'
-CHECKOUT_TESTADDR = '91.203.74.202'
-
-################################################################################
-################################################################################
-
 class CONTACT (Model):
 
     fullname =  CharField (max_length=256, blank=True)
@@ -48,7 +41,7 @@ class MONEY (Model):
 
 class TRANSACTION (Model):
 
-    timestamp = DateTimeField (auto_now_add=False)
+    timestamp = DateTimeField (auto_now_add=True)
     to_contact = ForeignKey (CONTACT, related_name='in_transactions')
     from_contact = ForeignKey (CONTACT, related_name='out_transactions', blank=True, null=True)
     money = OneToOneField (MONEY)
@@ -68,7 +61,7 @@ class BTC_TRANSACTION (TRANSACTION):
     anonymous = BooleanField (default=False)
 
     def __unicode__ (self):
-        return u'[%s] %s -> %s: %s @ %s' % (
+        return u'[%s] %s -> %s: %s @ [%s]' % (
             self.timestamp, self.from_contact, self.to_contact, self.money,
             self.confirmations)
 
@@ -109,9 +102,14 @@ class ORDER (Model):
     timestamp = DateTimeField (auto_now_add=True)
     from_contact = ForeignKey (CONTACT, related_name='out_orders', blank=True)
     to_contact = ForeignKey (CONTACT, related_name='in_orders')
+    transaction = ForeignKey (TRANSACTION, null=True, related_name='orders')
+
+    processed_timestamp = DateTimeField (blank=True, null=True)
+    processed = property (lambda self: bool (self.processed_timestamp))
 
     nop = property (lambda self: self.positions.count ())
-    price = property (lambda self: self.positions.aggregate (Sum ('price')))
+    total = property (lambda self: self.positions.values('price__currency__code')
+        .annotate (Sum ('price__value')))
 
     def __unicode__ (self):
         return u'%s' % self.id

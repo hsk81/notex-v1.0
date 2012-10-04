@@ -83,9 +83,9 @@ class ORDERAdmin (admin.ModelAdmin):
 
     search_fields = [
         'id', 'timestamp', 'from_contact__fullname', 'from_contact__email',
-        'to_contact__fullname', 'to_contact__email']
+        'to_contact__fullname', 'to_contact__email', 'processed_timestamp']
     list_display = (
-        'id', 'timestamp', 'from_contact', 'to_contact', 'nop', 'price')
+        'id', 'timestamp', 'from_contact', 'to_contact', 'nop', 'total', 'processed_timestamp')
 
 admin.site.register (ORDER, ORDERAdmin)
 

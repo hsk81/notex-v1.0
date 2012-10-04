@@ -6,8 +6,10 @@ __date__ = "$Oct 03, 2012 5:48:30 PM$"
 
 from django.conf import settings
 from django.http import HttpResponse
+from models import *
+
+from datetime import datetime
 from uuid import uuid4 as uuid_random
-from checkout.models import *
 
 import socket
 import os.path
@@ -21,14 +23,14 @@ logger = logging.getLogger (__name__)
 ###############################################################################
 ###############################################################################
 
-CHECKOUT_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
-CHECKOUT_NOTIFIER = 'blockchain.info'
-CHECKOUT_TESTADDR = '91.203.74.202'
+BTC_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
+BTC_NOTIFIER = 'blockchain.info'
+BTC_TESTADDR = '91.203.74.202'
 
 ################################################################################
 ################################################################################
 
-def transact (request):
+def btc_transact (request):
 
     test = bool (request.GET.get ('test', 'false').lower () != 'false')
     address = request.GET.get ('address', None)
@@ -46,15 +48,15 @@ def transact (request):
         content = 'debug: %s, test: %s' % (settings.DEBUG, test)
         logger.error (content); return HttpResponse (content)
 
-    if address != CHECKOUT_RECVADDR:
-        content = 'address: %s != %s' % (address, CHECKOUT_RECVADDR)
+    if address != BTC_RECVADDR:
+        content = 'address: %s != %s' % (address, BTC_RECVADDR)
         logger.error (content); return HttpResponse (content)
 
-    name, aliases, ips = socket.gethostbyname_ex (CHECKOUT_NOTIFIER)
-    if not settings.DEBUG and test: ips.append (CHECKOUT_TESTADDR)
+    name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
+    if not settings.DEBUG and test: ips.append (BTC_TESTADDR)
 
-    if not settings.DEBUG and name != CHECKOUT_NOTIFIER:
-        content = 'name: %s != %s' % (name, CHECKOUT_NOTIFIER)
+    if not settings.DEBUG and name != BTC_NOTIFIER:
+        content = 'name: %s != %s' % (name, BTC_NOTIFIER)
         logger.error (content); return HttpResponse (content)
 
     if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
@@ -81,7 +83,7 @@ def transact (request):
             anonymous = anonymous,
             to_contact = to_contact,
             from_contact = from_contact,
-            money = MONEY.create (currency = currency, value = value))
+            money = MONEY.objects.create (currency = currency, value = value))
     else:
         transaction.confirmations = confirmations
         transaction.save ()
@@ -93,18 +95,31 @@ def transact (request):
     except: product = None
     if not product: return HttpResponse ("product: None")
 
-    return process (from_contact, to_contact, product)
+    return process (transaction, product)
 
-def process (from_contact, to_contact, product):
+def process (transaction, product):
 
-    order = ORDER.objects.create (
-        from_contact = from_contact, to_contact = to_contact)
+    order, created = ORDER.objects.get_or_create (
+        from_contact = transaction.from_contact,
+        to_contact = transaction.to_contact,
+        transaction = transaction)
+
+    if order.processed:
+        return HttpResponse ("order: processed")
+
     price = MONEY.objects.create (
         value = product.price.value, currency = product.price.currency)
     position = ORDER_POSITION.objects.create (
         order = order, product = product, price = price)
 
-    return send_email_for (order)
+    if not send_email_for (order):
+        return HttpResponse ("order: not send_email")
+
+    order.processed_timestamp = datetime.now ()
+    order.save ()
+
+    return HttpResponse ("*ok*")
+
 
 def send_email_for (order):
 
@@ -114,7 +129,7 @@ def send_email_for (order):
     ## TODO: Implement SMTP send mail!
     ##
 
-    return HttpResponse ("*ok*")
+    return True
 
 def create_link (product):
 
