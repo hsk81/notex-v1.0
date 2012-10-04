@@ -5,8 +5,8 @@ __date__ ="$Mar 27, 2012 1:14:15 PM$"
 ################################################################################
 
 from django.contrib.sessions.models import Session
-from django.contrib                 import admin
-from models                         import *
+from django.contrib import admin
+from models import *
 
 ################################################################################
 ################################################################################
