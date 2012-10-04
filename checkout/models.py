@@ -9,6 +9,13 @@ from django.db.models import *
 ################################################################################
 ################################################################################
 
+CHECKOUT_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
+CHECKOUT_NOTIFIER = 'blockchain.info'
+CHECKOUT_TESTADDR = '91.203.74.202'
+
+################################################################################
+################################################################################
+
 class CONTACT (Model):
 
     fullname =  CharField (max_length=256, blank=True)
@@ -19,6 +26,9 @@ class CONTACT (Model):
 
 class CURRENCY (Model):
 
+    class Meta:
+        verbose_name_plural = 'Currencies'
+
     code = CharField (max_length=3, unique=True)
     name = CharField (max_length=256)
 
@@ -26,6 +36,9 @@ class CURRENCY (Model):
         return u'%s' % self.code
 
 class MONEY (Model):
+
+    class Meta:
+        verbose_name_plural = 'Money'
 
     value = DecimalField (max_digits=16, decimal_places=8)
     currency = ForeignKey (CURRENCY)
@@ -37,14 +50,18 @@ class TRANSACTION (Model):
 
     timestamp = DateTimeField (auto_now_add=False)
     to_contact = ForeignKey (CONTACT, related_name='in_transactions')
-    from_contact = ForeignKey (CONTACT, related_name='out_transactions', blank=True)
-    money = ForeignKey (MONEY)
+    from_contact = ForeignKey (CONTACT, related_name='out_transactions', blank=True, null=True)
+    money = OneToOneField (MONEY)
 
     def __unicode__ (self):
         return u'[%s] %s -> %s: %s' % (
             self.timestamp, self.from_contact, self.to_contact, self.money)
 
 class BTC_TRANSACTION (TRANSACTION):
+
+    class Meta:
+        verbose_name_plural = 'BTC Transactions'
+        verbose_name = 'BTC Transaction'
 
     transaction_hash = CharField (max_length=256, unique=True)
     confirmations = PositiveSmallIntegerField (default=0)
@@ -58,14 +75,20 @@ class BTC_TRANSACTION (TRANSACTION):
 class PRODUCT (Model):
 
     uuid = CharField (max_length=36, unique=True)
-    price = ForeignKey (MONEY)
+    price = OneToOneField (MONEY)
+
+    name = property (lambda self: self.properties.get (type='name'))
+    path = property (lambda self: self.properties.get (type='path'))
 
     def __unicode__ (self):
-        return u'%s' % self.properties.get (type='name')
+        return u'%s' % self.id
 
 class PROPERTY (Model):
 
-    type = CharField (max_length=256, unique=True)
+    class Meta:
+        verbose_name_plural = 'Properties'
+
+    type = CharField (max_length=256)
     value =  CharField (max_length=256)
     product = ForeignKey (PRODUCT, related_name='properties')
 
@@ -74,34 +97,32 @@ class PROPERTY (Model):
 
 class ITEM (Model):
 
-    product = ForeignKey (PRODUCT, related_name = 'items')
-    price = ForeignKey (MONEY)
+    product_name = property (lambda self: self.product.name)
+    product = ForeignKey (PRODUCT, related_name='items')
+    price = OneToOneField (MONEY)
 
     def __unicode__ (self):
-        return '%s @ %s' % (self.product, self.price)
+        return '%s @ %s' % (self.product.name, self.price)
 
 class ORDER (Model):
 
-    timestamp = DateTimeField (auto_now_add=False)
-    to_contact = ForeignKey (CONTACT, related_name='in_orders')
+    timestamp = DateTimeField (auto_now_add=True)
     from_contact = ForeignKey (CONTACT, related_name='out_orders', blank=True)
-    total = property (lambda self: self.positions.aggregate (Sum ('price')))
+    to_contact = ForeignKey (CONTACT, related_name='in_orders')
+
+    nop = property (lambda self: self.positions.count ())
+    price = property (lambda self: self.positions.aggregate (Sum ('price')))
 
     def __unicode__ (self):
-        return u'[%s] @ %s' % (self.timestamp, self.total)
+        return u'%s' % self.id
 
 class ORDER_POSITION (ITEM):
 
+    class Meta:
+        verbose_name = 'Order Position'
+        verbose_name_plural = 'Order Positions'
+
     order = ForeignKey (ORDER, related_name='positions')
-
-class RECEIPT (Model):
-
-    timestamp = DateTimeField (auto_now_add=False)
-    uuid = CharField (max_length=36, unique=True)
-    order = ForeignKey (ORDER)
-
-    def __unicode__ (self):
-        return u'[%s] @ %s' % (self.timestamp, self.order.total)
 
 ################################################################################
 ################################################################################

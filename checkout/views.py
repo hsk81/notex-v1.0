@@ -18,6 +18,13 @@ import logging
 
 logger = logging.getLogger (__name__)
 
+###############################################################################
+###############################################################################
+
+CHECKOUT_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
+CHECKOUT_NOTIFIER = 'blockchain.info'
+CHECKOUT_TESTADDR = '91.203.74.202'
+
 ################################################################################
 ################################################################################
 
@@ -39,15 +46,15 @@ def transact (request):
         content = 'debug: %s, test: %s' % (settings.DEBUG, test)
         logger.error (content); return HttpResponse (content)
 
-    if address != settings.CHECKOUT_RECVADDR:
-        content = 'address: %s != %s' % (address, settings.CHECKOUT_RECVADDR)
+    if address != CHECKOUT_RECVADDR:
+        content = 'address: %s != %s' % (address, CHECKOUT_RECVADDR)
         logger.error (content); return HttpResponse (content)
 
-    name, aliases, ips = socket.gethostbyname_ex (settings.CHECKOUT_NOTIFIER)
-    if not settings.DEBUG and test: ips.append (settings.CHECKOUT_TESTADDR)
+    name, aliases, ips = socket.gethostbyname_ex (CHECKOUT_NOTIFIER)
+    if not settings.DEBUG and test: ips.append (CHECKOUT_TESTADDR)
 
-    if not settings.DEBUG and name != settings.CHECKOUT_NOTIFIER:
-        content = 'name: %s != %s' % (name, settings.CHECKOUT_NOTIFIER)
+    if not settings.DEBUG and name != CHECKOUT_NOTIFIER:
+        content = 'name: %s != %s' % (name, CHECKOUT_NOTIFIER)
         logger.error (content); return HttpResponse (content)
 
     if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
@@ -59,10 +66,10 @@ def transact (request):
     #  for *sure* that the bitcoin transaction happened!
     ##
 
-    currency = CURRENCY.get (code = 'BTC')
-    to_contact = CONTACT.get (email = 'contact@blackhan.ch')
-    from_contact, _ = CONTACT.get_or_create (email = email, defaults = {
-        'fullname': fullname})
+    currency = CURRENCY.objects.get (code = 'BTC')
+    to_contact = CONTACT.objects.get (email = 'contact@blackhan.ch')
+    from_contact, _ = CONTACT.objects.get_or_create (
+        email = email, defaults = {'fullname': fullname})
 
     try:
         transaction = BTC_TRANSACTION.objects.get (
@@ -96,15 +103,12 @@ def process (from_contact, to_contact, product):
         value = product.price.value, currency = product.price.currency)
     position = ORDER_POSITION.objects.create (
         order = order, product = product, price = price)
-    receipt = RECEIPT.objects.create (
-        uuid = uuid_random (), order = order)
 
-    return send_email (from_contact, to_contact, receipt)
+    return send_email_for (order)
 
-def send_email (from_contact, to_contact, receipt):
+def send_email_for (order):
 
-    positions = receipt.order.positions.all ()
-    links = [create_link (pos.product) for pos in positions]
+    links = [create_link (pos.product) for pos in order.positions.all ()]
 
     ##
     ## TODO: Implement SMTP send mail!
@@ -114,13 +118,17 @@ def send_email (from_contact, to_contact, receipt):
 
 def create_link (product):
 
-    source = product.properties.get ('path')
+    source = product.path.value
+    assert source
     path_to, file = os.path.split (source)
-    link = uuid_random ()
-    link_name = os.path.join (path_to, link)
-    os.link (source, link_name)
+    assert path_to, file
 
-    return "http://notex.ch/download/?uuid=" + link
+    link = str (uuid_random ())
+    link_name = os.path.join (path_to, link)
+
+    ## TODO: os.link (source, link_name)
+
+    return link_name
 
 ################################################################################
 ################################################################################
