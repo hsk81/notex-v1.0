@@ -36,7 +36,7 @@ def btc_transact (request):
     address = request.GET.get ('address', None)
 
     transaction_hash = request.GET.get ('transaction_hash', None)
-    value = int (request.GET.get ('value', '0')) ## 1 Satoshi is 1E8 BTC
+    value = float (request.GET.get ('value', '0')) / 1E8 ## 1 Satoshi = 1E8 BTC
     confirmations = int (request.GET.get ('confirmations', '0'))
     anonymous = bool (request.GET.get ('anonymous', 'false').lower () != 'false')
 
@@ -88,7 +88,7 @@ def btc_transact (request):
         transaction.confirmations = confirmations
         transaction.save ()
 
-    logger.info ('%s: confirmation = %s' % (transaction_hash, confirmations))
+    logger.debug ('%s: confirmation = %s' % (transaction_hash, confirmations))
     if confirmations == 0: return HttpResponse ("confirmations: 0")
 
     try: product = PRODUCT.objects.get (uuid = product_uuid)
@@ -104,19 +104,28 @@ def process (transaction, product):
         to_contact = transaction.to_contact,
         transaction = transaction)
 
+    if created:
+        price = MONEY.objects.create (
+            value = product.price.value, currency = product.price.currency)
+        position = ORDER_POSITION.objects.create (
+            order = order, product = product, price = price)
+
     if order.processed:
         return HttpResponse ("order: processed")
 
-    price = MONEY.objects.create (
-        value = product.price.value, currency = product.price.currency)
-    position = ORDER_POSITION.objects.create (
-        order = order, product = product, price = price)
+    if product.price.currency != transaction.money.currency:
+        return HttpResponse ("currency: %s != %s" % (product.price.currency,
+            transaction.money.currency))
+
+    if product.price.value > transaction.money.value:
+        return HttpResponse ("price: %s > %s" % (product.price,
+            transaction.money))
 
     if not send_email_for (order):
         return HttpResponse ("order: not send_email")
-
-    order.processed_timestamp = datetime.now ()
-    order.save ()
+    else:
+        order.processed_timestamp = datetime.now ()
+        order.save ()
 
     return HttpResponse ("*ok*")
 
