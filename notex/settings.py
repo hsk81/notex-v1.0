@@ -142,7 +142,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'notex', 'tags', 'editor',
+    'notex', 'tags', 'editor', 'checkout',
     'debug_toolbar',
 )
 
