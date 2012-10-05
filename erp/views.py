@@ -183,7 +183,9 @@ def create_download_link (product):
     assert product.link
     upr = urlparse (product.link)
     assert product.path
-    path_base, _ = os.path.split (product.path)
+    path_base, path_file = os.path.split (product.path)
+
+    _, ext = os.path.splitext (path_file)
 
     assert path_base, upr.path
     path_uuid = os.path.join (path_base, upr.path[1:])
@@ -191,7 +193,7 @@ def create_download_link (product):
 
     assert path_uuid
     path_uuid = os.path.join (path_uuid, uuid)
-    os.symlink (product.path, path_uuid)
+    os.symlink (product.path, path_uuid + ext)
 
     return os.path.join (product.link, uuid)
 
