@@ -63,7 +63,7 @@ def btc_transact (request):
         content = 'name: %s != %s' % (name, BTC_NOTIFIER)
         logger.error (content); return HttpResponse (content)
 
-    if not settings.DEBUG and not test and not request.META['REMOTE_ADDR'] in ips:
+    if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
         content = 'REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips)
         logger.error (content); return HttpResponse (content)
 
