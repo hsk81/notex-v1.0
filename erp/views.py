@@ -195,7 +195,7 @@ def create_download_link (product):
     path_uuid = os.path.join (path_uuid, uuid)
     os.symlink (product.path, path_uuid + ext)
 
-    return os.path.join (product.link, uuid)
+    return os.path.join (product.link, uuid, ext)
 
 ################################################################################
 ################################################################################
