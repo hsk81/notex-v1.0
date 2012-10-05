@@ -43,7 +43,8 @@ class TRANSACTION (Model):
 
     timestamp = DateTimeField (auto_now_add=True)
     to_contact = ForeignKey (CONTACT, related_name='in_transactions')
-    from_contact = ForeignKey (CONTACT, related_name='out_transactions', blank=True, null=True)
+    from_contact = ForeignKey (CONTACT, related_name='out_transactions',
+        blank=True, null=True)
     money = OneToOneField (MONEY)
 
     def __unicode__ (self):
@@ -108,8 +109,8 @@ class ORDER (Model):
     processed = property (lambda self: bool (self.processed_timestamp))
 
     nop = property (lambda self: self.positions.count ())
-    total = property (lambda self: self.positions.values('price__currency__code')
-        .annotate (Sum ('price__value')))
+    total = property (lambda self: self.positions
+        .values('price__currency__code').annotate (Sum ('price__value')))
 
     def __unicode__ (self):
         return u'%s' % self.id
