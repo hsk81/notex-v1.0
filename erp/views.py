@@ -27,10 +27,10 @@ logger = logging.getLogger (__name__)
 ###############################################################################
 ###############################################################################
 
-BTC_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
-BTC_RECVMAIL = 'contact@blackhan.ch'
-BTC_NOTIFIER = 'blockchain.info'
-BTC_TRANCONF = 0
+BTC_RECVADDR = os.environ.get('BTC_RECVADDR')
+BTC_RECVMAIL = os.environ.get('BTC_RECVMAIL')
+BTC_NOTIFIER = os.environ.get('BTC_NOTIFIER')
+BTC_TRANCONF = int (os.environ.get('BTC_TRANCONF'))
 
 ################################################################################
 ################################################################################
