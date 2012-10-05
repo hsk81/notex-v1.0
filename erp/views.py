@@ -27,10 +27,9 @@ logger = logging.getLogger (__name__)
 ###############################################################################
 ###############################################################################
 
-BTC_RECVMAIL = 'contact@blackhan.ch'
 BTC_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
+BTC_RECVMAIL = 'contact@blackhan.ch'
 BTC_NOTIFIER = 'blockchain.info'
-BTC_TESTADDR = '91.203.74.202'
 BTC_TRANCONF = 0
 
 ################################################################################
@@ -59,13 +58,12 @@ def btc_transact (request):
         logger.error (content); return HttpResponse (content)
 
     name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
-    if not settings.DEBUG and test: ips.append (BTC_TESTADDR)
 
     if not settings.DEBUG and name != BTC_NOTIFIER:
         content = 'name: %s != %s' % (name, BTC_NOTIFIER)
         logger.error (content); return HttpResponse (content)
 
-    if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
+    if not settings.DEBUG and not test and not request.META['REMOTE_ADDR'] in ips:
         content = 'REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips)
         logger.error (content); return HttpResponse (content)
 
@@ -148,7 +146,7 @@ def send_mail_for (order, product):
     message =\
         'Thank you for your purchase! This email contains information ' +\
         'regarding your order and transaction. The provided link is valid ' +\
-        'only for the next few hours and will be removed afterwards.\n'
+        'only for the next 3 days and will be removed afterwards.\n'
 
     message += '\n'
     message += 'Order @ %s\n' % order.timestamp
