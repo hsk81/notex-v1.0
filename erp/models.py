@@ -15,7 +15,8 @@ class CONTACT (Model):
     email = EmailField (max_length=256, unique=True, null=True)
 
     def __unicode__ (self):
-        return u'%s' % self.email
+        if not self.fullname: return u'<%s>' % self.email
+        else: return u'%s <%s>' % (self.fullname, self.email)
 
 class CURRENCY (Model):
 
@@ -71,8 +72,9 @@ class PRODUCT (Model):
     uuid = CharField (max_length=36, unique=True)
     price = OneToOneField (MONEY)
 
-    name = property (lambda self: self.properties.get (type='name'))
-    path = property (lambda self: self.properties.get (type='path'))
+    name = property (lambda self: self.properties.get (type='name').value)
+    path = property (lambda self: self.properties.get (type='path').value)
+    link = property (lambda self: self.properties.get (type='link').value)
 
     def __unicode__ (self):
         return u'%s' % self.id
@@ -108,9 +110,19 @@ class ORDER (Model):
     processed_timestamp = DateTimeField (blank=True, null=True)
     processed = property (lambda self: bool (self.processed_timestamp))
 
+    def get_total (self, pattern = '%0.2f %s'):
+
+        positions = self.positions.values('price__currency__code') \
+            .annotate (Sum ('price__value'))
+
+        v2c_list = [pattern % (
+            p['price__value__sum'], p['price__currency__code'])
+                for p in positions]
+
+        return ','.join (v2c_list)
+
+    total = property (get_total)
     nop = property (lambda self: self.positions.count ())
-    total = property (lambda self: self.positions
-        .values('price__currency__code').annotate (Sum ('price__value')))
 
     def __unicode__ (self):
         return u'%s' % self.id

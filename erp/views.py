@@ -6,14 +6,18 @@ __date__ = "$Oct 03, 2012 5:48:30 PM$"
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.core.mail import *
+
+from uuid import uuid4 as uuid_random
+from urlparse import urlparse
 from models import *
 
-from datetime import datetime
-from uuid import uuid4 as uuid_random
-
 import socket
+import smtplib
 import os.path
 import logging
+import datetime
+import subprocess
 
 ################################################################################
 ################################################################################
@@ -23,6 +27,7 @@ logger = logging.getLogger (__name__)
 ###############################################################################
 ###############################################################################
 
+BTC_RECVMAIL = 'contact@blackhan.ch'
 BTC_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
 BTC_NOTIFIER = 'blockchain.info'
 BTC_TESTADDR = '91.203.74.202'
@@ -65,11 +70,11 @@ def btc_transact (request):
 
     ##
     ## Make sure to store the transaction, since after the above checks it is
-    #  for *sure* that the bitcoin transaction happened!
+    ## for *sure* that the bitcoin transaction happened!
     ##
 
     currency = CURRENCY.objects.get (code = 'BTC')
-    to_contact = CONTACT.objects.get (email = 'contact@blackhan.ch')
+    to_contact = CONTACT.objects.get (email = BTC_RECVMAIL)
     from_contact, _ = CONTACT.objects.get_or_create (
         email = email, defaults = {'fullname': fullname})
 
@@ -121,38 +126,75 @@ def process (transaction, product):
         return HttpResponse ("price: %s > %s" % (product.price,
             transaction.money))
 
-    if not send_email_for (order):
+    if not send_mail_for (order, product):
         return HttpResponse ("order: not send_email")
     else:
-        order.processed_timestamp = datetime.now ()
+        order.processed_timestamp = datetime.datetime.now ()
         order.save ()
 
     return HttpResponse ("*ok*")
 
 
-def send_email_for (order):
+def send_mail_for (order, product):
 
-    links = [create_link (pos.product) for pos in order.positions.all ()]
+    link = create_download_link (product)
 
-    ##
-    ## TODO: Implement SMTP send mail!
-    ##
+    subject = '[%s] Download: %s' % (order.to_contact.email, product.name)
+    from_email = order.to_contact.email
+    reply_to =  order.to_contact.email
+    recipients = [order.from_contact.email]
+
+    message =\
+        'Thank you for your purchase! This email contains information ' +\
+        'regarding your order and transaction. The provided link is valid ' +\
+        'only for the next few hours and will be removed afterwards.\n'
+
+    message += '\n'
+    message += 'Order @ %s\n' % order.timestamp
+    message += '\tFrom: %s\n' % order.from_contact
+    message += '\tTo: %s\n' % order.to_contact
+    message += '\tPositions: %s\n' % ','.join ([
+        str (p) for p in ORDER_POSITION.objects.filter (order = order)])
+    message += '\tTotal: %s\n' % order.total
+    message += '\n'
+    message += 'Transaction @ %s\n' % order.transaction.timestamp
+    message += '\tFrom: %s\n' % order.transaction.from_contact
+    message += '\tTo: %s\n' % order.transaction.to_contact
+    message += '\tAmount: %s\n' % order.transaction.money
+    message += '\n' 
+    message += 'Download Link: %s\n' % link
+
+    email = EmailMessage (subject, message, from_email, recipients, headers = {
+        'Reply-To': reply_to
+    })
+
+    try:
+        email.send ()
+
+    except smtplib.SMTPException as ex:
+        logging.exception (ex)
+        return False
 
     return True
 
-def create_link (product):
+def create_download_link (product):
 
-    source = product.path.value
-    assert source
-    path_to, file = os.path.split (source)
-    assert path_to, file
+    uuid = str (uuid_random ())
 
-    link = str (uuid_random ())
-    link_name = os.path.join (path_to, link)
+    assert product.link
+    upr = urlparse (product.link)
+    assert product.path
+    path_base, _ = os.path.split (product.path)
 
-    ## TODO: os.link (source, link_name)
+    assert path_base, upr.path
+    path_uuid = os.path.join (path_base, upr.path[1:])
+    subprocess.call (['mkdir', '-p', path_uuid])
 
-    return link_name
+    assert path_uuid
+    path_uuid = os.path.join (path_uuid, uuid)
+    os.symlink (product.path, path_uuid)
+
+    return os.path.join (product.link, uuid)
 
 ################################################################################
 ################################################################################

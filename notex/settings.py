@@ -86,7 +86,6 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,16 +134,17 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'notex', 'tags', 'editor', 'erp',
-    'debug_toolbar',
+    'notex', 'tags', 'editor', 'erp'
 )
 
 ################################################################################
 ################################################################################
 
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
-}
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int (os.environ.get('EMAIL_PORT'))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = bool (os.environ.get('EMAIL_USE_TLS'))
 
 ###############################################################################
 ###############################################################################
