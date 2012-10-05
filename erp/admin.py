@@ -59,7 +59,7 @@ class PRODUCTAdmin (admin.ModelAdmin):
     search_fields = [
         'id', 'uuid', 'price__value', 'price__currency__code',
         'price__currency__name']
-    list_display = ('id', 'uuid', 'name', 'path', 'price')
+    list_display = ('id', 'uuid', 'name', 'path', 'link', 'price')
 
 admin.site.register (PRODUCT, PRODUCTAdmin)
 
