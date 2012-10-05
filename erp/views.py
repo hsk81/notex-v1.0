@@ -31,6 +31,7 @@ BTC_RECVMAIL = 'contact@blackhan.ch'
 BTC_RECVADDR = '1EfPhEMsUz6qSgtdDDrXPZGP2DgiWQmFX8'
 BTC_NOTIFIER = 'blockchain.info'
 BTC_TESTADDR = '91.203.74.202'
+BTC_TRANCONF = 0
 
 ################################################################################
 ################################################################################
@@ -94,7 +95,7 @@ def btc_transact (request):
         transaction.save ()
 
     logger.debug ('%s: confirmation = %s' % (transaction_hash, confirmations))
-    if confirmations == 0: return HttpResponse ("confirmations: 0")
+    if confirmations < BTC_TRANCONF: return HttpResponse ("confirmations: 0")
 
     try: product = PRODUCT.objects.get (uuid = product_uuid)
     except: product = None
