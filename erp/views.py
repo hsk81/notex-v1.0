@@ -49,23 +49,23 @@ def btc_transact (request):
     email = request.GET.get ('mail', None)
     product_uuid = request.GET.get ('uuid', None)
 
-    if settings.DEBUG and test:
+    if settings.DEBUG and not test:
         content = 'debug: %s, test: %s' % (settings.DEBUG, test)
-        logger.error (content); return HttpResponse (content)
+        logger.error (content); return HttpResponse (content, status=400)
 
     if address != BTC_RECVADDR:
         content = 'address: %s != %s' % (address, BTC_RECVADDR)
-        logger.error (content); return HttpResponse (content)
+        logger.error (content); return HttpResponse (content, status=400)
 
     name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
 
     if not settings.DEBUG and name != BTC_NOTIFIER:
         content = 'name: %s != %s' % (name, BTC_NOTIFIER)
-        logger.error (content); return HttpResponse (content)
+        logger.error (content); return HttpResponse (content, status=403)
 
     if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
         content = 'REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips)
-        logger.error (content); return HttpResponse (content)
+        logger.error (content); return HttpResponse (content, status=403)
 
     ##
     ## Make sure to store the transaction, since after the above checks it is
@@ -93,11 +93,12 @@ def btc_transact (request):
         transaction.save ()
 
     logger.debug ('%s: confirmation = %s' % (transaction_hash, confirmations))
-    if confirmations < BTC_TRANCONF: return HttpResponse ("confirmations: 0")
+    if confirmations < BTC_TRANCONF:
+        return HttpResponse ("confirmations: %s" % confirmations, status=402)
 
     try: product = PRODUCT.objects.get (uuid = product_uuid)
     except: product = None
-    if not product: return HttpResponse ("product: None")
+    if not product: return HttpResponse ("product: None", status=400)
 
     return process (transaction, product)
 
@@ -115,18 +116,18 @@ def process (transaction, product):
             order = order, product = product, price = price)
 
     if order.processed:
-        return HttpResponse ("order: processed")
+        return HttpResponse ("order: processed", status=400)
 
     if product.price.currency != transaction.money.currency:
         return HttpResponse ("currency: %s != %s" % (product.price.currency,
-            transaction.money.currency))
+            transaction.money.currency), status=400)
 
     if product.price.value > transaction.money.value:
         return HttpResponse ("price: %s > %s" % (product.price,
-            transaction.money))
+            transaction.money), status=402)
 
     if not send_mail_for (order, product):
-        return HttpResponse ("order: not send_email")
+        return HttpResponse ("order: not send_email", status=500)
     else:
         order.processed_timestamp = datetime.datetime.now ()
         order.save ()
