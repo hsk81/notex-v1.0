@@ -30,6 +30,7 @@ logger = logging.getLogger (__name__)
 BTC_RECVADDR = os.environ.get('BTC_RECVADDR')
 BTC_RECVMAIL = os.environ.get('BTC_RECVMAIL')
 BTC_NOTIFIER = os.environ.get('BTC_NOTIFIER')
+BTC_NOTIFIER_IP = os.environ.get('BTC_NOTIFIER_IP')
 BTC_TRANCONF = int (os.environ.get('BTC_TRANCONF'))
 
 ################################################################################
@@ -58,6 +59,7 @@ def btc_transact (request):
         logger.error (content); return HttpResponse (content, status=400)
 
     name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
+    ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
 
     if not settings.DEBUG and name != BTC_NOTIFIER:
         content = 'name: %s != %s' % (name, BTC_NOTIFIER)
