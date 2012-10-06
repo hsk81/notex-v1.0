@@ -62,6 +62,9 @@ class BTC_TRANSACTION (TRANSACTION):
     confirmations = PositiveSmallIntegerField (default=0)
     anonymous = BooleanField (default=False)
 
+    thash = property (lambda self:
+        '%s..%s' % (self.transaction_hash[:4], self.transaction_hash[-4:]))
+
     def __unicode__ (self):
         return u'[%s] %s -> %s: %s @ [%s]' % (
             self.timestamp, self.from_contact, self.to_contact, self.money,

@@ -50,7 +50,7 @@ class BTC_TRANSACTIONAdmin (admin.ModelAdmin):
         'transaction_hash', 'anonymous']
     list_display = (
         'id', 'timestamp', 'from_contact', 'to_contact', 'money',
-        'confirmations', 'transaction_hash', 'anonymous')
+        'confirmations', 'thash', 'anonymous')
 
 admin.site.register (BTC_TRANSACTION, BTC_TRANSACTIONAdmin)
 
