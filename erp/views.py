@@ -16,7 +16,6 @@ import socket
 import smtplib
 import os.path
 import logging
-import datetime
 import subprocess
 
 ################################################################################
@@ -49,28 +48,23 @@ def btc_transact (request):
     email = request.GET.get ('mail', None)
     product_uuid = request.GET.get ('uuid', None)
 
-    try:
-        product = PRODUCT.objects.get (uuid = product_uuid)
-    except:
-        product = None
+    try: product = PRODUCT.objects.get (uuid = product_uuid)
+    except: product = None
 
     ## Check business rules & apply corresponding actions:
 
-    if address != BTC_RECVADDR:
-        return HttpResponse (status=400)
-    if not transaction_hash: ## TODO: Proper validation check!
-        return HttpResponse (status=400)
-
     if settings.DEBUG:
-        if not test:
-            return HttpResponse (status=400)
+        if not test: return HttpResponse (status=400)
     else:
         name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
-        if name != BTC_NOTIFIER:
-            return HttpResponse (status=403)
+        if name != BTC_NOTIFIER: return HttpResponse (status=403)
         ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
         if not request.META['REMOTE_ADDR'] in ips:
             return HttpResponse (status=403)
+
+    if address != BTC_RECVADDR: return HttpResponse (status=400)
+    if not transaction_hash: ## TODO: Enhanced validation check!
+        return HttpResponse (status=400)
 
     ## Make sure to store the transaction, since after the above checks, it is
     ## for *sure* that the bitcoin transaction happened:
@@ -110,14 +104,13 @@ def process (transaction, product):
         transaction = transaction)
 
     if order.processed:
-        if transaction.confirmations < 6:
-            return HttpResponse (status=402)
-        else:
-            return HttpResponse ("*ok*")
+        if transaction.confirmations < 6: return HttpResponse (status=402)
+        else: return HttpResponse ("*ok*")
 
     if not product:
-        order.processed_timestamp = datetime.datetime.now (); order.save ()
-        return HttpResponse ("*ok*") ## TODO: No product e-mail!
+        ## TODO: Invalid product e-mail!
+        order.process (); order.save ()
+        return HttpResponse ("*ok*")
 
     if created:
         price = MONEY.objects.create (
@@ -125,18 +118,16 @@ def process (transaction, product):
         position = ORDER_POSITION.objects.create (
             order = order, product = product, price = price)
 
-    if product.price.currency != transaction.money.currency:
-        order.processed_timestamp = datetime.datetime.now (); order.save ()
-        return HttpResponse ("*ok*") ## TODO: No BTC for product e-mail!
-    if product.price.value > transaction.money.value:
-        order.processed_timestamp = datetime.datetime.now (); order.save ()
-        return HttpResponse ("*ok*") ## TODO: Funds not enough e-mail!
+    if product.price.currency != transaction.money.currency or \
+       product.price.value > transaction.money.value:
+        ## TODO: Invalid fund e-mail!
+        order.process (); order.save ()
+        return HttpResponse ("*ok*")
 
     if not send_mail_for (order, product):
         return HttpResponse (status=500)
 
-    order.processed_timestamp = datetime.datetime.now ()
-    order.save ()
+    order.process (); order.save ()
 
     if transaction.anonymous or transaction.confirmations >= 6:
         return HttpResponse ("*ok*")
