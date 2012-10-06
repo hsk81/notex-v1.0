@@ -31,7 +31,6 @@ BTC_RECVADDR = os.environ.get('BTC_RECVADDR')
 BTC_RECVMAIL = os.environ.get('BTC_RECVMAIL')
 BTC_NOTIFIER = os.environ.get('BTC_NOTIFIER')
 BTC_NOTIFIER_IP = os.environ.get('BTC_NOTIFIER_IP')
-BTC_TRANCONF = int (os.environ.get('BTC_TRANCONF'))
 
 ################################################################################
 ################################################################################
@@ -39,8 +38,8 @@ BTC_TRANCONF = int (os.environ.get('BTC_TRANCONF'))
 def btc_transact (request):
 
     test = bool (request.GET.get ('test', 'false').lower () != 'false')
-    address = request.GET.get ('address', None)
 
+    address = request.GET.get ('address', None)
     transaction_hash = request.GET.get ('transaction_hash', None)
     value = float (request.GET.get ('value', '0')) / 1E8 ## 1 Satoshi = 1E8 BTC
     confirmations = int (request.GET.get ('confirmations', '0'))
@@ -50,29 +49,31 @@ def btc_transact (request):
     email = request.GET.get ('mail', None)
     product_uuid = request.GET.get ('uuid', None)
 
-    if settings.DEBUG and not test:
-        content = 'debug: %s, test: %s' % (settings.DEBUG, test)
-        logger.error (content); return HttpResponse (content, status=400)
+    try:
+        product = PRODUCT.objects.get (uuid = product_uuid)
+    except:
+        product = None
+
+    ## Check business rules & apply corresponding actions:
 
     if address != BTC_RECVADDR:
-        content = 'address: %s != %s' % (address, BTC_RECVADDR)
-        logger.error (content); return HttpResponse (content, status=400)
+        return HttpResponse (status=400)
+    if not transaction_hash: ## TODO: Proper validation check!
+        return HttpResponse (status=400)
 
-    name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
-    ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
+    if settings.DEBUG:
+        if not test:
+            return HttpResponse (status=400)
+    else:
+        name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
+        if name != BTC_NOTIFIER:
+            return HttpResponse (status=403)
+        ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
+        if not request.META['REMOTE_ADDR'] in ips:
+            return HttpResponse (status=403)
 
-    if not settings.DEBUG and name != BTC_NOTIFIER:
-        content = 'name: %s != %s' % (name, BTC_NOTIFIER)
-        logger.error (content); return HttpResponse (content, status=403)
-
-    if not settings.DEBUG and not request.META['REMOTE_ADDR'] in ips:
-        content = 'REMOTE_ADDR: %s not in %s' % (request.META['REMOTE_ADDR'], ips)
-        logger.error (content); return HttpResponse (content, status=403)
-
-    ##
-    ## Make sure to store the transaction, since after the above checks it is
-    ## for *sure* that the bitcoin transaction happened!
-    ##
+    ## Make sure to store the transaction, since after the above checks, it is
+    ## for *sure* that the bitcoin transaction happened:
 
     currency = CURRENCY.objects.get (code = 'BTC')
     to_contact = CONTACT.objects.get (email = BTC_RECVMAIL)
@@ -83,33 +84,40 @@ def btc_transact (request):
         transaction = BTC_TRANSACTION.objects.get (
             transaction_hash = transaction_hash)
     except:
+        money = MONEY.objects.create (
+            currency = currency, value = value)
         transaction = BTC_TRANSACTION.objects.create (
             transaction_hash = transaction_hash,
             confirmations = confirmations,
             anonymous = anonymous,
             to_contact = to_contact,
             from_contact = from_contact,
-            money = MONEY.objects.create (currency = currency, value = value))
+            money = money)
     else:
         transaction.confirmations = confirmations
         transaction.save ()
-
-    logger.debug ('%s: confirmation = %s' % (transaction_hash, confirmations))
-    if confirmations < BTC_TRANCONF:
-        return HttpResponse ("confirmations: %s" % confirmations, status=402)
-
-    try: product = PRODUCT.objects.get (uuid = product_uuid)
-    except: product = None
-    if not product: return HttpResponse ("product: None", status=400)
 
     return process (transaction, product)
 
 def process (transaction, product):
 
+    if not transaction.anonymous and transaction.confirmations == 0:
+        return HttpResponse (status=402)
+
     order, created = ORDER.objects.get_or_create (
         from_contact = transaction.from_contact,
         to_contact = transaction.to_contact,
         transaction = transaction)
+
+    if order.processed:
+        if transaction.confirmations < 6:
+            return HttpResponse (status=402)
+        else:
+            return HttpResponse ("*ok*")
+
+    if not product:
+        order.processed_timestamp = datetime.datetime.now (); order.save ()
+        return HttpResponse ("*ok*") ## TODO: No product e-mail!
 
     if created:
         price = MONEY.objects.create (
@@ -117,25 +125,23 @@ def process (transaction, product):
         position = ORDER_POSITION.objects.create (
             order = order, product = product, price = price)
 
-    if order.processed:
-        return HttpResponse ("order: processed", status=400)
-
     if product.price.currency != transaction.money.currency:
-        return HttpResponse ("currency: %s != %s" % (product.price.currency,
-            transaction.money.currency), status=400)
-
+        order.processed_timestamp = datetime.datetime.now (); order.save ()
+        return HttpResponse ("*ok*") ## TODO: No BTC for product e-mail!
     if product.price.value > transaction.money.value:
-        return HttpResponse ("price: %s > %s" % (product.price,
-            transaction.money), status=402)
+        order.processed_timestamp = datetime.datetime.now (); order.save ()
+        return HttpResponse ("*ok*") ## TODO: Funds not enough e-mail!
 
     if not send_mail_for (order, product):
-        return HttpResponse ("order: not send_email", status=500)
-    else:
-        order.processed_timestamp = datetime.datetime.now ()
-        order.save ()
+        return HttpResponse (status=500)
 
-    return HttpResponse ("*ok*")
+    order.processed_timestamp = datetime.datetime.now ()
+    order.save ()
 
+    if transaction.anonymous or transaction.confirmations >= 6:
+        return HttpResponse ("*ok*")
+
+    return HttpResponse ("*pending*")
 
 def send_mail_for (order, product):
 
