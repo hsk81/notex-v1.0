@@ -98,8 +98,7 @@ def btc_transact (request):
 def process (transaction, product):
 
     if not transaction.anonymous and transaction.confirmations == 0:
-        return HttpResponse (status=402,
-            content='*not-ok:anonymous/confirmations*')
+        return HttpResponse (status=402, content='*not-ok:anonymous/confirmations*')
 
     order, created = ORDER.objects.get_or_create (
         from_contact = transaction.from_contact,
@@ -107,10 +106,8 @@ def process (transaction, product):
         transaction = transaction)
 
     if order.processed:
-        if transaction.confirmations < 6:
-            return HttpResponse (status=402)
-        else:
-            return HttpResponse ('*ok*')
+        if transaction.confirmations < 6: return HttpResponse (status=402)
+        else: return HttpResponse ('*ok*')
 
     if not product:
         ## TODO: Invalid product e-mail!
