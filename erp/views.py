@@ -54,17 +54,19 @@ def btc_transact (request):
     ## Check business rules & apply corresponding actions:
 
     if settings.DEBUG:
-        if not test: return HttpResponse (status=400)
+        if not test: return HttpResponse (status=400, content='*not-ok:test*')
     else:
         name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
-        if name != BTC_NOTIFIER: return HttpResponse (status=403)
+        if name != BTC_NOTIFIER:
+            return HttpResponse (status=403, content='*not-ok:BTC_NOTIFIER*')
         ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
         if not request.META['REMOTE_ADDR'] in ips:
-            return HttpResponse (status=403)
+            return HttpResponse (status=403, content='*not-ok:REMOTE_ADDR*')
 
-    if address != BTC_RECVADDR: return HttpResponse (status=400)
+    if address != BTC_RECVADDR:
+        return HttpResponse (status=400, content='*not-ok:BTC_RECVADDR*')
     if not transaction_hash: ## TODO: Enhanced validation check!
-        return HttpResponse (status=400)
+        return HttpResponse (status=400, content='*not-ok:transaction_hash*')
 
     ## Make sure to store the transaction, since after the above checks, it is
     ## for *sure* that the bitcoin transaction happened:
@@ -96,7 +98,8 @@ def btc_transact (request):
 def process (transaction, product):
 
     if not transaction.anonymous and transaction.confirmations == 0:
-        return HttpResponse (status=402)
+        return HttpResponse (status=402,
+            content='*not-ok:anonymous/confirmations*')
 
     order, created = ORDER.objects.get_or_create (
         from_contact = transaction.from_contact,
@@ -105,12 +108,12 @@ def process (transaction, product):
 
     if order.processed:
         if transaction.confirmations < 6: return HttpResponse (status=402)
-        else: return HttpResponse ("*ok*")
+        else: return HttpResponse ('*ok*')
 
     if not product:
         ## TODO: Invalid product e-mail!
         order.process (); order.save ()
-        return HttpResponse ("*ok*")
+        return HttpResponse ('*ok*')
 
     if created:
         price = MONEY.objects.create (
@@ -122,7 +125,7 @@ def process (transaction, product):
        product.price.value > transaction.money.value:
         ## TODO: Invalid fund e-mail!
         order.process (); order.save ()
-        return HttpResponse ("*ok*")
+        return HttpResponse ('*ok*')
 
     if not send_mail_for (order, product):
         return HttpResponse (status=500)
@@ -130,9 +133,9 @@ def process (transaction, product):
     order.process (); order.save ()
 
     if transaction.anonymous or transaction.confirmations >= 6:
-        return HttpResponse ("*ok*")
+        return HttpResponse ('*ok*')
 
-    return HttpResponse ("*pending*")
+    return HttpResponse ('*pending*')
 
 def send_mail_for (order, product):
 
