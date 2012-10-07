@@ -107,7 +107,7 @@ def process (transaction, product):
         transaction = transaction)
 
     if order.processed:
-        if transaction.confirmations < 6:
+        if not transaction.anonymous and transaction.confirmations < 6:
             return HttpResponse ('*ok:pending-confirmation*', status=402)
         else:
             return HttpResponse ('*ok*')
