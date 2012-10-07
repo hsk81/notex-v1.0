@@ -113,7 +113,7 @@ class ORDER (Model):
 
     processed_timestamp = DateTimeField (blank=True, null=True)
     processed = property (lambda self: bool (self.processed_timestamp))
-    def process (self): self.process = datetime.datetime.now ()
+    def process (self): self.processed_timestamp = datetime.datetime.now ()
 
     def get_total (self, pattern = '%0.2f %s'):
 
