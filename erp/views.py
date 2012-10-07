@@ -107,8 +107,10 @@ def process (transaction, product):
         transaction = transaction)
 
     if order.processed:
-        if transaction.confirmations < 6: return HttpResponse (status=402)
-        else: return HttpResponse ('*ok*')
+        if transaction.confirmations < 6:
+            return HttpResponse ('*ok:pending-confirmation*', status=402)
+        else:
+            return HttpResponse ('*ok*')
 
     if not product:
         ## TODO: Invalid product e-mail!
@@ -136,7 +138,7 @@ def process (transaction, product):
     if transaction.anonymous or transaction.confirmations >= 6:
         return HttpResponse ('*ok*')
 
-    return HttpResponse ('*pending*')
+    return HttpResponse ('*ok:pending-confirmation*', status=402)
 
 def send_mail_for (order, product):
 
