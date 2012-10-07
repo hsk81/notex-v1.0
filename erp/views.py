@@ -98,7 +98,8 @@ def btc_transact (request):
 def process (transaction, product):
 
     if not transaction.anonymous and transaction.confirmations == 0:
-        return HttpResponse (status=402, content='*not-ok:anonymous/confirmations*')
+        return HttpResponse (status=402,
+            content='*not-ok:non-anonymous&zero-confirmations*')
 
     order, created = ORDER.objects.get_or_create (
         from_contact = transaction.from_contact,

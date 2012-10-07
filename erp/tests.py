@@ -53,7 +53,7 @@ class BtcTransactTest (TestCase):
     def test_regular (self):
 
         resp = self.request (confirmations = 0)
-        self.assertEqual (resp.content, '*not-ok:anonymous/confirmations*')
+        self.assertEqual (resp.content, '*not-ok:non-anonymous&zero-confirmations*')
         self.assertEqual (resp.status_code, 402)
         resp = self.request (confirmations = 1)
         self.assertEqual (resp.content, '*pending*')
