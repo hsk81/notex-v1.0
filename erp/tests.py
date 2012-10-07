@@ -21,7 +21,7 @@ BTC_NOTIFIER_IP = os.environ.get('BTC_NOTIFIER_IP')
 ###############################################################################
 ###############################################################################
 
-class ErpTest (TestCase):
+class BtcTransactTest (TestCase):
 
     def transaction_hash (self):
 
