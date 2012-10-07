@@ -15,6 +15,7 @@ pip install $1 django
 pip install $1 django-debug-toolbar
 pip install $1 django-jsmin
 pip install $1 django-cssmin
+pip install $1 pytz
 pip install $1 python-memcached
 pip install $1 pyyaml
 pip install $1 flup

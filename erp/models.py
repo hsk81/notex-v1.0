@@ -5,6 +5,8 @@ __date__ = "$Oct 03, 2012 11:43:15 PM$"
 ################################################################################
 
 from django.db.models import *
+from django.utils.timezone import utc
+
 import datetime
 
 ################################################################################
@@ -113,7 +115,8 @@ class ORDER (Model):
 
     processed_timestamp = DateTimeField (blank=True, null=True)
     processed = property (lambda self: bool (self.processed_timestamp))
-    def process (self): self.processed_timestamp = datetime.datetime.now ()
+    def process (self): self.processed_timestamp = datetime.datetime.utcnow() \
+        .replace (tzinfo=utc)
 
     def get_total (self, pattern = '%0.2f %s'):
 
