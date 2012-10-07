@@ -58,15 +58,15 @@ def btc_transact (request):
     else:
         name, aliases, ips = socket.gethostbyname_ex (BTC_NOTIFIER)
         if name != BTC_NOTIFIER:
-            return HttpResponse (status=403, content='*not-ok:BTC_NOTIFIER*')
+            return HttpResponse (status=403, content='*not-ok:notifier*')
         ips.append (BTC_NOTIFIER_IP) ## pre-defined ip address
         if not request.META['REMOTE_ADDR'] in ips:
-            return HttpResponse (status=403, content='*not-ok:REMOTE_ADDR*')
+            return HttpResponse (status=403, content='*not-ok:ip-address*')
 
     if address != BTC_RECVADDR:
-        return HttpResponse (status=400, content='*not-ok:BTC_RECVADDR*')
+        return HttpResponse (status=400, content='*not-ok:address*')
     if not transaction_hash: ## TODO: Enhanced validation check!
-        return HttpResponse (status=400, content='*not-ok:transaction_hash*')
+        return HttpResponse (status=400, content='*not-ok:transaction-hash*')
 
     ## Make sure to store the transaction, since after the above checks, it is
     ## for *sure* that the bitcoin transaction happened:
@@ -107,8 +107,10 @@ def process (transaction, product):
         transaction = transaction)
 
     if order.processed:
-        if transaction.confirmations < 6: return HttpResponse (status=402)
-        else: return HttpResponse ('*ok*')
+        if transaction.confirmations < 6:
+            return HttpResponse (status=402)
+        else:
+            return HttpResponse ('*ok*')
 
     if not product:
         ## TODO: Invalid product e-mail!
@@ -123,9 +125,10 @@ def process (transaction, product):
 
     if product.price.currency != transaction.money.currency or \
        product.price.value > transaction.money.value:
+
         ## TODO: Invalid fund e-mail!
         order.process (); order.save ()
-        return HttpResponse ('*ok*')
+        return HttpResponse (content='*ok*')
 
     if not send_mail_for (order, product):
         return HttpResponse (status=500)
