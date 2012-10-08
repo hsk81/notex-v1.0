@@ -98,8 +98,7 @@ def btc_transact (request):
 def process (transaction, product):
 
     if not transaction.anonymous and transaction.confirmations == 0:
-        return HttpResponse (status=402,
-            content='*not-ok:non-anonymous&zero-confirmations*')
+        return HttpResponse ('*not-ok:non-anonymous&0-confirmations*')
 
     order, created = ORDER.objects.get_or_create (
         from_contact = transaction.from_contact,
@@ -108,7 +107,8 @@ def process (transaction, product):
 
     if order.processed:
         if not transaction.anonymous and transaction.confirmations < 6:
-            return HttpResponse ('*ok:pending-confirmation*', status=402)
+            return HttpResponse ('*not-ok:non-anonymous&%s-confirmations*' %
+                transaction.confirmations)
         else:
             return HttpResponse ('*ok*')
 
@@ -138,7 +138,8 @@ def process (transaction, product):
     if transaction.anonymous or transaction.confirmations >= 6:
         return HttpResponse ('*ok*')
 
-    return HttpResponse ('*ok:pending-confirmation*', status=402)
+    return HttpResponse ('*not-ok:non-anonymous&%s-confirmations*' %
+        transaction.confirmations)
 
 def send_mail_for (order, product):
 

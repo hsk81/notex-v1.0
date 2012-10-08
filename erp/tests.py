@@ -23,10 +23,6 @@ BTC_NOTIFIER_IP = os.environ.get('BTC_NOTIFIER_IP')
 
 class BtcTransactTest (TestCase):
 
-    def transaction_hash (self):
-
-        return uuid_random ().hex + uuid_random ().hex
-
     def request (self, **args):
 
         uuid = args.get ('uuid', 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905')
@@ -47,36 +43,119 @@ class BtcTransactTest (TestCase):
             'REMOTE_ADDR': args.get ('REMOTE_ADDR', BTC_NOTIFIER_IP)
         })
 
+    def transaction_hash (self, last=False):
+
+        if not last:
+            self.last_thash = uuid_random ().hex + uuid_random ().hex
+
+        return self.last_thash
+
+    def transaction (self, transaction_hash):
+
+        return BTC_TRANSACTION.objects.get (
+            transaction_hash = transaction_hash)
+
+    def order (self, transaction):
+
+        return ORDER.objects.get (
+            from_contact = transaction.from_contact,
+            to_contact = transaction.to_contact,
+            transaction = transaction)
+
+    def assertTransaction (self, transaction, confirmations, anonymous=False):
+
+        self.assertTrue (transaction.anonymous == anonymous)
+        self.assertTrue (transaction.confirmations == confirmations)
+
+    def assertOrder (self, order, processed):
+
+        self.assertTrue (order.processed)
+
     ###########################################################################
     ###########################################################################
 
     def test_regular (self):
 
         resp = self.request (confirmations = 0)
-        self.assertEqual (resp.content, '*not-ok:non-anonymous&zero-confirmations*')
-        self.assertEqual (resp.status_code, 402)
-        resp = self.request (confirmations = 1)
-        self.assertEqual (resp.content, '*ok:pending-confirmation*')
-        self.assertEqual (resp.status_code, 402)
-        resp = self.request (confirmations = 6)
+        self.assertEqual (resp.content, '*not-ok:non-anonymous&0-confirmations*')
+        self.assertEqual (resp.status_code, 200)
+
+        thash = self.transaction_hash (last = True)
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=0)
+
+        resp = self.request (confirmations = 1, transaction_hash = thash)
+        self.assertEqual (resp.content, '*not-ok:non-anonymous&1-confirmations*')
+        self.assertEqual (resp.status_code, 200)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=1)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
+
+        resp = self.request (confirmations = 2, transaction_hash = thash)
+        self.assertEqual (resp.content, '*not-ok:non-anonymous&2-confirmations*')
+        self.assertEqual (resp.status_code, 200)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=2)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
+
+        resp = self.request (confirmations = 6, transaction_hash = thash)
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=6)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
 
     def test_anonymous (self):
 
-        resp = self.request (anonymous = True, confirmations = 0)
+        resp = self.request (confirmations = 0, anonymous = True)
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
-        resp = self.request (anonymous = True, confirmations = 1)
+
+        thash = self.transaction_hash (last = True)
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=0, anonymous=True)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
+
+        resp = self.request (confirmations = 1, anonymous = True,
+            transaction_hash = thash)
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
-        resp = self.request (anonymous = True, confirmations = 6)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=1, anonymous=True)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
+
+        resp = self.request (confirmations = 2, anonymous = True,
+            transaction_hash = thash)
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=2, anonymous=True)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
+
+        resp = self.request (confirmations = 6, anonymous = True,
+            transaction_hash = thash)
+        self.assertEqual (resp.content, '*ok*')
+        self.assertEqual (resp.status_code, 200)
+
+        transaction = self.transaction (thash)
+        self.assertTransaction (transaction, confirmations=6, anonymous=True)
+        order = self.order (transaction)
+        self.assertOrder (order, processed = True)
 
     def test_address (self):
 
-        resp = self.request (address = None)
+        resp = self.request (address = '')
         self.assertEqual (resp.content, '*not-ok:address*')
         self.assertEqual (resp.status_code, 400)
 
@@ -94,19 +173,20 @@ class BtcTransactTest (TestCase):
 
     def test_mail (self):
 
-        resp = self.request (mail = 'new-user@mail.net', name = 'New User')
+        resp = self.request (mail = 'new-user@mail.net',
+            name = 'New User')
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
 
     def test_uuid (self):
 
-        resp = self.request (uuid = None)
+        resp = self.request (uuid = '')
         self.assertEqual (resp.content, '*ok*')
         self.assertEqual (resp.status_code, 200)
 
     def test_remote_address (self):
 
-        resp = self.request (REMOTE_ADDR = None)
+        resp = self.request (REMOTE_ADDR = '')
         self.assertEqual (resp.content, '*not-ok:ip-address*')
         self.assertEqual (resp.status_code, 403)
 
