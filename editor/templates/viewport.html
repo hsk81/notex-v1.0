@@ -52,68 +52,6 @@
     {% endif %}
 
     <script type="text/javascript">
-        var cards = function () {
-            var fnNext = function (self, event) {
-                var panel = Ext.getCmp ('card-tabs-panel').getLayout ();
-                var item = panel.activeItem.id.split ('card-')[1];
-                var next = parseInt (item, 10) + 1;
-
-                panel.setActiveItem (next);
-                Ext.getCmp ('move-prev').setDisabled (false);
-                Ext.getCmp ('move-next').setDisabled (next==2);
-            };
-
-            var fnPrev = function (self, event) {
-                var panel = Ext.getCmp ('card-tabs-panel').getLayout ();
-                var item = panel.activeItem.id.split ('card-')[1];
-                var prev = parseInt (item, 10) - 1;
-
-                panel.setActiveItem (prev);
-                Ext.getCmp ('move-prev').setDisabled (prev==0);
-                Ext.getCmp ('move-next').setDisabled (false);
-            };
-
-            return new Ext.Panel ({
-                id: 'card-tabs-panel',
-                layout:'card',
-                activeItem: 0,
-                bodyStyle: 'padding:15px',
-                defaults: {
-                    border:false
-                },
-
-                bbar: [{
-                    id: 'move-prev',
-                    text: 'Back',
-                    handler: fnPrev.createDelegate (this),
-                    disabled: true
-                }, '->', {
-                    id: 'move-next',
-                    text: 'Next',
-                    handler: fnNext.createDelegate (this)
-                }],
-
-                items: [{
-                    id: 'card-0',
-                    html: '<h1>Welcome to the Wizard!</h1><p>Step 1 of 3</p>'
-                },{
-                    id: 'card-1',
-                    html: '<p>Step 2 of 3</p>'
-                },{
-                    id: 'card-2',
-                    html: '<h1>Congratulations!</h1><p>Step 3 of 3 - Complete</p>'
-                }]
-            });
-        }
-
-        var wndOrder = function (product) {
-            return new Ext.Window ({
-                title: product.title, width: 512, items: [cards ()]
-            })
-        }
-    </script>
-
-    <script type="text/javascript">
         Ext.BLANK_IMAGE_URL ="{{ STATIC_URL }}lib/extjs/resources/images/default/s.gif";
         Ext.onReady(function () {Ext.QuickTips.init();viewport.show();});
     </script>

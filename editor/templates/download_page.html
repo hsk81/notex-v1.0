@@ -1,29 +1,148 @@
+<style>
+    input {
+        border: 4px solid white;
+        -webkit-box-shadow:
+            inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1);
+
+        -moz-box-shadow:
+            inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1);
+        box-shadow:
+            inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1);
+        padding: 15px;
+        background: rgba(255,255,255,0.5);
+        margin: 0 0 10px 0;
+    }
+</style>
+
 <script type="text/javascript">
-    function order (product) {
+    var getCheckoutPanel = function (address, product) {
+
+        function generateAddress () {
+            return address; //TODO!
+        }
+
+        function move (delta) {
+            var panelLayout = Ext.getCmp ('checkout-panel').getLayout ();
+            var item = panelLayout.activeItem.id.split ('card-')[1];
+            var index = parseInt (item, 10);
+
+            if (index == 0) {
+                var email = Ext.fly ('input-0.id').dom.value;
+                var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (regex.test (email) != true) {
+                    return;
+                }
+            }
+
+            index += delta;
+
+            panelLayout.setActiveItem (index);
+            Ext.getCmp ('move-prev').setDisabled (index==0);
+            Ext.getCmp ('move-next').setDisabled (index==1);
+
+            if (index == 1) {
+                Ext.fly ('input-1.id').dom.value = String.format (
+                    "{0} -> {1}", product.price, generateAddress ()
+                );
+            }
+
+            var window = Ext.getCmp ('checkout-window');
+            window.updateTitle (index);
+        };
+
+        return new Ext.Panel ({
+            id: 'checkout-panel',
+            layout:'card',
+            activeItem: 0,
+            width: 640, height: 320,
+            defaults: {
+                border:false
+            },
+
+            bbar: [{
+                id: 'move-prev',
+                text: 'Back',
+                handler: move.createDelegate (this, [-1]),
+                disabled: true
+            }, '->', {
+                id: 'move-next',
+                text: 'Next',
+                handler: move.createDelegate (this, [+1])
+            }],
+
+            items: [{
+                layout: 'fit',
+                id: 'card-0',
+                html: '{% include "card-0.html" %}'
+            },{
+                id: 'card-1',
+                html: '{% include "card-1.html" %}'
+            }]
+        });
+    }
+
+    var getCheckoutWindow = function (address, product) {
+        function getTitle (product, progress) {
+            return String.format ('Checkout: {0} [{1} of {2}]', product.title,
+                progress.index + 1, progress.length
+            );
+        }
+
+        var progress = {
+            index: 0, length: 2
+        }
+
+        return new Ext.Window ({
+            id: 'checkout-window',
+            title: getTitle (product, progress),
+            items: [getCheckoutPanel (address, product)],
+            iconCls: 'icon-coins-16',
+            resizable: false,
+
+            updateTitle: function (index) {
+                this.setTitle (getTitle (product, {
+                    index: index, length: progress.length
+                }));
+
+                return this.title;
+            }
+        })
+    }
+</script>
+
+<script type="text/javascript">
+    function checkout (address, product) {
         if (_gaq) {
             _gaq.push(['_trackEvent', 'Sale', 'Software', product.title]);
         }
 
-        wndOrder (product).show ();
+        getCheckoutWindow (address, product).show ();
     }
 
-    function order_notex_intl () {
-        return order ({
-            uuid: 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905', title: 'NoTex INTL'
+    function checkout_notex_intl () {
+        return checkout ('19PGfaouCiuFrsrPGtRmAuMPLhCBL86FeJ', {
+            uuid: 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905',
+            title: 'NoTex INTL',
+            price: '0.75 BTC'
         });
     }
 
-    function order_notex_ncjk () {
-        return order ({
-            uuid: '9236c06c-ddb3-4789-8cf2-5f4937bddced', title: 'NoTex nCJK'
+    function checkout_notex_ncjk () {
+        return checkout ('19PGfaouCiuFrsrPGtRmAuMPLhCBL86FeJ', {
+            uuid: '9236c06c-ddb3-4789-8cf2-5f4937bddced',
+            title: 'NoTex nCJK',
+            price: '0.50 BTC'
         });
     }
 </script>
 
 <style>
-    .order img:hover { cursor: pointer; }
-    .order img { margin-left: 2em; }
-    .order li { margin-left: 1em; }
+    .checkout img:hover { cursor: pointer; }
+    .checkout img { margin-left: 2em; }
+    .checkout li { margin-left: 1em; }
 </style>
 
 <div id="page" class="textual download">
@@ -36,15 +155,15 @@
 
     <p>The offline editor is packaged as a so called virtual machine for <em>VirtualBox</em>; based on your needs, you can choose from one of the following two options:</p>
 
-    <table class="order">
+    <table class="checkout">
         <tbody>
         <tr>
             <td>
-                <img src="{{ STATIC_URL }}app/erp/img/bitcoin-order.png" onClick="order_notex_intl();" />
+                <img src="{{ STATIC_URL }}app/erp/img/bitcoin-order.png" onClick="checkout_notex_intl();" />
             </td>
             <td>
                 <ul>
-                    <li>1. <a href="#" onClick="order_notex_intl ();">NoTex International</a></li>
+                    <li>1. <a href="#" onClick="checkout_notex_intl ();">NoTex International</a></li>
                 </ul>
             </td>
         </tr>
@@ -53,15 +172,15 @@
 
     <p>Offers full support for the LaTex backend <em>Texlive 2012</em>, whereas the far eastern Chinese, Japanese and Korean languages are included. Plus it contains fonts for various other Asian languages. A list of supported packages can be found <a target="_blank" href="http://download.notex.ch/notex.current.intl.txt">here</a>.</p>
 
-    <table class="order">
+    <table class="checkout">
         <tbody>
         <tr>
             <td>
-                <img src="{{ STATIC_URL }}app/erp/img/bitcoin-order.png" onClick="order_notex_ncjk ();" />
+                <img src="{{ STATIC_URL }}app/erp/img/bitcoin-order.png" onClick="checkout_notex_ncjk ();" />
             </td>
             <td>
                 <ul>
-                    <li>2. <a href="#" onClick="order_notex_ncjk ();">NoTex non-CJK</a></li>
+                    <li>2. <a href="#" onClick="checkout_notex_ncjk ();">NoTex non-CJK</a></li>
                 </ul>
             </td>
         </tr>
