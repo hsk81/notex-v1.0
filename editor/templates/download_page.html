@@ -20,8 +20,52 @@
 <script type="text/javascript">
     var getCheckoutPanel = function (address, product) {
 
-        function generateAddress () {
-            return address; //TODO!
+        function CORSRequest (method, url) {
+            var xhr = new XMLHttpRequest();
+
+            if ("withCredentials" in xhr) {
+                xhr.open(method, url, true);
+            } else if (typeof XDomainRequest != "undefined") {
+                xhr = new XDomainRequest();
+                xhr.open(method, url);
+            } else {
+                xhr = null;
+            }
+
+            return xhr;
+        }
+
+        function generateAddress (fn) {
+            var callbackUrlBase = "https://notex.ch/erp/btc-transact";
+            var callbackUrlArgs = "?mail={0}&uuid={1}";
+            var callbackUrl = callbackUrlBase + String.format (callbackUrlArgs,
+                Ext.fly ('input-0.id').dom.value, product.uuid
+            );
+
+            var apiUrlBase = "https://blockchain.info/api/receive";
+            var apiUrlArgs = "?method=create&address={0}&anonymous={1}&callback={2}";
+            var apiUrl = apiUrlBase + String.format (apiUrlArgs,
+                address, true, callbackUrl
+            );
+
+            var xhr = new CORSRequest ('GET', apiUrl);
+            if (xhr) {
+                xhr.onload = function (event) {
+                    if (xhr.status == 200) {
+                        var response = Ext.decode (xhr.responseText);
+                        fn.call (this, response.input_address);
+                    } else {
+                        fn.call (this, undefined);
+                    }
+                };
+
+                xhr.onerror = function (event) {
+                    fn.call (this, undefined);
+                };
+
+                xhr.withCredentials = false; //no cookies
+                xhr.send();
+            }
         }
 
         function move (delta) {
@@ -44,9 +88,11 @@
             Ext.getCmp ('move-next').setDisabled (index==1);
 
             if (index == 1) {
-                Ext.fly ('input-1.id').dom.value = String.format (
-                    "{0} -> {1}", product.price, generateAddress ()
-                );
+                generateAddress (function (address) {
+                    Ext.fly ('input-1.id').dom.value = String.format (
+                        "{0} -> {1}", product.price, address
+                    );
+                })
             }
 
             var window = Ext.getCmp ('checkout-window');
