@@ -12,7 +12,6 @@ from django.core.mail import *
 
 from uuid import uuid4 as uuid_random
 from urlparse import urlparse
-from decimal import *
 from models import *
 
 import socket
