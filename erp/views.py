@@ -79,7 +79,7 @@ def btc_transact (request):
         if not request.META['REMOTE_ADDR'] in ips:
             return HttpResponse (status=403, content='*not-ok:ip-address*')
 
-    if address != BTC_RECVADDR:
+    if address != BTC_RECVADDR and not anonymous:
         return HttpResponse (status=400, content='*not-ok:address*')
     if not transaction_hash: ## TODO: Enhanced validation check!
         return HttpResponse (status=400, content='*not-ok:transaction-hash*')
@@ -141,8 +141,7 @@ def process (transaction, product):
             order = order, product = product, price = price)
 
     if product.price.currency != transaction.money.currency or \
-       product.price.value.to_python () - \
-       transaction.money.value.to_python () > Decimal (0):
+       product.price.value > transaction.money.value:
 
         logger.error ('transaction %s: invalid funds %s > %s' % (
             transaction.transaction_hash, product.price.value, transaction.money.value
