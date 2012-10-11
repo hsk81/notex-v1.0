@@ -288,6 +288,7 @@ CSSMIN_INPUT += [] if DEBUG else [
     'static/app/editor/css/CodeMirror.yaml.css',
     'static/app/editor/css/CodeMirror.rest.css',
     'static/app/editor/css/CodeMirror.css',
+    'static/app/erp/css/Checkout.css',
 ]
 
 CSSMIN_OUTPUT = 'static/css/notex.min.css'
@@ -378,6 +379,7 @@ JSMIN_INPUT += [] if DEBUG else [
     'static/app/editor/js/Ajax.csrf.js',
     'static/app/editor/js/KeyMap.js',
     'static/app/editor/js/Viewport.js',
+    'static/app/erp/js/Checkout.js',
 ]
 
 JSMIN_OUTPUT = 'static/js/notex.min.js'

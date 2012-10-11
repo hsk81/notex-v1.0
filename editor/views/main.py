@@ -202,7 +202,7 @@ def main_args (request, page):
                 uuid = 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905')
             dictionary['notex_ncjk'] = PRODUCT.objects.get (
                 uuid = '9236c06c-ddb3-4789-8cf2-5f4937bddced')
-            dictionary['btc_recvaddress'] = os.environ.get('BTC_RECVADDR')
+            dictionary['btc_recvaddr'] = os.environ.get('BTC_RECVADDR')
 
         return dictionary
 

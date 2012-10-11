@@ -1,0 +1,74 @@
+/******************************************************************************
+ * Checkout:
+ *****************************************************************************/
+
+.checkout-card ul {
+    margin:0; width:100%; height:100%;
+}
+
+/******************************************************************************
+ * Checkout: Header
+ *****************************************************************************/
+
+.checkout-card li.header {
+    padding:8px;
+}
+
+.checkout-card li.header p {
+    font-size:larger; text-align:justify; color:grey;
+}
+
+/******************************************************************************
+ * Checkout: Content
+ *****************************************************************************/
+
+.checkout-card li.content {
+    position:absolute; top:64px; bottom:64px; width:100%;
+}
+
+.checkout-card li.content div.outer {
+    display:table; height: 100%; width: 100%;
+}
+
+.checkout-card li.content div.inner {
+    display:table-cell; vertical-align:middle; text-align:center;
+}
+
+.checkout-card li.content input {
+    margin:0;
+    width:75%;
+    text-align:center;
+    font-size:large;
+    font-family:monospace;
+    color:black;
+}
+
+.checkout-card li.content input {
+    border: 4px solid white;
+    -webkit-box-shadow:
+        inset 0 0 8px  rgba(0,0,0,0.1),
+        0 0 16px rgba(0,0,0,0.1);
+    -moz-box-shadow:
+        inset 0 0 8px  rgba(0,0,0,0.1),
+        0 0 16px rgba(0,0,0,0.1);
+    box-shadow:
+        inset 0 0 8px  rgba(0,0,0,0.1),
+        0 0 16px rgba(0,0,0,0.1);
+    padding: 15px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 0 10px 0;
+}
+
+/******************************************************************************
+ * Checkout: Footer
+ *****************************************************************************/
+
+.checkout-card li.footer {
+    padding:8px; position:absolute; bottom:0;
+}
+
+.checkout-card li.footer p {
+    font-size:larger; text-align:justify; color:grey;
+}
+
+/*****************************************************************************/

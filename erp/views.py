@@ -5,6 +5,8 @@ __date__ = "$Oct 03, 2012 5:48:30 PM$"
 ################################################################################
 
 from django.conf import settings
+from django.shortcuts import render_to_response
+from django.template.context import RequestContext
 from django.http import HttpResponse
 from django.core.mail import *
 
@@ -30,6 +32,19 @@ BTC_RECVADDR = os.environ.get('BTC_RECVADDR')
 BTC_RECVMAIL = os.environ.get('BTC_RECVMAIL')
 BTC_NOTIFIER = os.environ.get('BTC_NOTIFIER')
 BTC_NOTIFIER_IP = os.environ.get('BTC_NOTIFIER_IP')
+
+################################################################################
+################################################################################
+
+def checkout_card0 (request):
+
+    return render_to_response ('card-0.html',
+        context_instance=RequestContext (request))
+
+def checkout_card1 (request):
+
+    return render_to_response ('card-1.html',
+        context_instance=RequestContext (request))
 
 ################################################################################
 ################################################################################
