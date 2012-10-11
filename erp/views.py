@@ -140,7 +140,7 @@ def process (transaction, product):
             order = order, product = product, price = price)
 
     if product.price.currency != transaction.money.currency or \
-       product.price.value > transaction.money.value:
+       long (product.price.value*1E8) > long (transaction.money.value*1E8):
 
         logger.error (
             'transaction %s: invalid funds' % transaction.transaction_hash)
