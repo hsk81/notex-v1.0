@@ -29,7 +29,7 @@ var getCheckoutWindow = function (address, product) {
         var apiUrlBase = "https://blockchain.info/api/receive";
         var apiUrlArgs = "?method=create&address={0}&anonymous={1}&callback={2}";
         var apiUrl = apiUrlBase + String.format (apiUrlArgs,
-            address, true, callbackUrl
+            address, true, encodeURIComponent (callbackUrl)
         );
 
         var xhr = new CORSRequest ('GET', apiUrl);
