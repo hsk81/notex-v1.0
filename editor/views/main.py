@@ -13,6 +13,8 @@ from editor.models import ROOT, ROOT_TYPE
 from editor.models import NODE, NODE_TYPE
 from editor.models import LEAF, LEAF_TYPE
 
+from erp.models import PRODUCT
+
 from uuid import uuid4 as uuid_random
 from datetime import datetime
 
@@ -193,7 +195,18 @@ def main_args (request, page):
     if settings.IN_RXS (socket.getfqdn (), settings.MACH_VMES):
         result['STATIC_URL'] = 'http://%s/static/' % request.get_host ()
 
-    return result
+    def extra (page, dictionary):
+
+        if page == 'download':
+            dictionary['notex_intl'] = PRODUCT.objects.get (
+                uuid = 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905')
+            dictionary['notex_ncjk'] = PRODUCT.objects.get (
+                uuid = '9236c06c-ddb3-4789-8cf2-5f4937bddced')
+            dictionary['btc_recvaddress'] = os.environ.get('BTC_RECVADDR')
+
+        return dictionary
+
+    return extra (page, result)
 
 ################################################################################
 ################################################################################

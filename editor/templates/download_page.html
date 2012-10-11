@@ -170,18 +170,18 @@
     }
 
     function checkout_notex_intl () {
-        return checkout ('19PGfaouCiuFrsrPGtRmAuMPLhCBL86FeJ', {
-            uuid: 'b3bdb98c-6fae-445d-8b64-3c0dbfbf9905',
-            title: 'NoTex INTL',
-            price: '0.75 BTC'
+        return checkout ('{{ recv_address }}', {
+            uuid: '{{ notex_intl.uuid }}',
+            title: '{{ notex_intl.name }}',
+            price: '{{ notex_intl.price }}'
         });
     }
 
     function checkout_notex_ncjk () {
-        return checkout ('19PGfaouCiuFrsrPGtRmAuMPLhCBL86FeJ', {
-            uuid: '9236c06c-ddb3-4789-8cf2-5f4937bddced',
-            title: 'NoTex nCJK',
-            price: '0.50 BTC'
+        return checkout ('{{ recv_address }}', {
+            uuid: '{{ notex_ncjk.uuid }}',
+            title: '{{ notex_ncjk.name }}',
+            price: '{{ notex_ncjk.price }}'
         });
     }
 </script>
