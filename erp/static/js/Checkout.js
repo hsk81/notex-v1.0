@@ -16,7 +16,7 @@ var getCheckoutWindow = function (address, product) {
     }
 
     function generateAddress (fn) {
-        var callbackUrlBase = "https://notex.ch/erp/btc-transact";
+        var callbackUrlBase = "http://notex.ch/erp/btc-transact";
         var callbackUrlArgs = "?mail={0}&uuid={1}";
         var callbackUrl = callbackUrlBase + String.format (callbackUrlArgs,
             Ext.fly ('input-0.id').dom.value, product.uuid
