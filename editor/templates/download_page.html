@@ -102,7 +102,7 @@
         return checkout ('{{ btc_recvaddr }}', {
             uuid: '{{ notex_intl.uuid }}',
             title: '{{ notex_intl.name }}',
-            price: '{{ notex_intl.price }}'
+            price: '{{ notex_intl.price.with_cents }}'
         });
     }
 
@@ -110,7 +110,7 @@
         return checkout ('{{ btc_recvaddr }}', {
             uuid: '{{ notex_ncjk.uuid }}',
             title: '{{ notex_ncjk.name }}',
-            price: '{{ notex_ncjk.price }}'
+            price: '{{ notex_ncjk.price.with_cents }}'
         });
     }
 </script>

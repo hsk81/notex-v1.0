@@ -43,6 +43,10 @@ class MONEY (Model):
     def __unicode__ (self):
         return u'%s %s' % (self.value, self.currency)
 
+    def get_with_cents (self):
+        return u'%0.2f %s' % (self.value, self.currency)
+    with_cents = property (get_with_cents)
+
 class TRANSACTION (Model):
 
     timestamp = DateTimeField (auto_now_add=True)
