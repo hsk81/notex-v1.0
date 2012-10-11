@@ -12,6 +12,7 @@ from django.core.mail import *
 
 from uuid import uuid4 as uuid_random
 from urlparse import urlparse
+from decimal import *
 from models import *
 
 import socket
@@ -140,10 +141,11 @@ def process (transaction, product):
             order = order, product = product, price = price)
 
     if product.price.currency != transaction.money.currency or \
-       float (product.price.value - transaction.money.value) > 0.0:
+       product.price.value - transaction.money.value > Decimal (0):
 
-        logger.error (
-            'transaction %s: invalid funds' % transaction.transaction_hash)
+        logger.error ('transaction %s: invalid funds %s > %s' % (
+            transaction.transaction_hash, product.price.value, transaction.money.value
+        ))
 
         order.process (); order.save ()
         return HttpResponse (content='*ok*')
