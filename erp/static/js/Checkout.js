@@ -26,7 +26,7 @@ var getCheckoutWindow = function (address, product) {
             Ext.fly ('input-0.id').dom.value, product.uuid
         );
 
-        var apiUrlBase = "https://blockchain.info/api/receive/";
+        var apiUrlBase = "https://blockchain.info/api/receive";
         var apiUrlArgs = "?method=create&address={0}&anonymous={1}&callback={2}";
         var apiUrl = apiUrlBase + String.format (apiUrlArgs,
             address, true, encodeURIComponent (callbackUrl)
