@@ -16,13 +16,17 @@ var getCheckoutWindow = function (address, product) {
     }
 
     function generateAddress (fn) {
-        var callbackUrlBase = "http://notex.ch/erp/btc-transact";
+        var callbackUrlOrig = String.format ("{0}//{1}",
+            document.location.protocol, document.location.host
+        );
+
+        var callbackUrlBase = "https://notex.ch/erp/btc-transact/";
         var callbackUrlArgs = "?mail={0}&uuid={1}";
         var callbackUrl = callbackUrlBase + String.format (callbackUrlArgs,
             Ext.fly ('input-0.id').dom.value, product.uuid
         );
 
-        var apiUrlBase = "https://blockchain.info/api/receive";
+        var apiUrlBase = "https://blockchain.info/api/receive/";
         var apiUrlArgs = "?method=create&address={0}&anonymous={1}&callback={2}";
         var apiUrl = apiUrlBase + String.format (apiUrlArgs,
             address, true, encodeURIComponent (callbackUrl)
