@@ -129,8 +129,7 @@ def process (transaction, product):
             return HttpResponse ('*ok*')
 
     if not product:
-        logger.error (
-            'transaction %s: no product' % transaction.transaction_hash)
+
         order.process (); order.save ()
         return HttpResponse ('*ok*')
 
@@ -142,10 +141,6 @@ def process (transaction, product):
 
     if product.price.currency != transaction.money.currency or \
        float (product.price.value) > float (transaction.money.value):
-
-        logger.error ('transaction %s: invalid funds %s > %s' % (
-            transaction.transaction_hash, product.price.value, transaction.money.value
-        ))
 
         order.process (); order.save ()
         return HttpResponse (content='*ok*')
