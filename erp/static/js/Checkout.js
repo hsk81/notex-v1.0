@@ -16,10 +16,7 @@ var getCheckoutWindow = function (address, product) {
     }
 
     function generateAddress (fn) {
-        var callbackUrlOrig = String.format ('{0}//{1}',
-            document.location.protocol, document.location.host
-        );
-
+        var callbackUrlOrig = "http://notex.ch";
         var callbackUrlBase = callbackUrlOrig + "/erp/btc-transact";
         var callbackUrlArgs = "?mail={0}&uuid={1}";
         var callbackUrl = callbackUrlBase + String.format (callbackUrlArgs,

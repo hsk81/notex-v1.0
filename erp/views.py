@@ -128,7 +128,8 @@ def process (transaction, product):
             return HttpResponse ('*ok*')
 
     if not product:
-        ## TODO: Invalid product e-mail!
+        logger.error (
+            'transaction %s: no product' % transaction.transaction_hash)
         order.process (); order.save ()
         return HttpResponse ('*ok*')
 
@@ -141,7 +142,9 @@ def process (transaction, product):
     if product.price.currency != transaction.money.currency or \
        product.price.value > transaction.money.value:
 
-        ## TODO: Invalid fund e-mail!
+        logger.error (
+            'transaction %s: invalid funds' % transaction.transaction_hash)
+
         order.process (); order.save ()
         return HttpResponse (content='*ok*')
 
