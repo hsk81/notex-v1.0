@@ -141,7 +141,7 @@ def process (transaction, product):
             order = order, product = product, price = price)
 
     if product.price.currency != transaction.money.currency or \
-       product.price.value > transaction.money.value:
+       float (product.price.value) > float (transaction.money.value):
 
         logger.error ('transaction %s: invalid funds %s > %s' % (
             transaction.transaction_hash, product.price.value, transaction.money.value
