@@ -15,7 +15,7 @@ var getCheckoutWindow = function (address, product) {
         return xhr;
     }
 
-    function generateAddress (fn) {
+    function generateInputAddress (fn) {
         var callbackUrlOrig = String.format ("{0}//{1}",
             document.location.protocol, document.location.host
         );
@@ -67,17 +67,28 @@ var getCheckoutWindow = function (address, product) {
 
         index += delta;
 
+        if (index == 1) {
+            function callback (input_address) {
+                Ext.fly ('input-1.id').dom.value = String.format (
+                    "{1} -> {0}", input_address, product.price.with_cents
+                );
+
+                var orig = "https://chart.googleapis.com/chart"
+                var args = "chs=192x192&cht=qr&chl=" + String.format (
+                    "bitcoin:{0}?amount={1}", input_address, product.price.value
+                );
+
+                Ext.fly ('qr-code.id').dom.src = String.format ("{0}?{1}",
+                    orig, args
+                );
+            }
+
+            generateInputAddress (callback);
+        }
+
         panelLayout.setActiveItem (index);
         Ext.getCmp ('move-prev').setDisabled (index==0);
         Ext.getCmp ('move-next').setDisabled (index==1);
-
-        if (index == 1) {
-            generateAddress (function (address) {
-                Ext.fly ('input-1.id').dom.value = String.format (
-                    "{0} -> {1}", product.price, address
-                );
-            })
-        }
 
         var window = Ext.getCmp ('checkout-window');
         window.updateTitle (index);
@@ -89,7 +100,7 @@ var getCheckoutWindow = function (address, product) {
             id: 'checkout-panel',
             layout:'card',
             activeItem: 0,
-            width: 640, height: 320,
+            width: 640, height: 480,
             defaults: {
                 border:false
             },
@@ -114,7 +125,8 @@ var getCheckoutWindow = function (address, product) {
             listeners: {
                 afterrender: function (self) {
                     var origin = String.format ('{0}//{1}',
-                        document.location.protocol, document.location.host);
+                        document.location.protocol, document.location.host
+                    );
 
                     $('#card-0').load (origin + '/erp/checkout/card-0.html');
                     $('#card-1').load (origin + '/erp/checkout/card-1.html');

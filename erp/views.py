@@ -43,8 +43,11 @@ def checkout_card0 (request):
 
 def checkout_card1 (request):
 
+    src = request.GET.get (
+        'src', settings.STATIC_URL + 'app/erp/img/qr-empty.png')
+
     return render_to_response ('card-1.html',
-        context_instance=RequestContext (request))
+        context_instance=RequestContext (request), dictionary={'src': src })
 
 ################################################################################
 ################################################################################

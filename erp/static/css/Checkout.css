@@ -34,6 +34,10 @@
     display:table-cell; vertical-align:middle; text-align:center;
 }
 
+.checkout-card li.content div.inner img {
+    margin-bottom: 8px;
+}
+
 .checkout-card li.content input {
     margin:0;
     width:75%;
@@ -45,6 +49,10 @@
 
 .checkout-card li.content input {
     border: 4px solid white;
+    padding: 16px;
+}
+
+.checkout-card li.content input, .checkout-card li.content div.inner img {
     -webkit-box-shadow:
         inset 0 0 8px  rgba(0,0,0,0.1),
         0 0 16px rgba(0,0,0,0.1);
@@ -54,9 +62,7 @@
     box-shadow:
         inset 0 0 8px  rgba(0,0,0,0.1),
         0 0 16px rgba(0,0,0,0.1);
-    padding: 15px;
     background: rgba(255,255,255,0.5);
-    margin: 0 0 10px 0;
 }
 
 /******************************************************************************
