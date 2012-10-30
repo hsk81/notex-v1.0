@@ -33,7 +33,7 @@
     text-align:center;
     font-weight:bold;
     font-variant:small-caps;
-    font-size:10.0em;
+    font-size:7.5em;
     font-family:sans serif;
     color:#f0f0f0;
 }
@@ -215,20 +215,24 @@
     position: absolute;
     margin-bottom: 24px;
     width: 100%;
-    height: 32px;
     bottom: 0;
 }
 
 #page-wrap-content .footer {
     margin-bottom: 24px;
     width: 100%;
-    height: 32px;
 }
 
 #page-wrap-content .ssl-seal-wrap {
     margin: 0 auto;
     width: 132px;
     height: 32px;
+}
+
+#page-wrap-content .ad-banner-wrap {
+    margin: 0 auto;
+    width: 468px;
+    height: 60px;
 }
 
 /*****************************************************************************/
