@@ -230,6 +230,7 @@
 }
 
 #page-wrap-content .ad-banner-wrap {
+    border: #f5f5f5 dotted thin;
     margin:0 auto;
     width:468px;
     height:60px;
