@@ -807,6 +807,8 @@ var reportManager = function () {
         title : 'Report Manager',
         id : 'reportManager.id',
         layout : 'fit',
+        border : false,
+        flex : 1,
 
         tools : [{
             id : 'refresh',

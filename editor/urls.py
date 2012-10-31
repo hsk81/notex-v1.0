@@ -13,6 +13,7 @@ import views
 urlpatterns = patterns ('',
 
     url (r'^$', views.main, name='main'),
+    url (r'^ad-medrec.html', views.ad_medrec, name='ad-medrec'),
 
     ##
     ## navigation menu
