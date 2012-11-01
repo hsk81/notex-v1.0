@@ -1,5 +1,5 @@
-{% if not dbg %}
-    <div style="height:100%; width:100%;">
+<div id="ad-wrap">
+    {% if not dbg %}
         <script type="text/javascript"><!--
         google_ad_client = "ca-pub-0141161703803018";
         /* NoTex - MedRec */
@@ -11,5 +11,7 @@
         <script type="text/javascript"
                 src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
         </script>
-    </div>
-{% endif %}
+    {% else %}
+        <div style="height:254px; width:100%;"></div>
+    {% endif %}
+</div>

@@ -32,7 +32,7 @@
         location.static_url = "{{ STATIC_URL }}";
     </script>
     <div id="content-wrap">
-        <div id="content">{% include 'page.html' %}</div>
+        <div id="content">{% include 'page.html' %}{% include 'ad/medrec.html' %}</div>
     </div>
     {% block application-js %}{% endblock %}
 {% endcache %}
