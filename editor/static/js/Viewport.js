@@ -32,6 +32,7 @@ var viewport = function () {
                     xtype : 'panel',
                     title : 'Advertisement',
                     layout : 'fit',
+                    height : 277,
                     html: $('#ad-wrap').html ()
                 }]
             }]
