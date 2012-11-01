@@ -345,7 +345,7 @@ class LeafCreator:
 
 def ad_medrec (request):
 
-    return render_to_response ('ad-medrec.html',
+    return render_to_response ('ad/medrec.html',
         dictionary={'dbg': settings.DEBUG},
         context_instance=RequestContext (request))
 
