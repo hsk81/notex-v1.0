@@ -30,7 +30,7 @@ window.onload = function () {
     }
 
     var worker = new Worker (
-        '/static/' + 'app/editor/js/CodeMirror.typo.worker.js'
+        STATIC_URL + 'app/editor/js/CodeMirror.typo.worker.js'
     );
 
     worker.onmessage = function (event) {
@@ -43,7 +43,7 @@ window.onload = function () {
     };
 
     worker.postMessage ({
-        lingua: lingua, static: '/static/'
+        lingua: lingua, static: STATIC_URL
     });
 
     Ext.getCmp ('status-bar.cmb-lang.id').setValueFor (lingua);

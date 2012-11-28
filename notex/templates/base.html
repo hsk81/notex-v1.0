@@ -25,6 +25,7 @@
         {% endif %}
     {% endcache %}
     <script type="text/javascript">CSRF_TOKEN = "{% csrf_token %}";</script>
+    <script type="text/javascript">STATIC_URL = "{{ STATIC_URL }}";</script>
 </head>
 <body>
 {% cache 180 cache-body page %}

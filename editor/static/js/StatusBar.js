@@ -206,7 +206,7 @@ var statusBar = function () {
                 var lingua = record.json.code;
                 assert (lingua);
 
-                var worker = new Worker ('/static/' +
+                var worker = new Worker (STATIC_URL +
                     'app/editor/js/CodeMirror.typo.worker.js'
                 );
 
@@ -233,7 +233,7 @@ var statusBar = function () {
                 });
 
                 worker.postMessage ({
-                    lingua: record.json.code, static: '/static/'
+                    lingua: record.json.code, static: STATIC_URL
                 });
             }
         },
