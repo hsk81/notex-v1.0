@@ -26,8 +26,6 @@
 {% endblock %}
 
 {% block application-js %}
-    <script type="text/javascript">location.static_url = "{{ STATIC_URL }}";</script>
-
     <script type="text/javascript">{% include 'util.js' %}</script>
     <script type="text/javascript">{% include 'base-64.js' %}</script>
     <script type="text/javascript">{% include 'urls.js' %}</script>
