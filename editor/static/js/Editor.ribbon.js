@@ -22,8 +22,8 @@ var editorRibbon = function () {
             '<form action="https://bitpay.com/checkout" method="post" >',
                 '<input type="hidden" name="action" value="checkout" />',
                 '<input type="hidden" name="posData" value="" />',
-                '<span>USD&nbsp;<input type="number" name="price" min="5" step="5" value="5" /><span/>',
-                '<input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDh0rKg2K2qQJ7at3YnSP39QQy/sGzsEDXdkOH5AU2/9Eee0JoulhWjb1XrwptGC2ikWrICNT+A4Rln2kkZqWlsy8No3S9MeSWjV2Io8aJFp8hae1PECRuB6z5JNOGGWo6wTXFYsqmjwqktaPHE+MfJeK/p2tWwPJe5N9G2J1TRxRXloHR5NIq3ninT6llR3WDyziU0UUpRSL1OqDL3wO054g==" />',
+                '<span>BTC&nbsp;<input type="number" name="price" min="1" step="1" value="1" /><span/>',
+                '<input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDh0rKg2K2qQJ7at3YnSP39QQy/sGzsEDXdkOH5AU2/9EcwF2594TosmZKuEpHfuLzv58PBfesxFT8g24mXE8gItx9hbl+d9OpbhSZwEN2ogrNJv+a961w3w9n2AyH7fIB4vEO2wf7Rcxqk0rRvSBoxbxc5Zs6C1Y+zdrUcSZQPEJ9Q98plBub1xyR1ZGzVAklShHgB0je7CGJswZVk3WJIus0v0KcAydaFyWF52pGdraE=" />',
                 '<input type="image" src="https://bitpay.com/img/donate-sm.png" border="0" name="submit" alt="Donate BTC" >',
             '</form>',
         '<div/>'
