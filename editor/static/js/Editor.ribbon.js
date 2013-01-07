@@ -24,7 +24,7 @@ var editorRibbon = function () {
                 '<input type="hidden" name="posData" value="" />',
                 '<span>USD&nbsp;<input type="number" name="price" min="5" step="5" value="5" /><span/>',
                 '<input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDh0rKg2K2qQJ7at3YnSP39QQy/sGzsEDXdkOH5AU2/9Eee0JoulhWjb1XrwptGC2ikWrICNT+A4Rln2kkZqWlsy8No3S9MeSWjV2Io8aJFp8hae1PECRuB6z5JNOGGWo6wTXFYsqmjwqktaPHE+MfJeK/p2tWwPJe5N9G2J1TRxRXloHR5NIq3ninT6llR3WDyziU0UUpRSL1OqDL3wO054g==" />',
-                '<input type="image" src="https://bitpay.com/img/donate-sm.png" border="0" name="submit" alt="BitPay, the easy way to pay with bitcoins." >',
+                '<input type="image" src="https://bitpay.com/img/donate-sm.png" border="0" name="submit" alt="Donate BTC" >',
             '</form>',
         '<div/>'
     ].join ('');
