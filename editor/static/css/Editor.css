@@ -236,3 +236,32 @@
 }
 
 /*****************************************************************************/
+
+#donate-btc {
+    font: bold 16px/100% Verdana, Tahoma, sans-serif;
+    text-shadow: 1px 1px #afafaf;
+}
+
+#donate-btc input[name='price'] {
+    background: #FFFFFF;
+    border: solid 1px #E5E5E5;
+    font: bold 16px/100% Verdana, Tahoma, sans-serif;
+    text-shadow: 1px 1px #cfcfcf;
+    margin: 2px;
+    outline: 0;
+    padding: 4px;
+    text-align: right;
+    width: 66px;
+}
+
+#donate-btc input[name='price'] {
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF),
+        color-stop(4%, #EEEEEE), to(#FFFFFF));
+    background: -moz-linear-gradient(top, #FFFFFF, #EEEEEE 1px, #FFFFFF 25px);
+}
+
+#donate-btc input[name='submit'] {
+    float: right; margin: 0 2px;
+}
+
+/*****************************************************************************/
