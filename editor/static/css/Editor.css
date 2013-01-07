@@ -238,16 +238,17 @@
 /*****************************************************************************/
 
 #donate-btc {
-    font: bold 16px/100% Verdana, Tahoma, sans-serif;
+    font: bold 13px/100% Verdana, Tahoma, sans-serif;
     text-shadow: 1px 1px #afafaf;
 }
 
 #donate-btc input[name='price'] {
     background: #FFFFFF;
     border: solid 1px #E5E5E5;
-    font: bold 16px/100% Verdana, Tahoma, sans-serif;
+    font: bold 13px/100% Verdana, Tahoma, sans-serif;
     text-shadow: 1px 1px #cfcfcf;
-    margin: 2px;
+    margin-top: 6px;
+    margin-right: 0px;
     outline: 0;
     padding: 4px;
     text-align: right;
@@ -261,7 +262,7 @@
 }
 
 #donate-btc input[name='submit'] {
-    float: right; margin: 0 2px;
+    float: right; margin: 2px 4px 2px 2px;
 }
 
 /*****************************************************************************/
