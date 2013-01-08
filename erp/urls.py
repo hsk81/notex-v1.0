@@ -12,6 +12,7 @@ import views
 
 urlpatterns = patterns ('',
     url (r'^btc-transact/$', views.btc_transact, name='btc-transact'),
+    url (r'^tco-notify/$', views.tco_notify, name='two-notify'),
 
     url (r'^checkout/card-0.html', views.checkout_card0, name='card-0'),
     url (r'^checkout/card-1.html', views.checkout_card1, name='card-1'),

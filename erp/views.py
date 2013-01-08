@@ -14,6 +14,7 @@ from uuid import uuid4 as uuid_random
 from urlparse import urlparse
 from models import *
 
+import json
 import socket
 import smtplib
 import os.path
@@ -220,6 +221,21 @@ def create_download_link (product):
     os.symlink (product.path, path_uuid + ext)
 
     return os.path.join (product.link, uuid + ext)
+
+################################################################################
+################################################################################
+
+def tco_notify (request):
+    """
+    See https://www.2checkout.com/va/notifications/ for 2Checkout's instant
+    notification service.
+    """
+
+    logger.info (request)
+    result = dict (success=True, timestamp=str (datetime.datetime.now ()))
+    response = HttpResponse (json.dumps (result), mimetype='application/json')
+
+    return response
 
 ################################################################################
 ################################################################################

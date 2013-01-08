@@ -203,6 +203,14 @@ LOGGING = {
             'interval': 1,
             'formatter': 'verbose',
         },
+        'file-erp': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'log/erp.log',
+            'when': 'D',
+            'interval': 1,
+            'formatter': 'verbose',
+        },
         'file-exporter': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
@@ -236,33 +244,39 @@ LOGGING = {
     },
 
     'root': {
-        'level': 'ERROR',
+        'level': 'DEBUG',
         'handlers': ['console-verbose', 'file'],
     },
 
     'loggers': {
         'django.request': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'handlers': ['console-verbose', 'file'],
             'filters': ['no_message_failures'],
             'propagate': False
         },
 
         'editor.views.exporter': {
-            'level':'ERROR',
+            'level':'DEBUG',
             'handlers': ['console-verbose', 'file-exporter'],
             'propagate': False
         },
 
         'editor.views.importer': {
-            'level':'ERROR',
+            'level':'DEBUG',
             'handlers': ['console-verbose', 'file-importer'],
             'propagate': False
         },
 
         'notex.management.commands.cleanup': {
-            'level':'ERROR',
+            'level':'DEBUG',
             'handlers': ['console-simplis', 'file-cleanup'],
+            'propagate': False
+        },
+
+        'erp.views': {
+            'level':'DEBUG',
+            'handlers': ['console-verbose', 'file-erp'],
             'propagate': False
         },
     }
