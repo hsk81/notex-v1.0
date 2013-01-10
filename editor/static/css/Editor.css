@@ -243,10 +243,10 @@
 }
 
 #donate-btc span {
-    position: relative;
-    top: 6px;
-    left: -42px;
     font: bold 13px/100% Verdana, Tahoma, sans-serif;
+    position: relative;
+    top: -13px;
+    left: 2px;
 }
 
 #donate-btc input[name='price'] {
@@ -267,10 +267,8 @@
 }
 
 #donate-btc input[name='submit'] {
-    position: absolute;
-    width: 83px;
-    top: -15px;
-    left: 46px;
+    margin: 2px 0 2px 0;
+    width: 83px; height: 32px;
 }
 
 /*****************************************************************************/

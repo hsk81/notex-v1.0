@@ -221,6 +221,14 @@ def download (request): return main (request, page='download')
 ################################################################################
 ################################################################################
 
+def btc_donate (request):
+
+    return render_to_response ('btc-donate.html',
+        context_instance=RequestContext (request))
+
+################################################################################
+################################################################################
+
 def init (request):
     type = ROOT_TYPE.objects.get (_code='root')
     usid = request.session.session_key

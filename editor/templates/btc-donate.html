@@ -1,0 +1,9 @@
+<div id="donate-btc">
+    <form action="https://bitpay.com/checkout" method="post" >
+        <input type="hidden" name="action" value="checkout" />
+        <input type="hidden" name="posData" value="" />
+        <span>BTC&nbsp;<input type="number" name="price" min="1" step="1" value="1" /></span>
+        <input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDh0rKg2K2qQJ7at3YnSP39QQy/sGzsEDXdkOH5AU2/9EcwF2594TosmZKuEpHfuLzv58PBfesxFT8g24mXE8gItx9hbl+d9OpbhSZwEN2ogrNJv+a961w3w9n2AyH7fIB4vEO2wf7Rcxqk0rRvSBoxbxc5Zs6C1Y+zdrUcSZQPEJ9Q98plBub1xyR1ZGzVAklShHgB0je7CGJswZVk3WJIus0v0KcAydaFyWF52pGdraE=" />
+        <input type="image" src="{{ STATIC_URL }}app/erp/img/bitcoin-order.png" border="0" name="submit" alt="Donate BTC" onClick="if (_gaq) _gaq.push (['_trackEvent', 'Donation', 'BTC', $('#donate-btc').find ('input[name=price]')[0].value]);">
+    </form>
+</div>

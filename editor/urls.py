@@ -26,7 +26,7 @@ urlpatterns = patterns ('',
     url (r'^download/$', views.download, name='download'),
 
     ##
-    ## crud : create, read, update & delete
+    ## crud: create, read, update & delete
     ##
 
     url (r'^create-project/$', views.createProject, name='create-project'),
@@ -52,6 +52,11 @@ urlpatterns = patterns ('',
     url (r'^export-html/(?P<id>.*)/$', views.export_html, name='export-html'),
     url (r'^import-file/(?P<fid>.*)/$', views.import_file, name='import-file'),
 
+    ##
+    ## ajax load:
+    ##
+
+    url (r'^btc-donate.html', views.btc_donate, name='btc-donate')
 )
 
 ################################################################################

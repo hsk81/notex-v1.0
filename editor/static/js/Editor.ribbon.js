@@ -17,18 +17,6 @@ var editorRibbon = function () {
         }
     }
 
-    var htmlDonate = [
-        '<div id="donate-btc">',
-            '<form action="https://bitpay.com/checkout" method="post" >',
-                '<input type="hidden" name="action" value="checkout" />',
-                '<input type="hidden" name="posData" value="" />',
-                '<span>BTC&nbsp;<input type="number" name="price" min="1" step="1" value="1" /><span/>',
-                '<input type="hidden" name="data" value="i8TNlYByQUfyy7b+TVIwNeXvmmQTZW5uAlZSZzi9UtwML3jOEoCJlSSd2umlfPDh0rKg2K2qQJ7at3YnSP39QQy/sGzsEDXdkOH5AU2/9EcwF2594TosmZKuEpHfuLzv58PBfesxFT8g24mXE8gItx9hbl+d9OpbhSZwEN2ogrNJv+a961w3w9n2AyH7fIB4vEO2wf7Rcxqk0rRvSBoxbxc5Zs6C1Y+zdrUcSZQPEJ9Q98plBub1xyR1ZGzVAklShHgB0je7CGJswZVk3WJIus0v0KcAydaFyWF52pGdraE=" />',
-                '<input type="image" src="https://bitpay.com/img/donate-sm.png" border="0" name="submit" alt="Donate BTC" >',
-            '</form>',
-        '<div/>'
-    ].join ('');
-
     return new Ext.Toolbar ({ enableOverflow : true, items : [{
 
         xtype: 'buttongroup',
@@ -170,8 +158,17 @@ var editorRibbon = function () {
     },'->',{
         xtype: 'buttongroup',
         height: 45,
-        width: 215,
-        html: htmlDonate
+        width: 220,
+        listeners: {
+            render: function (self) {
+                var origin = String.format ('{0}//{1}',
+                    document.location.protocol, document.location.host
+                );
+                self.load ({
+                    url: origin + '/editor/btc-donate.html'
+                });
+            }
+        }
     }],
 
     listeners: { overflowchange : changeIconClassFrom32To16}});
