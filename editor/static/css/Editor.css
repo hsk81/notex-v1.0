@@ -134,6 +134,88 @@
 }
 
 /******************************************************************************
+ * Page: Contact
+ *****************************************************************************/
+
+#page.contact {
+    width:100%;
+}
+
+#page.contact div.form-wrap {
+    padding:8px;
+}
+
+#page.contact div form {
+    font:13px Arial, Helvetica, sans-serif;
+    color:grey;
+}
+
+#page.contact div form {
+    background-color:#f0f0f0;
+    border:1px solid grey;
+    margin:0 auto;
+    padding:8px;
+    width:750px;
+}
+
+#page.contact div form table {
+    margin:0 auto;
+    width:725px;
+}
+
+#page.contact div form input[type=text] {
+    font-family:monospace;
+    border:1px solid grey;
+    width:666px;
+    padding:4px;
+}
+
+#page.contact div form input[type=submit],
+#page.contact div form input[type=reset] {
+    border:1px solid grey;
+    padding:2px 4px;
+    width:64px;
+}
+
+#page.contact div form textarea {
+    font-family:monospace;
+    border:1px solid grey;
+    margin-top:4px;
+    padding:4px;
+    width:725px;
+}
+
+#page.contact .subline {
+    margin:18px auto 0 auto;
+    width:100%;
+}
+
+#page.contact .subline ul {
+    border-bottom:1px solid #888888;
+    border-top:1px solid #888888;
+    background-color:#f0f0f0;
+    list-style-type:none;
+    text-align:center;
+}
+
+#page.contact .subline ul li {
+    font-weight:normal;
+    font-size:0.75em;
+    line-height:32px;
+    display:inline;
+}
+
+#page.contact .subline ul li.subline-text {
+    border-left:1px solid #888888;
+    padding:6.5px 32px 6.5px 2px;
+}
+
+#page.contact .subline ul li.subline-icon {
+    background-repeat:no-repeat;
+    padding:1px 9px;
+}
+
+/******************************************************************************
  * Page: Textual
  *****************************************************************************/
 

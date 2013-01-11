@@ -1,17 +1,44 @@
-<div id="page" class="home">
-    <div class="title">{{ page }}</div>
-    <div class="sub-title">
-        <hr>
-        <div class="text">[{{ page }} - under construction]</div>
-
-        <a class="icon-facebook-16 link-icon facebook"
-           target="_blank" href="http://facebook.com">_</a>
-        <a class="icon-twitter_1-16 link-icon twitter"
-           target="_blank" href="http://twitter.com">_</a>
-        <a class="icon-blogger-16 link-icon blogger"
-           target="_blank" href="http://blogger.com">_</a>
-        <a class="icon-youtube-16 link-icon youtube"
-           target="_blank" href="http://youtube.com">_</a>
+<div id="page" class="contact">
+    <div class="form-wrap">
+    <form action="{% url editor:contact %}" method="post">{% csrf_token %}
+        <table border=0 class="table">
+            <tr>
+                <td align="left">
+                    <b>Name</b>
+                </td>
+                <td align="right" class="input-cell">
+                    <input class="input" type="text" name="name">
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <b>Email</b>
+                </td>
+                <td align="right" class="input-cell">
+                    <input class="input" type="text" name="mail" value="">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <textarea class="textarea" name="comment" rows="20" cols="64"></textarea>
+                </td>
+            </tr>
+            <tr align="right">
+                <td colspan=2>
+                    <input type="submit" value="Send" onclick="$.blockUI ({ message: '<p>Please wait ..</p>' });">
+                    <input type="reset" value="Reset">
+                </td>
+            </tr>
+        </table>
+    </form>
+    </div>
+    <div class="subline">
+        <ul>
+            <li class="subline-icon icon-link-16"></li>
+            <li class="subline-text"><a href="http://blackhan.ch">http://blackhan.ch</a></li>
+            <li class="subline-icon icon-email-16"></li>
+            <li class="subline-text">contact[at]blackhan.ch</li>
+        </ul>
     </div>
 </div>
 
