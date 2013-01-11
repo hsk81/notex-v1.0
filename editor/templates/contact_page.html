@@ -1,6 +1,6 @@
 <div id="page" class="contact">
     <div class="form-wrap">
-    <form onsubmit="Ext.getBody ().mask ('Sending', 'x-mask-loading');" action="{% url editor:send-feedback %}" method="post">
+    <form onsubmit="Ext.getBody ().mask ('Sending', 'x-mask-loading');" action="{% url editor:send-feedback %}" method="post">{% csrf_token %}
         <table border=0 class="table">
             <tr>
                 <td align="left">
