@@ -14,6 +14,8 @@
                     <a href='{% url editor:faq %}'><span>FAQ</span></a></li>
                 <li class="{% if page == 'download' %}active{% endif %}">
                     <a href='{% url editor:download %}'><span>Download</span></a></li>
+                <li class="{% if page == 'contact' %}active{% endif %}" style="float: right;">
+                    <a href='{% url editor:contact %}'><span>Contact</span></a></li>
             </ul>
         </div>
 
@@ -29,6 +31,8 @@
             {% include 'faq_page.html' %}
         {% elif page == 'download' %}
             {% include 'download_page.html' %}
+        {% elif page == 'contact' %}
+            {% include 'contact_page.html' %}
         {% endif %}
     </div>
 </div>

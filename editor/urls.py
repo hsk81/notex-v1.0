@@ -24,6 +24,7 @@ urlpatterns = patterns ('',
     url (r'^rest/$', views.rest, name='rest'),
     url (r'^faq/$', views.faq, name='faq'),
     url (r'^download/$', views.download, name='download'),
+    url (r'^contact/$', views.contact, name='contact'),
 
     ##
     ## crud: create, read, update & delete

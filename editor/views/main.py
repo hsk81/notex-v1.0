@@ -86,6 +86,11 @@ def main_args (request, page):
                 Download - NoTex: Browser based standalone version for people
                 who prefer to use their editor offline.
                 """,
+            'contact' :
+                """
+                Contact - NoTex: For questions & answers, contact us using our
+                feedback form or e-mail.
+                """,
         }
 
         return re \
@@ -145,6 +150,12 @@ def main_args (request, page):
                 other Asian languages) and a non-CJK version which omits these
                 languages.
                 """,
+            'contact' :
+                """
+                Contact information regarding the company behind; provides a
+                form to directly send a question/feedback or alternatively an
+                e-mail address.
+                """,
         }
 
         return re \
@@ -169,6 +180,8 @@ def main_args (request, page):
                 'faq', 'frequently asked', 'important', 'questions'],
             'download' : common + [
                 'download', 'standalone', 'version', 'offline'],
+            'contact' : common + [
+                'contact', 'form', 'e-mail', 'feedback', 'questions'],
         }
 
         return lookup[page]
@@ -217,6 +230,7 @@ def tutorial (request): return main (request, page='tutorial')
 def rest (request): return main (request, page='rest')
 def faq (request): return main (request, page='faq')
 def download (request): return main (request, page='download')
+def contact (request): return main (request, page='contact')
 
 ################################################################################
 ################################################################################
