@@ -163,7 +163,8 @@
     width:725px;
 }
 
-#page.contact div form input[type=text] {
+#page.contact div form input[type=text],
+#page.contact div form input[type=email] {
     font-family:monospace;
     border:1px solid grey;
     width:666px;

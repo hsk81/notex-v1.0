@@ -1,13 +1,13 @@
 <div id="page" class="contact">
     <div class="form-wrap">
-    <form action="{% url editor:contact %}" method="post">{% csrf_token %}
+    <form action="{% url editor:send-feedback %}" method="post">{% csrf_token %}
         <table border=0 class="table">
             <tr>
                 <td align="left">
                     <b>Name</b>
                 </td>
                 <td align="right" class="input-cell">
-                    <input class="input" type="text" name="name">
+                    <input class="input" type="text" name="name" placeholder="your name" required>
                 </td>
             </tr>
             <tr>
@@ -15,17 +15,17 @@
                     <b>Email</b>
                 </td>
                 <td align="right" class="input-cell">
-                    <input class="input" type="text" name="mail" value="">
+                    <input class="input" type="email" name="mail" placeholder="email address" required>
                 </td>
             </tr>
             <tr>
                 <td colspan=2>
-                    <textarea class="textarea" name="comment" rows="20" cols="64"></textarea>
+                    <textarea class="textarea" name="comment" rows="20" cols="64" placeholder=".." required></textarea>
                 </td>
             </tr>
             <tr align="right">
                 <td colspan=2>
-                    <input type="submit" value="Send" onclick="$.blockUI ({ message: '<p>Please wait ..</p>' });">
+                    <input type="submit" value="Send" onsubmit="Ext.getBody ().mask ('Sending', 'x-mask-loading');">
                     <input type="reset" value="Reset">
                 </td>
             </tr>

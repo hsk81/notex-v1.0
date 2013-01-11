@@ -46,7 +46,7 @@ def send_feedback (request):
                 'exception': ex
             })
 
-    return HttpResponseRedirect ('../editor/contact/')
+    return HttpResponseRedirect ('/editor/contact/')
 
 ################################################################################
 ################################################################################
