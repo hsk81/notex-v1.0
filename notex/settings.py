@@ -145,6 +145,9 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = bool (os.environ.get('EMAIL_USE_TLS'))
 
+EMAIL_SUBJECT = "'%s' <%s>" ## 'sender' <e-mail>
+EMAIL_RECIPIENTS = [os.environ.get('EMAIL_RECIPIENT')]
+
 ###############################################################################
 ###############################################################################
 

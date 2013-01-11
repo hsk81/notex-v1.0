@@ -54,10 +54,11 @@ urlpatterns = patterns ('',
     url (r'^import-file/(?P<fid>.*)/$', views.import_file, name='import-file'),
 
     ##
-    ## ajax load:
+    ## miscellanea:
     ##
 
-    url (r'^btc-donate.html', views.btc_donate, name='btc-donate')
+    url (r'^btc-donate.html', views.btc_donate, name='btc-donate'),
+    url (r'^send-feedback/$', views.send_feedback, name='send-feedback')
 )
 
 ################################################################################
