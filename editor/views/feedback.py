@@ -3,7 +3,6 @@ __author__ = 'hsk81'
 ################################################################################
 ################################################################################
 
-from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.conf import settings
@@ -19,7 +18,6 @@ logger = logging.getLogger (__name__)
 ################################################################################
 ################################################################################
 
-@csrf_protect
 def send_feedback (request):
 
     if request.method == 'POST':
