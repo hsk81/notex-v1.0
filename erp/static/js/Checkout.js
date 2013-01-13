@@ -58,6 +58,10 @@ var getCheckoutWindow = function (address, product) {
         var index = parseInt (item, 10);
 
         if (index == 0) {
+            tracker.event ({
+                category: 'Checkout', action: 'Email', label: 'BTC', value: 1
+            });
+
             var email = Ext.fly ('input-0.id').dom.value;
             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (regex.test (email) != true) {
@@ -68,6 +72,10 @@ var getCheckoutWindow = function (address, product) {
         index += delta;
 
         if (index == 1) {
+            tracker.event ({
+                category: 'Checkout', action: 'QR Code', label: 'BTC', value: 1
+            });
+
             function callback (input_address) {
                 Ext.fly ('input-1.id').dom.value = String.format (
                     "{1} -> {0}", input_address, product.price.with_cents
