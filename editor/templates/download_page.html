@@ -95,9 +95,12 @@
 
 <script type="text/javascript">
     function checkout (address, product) {
-        if (_gaq) {
-            _gaq.push(['_trackEvent', 'Sale', 'Software', product.title]);
-        }
+        tracker.event ({
+            category: 'P&L',
+            action: product.title,
+            label: product.price.currency,
+            value: product.price.value
+        });
 
         getCheckoutWindow (address, product).show ();
     }
